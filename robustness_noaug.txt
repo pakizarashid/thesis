@@ -1,0 +1,28 @@
+[LibriSpeechSubset] Loading/downloading train-clean-100 into ./data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from ./data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 25 utterances (eval split, speaker-disjoint from the other split).
+
+============================================================
+BASELINE (pretrained VoiceMark, LoRA zero-init)
+============================================================
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[build_backbone] Using baseline (LoRA at zero-init, == pretrained VoiceMark)
+[augment_neural] WARNING - sox effects unavailable (module 'torchaudio' has no attribute 'sox_effects'), falling back to quantization-noise approximation for the rest of this run (this message prints once, not per-call).
+
+============================================================
+STAGE 1 FINE-TUNED (./checkpoints/stage1_full/stage1_epoch29.pt)
+============================================================
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[build_backbone] Loaded LoRA weights from ./checkpoints/stage1_full/stage1_epoch29.pt (epoch 29, train-time avg_acc=0.9817)
+
+============================================================
+RESULTS: Detection ACC under distortion
+============================================================
+Condition         Baseline   Fine-tuned      Delta
+clean               0.4710       0.9799    +0.5089
+masking             0.4710       0.9799    +0.5089
+shuffling           0.4710       0.9777    +0.5067
+replacing           0.4710       0.9509    +0.4799
+neural              0.4710       0.8884    +0.4174
