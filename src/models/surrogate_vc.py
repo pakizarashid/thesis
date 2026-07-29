@@ -104,8 +104,26 @@ class YourTTSSurrogate(nn.Module):
         if d_vector.shape[0] > 1 and x.shape[0] == 1:
             x = x.expand(d_vector.shape[0], -1)
 
+        # Look up the numeric language ID -- confirmed via
+        # tts_model.language_manager.name_to_id, e.g. {'en': 0, 'fr-fr': 1, 'pt-br': 2}.
+        # Without this, lang_emb stays None and the text encoder's internal
+        # concatenation of [text_emb ; lang_emb] silently mismatches channel
+        # counts (192 vs 196), which is what caused the earlier crash.
+        language_id = None
+        if hasattr(tts_model, "language_manager") and tts_model.language_manager is not None:
+            language_id = tts_model.language_manager.name_to_id.get(language)
+            if language_id is None:
+                raise ValueError(
+                    f"Language '{language}' not found in language_manager.name_to_id "
+                    f"({tts_model.language_manager.name_to_id}). Use one of those keys."
+                )
+        language_ids_tensor = (
+            torch.tensor([language_id] * d_vector.shape[0], dtype=torch.long, device=d_vector.device)
+            if language_id is not None else None
+        )
+
         aux_input = {"x_lengths": None, "d_vectors": d_vector, "speaker_ids": None,
-                     "language_ids": None, "durations": None}
+                     "language_ids": language_ids_tensor, "durations": None}
 
         sid, g, lid, durations = tts_model._set_cond_input(aux_input)
         x_lengths = tts_model._set_x_lengths(x, aux_input)
