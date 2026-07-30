@@ -139,20 +139,28 @@ class SafeSpeechDisruptionLoss(nn.Module):
     Stage 2 training. Call once per training step with the clean input audio
     and the surrogate's cloned output (from watermarked audio).
 
-    total = -lambda_mel * pivotal_disruption_loss + weight_beta * (l1_to_noise + kl_to_noise)
+    total = -lambda_mel * pivotal_disruption_loss + weight_l1 * l1_to_noise + weight_kl * kl_to_noise
 
-    weight_beta=10 is SafeSpeech's own default (see module docstring --
-    treat as a starting point, not a verified-correct value for your setup).
-    lambda_mel defaults to 1.0; the project plan's overall Stage 2 loss
-    already introduces its own outer lambda multiplying this whole term
-    (see THESIS_PLAN.md Section 3: L = VoiceMark losses + lambda * SafeSpeech losses),
-    so avoid double-counting if you also scale this externally.
+    DEFAULTS (updated after gradient_diagnostic.py analysis -- see git history /
+    thesis notes for the iteration): measured raw (unweighted) gradient norms
+    at the LoRA parameters were pivotal ~0.23, l1_to_noise ~0.48, kl_to_noise
+    ~325 (order-of-magnitude stable across repeated measurements with
+    different batches). SafeSpeech's own weight_beta=10 applied to l1
+    (inherited from their shared-weight design) OVER-weights it relative to
+    pivotal, since l1's raw scale was already comparable. Current defaults
+    (lambda_mel=2.0, weight_l1=1.0, weight_kl=0.001) target bringing all three
+    into the same rough order of magnitude, with pivotal given a slight
+    priority boost since it's the term that actually drives the SIM metric
+    reported in your thesis. RE-RUN gradient_diagnostic.py after any further
+    change to confirm the balance before committing to a long training run --
+    do not assume these values are final without checking.
     """
 
     def __init__(self, sampling_rate: int = 22050, filter_length: int = 1024,
                  n_mel_channels: int = 80, hop_length: int = 256,
                  win_length: int = 1024, mel_fmin: float = 0.0, mel_fmax: float = None,
-                 lambda_mel: float = 1.0, weight_beta: float = 10.0, seed: int = None):
+                 lambda_mel: float = 2.0, weight_l1: float = 1.0, weight_kl: float = 0.001,
+                 seed: int = None):
         super().__init__()
         self.mel_fn = SafeSpeechMelSpectrogram(
             sampling_rate=sampling_rate, filter_length=filter_length,
@@ -160,7 +168,8 @@ class SafeSpeechDisruptionLoss(nn.Module):
             win_length=win_length, mel_fmin=mel_fmin, mel_fmax=mel_fmax,
         )
         self.lambda_mel = lambda_mel
-        self.weight_beta = weight_beta
+        self.weight_l1 = weight_l1
+        self.weight_kl = weight_kl
         self.seed = seed
 
     def forward(self, clean_audio: torch.Tensor, cloned_output: torch.Tensor) -> dict:
@@ -177,7 +186,8 @@ class SafeSpeechDisruptionLoss(nn.Module):
 
         total = (
             -self.lambda_mel * pivotal_loss
-            + self.weight_beta * (l1_noise_loss + kl_noise_loss)
+            + self.weight_l1 * l1_noise_loss
+            + self.weight_kl * kl_noise_loss
         )
 
         return {
