@@ -32,6 +32,7 @@ Usage:
 
 import os
 import argparse
+import json
 import numpy as np
 import soundfile as sf
 import librosa
@@ -99,9 +100,14 @@ def main():
     p.add_argument("--whisper_model_size", type=str, default="base",
                     help="Whisper model size -- 'base' is a reasonable speed/accuracy tradeoff for this check.")
     p.add_argument("--skip_wer", action="store_true", help="Skip WER (whisper download/load can be slow).")
+    p.add_argument("--output", type=str, default=None,
+                    help="Save results as JSON (recommended -- without this, results only exist in "
+                         "printed stdout and are lost if not manually captured).")
     args = p.parse_args()
 
     print(f"\n{'=' * 60}\nQuality metrics for: {args.sample_dir}\n{'=' * 60}")
+
+    results_out = {"sample_dir": args.sample_dir}
 
     # --- PESQ / STOI on clean vs watermarked ---
     pesq_scores, stoi_scores = [], []
@@ -119,8 +125,14 @@ def main():
               f"STOI={stoi_score:.3f} (range 0-1, higher=better)")
 
     if pesq_scores:
-        print(f"\nMean PESQ (clean vs watermarked): {sum(pesq_scores)/len(pesq_scores):.3f}")
-        print(f"Mean STOI (clean vs watermarked): {sum(stoi_scores)/len(stoi_scores):.3f}")
+        mean_pesq = sum(pesq_scores) / len(pesq_scores)
+        mean_stoi = sum(stoi_scores) / len(stoi_scores)
+        print(f"\nMean PESQ (clean vs watermarked): {mean_pesq:.3f}")
+        print(f"Mean STOI (clean vs watermarked): {mean_stoi:.3f}")
+        results_out["mean_pesq"] = mean_pesq
+        results_out["mean_stoi"] = mean_stoi
+        results_out["pesq_values"] = pesq_scores
+        results_out["stoi_values"] = stoi_scores
     else:
         print("\nNo clean/watermarked pairs found -- check --sample_dir and --n_samples.")
 
@@ -131,21 +143,32 @@ def main():
         whisper_model = whisper.load_model(args.whisper_model_size)
 
         wer_scores = []
+        transcriptions = []
         for i in range(args.n_samples):
             cloned_path = os.path.join(args.sample_dir, f"sample{i}_cloned.wav")
             if not os.path.exists(cloned_path):
                 continue
             wer_score, hypothesis = compute_wer(cloned_path, args.reference_text, whisper_model)
             wer_scores.append(wer_score)
+            transcriptions.append(hypothesis)
             print(f"  sample{i}: WER={wer_score:.3f} (0=perfect, 1.0=completely wrong) "
                   f"transcribed=\"{hypothesis}\"")
 
         if wer_scores:
-            print(f"\nMean WER (cloned audio intelligibility): {sum(wer_scores)/len(wer_scores):.3f}")
+            mean_wer = sum(wer_scores) / len(wer_scores)
+            print(f"\nMean WER (cloned audio intelligibility): {mean_wer:.3f}")
             print(f"Reference text was: \"{args.reference_text}\"")
+            results_out["mean_wer"] = mean_wer
+            results_out["wer_values"] = wer_scores
+            results_out["transcriptions"] = transcriptions
+            results_out["reference_text"] = args.reference_text
         else:
             print("\nNo cloned samples found -- check --sample_dir and --n_samples.")
 
+    if args.output:
+        with open(args.output, "w") as f:
+            json.dump({"label": args.sample_dir, "results": results_out}, f, indent=2)
+        print(f"\n[main] Saved results to {args.output}")
 
 if __name__ == "__main__":
     main()
