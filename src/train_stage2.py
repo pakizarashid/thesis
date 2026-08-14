@@ -96,8 +96,10 @@ def load_stage1_checkpoint(backbone, checkpoint_path: str = None):
     if non_lora_missing:
         print(f"[load_stage1_checkpoint] WARNING - {len(non_lora_missing)} LoRA keys missing: "
               f"{non_lora_missing[:3]}...")
+    avg_acc = ckpt.get("avg_acc")
+    avg_acc_str = f"{avg_acc:.4f}" if avg_acc is not None else "N/A"
     print(f"[load_stage1_checkpoint] Resumed from {checkpoint_path} "
-          f"(Stage 1 epoch {ckpt.get('epoch')}, train-time avg_acc={ckpt.get('avg_acc'):.4f})")
+          f"(Stage 1 epoch {ckpt.get('epoch')}, train-time avg_acc={avg_acc_str})")
 
 
 def lambda_schedule(step: int, ramp_steps: int, lambda_max: float) -> float:
