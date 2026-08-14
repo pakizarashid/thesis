@@ -184,6 +184,9 @@ def main():
         "epoch": ckpt.get("epoch"), "lora_state_dict": lora_state,
         "optimizer_state_dict": optimizer.state_dict(),
         "lora_r": args.lora_r, "lora_alpha": args.lora_alpha,
+        "avg_acc": sum(epoch_acc) / len(epoch_acc),  # final epoch's msg accuracy -- for schema
+        # consistency with train.py/train_stage2.py's checkpoints, so downstream scripts
+        # that print/expect this key don't need defensive workarounds.
         "recalibrated_from": args.input_checkpoint, "recalibration_epochs": args.epochs,
     }, ckpt_path)
     print(f"[recalibrate] Saved recalibrated checkpoint to {ckpt_path}")
