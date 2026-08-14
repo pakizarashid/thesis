@@ -1,6 +1,6 @@
 # Dual-Defense Audio Watermarking for Zero-Shot Voice Cloning
 
-MSc thesis project: a joint traceability + disruption audio watermarking system built on VoiceMark (traceability) and a SafeSpeech-derived disruption objective, evaluated against AudioPure (diffusion-based purification). All experiments use LibriSpeech `train-clean-100` (see [Dataset section](#dataset) for exact scope and rationale).
+MS project: a joint traceability + disruption audio watermarking system built on VoiceMark (traceability) and a SafeSpeech-derived disruption objective, evaluated against AudioPure (diffusion-based purification). All experiments use LibriSpeech `train-clean-100` (see [Dataset section](#dataset) for exact scope and rationale).
 
 **Full technical writeups**: [`STAGE1_WRITEUP.md`](./STAGE1_WRITEUP.md) · [`STAGE2_WRITEUP.md`](./STAGE2_WRITEUP.md) · [`AUDIOPURE_WRITEUP.md`](./AUDIOPURE_WRITEUP.md)
 
