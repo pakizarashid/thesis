@@ -59,21 +59,32 @@ def compute_wer(audio_path, reference_text, whisper_model):
     """
     Transcribes audio_path via Whisper, computes word error rate against
     reference_text. Requires: pip install openai-whisper jiwer
+
+    NOTE: normalizes text manually (lowercase, strip punctuation/whitespace)
+    with plain Python BEFORE calling jiwer.wer(), rather than using jiwer's
+    truth_transform/reference_transform kwargs. Two real problems with those
+    kwargs: (1) jiwer 3.0+ renamed truth/truth_transform to
+    reference/reference_transform, breaking on older/newer installs
+    depending on version, and (2) a documented correctness bug in jiwer
+    3.0.0 specifically, where using reference_transform produces WRONG WER
+    values compared to the old truth_transform name (confirmed via
+    jitsi/jiwer GitHub issue #76). Manual normalization + jiwer's plain
+    two-argument wer(reference, hypothesis) form sidesteps both issues and
+    is stable across jiwer versions.
     """
+    import re
     import jiwer
+
+    def normalize(text):
+        text = text.lower()
+        text = re.sub(r"[^\w\s]", "", text)  # strip punctuation
+        text = re.sub(r"\s+", " ", text).strip()  # collapse whitespace
+        return text
 
     result = whisper_model.transcribe(audio_path, language="en")
     hypothesis = result["text"].strip()
 
-    transform = jiwer.Compose([
-        jiwer.ToLowerCase(),
-        jiwer.RemovePunctuation(),
-        jiwer.RemoveMultipleSpaces(),
-        jiwer.Strip(),
-        jiwer.ReduceToListOfListOfWords(),
-    ])
-    wer_score = jiwer.wer(reference_text, hypothesis,
-                           truth_transform=transform, hypothesis_transform=transform)
+    wer_score = jiwer.wer(normalize(reference_text), normalize(hypothesis))
     return wer_score, hypothesis
 
 
