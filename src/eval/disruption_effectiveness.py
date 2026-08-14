@@ -55,8 +55,10 @@ def build_backbone(lora_checkpoint_path: str = None, r: int = 8, alpha: int = 16
         non_lora_missing = [k for k in missing if "_lora." in k]
         if non_lora_missing:
             print(f"[build_backbone] WARNING - {len(non_lora_missing)} LoRA keys missing: {non_lora_missing[:3]}...")
+        avg_acc = ckpt.get("avg_acc")
+        avg_acc_str = f"{avg_acc:.4f}" if avg_acc is not None else "N/A"
         print(f"[build_backbone] Loaded LoRA weights from {lora_checkpoint_path} "
-              f"(epoch {ckpt.get('epoch')}, train-time avg_acc={ckpt.get('avg_acc'):.4f})")
+              f"(epoch {ckpt.get('epoch')}, train-time avg_acc={avg_acc_str})")
     else:
         print("[build_backbone] Using baseline (LoRA at zero-init, == pretrained VoiceMark)")
 
