@@ -126,11 +126,11 @@ Fix: `src/recalibrate_presence.py` adds a binary cross-entropy presence loss com
 
 ### 5. Audio quality metrics (new, not previously measured)
 
-| Condition | n | PESQ | STOI | SI-SNR | WER |
+| Condition | n | PESQ ↑ | STOI ↑ | SI-SNR ↑ | WER ↓ |
 |---|---|---|---|---|---|
 | Baseline | 50 | 2.197 | 0.910 | 3.26 dB | 0.045 |
-| Stage 1, loss-rebalanced (`stage1_low_perturbation`) | 50 | 2.383 | 0.917 | 3.25 dB | 0.040 |
-| **VoiceMark's own published numbers** | — | **2.20** | **0.89** | **2.01 dB** | — |
+| Stage 1, loss-rebalanced (`stage1_low_perturbation`) | 50 | **2.383** | 0.917 | 3.25 dB | 0.040 |
+| **VoiceMark's own published numbers** | — | 2.20 | **0.89** | **2.01 dB** | — |
 
 SI-SNR (scale-invariant SNR) is used specifically because it is the exact metric VoiceMark's own paper reports (Table 3, Li et al. 2025) — found via direct literature search, enabling a true apples-to-apples comparison rather than an approximate one.
 
