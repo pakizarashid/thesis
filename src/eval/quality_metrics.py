@@ -38,6 +38,33 @@ import soundfile as sf
 import librosa
 
 
+def compute_si_snr(clean_wav, watermarked_wav) -> float:
+    """
+    Scale-invariant SNR (SI-SNR / SI-SDR), the standard source-separation
+    metric (Le Roux et al.) -- crucially, this is the EXACT metric VoiceMark's
+    own paper reports (their Table 3: PESQ 2.20, SI-SNR 2.01 dB, STOI 0.89),
+    not the plain SNR computed above. Implemented specifically to make a true
+    apples-to-apples comparison against their published numbers, rather than
+    the approximate one plain SNR gave.
+
+    Projects the watermarked signal onto the clean signal (removing any pure
+    scale/amplitude mismatch) before computing the ratio -- this is what
+    makes it "scale-invariant" and distinct from plain SNR above.
+    """
+    min_len = min(len(clean_wav), len(watermarked_wav))
+    s = clean_wav[:min_len].astype(np.float64)
+    s_hat = watermarked_wav[:min_len].astype(np.float64)
+
+    s = s - np.mean(s)
+    s_hat = s_hat - np.mean(s_hat)
+
+    s_target = (np.dot(s_hat, s) / (np.dot(s, s) + 1e-8)) * s
+    e_noise = s_hat - s_target
+
+    si_snr_db = 10 * np.log10((np.sum(s_target ** 2) + 1e-8) / (np.sum(e_noise ** 2) + 1e-8))
+    return si_snr_db
+
+
 def compute_snr(clean_wav, watermarked_wav) -> float:
     """
     Signal-to-noise ratio, in dB, between the original clean audio (the
@@ -140,7 +167,7 @@ def main():
     results_out = {"sample_dir": args.sample_dir}
 
     # --- SNR / PESQ / STOI on clean vs watermarked ---
-    pesq_scores, stoi_scores, snr_scores = [], [], []
+    pesq_scores, stoi_scores, snr_scores, si_snr_scores = [], [], [], []
     for i in range(args.n_samples):
         clean_path = os.path.join(args.sample_dir, f"sample{i}_clean.wav")
         wm_path = os.path.join(args.sample_dir, f"sample{i}_watermarked.wav")
@@ -150,26 +177,33 @@ def main():
         wm_wav, wm_sr = sf.read(wm_path)
         pesq_score, stoi_score = compute_pesq_stoi(clean_wav, wm_wav, sr)
         snr_score = compute_snr(clean_wav, wm_wav)
+        si_snr_score = compute_si_snr(clean_wav, wm_wav)
         pesq_scores.append(pesq_score)
         stoi_scores.append(stoi_score)
         snr_scores.append(snr_score)
+        si_snr_scores.append(si_snr_score)
         print(f"  sample{i}: PESQ={pesq_score:.3f} (range -0.5 to 4.5, higher=better) "
               f"STOI={stoi_score:.3f} (range 0-1, higher=better) "
-              f"SNR={snr_score:.2f} dB (higher=smaller/more imperceptible perturbation)")
+              f"SNR={snr_score:.2f} dB SI-SNR={si_snr_score:.2f} dB "
+              f"(VoiceMark's own paper reports SI-SNR=2.01 dB -- this is the metric to compare against)")
 
     if pesq_scores:
         mean_pesq = sum(pesq_scores) / len(pesq_scores)
         mean_stoi = sum(stoi_scores) / len(stoi_scores)
         mean_snr = sum(snr_scores) / len(snr_scores)
-        print(f"\nMean PESQ (clean vs watermarked): {mean_pesq:.3f}")
-        print(f"Mean STOI (clean vs watermarked): {mean_stoi:.3f}")
+        mean_si_snr = sum(si_snr_scores) / len(si_snr_scores)
+        print(f"\nMean PESQ (clean vs watermarked): {mean_pesq:.3f} (VoiceMark paper: 2.20)")
+        print(f"Mean STOI (clean vs watermarked): {mean_stoi:.3f} (VoiceMark paper: 0.89)")
         print(f"Mean SNR (perturbation magnitude): {mean_snr:.2f} dB")
+        print(f"Mean SI-SNR (matches VoiceMark paper's exact metric): {mean_si_snr:.2f} dB (VoiceMark paper: 2.01 dB)")
         results_out["mean_pesq"] = mean_pesq
         results_out["mean_stoi"] = mean_stoi
         results_out["mean_snr_db"] = mean_snr
+        results_out["mean_si_snr_db"] = mean_si_snr
         results_out["pesq_values"] = pesq_scores
         results_out["stoi_values"] = stoi_scores
         results_out["snr_values_db"] = snr_scores
+        results_out["si_snr_values_db"] = si_snr_scores
     else:
         print("\nNo clean/watermarked pairs found -- check --sample_dir and --n_samples.")
 
