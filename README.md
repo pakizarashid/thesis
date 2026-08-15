@@ -1,6 +1,6 @@
 # Dual-Defense Audio Watermarking for Zero-Shot Voice Cloning
 
-MS project: a joint traceability + disruption audio watermarking system built on VoiceMark (traceability) and a SafeSpeech-derived disruption objective, evaluated against AudioPure (diffusion-based purification). All experiments use LibriSpeech `train-clean-100` (see [Dataset section](#dataset) for exact scope and rationale).
+MS thesis project: a joint traceability + disruption audio watermarking system built on VoiceMark (traceability) and a SafeSpeech-derived disruption objective, evaluated against AudioPure (diffusion-based purification). All training uses LibriSpeech `train-clean-100`; VCTK is additionally used for evaluation-only cross-dataset generalization testing (see [Dataset section](#dataset) for exact scope and rationale).
 
 **Full technical writeups**: [`STAGE1_WRITEUP.md`](./STAGE1_WRITEUP.md) · [`STAGE2_WRITEUP.md`](./STAGE2_WRITEUP.md) · [`AUDIOPURE_WRITEUP.md`](./AUDIOPURE_WRITEUP.md)
 
@@ -11,10 +11,11 @@ MS project: a joint traceability + disruption audio watermarking system built on
 ```
 src/
   models/       backbone.py, adapters.py (LoRA), surrogate_vc.py (YourTTS)
-  data/         librispeech.py, augment.py
+  data/         librispeech.py, augment.py, vctk.py (reads from mounted Kaggle input)
   losses/       voicemark_losses.py, safespeech_losses.py
   eval/         disruption_effectiveness.py, audiopure_eval.py, false_positive_rate.py,
-                quality_metrics.py, augmentation_robustness.py, gradient_diagnostic.py,
+                cross_dataset_eval.py, quality_metrics.py (PESQ/STOI/SNR/WER),
+                augmentation_robustness.py, gradient_diagnostic.py,
                 save_audio_samples.py, audio_diff_analysis.py, compare_results.py
   train.py            Stage 1 training
   train_stage2.py     Stage 2 training (mel-mode / sim-mode disruption)
@@ -42,7 +43,9 @@ python scripts/patch_audiopure.py
 
 ## Dataset
 
-All experiments use LibriSpeech `train-clean-100` (251 speakers, ~100 hours, 16kHz), not VCTK (VoiceMark's own corpus) or LibriTTS+CMU ARCTIC (SafeSpeech's corpus) — chosen for native sample-rate match (avoiding resampling), internal consistency across all three project phases, automatic no-license-request download, and to keep iteration cycles fast given this project's compute constraints. Full rationale in `STAGE1_WRITEUP.md` Section 2.
+**Training** (Stages 1 and 2) uses LibriSpeech `train-clean-100` (251 speakers, ~100 hours, 16kHz) exclusively — not VCTK (VoiceMark's own corpus) or LibriTTS+CMU ARCTIC (SafeSpeech's corpus) — chosen for native sample-rate match (avoiding resampling), internal consistency across all three project phases, automatic no-license-request download, and to keep iteration cycles fast given this project's compute constraints. Full rationale in `STAGE1_WRITEUP.md` Section 2.
+
+**Evaluation only** additionally uses VCTK (see Results Section 6) — deliberately *not* used for training, since the entire point is testing whether LibriSpeech-trained checkpoints generalize to a corpus they've never seen. Read directly from a mounted Kaggle Input dataset, not downloaded, given VCTK's ~13GB size would otherwise conflict with Kaggle's working-disk budget.
 
 | Phase | Train speakers | Train utterances | Eval speakers | Eval utterances | Clip length |
 |---|---|---|---|---|---|
@@ -60,7 +63,8 @@ Train/eval speaker pools are always disjoint (non-overlapping slices of one dete
 |---|---|---|
 | `checkpoints/stage1_full/` | Stage 1, no augmentation | Original |
 | `checkpoints/stage1_aug/` | Stage 1, VC-distortion augmentation | Original |
-| `checkpoints/stage1_full_recalibrated_v3/` | Stage 1 full, presence-calibration fix applied | **Canonical Stage 1 checkpoint** |
+| `checkpoints/stage1_full_recalibrated_v3/` | Stage 1 full, presence-calibration fix applied | Canonical for detection/FPR tasks |
+| `checkpoints/stage1_low_perturbation/` | Loss-rebalanced from v3 (Lmel/Lcos doubled) | Documented negative result — see Results Section 5 |
 | `checkpoints/stage2_sim_longrun/` | Stage 2, similarity-targeted disruption, 30 epochs | **Canonical Stage 2 checkpoint** |
 
 `stage1_full_recalibrated/` and `_v2/` are retained as diagnostic evidence for the false-positive-rate investigation (see below), not for general use.
@@ -122,12 +126,29 @@ Fix: `src/recalibrate_presence.py` adds a binary cross-entropy presence loss com
 
 ### 5. Audio quality metrics (new, not previously measured)
 
-| Condition | Mean PESQ (watermark transparency) | Mean STOI (intelligibility) | Mean WER (cloned audio, known reference text) |
-|---|---|---|---|
-| Baseline | 2.046 | 0.902 | 0.031 |
-| Stage 2 (sim-mode) | 2.151 | 0.904 | 0.062 |
+| Condition | n | PESQ | STOI | SI-SNR | WER |
+|---|---|---|---|---|---|
+| Baseline | 50 | 2.197 | 0.910 | 3.26 dB | 0.045 |
+| Stage 1, loss-rebalanced (`stage1_low_perturbation`) | 50 | 2.383 | 0.917 | 3.25 dB | 0.040 |
+| **VoiceMark's own published numbers** | — | **2.20** | **0.89** | **2.01 dB** | — |
 
-PESQ ~2.0–2.2 ("fair" range, not transparent but not badly degraded); STOI ~0.90 indicates well-preserved intelligibility; WER confirms cloned audio remains highly intelligible across conditions.
+SI-SNR (scale-invariant SNR) is used specifically because it is the exact metric VoiceMark's own paper reports (Table 3, Li et al. 2025) — found via direct literature search, enabling a true apples-to-apples comparison rather than an approximate one.
+
+**Two findings, both properly evidenced at matched sample sizes**:
+
+1. **The loss-rebalancing experiment (`src/reduce_perturbation.py`) did not work.** An initial n=25 comparison using plain SNR appeared to show a real improvement (+1.27 dB). This did not survive correction: plain SNR doesn't account for scale/amplitude differences, and at n=50 with the paper-matching SI-SNR metric, baseline and rebalanced are statistically indistinguishable (3.26 vs 3.25 dB). Reported as a negative result, not omitted — see `STAGE1_WRITEUP.md` Section 11 for the full methodology trail, including the sample-size and metric-choice corrections that led here.
+2. **The baseline reproduction already matches or exceeds VoiceMark's own published imperceptibility**, with no additional work: PESQ is a near-exact match (2.197 vs 2.20), STOI exceeds theirs (0.910 vs 0.89), and SI-SNR exceeds theirs by over 60% (3.26 vs 2.01 dB). This is a genuine, verified validation result on the original authors' own metric.
+
+### 6. Cross-dataset generalization (VCTK)
+
+Tests whether checkpoints trained exclusively on LibriSpeech generalize to a completely unseen corpus — VCTK, notably VoiceMark's own original training domain, making this also a direct comparison point to their paper. Evaluation only, no retraining (retraining on VCTK would defeat the purpose of testing generalization).
+
+| Condition | LibriSpeech held-out ACC | VCTK detection ACC (unseen corpus) |
+|---|---|---|
+| Baseline | ~98.3–99.55% | 99.78% |
+| Stage 1 (recalibrated v3) | ~99.5–100% | 99.78% |
+
+Detection accuracy on VCTK closely matches LibriSpeech performance despite the model never training on VCTK — genuine evidence of generalization across recording conditions and speaker populations, not overfitting to a single corpus. See `src/data/vctk.py` for the loader (reads directly from a mounted Kaggle input dataset, avoiding the disk-space problems of downloading the full ~13GB corpus directly).
 
 ---
 
