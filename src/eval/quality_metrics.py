@@ -38,6 +38,36 @@ import soundfile as sf
 import librosa
 
 
+def compute_snr(clean_wav, watermarked_wav) -> float:
+    """
+    Signal-to-noise ratio, in dB, between the original clean audio (the
+    'signal') and the watermark/disruption perturbation (the 'noise' = the
+    difference between watermarked and clean). This is the standard way
+    SafeSpeech and similar adversarial-perturbation work report HOW STRONG
+    the perturbation is -- distinct from PESQ/STOI, which measure perceptual
+    QUALITY impact rather than raw perturbation magnitude.
+
+    Higher SNR = smaller/more imperceptible perturbation.
+    Lower SNR = larger/more aggressive perturbation.
+
+    Requires clean_wav and watermarked_wav to be the SAME content, frame-
+    aligned (same validity constraint as PESQ/STOI -- not meaningful for
+    clean-vs-cloned, which have different content/duration).
+    """
+    min_len = min(len(clean_wav), len(watermarked_wav))
+    clean = clean_wav[:min_len].astype(np.float64)
+    watermarked = watermarked_wav[:min_len].astype(np.float64)
+
+    noise = watermarked - clean
+    signal_power = np.mean(clean ** 2)
+    noise_power = np.mean(noise ** 2)
+
+    if noise_power == 0:
+        return float("inf")  # watermarked is bit-identical to clean
+    snr_db = 10 * np.log10(signal_power / noise_power)
+    return snr_db
+
+
 def compute_pesq_stoi(clean_wav, watermarked_wav, sr):
     """
     PESQ requires 8kHz or 16kHz input (our audio is already 16kHz, no resample
@@ -109,8 +139,8 @@ def main():
 
     results_out = {"sample_dir": args.sample_dir}
 
-    # --- PESQ / STOI on clean vs watermarked ---
-    pesq_scores, stoi_scores = [], []
+    # --- SNR / PESQ / STOI on clean vs watermarked ---
+    pesq_scores, stoi_scores, snr_scores = [], [], []
     for i in range(args.n_samples):
         clean_path = os.path.join(args.sample_dir, f"sample{i}_clean.wav")
         wm_path = os.path.join(args.sample_dir, f"sample{i}_watermarked.wav")
@@ -119,20 +149,27 @@ def main():
         clean_wav, sr = sf.read(clean_path)
         wm_wav, wm_sr = sf.read(wm_path)
         pesq_score, stoi_score = compute_pesq_stoi(clean_wav, wm_wav, sr)
+        snr_score = compute_snr(clean_wav, wm_wav)
         pesq_scores.append(pesq_score)
         stoi_scores.append(stoi_score)
+        snr_scores.append(snr_score)
         print(f"  sample{i}: PESQ={pesq_score:.3f} (range -0.5 to 4.5, higher=better) "
-              f"STOI={stoi_score:.3f} (range 0-1, higher=better)")
+              f"STOI={stoi_score:.3f} (range 0-1, higher=better) "
+              f"SNR={snr_score:.2f} dB (higher=smaller/more imperceptible perturbation)")
 
     if pesq_scores:
         mean_pesq = sum(pesq_scores) / len(pesq_scores)
         mean_stoi = sum(stoi_scores) / len(stoi_scores)
+        mean_snr = sum(snr_scores) / len(snr_scores)
         print(f"\nMean PESQ (clean vs watermarked): {mean_pesq:.3f}")
         print(f"Mean STOI (clean vs watermarked): {mean_stoi:.3f}")
+        print(f"Mean SNR (perturbation magnitude): {mean_snr:.2f} dB")
         results_out["mean_pesq"] = mean_pesq
         results_out["mean_stoi"] = mean_stoi
+        results_out["mean_snr_db"] = mean_snr
         results_out["pesq_values"] = pesq_scores
         results_out["stoi_values"] = stoi_scores
+        results_out["snr_values_db"] = snr_scores
     else:
         print("\nNo clean/watermarked pairs found -- check --sample_dir and --n_samples.")
 
