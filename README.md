@@ -1,8 +1,16 @@
 # Dual-Defense Audio Watermarking for Zero-Shot Voice Cloning
 
-MS thesis project: a joint traceability + disruption audio watermarking system built on VoiceMark (traceability) and a SafeSpeech-derived disruption objective, evaluated against AudioPure (diffusion-based purification). All training uses LibriSpeech `train-clean-100`; VCTK is additionally used for evaluation-only cross-dataset generalization testing (see [Dataset section](#dataset) for exact scope and rationale).
+MSc thesis project: a joint traceability + disruption audio watermarking system built on VoiceMark (traceability) and a SafeSpeech-derived disruption objective, evaluated against AudioPure (diffusion-based purification). All training uses LibriSpeech `train-clean-100`; VCTK is additionally used for evaluation-only cross-dataset generalization testing (see [Dataset section](#dataset) for exact scope and rationale).
 
 **Full technical writeups**: [`STAGE1_WRITEUP.md`](./STAGE1_WRITEUP.md) · [`STAGE2_WRITEUP.md`](./STAGE2_WRITEUP.md) · [`AUDIOPURE_WRITEUP.md`](./AUDIOPURE_WRITEUP.md)
+
+---
+
+## Pipeline overview
+
+![Data flow diagram](./pipeline_diagram.png)
+
+Green boxes are the only trainable components (294,912 shared LoRA parameters across both stages); yellow boxes are large frozen models used as fixed tools; pink ellipses are where measurements come out.
 
 ---
 
@@ -11,7 +19,7 @@ MS thesis project: a joint traceability + disruption audio watermarking system b
 ```
 src/
   models/       backbone.py, adapters.py (LoRA), surrogate_vc.py (YourTTS)
-  data/         librispeech.py, augment.py, vctk.py (reads from mounted Kaggle input)
+  data/         librispeech.py, augment.py, vctk.py, libritts.py (both read from mounted Kaggle input)
   losses/       voicemark_losses.py, safespeech_losses.py
   eval/         disruption_effectiveness.py, audiopure_eval.py, false_positive_rate.py,
                 cross_dataset_eval.py, quality_metrics.py (PESQ/STOI/SNR/WER),
@@ -97,6 +105,15 @@ Five independent interventions tested (lambda scale, loss reweighting, adapter c
 | Stage 2 (similarity-targeted, final) | ~0.473 | ~1.854 |
 
 No reliable disruption effect found; documented as a rigorous negative result with a leading explanation (likely adapter capacity limitation).
+
+**Cross-domain validation (LibriTTS, SafeSpeech's own training corpus)** — checks whether the negative result is specific to LibriSpeech or holds generally, evaluated on the canonical checkpoint with no retraining:
+
+| Condition | SIM (LibriTTS) | Pivotal distance (LibriTTS) |
+|---|---|---|
+| Baseline | 0.4246 | 2.2107 |
+| Stage 2 (canonical) | 0.4448 | 2.1913 |
+
+No disruption effect on LibriTTS either, ruling out dataset domain as an alternative explanation and strengthening the capacity-limitation hypothesis. See `STAGE2_WRITEUP.md` Section 8 for full detail.
 
 ### 3. AudioPure — purification attack (central thesis result)
 
