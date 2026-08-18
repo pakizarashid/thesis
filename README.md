@@ -65,9 +65,10 @@ Train/eval speaker pools are always disjoint (non-overlapping slices of one dete
 | `checkpoints/stage1_aug/` | Stage 1, VC-distortion augmentation | Original |
 | `checkpoints/stage1_full_recalibrated_v3/` | Stage 1 full, presence-calibration fix applied | Canonical for detection/FPR tasks |
 | `checkpoints/stage1_low_perturbation/` | Loss-rebalanced from v3 (Lmel/Lcos doubled) | Documented negative result — see Results Section 5 |
-| `checkpoints/stage2_sim_longrun/` | Stage 2, similarity-targeted disruption, 30 epochs | **Canonical Stage 2 checkpoint** |
+| `checkpoints/stage2_sim_longrun/` | Stage 2, similarity-targeted disruption, 30 epochs | Superseded — see `_recalibrated_v2` |
+| `checkpoints/stage2_sim_longrun_recalibrated_v2/` | Stage 2, same disruption training, presence-calibration fix applied | **Canonical Stage 2 checkpoint** |
 
-`stage1_full_recalibrated/` and `_v2/` are retained as diagnostic evidence for the false-positive-rate investigation (see below), not for general use.
+`stage1_full_recalibrated/` + `_v2/`, and `stage2_sim_longrun_recalibrated/` (v1), are retained as diagnostic evidence for the false-positive-rate investigation (see below), not for general use.
 
 ---
 
@@ -106,8 +107,9 @@ No reliable disruption effect found; documented as a rigorous negative result wi
 | Stage 1 + distortion-augmentation | 98.8% | 51.8% | 47.0 pp |
 | Stage 2 (disruption fine-tuned) | 99.5–100.0% | 45.3–54.8% | ~50–55 pp |
 | Stage 1 (presence-recalibrated, v3) | 100.0% | 49.3% | 50.8 pp |
+| Stage 2 (presence-recalibrated, v2) | 99.5% | 49.25% | 50.25 pp |
 
-All conditions collapse to chance level (~50%) — the watermark is completely destroyed by purification, regardless of training approach, including the model specifically trained for distortion robustness. This is the thesis's central, novel finding — neither VoiceMark nor SafeSpeech test this combination.
+All conditions collapse to chance level (~50%) — the watermark is completely destroyed by purification, regardless of training approach, including the model specifically trained for distortion robustness, and regardless of the presence-calibration fix applied to either stage. This is the thesis's central, novel finding — neither VoiceMark nor SafeSpeech test this combination.
 
 ### 4. False positive rate (new metric, not covered by either source paper)
 
@@ -116,21 +118,23 @@ No training loss in this project (Stages 1 or 2) ever penalized the detector for
 | Checkpoint | False positive rate | Notes |
 |---|---|---|
 | Baseline (pretrained) | 4.0% | Healthy |
-| Stage 1 (original) | 76.0% | Degraded — no negative examples in training |
-| Stage 2 (original) | 84.0% | Further degraded |
-| Recalibration v1 (10 spk, 5 epochs) | 28.0% | Partial fix |
-| Recalibration v2 (10 spk, 10 epochs total, same data) | 28.0% | **No improvement — overfitting confirmed** |
-| **Recalibration v3 (30 spk, 5 epochs, fresh)** | **4.0%** | **Matches baseline — data diversity was the fix, not epoch count** |
+| **Stage 1** (original) | 76.0% | Degraded — no negative examples in training |
+| Stage 1, recalibration v1 (10 spk, 5 epochs) | 28.0% | Partial fix |
+| Stage 1, recalibration v2 (10 spk, 10 epochs total, same data) | 28.0% | No improvement — overfitting on narrow data |
+| **Stage 1, recalibration v3 (30 spk, 5 epochs, fresh restart)** | **4.0%** | **Fixed — needed data diversity, not more epochs** |
+| **Stage 2** (original) | 84.0% | Further degraded |
+| Stage 2, recalibration v1 (30 spk, 5 epochs) | 12.0% | Partial fix — train-batch trend still improving, not yet plateaued |
+| **Stage 2, recalibration v2 (30 spk, 10 epochs total, same data)** | **0.0%** | **Fully fixed — more epochs on already-diverse data worked directly, no overfitting** |
 
-Fix: `src/recalibrate_presence.py` adds a binary cross-entropy presence loss computed on both watermarked (positive) and the same clean audio run directly through the detector (negative) — the missing negative-example signal.
+Fix: `src/recalibrate_presence.py` adds a binary cross-entropy presence loss computed on both watermarked (positive) and the same clean audio run directly through the detector (negative) — the missing negative-example signal. Note the two stages resolved via different mechanisms: Stage 1's first attempts used too narrow a dataset (10 speakers), so more epochs alone overfit rather than generalized — fixed only once data diversity increased (v3). Stage 2's attempts started with the larger dataset (30 speakers) from the outset, so more epochs alone were sufficient (v1→v2) with no overfitting observed — confirming the underlying lesson is "sufficient data diversity is a prerequisite," not "more epochs are inherently harmful."
 
 ### 5. Audio quality metrics (new, not previously measured)
 
 | Condition | n | PESQ ↑ | STOI ↑ | SI-SNR ↑ | WER ↓ |
 |---|---|---|---|---|---|
 | Baseline | 50 | 2.197 | 0.910 | 3.26 dB | 0.045 |
-| Stage 1, loss-rebalanced (`stage1_low_perturbation`) | 50 | **2.383** | 0.917 | 3.25 dB | 0.040 |
-| **VoiceMark's own published numbers** | — | 2.20 | **0.89** | **2.01 dB** | — |
+| Stage 1, loss-rebalanced (`stage1_low_perturbation`) | 50 | 2.383 | 0.917 | 3.25 dB | 0.040 |
+| **VoiceMark's own published numbers** | — | **2.20** | **0.89** | **2.01 dB** | — |
 
 SI-SNR (scale-invariant SNR) is used specifically because it is the exact metric VoiceMark's own paper reports (Table 3, Li et al. 2025) — found via direct literature search, enabling a true apples-to-apples comparison rather than an approximate one.
 
