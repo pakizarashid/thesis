@@ -41,6 +41,8 @@ from adapters import apply_lora_adapters
 from surrogate_vc import load_yourtts_surrogate
 from safespeech_losses import SafeSpeechMelSpectrogram, compute_pivotal_disruption_loss
 from librispeech import LibriSpeechSubset, collate_librispeech
+from vctk import VCTKSubset, collate_vctk
+from libritts import LibriTTSSubset, collate_libritts
 from torch.utils.data import DataLoader
 
 
@@ -119,7 +121,20 @@ def main():
     p.add_argument("--checkpoint", type=str, default=None,
                     help="Path to a train.py/train_stage2.py checkpoint. If omitted, evaluates baseline (LoRA zero-init).")
     p.add_argument("--output", type=str, required=True)
+    p.add_argument("--dataset", type=str, default="librispeech",
+                    choices=["librispeech", "vctk", "libritts"],
+                    help="'libritts' evaluates disruption effectiveness on SafeSpeech's own training "
+                         "domain (LibriTTS) rather than LibriSpeech, since Stage 2 was never validated "
+                         "against SafeSpeech's actual chosen dataset before.")
+    p.add_argument("--vctk_root", type=str,
+                    default="/kaggle/input/datasets/pratt3000/vctk-corpus/VCTK-Corpus/VCTK-Corpus")
+    p.add_argument("--libritts_root", type=str,
+                    default="/kaggle/input/datasets/pratt3000/libritts/LibriTTS")
     p.add_argument("--data_root", type=str, default="./data/librispeech")
+    p.add_argument("--data_download", action="store_true", default=True,
+                    help="Set via --no_data_download to read from an already-mounted path "
+                         "(e.g. a Kaggle Input dataset) instead of downloading.")
+    p.add_argument("--no_data_download", dest="data_download", action="store_false")
     p.add_argument("--n_speakers", type=int, default=10)
     p.add_argument("--utterances_per_speaker", type=int, default=10)
     p.add_argument("--n_eval_speakers", type=int, default=5)
@@ -134,15 +149,37 @@ def main():
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    eval_ds = LibriSpeechSubset(
-        root=args.data_root, n_speakers=args.n_speakers,
-        utterances_per_speaker=args.utterances_per_speaker,
-        n_eval_speakers=args.n_eval_speakers,
-        eval_utterances_per_speaker=args.eval_utterances_per_speaker,
-        sample_rate=16000, crop_seconds=args.crop_seconds, split="eval",
-    )
+    if args.dataset == "librispeech":
+        eval_ds = LibriSpeechSubset(
+            root=args.data_root, download=args.data_download, n_speakers=args.n_speakers,
+            utterances_per_speaker=args.utterances_per_speaker,
+            n_eval_speakers=args.n_eval_speakers,
+            eval_utterances_per_speaker=args.eval_utterances_per_speaker,
+            sample_rate=16000, crop_seconds=args.crop_seconds, split="eval",
+        )
+        collate_fn = collate_librispeech
+    elif args.dataset == "vctk":
+        eval_ds = VCTKSubset(
+            root=args.vctk_root, n_speakers=args.n_speakers,
+            utterances_per_speaker=args.utterances_per_speaker,
+            n_eval_speakers=args.n_eval_speakers,
+            eval_utterances_per_speaker=args.eval_utterances_per_speaker,
+            sample_rate=16000, crop_seconds=args.crop_seconds, split="eval",
+        )
+        collate_fn = collate_vctk
+    else:  # libritts
+        eval_ds = LibriTTSSubset(
+            root=args.libritts_root, n_speakers=args.n_speakers,
+            utterances_per_speaker=args.utterances_per_speaker,
+            n_eval_speakers=args.n_eval_speakers,
+            eval_utterances_per_speaker=args.eval_utterances_per_speaker,
+            sample_rate=16000, crop_seconds=args.crop_seconds, split="eval",
+        )
+        collate_fn = collate_libritts
+
+    print(f"[main] Evaluating on dataset: {args.dataset}")
     eval_loader = DataLoader(eval_ds, batch_size=args.batch_size, shuffle=False,
-                              collate_fn=collate_librispeech, drop_last=False)
+                              collate_fn=collate_fn, drop_last=False)
 
     label = "baseline" if args.checkpoint is None else args.checkpoint
     print(f"\n{'=' * 60}\nEvaluating: {label}\n{'=' * 60}")
@@ -159,7 +196,7 @@ def main():
 
     with open(args.output, "w") as f:
         json.dump({
-            "label": label, "checkpoint": args.checkpoint,
+            "label": label, "checkpoint": args.checkpoint, "dataset": args.dataset,
             "results": {"sim": results["sim_mean"], "pivotal_distance": results["pivotal_distance_mean"]},
         }, f, indent=2)
     print(f"[main] Saved results to {args.output}")
