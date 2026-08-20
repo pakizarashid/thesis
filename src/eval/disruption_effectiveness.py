@@ -151,7 +151,7 @@ def main():
 
     if args.dataset == "librispeech":
         eval_ds = LibriSpeechSubset(
-            root=args.data_root, download=args.data_download, n_speakers=args.n_speakers,
+            root=args.data_root, n_speakers=args.n_speakers,
             utterances_per_speaker=args.utterances_per_speaker,
             n_eval_speakers=args.n_eval_speakers,
             eval_utterances_per_speaker=args.eval_utterances_per_speaker,
