@@ -146,11 +146,60 @@ class LoRAMultiheadAttentionWrapper(nn.Module):
         return attn_output, attn_output_weights
 
 
-def _replace_mha_with_lora(module: nn.Module, r: int, alpha: int, prefix: str = ""):
+class LoRALinearWrapper(nn.Module):
+    """
+    Wraps a frozen nn.Linear, adding a LoRA delta to its weight. Same
+    zero-init/no-op-at-construction property as LoRAMultiheadAttentionWrapper.
+
+    ADDED to test the capacity-limitation hypothesis raised in
+    STAGE2_WRITEUP.md Section 7: the original LoRA wrapping (above) only
+    touches nn.MultiheadAttention's in/out projections inside
+    transformer_decoder / transformer layers. A standard
+    nn.TransformerDecoderLayer / nn.TransformerEncoderLayer also has a
+    feedforward block (linear1 -> activation -> linear2), typically with MORE
+    parameters than the attention projections, that was previously entirely
+    frozen and untouched by any adapter. If the capacity-limitation hypothesis
+    is correct, wrapping these FFN layers too (see `include_ffn` below) is the
+    most direct, cheap test of it -- cheaper than fully unfreezing the module
+    or switching to a non-adapter perturbation mechanism.
+    """
+
+    def __init__(self, linear: nn.Linear, r: int = 8, alpha: int = 16):
+        super().__init__()
+        self.linear = linear  # frozen, kept as submodule so base weights travel with state_dict
+        # Named "linear_lora" (not "delta") so its parameter names contain the
+        # same "_lora." substring the rest of this file's bookkeeping greps
+        # for (see apply_lora_adapters's non_lora_trainable sanity check, and
+        # any external checkpoint-filtering code that does `if "_lora." in k`).
+        self.linear_lora = LoRALinearDelta(linear.in_features, linear.out_features, r=r, alpha=alpha)
+
+    def __getattr__(self, name):
+        try:
+            return super().__getattr__(name)
+        except AttributeError:
+            pass
+        modules = self.__dict__.get("_modules", {})
+        linear = modules.get("linear", None)
+        if linear is not None and hasattr(linear, name):
+            return getattr(linear, name)
+        raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        weight = self.linear.weight + self.linear_lora()
+        return F.linear(x, weight, self.linear.bias)
+
+
+def _replace_mha_with_lora(module: nn.Module, r: int, alpha: int, prefix: str = "",
+                            include_ffn: bool = False, ffn_names=("linear1", "linear2")):
     """
     Recursively walks `module`, replacing every nn.MultiheadAttention child
     with a LoRAMultiheadAttentionWrapper around it. Returns the list of
     (name, wrapper) pairs created, for parameter-group bookkeeping.
+
+    If include_ffn=True, also wraps any direct nn.Linear children named in
+    `ffn_names` (the default 'linear1'/'linear2' matches PyTorch's
+    TransformerEncoderLayer/TransformerDecoderLayer feedforward block) with
+    LoRALinearWrapper. See LoRALinearWrapper's docstring for why this exists.
     """
     created = []
     for name, child in module.named_children():
@@ -159,18 +208,42 @@ def _replace_mha_with_lora(module: nn.Module, r: int, alpha: int, prefix: str = 
             wrapper = LoRAMultiheadAttentionWrapper(child, r=r, alpha=alpha)
             setattr(module, name, wrapper)
             created.append((full_name, wrapper))
+        elif include_ffn and isinstance(child, nn.Linear) and name in ffn_names:
+            wrapper = LoRALinearWrapper(child, r=r, alpha=alpha)
+            setattr(module, name, wrapper)
+            created.append((full_name, wrapper))
         else:
-            created.extend(_replace_mha_with_lora(child, r, alpha, prefix=full_name))
+            created.extend(_replace_mha_with_lora(child, r, alpha, prefix=full_name,
+                                                    include_ffn=include_ffn, ffn_names=ffn_names))
     return created
 
 
-def apply_lora_adapters(backbone, r: int = 8, alpha: int = 16, targets=("msg_processor", "detector")):
+def apply_lora_adapters(backbone, r: int = 8, alpha: int = 16, targets=("msg_processor", "detector"),
+                         include_ffn: bool = False, ffn_r: int = None, ffn_targets: tuple = None):
     """
     Applies LoRA wrapping to msg_processor and/or detector on a VoiceMarkBackbone
     instance (backbone.model.msg_processor / backbone.model.detector). Call this
     AFTER VoiceMarkBackbone.__init__ (which freezes everything). Returns the list
     of newly created LoRA parameter names, for building your optimizer's
     parameter group.
+
+    include_ffn: if True, also LoRA-wraps the transformer feedforward Linear
+        layers (see LoRALinearWrapper). Backward-compatible default (False)
+        reproduces the exact original attention-only behavior.
+    ffn_r: optional rank override applied to every LoRA module (attention AND
+        FFN alike) on targets listed in `ffn_targets` (defaults to `r` if
+        None). Useful for a targeted capacity test -- e.g. keep detector's
+        LoRA at r=8 (it doesn't affect recon_wm / the disruption loss at all,
+        only msg_processor does) while giving msg_processor a much larger
+        rank specifically to test the capacity hypothesis cheaply, without
+        inflating detector's unrelated parameter count. NOTE: this overrides
+        `r` for the whole target, not just its FFN modules -- there is
+        currently no separate attention-only-vs-FFN-only rank control within
+        a single target.
+    ffn_targets: optional subset of `targets` to apply include_ffn to (e.g.
+        ("msg_processor",) only). Defaults to `targets` if None. Restricting
+        this to msg_processor only is recommended for disruption-capacity
+        experiments -- detector's FFN capacity is irrelevant to recon_wm.
 
     Example:
         backbone = VoiceMarkBackbone()
@@ -180,12 +253,20 @@ def apply_lora_adapters(backbone, r: int = 8, alpha: int = 16, targets=("msg_pro
             lr=5e-5,
         )
     """
+    if ffn_r is None:
+        ffn_r = r
+    if ffn_targets is None:
+        ffn_targets = targets
+
     all_created = []
     for target_name in targets:
         submodule = getattr(backbone.model, target_name, None)
         if submodule is None:
             raise ValueError(f"No submodule named '{target_name}' on backbone.model")
-        created = _replace_mha_with_lora(submodule, r=r, alpha=alpha, prefix=target_name)
+        this_include_ffn = include_ffn and (target_name in ffn_targets)
+        this_r = ffn_r if this_include_ffn else r
+        created = _replace_mha_with_lora(submodule, r=this_r, alpha=alpha, prefix=target_name,
+                                          include_ffn=this_include_ffn)
         all_created.extend(created)
 
     # New LoRA parameters default to CPU regardless of where the frozen backbone
