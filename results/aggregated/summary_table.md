@@ -1,6 +1,6 @@
 # Aggregated results summary
 
-Generated from 50 files in results/. Values under 'this project' are measured; the two reference blocks below are literal transcriptions of published numbers, not measured here.
+Generated from 60 files in results/. Values under 'this project' are measured; the two reference blocks below are literal transcriptions of published numbers, not measured here.
 
 
 ## Audio quality (PESQ/STOI/SI-SNR)
@@ -11,6 +11,7 @@ Generated from 50 files in results/. Values under 'this project' are measured; t
 | ./audio_samples/baseline_large                | ./audio_samples/baseline_large                |      2.15   |      0.9133 |        3.806  |     0.035  | This is a test sentence for voice cloning. |         nan      |
 | ./audio_samples/baseline_n50                  | ./audio_samples/baseline_n50                  |      2.1971 |      0.9103 |        3.4258 |     0.045  | This is a test sentence for voice cloning. |           3.2565 |
 | ./audio_samples/low_perturbation_n50          | ./audio_samples/low_perturbation_n50          |      2.3827 |      0.9165 |        4.6574 |     0.04   | This is a test sentence for voice cloning. |           3.254  |
+| ./audio_samples/stage1_final_n25              | ./audio_samples/stage1_final_n25              |      2.3602 |      0.9197 |        5.133  |     0.04   | This is a test sentence for voice cloning. |           3.9495 |
 | ./audio_samples/stage1_low_perturbation       | ./audio_samples/stage1_low_perturbation       |      2.2068 |      0.9061 |        4.9933 |     0.0625 | This is a test sentence for voice cloning. |         nan      |
 | ./audio_samples/stage1_low_perturbation_large | ./audio_samples/stage1_low_perturbation_large |      2.3814 |      0.9188 |        5.0799 |     0.04   | This is a test sentence for voice cloning. |         nan      |
 
@@ -19,9 +20,11 @@ Generated from 50 files in results/. Values under 'this project' are measured; t
 
 | label                                                                  |   acc_before |   acc_after |   acc_drop |
 |:-----------------------------------------------------------------------|-------------:|------------:|-----------:|
+| ./checkpoints/stage3_audiopure_robust/stage3_epoch4.pt                 |       1      |      0.4775 |     0.5225 |
 | baseline                                                               |       0.9825 |      0.4875 |     0.495  |
 | ./checkpoints/stage1_full_recalibrated_v3/recalibrated_final.pt        |       1      |      0.4925 |     0.5075 |
 | ./checkpoints/stage1_aug/stage1_epoch29.pt                             |       0.9875 |      0.4925 |     0.495  |
+| ./checkpoints/stage1_final_scaleup_recalibrated/recalibrated_final.pt  |       0.9931 |      0.49   |     0.5031 |
 | ./checkpoints/stage1_full/stage1_epoch29.pt                            |       1      |      0.4825 |     0.5175 |
 | ./checkpoints/stage2_sim_longrun/stage2_epoch29.pt                     |       0.995  |      0.495  |     0.5    |
 | ./checkpoints/stage1_low_perturbation/low_perturbation_final.pt        |       1      |      0.5325 |     0.4675 |
@@ -31,13 +34,15 @@ Generated from 50 files in results/. Values under 'this project' are measured; t
 
 ## Augmentation robustness
 
-| label                                                           |    clean |   masking |   shuffling |   replacing |   neural |   vctk_detection_acc |
-|:----------------------------------------------------------------|---------:|----------:|------------:|------------:|---------:|---------------------:|
-| ./checkpoints/stage1_aug/stage1_epoch29.pt                      |   0.9777 |    0.9911 |      0.9821 |      0.9732 |   0.8638 |             nan      |
-| baseline                                                        |   0.9866 |    0.9888 |      0.9866 |      0.9621 |   0.9509 |             nan      |
-| ./checkpoints/stage1_full/stage1_epoch29.pt                     |   0.9799 |    0.9799 |      0.9777 |      0.9509 |   0.8884 |             nan      |
-| baseline                                                        | nan      |  nan      |    nan      |    nan      | nan      |               0.9978 |
-| ./checkpoints/stage1_full_recalibrated_v3/recalibrated_final.pt | nan      |  nan      |    nan      |    nan      | nan      |               0.9978 |
+| label                                                                                            |      sim |    clean |   masking |   shuffling |   replacing |   neural |   sim_before |   sim_after |   sim_drop |   pivotal_before |   pivotal_after |   detection_acc_before |   detection_acc_after |   detection_acc_drop |   perturbation_linf_mean |   perturbation_snr_db_mean |    far |   n_trials |   n_candidates |   mean_true_hamming_dist |   mean_min_distractor_hamming_dist |   vctk_detection_acc |
+|:-------------------------------------------------------------------------------------------------|---------:|---------:|----------:|------------:|------------:|---------:|-------------:|------------:|-----------:|-----------------:|----------------:|-----------------------:|----------------------:|---------------------:|-------------------------:|---------------------------:|-------:|-----------:|---------------:|-------------------------:|-----------------------------------:|---------------------:|
+| ./checkpoints/stage1_aug/stage1_epoch29.pt                                                       | nan      |   0.9777 |    0.9911 |      0.9821 |      0.9732 |   0.8638 |     nan      |    nan      |   nan      |         nan      |        nan      |                 nan    |              nan      |             nan      |                  nan     |                   nan      | nan    |        nan |            nan |                   nan    |                             nan    |             nan      |
+| baseline                                                                                         | nan      |   0.9866 |    0.9888 |      0.9866 |      0.9621 |   0.9509 |     nan      |    nan      |   nan      |         nan      |        nan      |                 nan    |              nan      |             nan      |                  nan     |                   nan      | nan    |        nan |            nan |                   nan    |                             nan    |             nan      |
+| ./checkpoints/stage1_full/stage1_epoch29.pt                                                      | nan      |   0.9799 |    0.9799 |      0.9777 |      0.9509 |   0.8884 |     nan      |    nan      |   nan      |         nan      |        nan      |                 nan    |              nan      |             nan      |                  nan     |                   nan      | nan    |        nan |            nan |                   nan    |                             nan    |             nan      |
+| pgd_eps0.002_n10_lwm1.0_on_./checkpoints/stage1_final_scaleup_recalibrated/recalibrated_final.pt |   0.2616 | nan      |  nan      |    nan      |    nan      | nan      |       0.4708 |      0.2616 |     0.2092 |           2.2076 |          2.1088 |                   0.99 |                0.9988 |              -0.0088 |                    0.002 |                    32.7048 | nan    |        nan |            nan |                   nan    |                             nan    |             nan      |
+| ./checkpoints/stage1_final_scaleup_recalibrated/recalibrated_final.pt                            | nan      | nan      |  nan      |    nan      |    nan      | nan      |     nan      |    nan      |   nan      |         nan      |        nan      |                 nan    |              nan      |             nan      |                  nan     |                   nan      |   0.01 |        100 |            100 |                     0.07 |                               3.21 |             nan      |
+| baseline                                                                                         | nan      | nan      |  nan      |    nan      |    nan      | nan      |     nan      |    nan      |   nan      |         nan      |        nan      |                 nan    |              nan      |             nan      |                  nan     |                   nan      | nan    |        nan |            nan |                   nan    |                             nan    |               0.9978 |
+| ./checkpoints/stage1_full_recalibrated_v3/recalibrated_final.pt                                  | nan      | nan      |  nan      |    nan      |    nan      | nan      |     nan      |    nan      |   nan      |         nan      |        nan      |                 nan    |              nan      |             nan      |                  nan     |                   nan      | nan    |        nan |            nan |                   nan    |                             nan    |               0.9978 |
 
 
 ## Disruption (SIM)
@@ -50,8 +55,12 @@ Generated from 50 files in results/. Values under 'this project' are measured; t
 | baseline                                                                                   | nan                                |      nan    |    nan      |      nan      |   nan      | nan                                        |   0.4552 |             1.8747 |     nan      |    nan      |   nan      |         nan      |        nan      |               nan      |              nan      |             nan      |                  nan     |                   nan      |
 | baseline                                                                                   | nan                                |      nan    |    nan      |      nan      |   nan      | nan                                        |   0.451  |             1.8734 |     nan      |    nan      |   nan      |         nan      |        nan      |               nan      |              nan      |             nan      |                  nan     |                   nan      |
 | pgd_eps0.001_n10_lwm1.0_on_./checkpoints/stage1_full_recalibrated_v3/recalibrated_final.pt | nan                                |      nan    |    nan      |      nan      |   nan      | nan                                        |   0.2884 |           nan      |       0.4661 |      0.2884 |     0.1777 |           1.8657 |          1.7939 |                 0.9952 |                1      |              -0.0048 |                    0.001 |                    39.323  |
+| pgd_eps0.002_n10_lwm1.0_on_./checkpoints/stage1_full_recalibrated_v3/recalibrated_final.pt | nan                                |      nan    |    nan      |      nan      |   nan      | nan                                        |   0.242  |           nan      |       0.4435 |      0.242  |     0.2015 |           2.2778 |          2.1517 |                 0.9943 |                0.9981 |              -0.0038 |                    0.002 |                    31.6939 |
+| pgd_eps0.002_n10_lwm1.0_on_./checkpoints/stage1_full_recalibrated_v3/recalibrated_final.pt | nan                                |      nan    |    nan      |      nan      |   nan      | nan                                        |   0.1868 |           nan      |       0.4477 |      0.1868 |     0.2609 |           2.2214 |          1.9751 |                 0.9904 |                0.9928 |              -0.0024 |                    0.002 |                    31.5681 |
 | pgd_eps0.002_n10_lwm1.0_on_./checkpoints/stage1_full_recalibrated_v3/recalibrated_final.pt | nan                                |      nan    |    nan      |      nan      |   nan      | nan                                        |   0.2234 |           nan      |       0.4544 |      0.2234 |     0.2309 |           2.0047 |          2.0241 |                 0.9969 |                0.9988 |              -0.0019 |                    0.002 |                    32.6713 |
 | pgd_eps0.002_n10_lwm1.0_on_./checkpoints/stage1_full_recalibrated_v3/recalibrated_final.pt | nan                                |      nan    |    nan      |      nan      |   nan      | nan                                        |   0.2507 |           nan      |       0.4539 |      0.2507 |     0.2032 |           1.8644 |          1.7963 |                 0.9952 |                0.9952 |               0      |                    0.002 |                    33.3035 |
+| pgd_eps0.002_n10_lwm1.0_on_./checkpoints/stage1_full_recalibrated_v3/recalibrated_final.pt | nan                                |      nan    |    nan      |      nan      |   nan      | nan                                        |   0.2099 |           nan      |       0.4688 |      0.2099 |     0.259  |           2.0611 |          2.0712 |                 0.9944 |                1      |              -0.0056 |                    0.002 |                    33.3178 |
+| pgd_eps0.002_n10_lwm1.0_on_./checkpoints/stage1_full_recalibrated_v3/recalibrated_final.pt | nan                                |      nan    |    nan      |      nan      |   nan      | nan                                        |   0.2428 |           nan      |       0.4985 |      0.2428 |     0.2557 |           1.8067 |          1.8707 |                 1      |                1      |               0      |                    0.002 |                    31.5062 |
 | pgd_eps0.003_n10_lwm1.0_on_./checkpoints/stage1_full_recalibrated_v3/recalibrated_final.pt | nan                                |      nan    |    nan      |      nan      |   nan      | nan                                        |   0.2308 |           nan      |       0.4485 |      0.2308 |     0.2176 |           1.8443 |          1.8033 |                 0.9952 |                0.9928 |               0.0024 |                    0.003 |                    29.7926 |
 | pgd_eps0.005_n10_lwm1.0_on_./checkpoints/stage1_full_recalibrated_v3/recalibrated_final.pt | nan                                |      nan    |    nan      |      nan      |   nan      | nan                                        |   0.2204 |           nan      |       0.461  |      0.2204 |     0.2405 |           1.8577 |          1.7551 |                 0.9952 |                0.9928 |               0.0024 |                    0.005 |                    25.3937 |
 | pgd_eps0.007_n10_lwm1.0_on_./checkpoints/stage1_full_recalibrated_v3/recalibrated_final.pt | nan                                |      nan    |    nan      |      nan      |   nan      | nan                                        |   0.2199 |           nan      |       0.4567 |      0.2199 |     0.2368 |           1.8715 |          1.9096 |                 0.9952 |                0.9904 |               0.0048 |                    0.007 |                    22.4703 |
@@ -73,14 +82,15 @@ Generated from 50 files in results/. Values under 'this project' are measured; t
 
 | label                                                                  |   false_positive_rate |   mean_presence_logit |
 |:-----------------------------------------------------------------------|----------------------:|----------------------:|
-| baseline                                                               |                  0.04 |               -7.2496 |
-| ./checkpoints/stage1_full_recalibrated/recalibrated_final.pt           |                  0.28 |               -2.8596 |
-| ./checkpoints/stage1_full_recalibrated_v2/recalibrated_final.pt        |                  0.28 |               -4.6249 |
-| ./checkpoints/stage1_full_recalibrated_v3/recalibrated_final.pt        |                  0.04 |               -5.1028 |
-| ./checkpoints/stage1_full/stage1_epoch29.pt                            |                  0.76 |                0.2699 |
-| ./checkpoints/stage2_sim_longrun/stage2_epoch29.pt                     |                  0.84 |                0.4949 |
-| ./checkpoints/stage2_sim_longrun_recalibrated/recalibrated_final.pt    |                  0.12 |               -4.1435 |
-| ./checkpoints/stage2_sim_longrun_recalibrated_v2/recalibrated_final.pt |                  0    |               -5.7004 |
+| baseline                                                               |                 0.04  |               -7.2496 |
+| ./checkpoints/stage1_full_recalibrated/recalibrated_final.pt           |                 0.28  |               -2.8596 |
+| ./checkpoints/stage1_full_recalibrated_v2/recalibrated_final.pt        |                 0.28  |               -4.6249 |
+| ./checkpoints/stage1_full_recalibrated_v3/recalibrated_final.pt        |                 0.04  |               -5.1028 |
+| ./checkpoints/stage1_final_scaleup_recalibrated/recalibrated_final.pt  |                 0.065 |               -6.5534 |
+| ./checkpoints/stage1_full/stage1_epoch29.pt                            |                 0.76  |                0.2699 |
+| ./checkpoints/stage2_sim_longrun/stage2_epoch29.pt                     |                 0.84  |                0.4949 |
+| ./checkpoints/stage2_sim_longrun_recalibrated/recalibrated_final.pt    |                 0.12  |               -4.1435 |
+| ./checkpoints/stage2_sim_longrun_recalibrated_v2/recalibrated_final.pt |                 0     |               -5.7004 |
 
 
 ## Published reference numbers (NOT measured by this pipeline)
