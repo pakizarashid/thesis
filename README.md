@@ -1,6 +1,8 @@
 # Dual-Defense Audio Watermarking for Zero-Shot Voice Cloning
 
-MSc thesis project: a joint traceability + disruption audio watermarking system built on VoiceMark (traceability) and a SafeSpeech-derived disruption objective, evaluated against AudioPure (diffusion-based purification). All training uses LibriSpeech `train-clean-100`; VCTK is additionally used for evaluation-only cross-dataset generalization testing (see [Dataset section](#dataset) for exact scope and rationale).
+MSc thesis project: a joint traceability + disruption audio watermarking system built on VoiceMark (traceability) and a SafeSpeech-derived disruption objective, evaluated against AudioPure (diffusion-based purification). All training uses LibriSpeech `train-clean-100`; VCTK and LibriTTS are additionally used for evaluation-only cross-dataset generalization testing (see Dataset section for exact scope and rationale).
+
+Headline results: (1) six independent attempts to train the disruption objective into shared embedder weights all converged to a negative result — diagnosed as a mechanism mismatch, not a tuning failure; (2) switching to direct waveform-space PGD perturbation (disruption_pgd.py), matching SafeSpeech's own real mechanism, fixes this decisively and is confirmed at n=100 across three corpora (LibriSpeech, VCTK, LibriTTS) at one fixed, imperceptibility-calibrated operating point — this is the thesis's central positive contribution; (3) a separate, dedicated fine-tuning effort to make the detector survive AudioPure purification (train_stage3_audiopure_robust.py) was designed, run across three training configurations, and independently verified twice — concluded as a genuine negative result that localizes the vulnerability to the watermark's underlying representation, not the detector head.
 
 **Full technical writeups**: [`STAGE1_WRITEUP.md`](./STAGE1_WRITEUP.md) · [`STAGE2_WRITEUP.md`](./STAGE2_WRITEUP.md) · [`AUDIOPURE_WRITEUP.md`](./AUDIOPURE_WRITEUP.md)
 
