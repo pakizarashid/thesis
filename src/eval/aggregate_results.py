@@ -83,6 +83,10 @@ def _classify(row: dict) -> str:
         return "Audio quality (PESQ/STOI/SI-SNR)"
     if "audioseal" in fname:
         return "AudioSeal baseline"
+    if "far" in fname:
+        return "FAR (attribution)"
+    if "far" in fname:
+        return "FAR (attribution)"
     if any(k in row for k in ("clean", "masking", "shuffling", "replacing", "neural")):
         return "Augmentation robustness"
     return "Other"

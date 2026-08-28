@@ -540,6 +540,7 @@ def main():
                 "detection_acc_drop": means["detection_acc_before"] - means["detection_acc_after"],
                 "perturbation_linf_mean": means["perturbation_linf"],
                 "perturbation_snr_db_mean": means["perturbation_snr_db"],
+                "n_trials": len(eval_ds),
                 # Backward-compat key so this drops into aggregate_results.py's
                 # existing "Disruption (SIM)" classification/table unmodified.
                 "sim": means["sim_after"],
