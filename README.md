@@ -2,19 +2,19 @@
 
 MSc thesis: a joint traceability + anti-cloning watermarking system built on VoiceMark (traceability) and a SafeSpeech-derived disruption objective, stress-tested against AudioPure (diffusion-based purification). Trained on LibriSpeech `train-clean-100`; VCTK and LibriTTS are used for evaluation-only generalization checks.
 
-**Full writeups:** [Stage 1](./STAGE1_WRITEUP.md) · [Stage 2](./STAGE2_WRITEUP.md) · [AudioPure](./AUDIOPURE_WRITEUP.md) 
+**Full writeups:** [Stage 1](./STAGE1_WRITEUP.md) · [Stage 2](./STAGE2_WRITEUP.md) · [AudioPure](./AUDIOPURE_WRITEUP.md) *(these predate the PGD and Stage 3 work below — this README is the up-to-date account until they're refreshed)*
 
 ---
 **TL;DR:** training the disruption objective into the watermark embedder's own weights (six variations tried) never worked — the shared-weight LoRA setup doesn't have the optimization freedom that SafeSpeech's real per-utterance PGD mechanism has. Switching to that mechanism directly (`disruption_pgd.py`) fixed it: a small, calibrated waveform perturbation disrupts voice cloning while keeping detection accuracy and audio quality intact, confirmed at n=100 across three corpora with zero retuning. That's the thesis's central result. Separately, fine-tuning the detector to survive AudioPure purification was tried three times and independently verified twice — it doesn't work, which itself localizes the vulnerability to the representation, not the detector.
 
 **Where this stands as research:** this is not a straight reproduction. 
 1. Stage 1's traceability watermarking reproduces VoiceMark's own published numbers, validated at increasing scale — necessary groundwork, not the contribution by itself.
-2. AudioPure diffusion purification defeats the watermark, a gap VoiceMark's own paper never tests and never claims to survive; this project diagnosed *why it resists fixing* two independent ways — three rounds of detector fine-tuning directly against purified audio (Stage 3), and a 3x training-data scale-up  — both converge to the same chance-level collapse, which localizes the failure to the frozen representation, not to detector capacity or data volume. That diagnosis is itself a finding, not just a negative result.
-3. The PGD-hybrid disruption mechanism is a working, novel construction neither source paper has: it disrupts unauthorized voice cloning while *improving* watermark detection accuracy, confirmed at n=100 across three corpora at one fixed operating point with zero retuning. Reproduction + diagnosed gap + working construction is the shape of the contribution — what's still open is a fix for (2), which is the natural next step, not yet attempted (see Known limitations).
+2. AudioPure diffusion purification defeats the watermark, a gap VoiceMark's own paper never tests and never claims to survive; this project diagnosed *why it resists fixing* two independent ways — three rounds of detector fine-tuning directly against purified audio (Stage 3), and a 3x training-data scale-up — both converge to the same chance-level collapse, which localizes the failure to the frozen representation, not to detector capacity or data volume. That diagnosis is itself a finding, not just a negative result.
+3. The PGD-hybrid disruption mechanism is a working, novel *combination*: PGD itself is SafeSpeech's own mechanism, not something this project invented, but neither paper solves it jointly with a watermark-preservation objective — SafeSpeech's PGD only disrupts, VoiceMark's watermark only marks. This project's PGD solves both simultaneously, disrupting unauthorized voice cloning while *improving* watermark detection accuracy, confirmed at n=100 across three corpora at one fixed operating point with zero retuning. Reproduction + diagnosed gap + working combined mechanism is the shape of the contribution — what's still open is a fix for (2), which is the natural next step, not yet attempted (see Known limitations).
 
 ---
 
-## This update — 3x data scale-up, finalized (2026-08-28)
+## This update — 3x data scale-up, finalized
 
 ![Stage 1 findings summary](./stage1_findings_summary.png)
 
@@ -27,6 +27,8 @@ Training data increased 3x (60 speakers × 15 utterances = 900 train utterances,
 | PESQ / STOI / SI-SNR | 2.360 / 0.920 / 3.95 dB | 2.383 / 0.917 / 3.25 dB |
 | AudioPure: ACC before → after | 99.31% → 49.00% (n=100) | ~100% → 49.3% (n=25, v3) |
 | PGD hybrid, re-confirmed on new checkpoint | working, Δ SIM ≈ 0.209, same epsilon=0.002/lambda_wm=1.0 | Δ SIM 0.231 (LibriSpeech, prior checkpoint) |
+
+**New this update:** a direct comparison against SafeSpeech's own published disruption numbers, followed by a real epsilon sweep to close the gap (Results Section 3). At the original gentle operating point (ε=0.002), disruption is real but substantially gentler than SafeSpeech's (~51% vs. their 66–98%). Raising epsilon to 0.015 closes most of that gap — 66.7% relative disruption, inside SafeSpeech's own range, watermark ACC still 99%+ — at a real, reported cost to audio quality (PESQ 1.75→1.20). Both operating points are now documented, giving a fuller disruption/quality/traceability tradeoff curve than either source paper reports on its own.
 
 Read together with Panel B above: 3x more training data moved the false-positive rate slightly (4.0% → 6.5%, still on a larger, more reliable n) but left the AudioPure collapse completely unchanged (~49% both before and after this scale-up) — the second independent line of evidence (after Stage 3's detector fine-tuning) that this is not something more data or more training fixes.
 
@@ -185,6 +187,28 @@ Disruption is flat from epsilon=0.003–0.01; below 0.003 it genuinely weakens. 
 
 † 98 of 100 requested utterances were available for the sampled speakers. Both VCTK and LibriTTS show accuracy *improving*, not dropping — the operating point transfers with no per-corpus tuning.
 
+**How this compares to SafeSpeech's own published disruption magnitude** — this comparison was missing from every earlier version of this document; the honest answer is that our disruption is real but substantially gentler than SafeSpeech's own reported numbers, by design:
+
+| Setting | Clean SIM → protected SIM | Relative drop | Epsilon (L∞) | Notes |
+|---|---|---|---|---|
+| SafeSpeech, LibriTTS, BERT-VITS2 (their paper) | 0.604 → 0.204 | ~66% | 8/255 ≈ 0.031 | fine-tuning-based threat model |
+| SafeSpeech, LibriTTS, StyleTTS2 (their paper) | 0.587 → 0.011 | ~98% | 8/255 ≈ 0.031 | fine-tuning-based threat model |
+| SafeSpeech, zero-shot F5-TTS (their paper, closest threat model to ours) | 0.885 → 0.094 | ~89% | 8/255 ≈ 0.031 | zero-shot cloning, different surrogate model |
+| **This project, zero-shot YourTTS, final operating point** | **0.4544 → 0.2234** | **~51%** | **0.002** | **zero-shot cloning, watermark + quality preserved simultaneously** |
+
+SafeSpeech's own paper also reports WER on protected audio rising from 24.0% to 99.6% and MOS collapsing to 1.07/5 — their protected clones are near-total garbage. Ours are not: PESQ stays at 1.75–2.36 and STOI at 0.85–0.92 at the gentle operating point, because quality preservation and watermark-detection preservation are explicit, simultaneous constraints in this project's objective that SafeSpeech's own mechanism does not carry. The epsilon we operate at (0.002) is also over 15x tighter than SafeSpeech's own budget (8/255 ≈ 0.031) — this was flagged as an open question: does raising epsilon toward their budget close the gap? It's now been tested directly.
+
+**Follow-up: closing the gap by raising epsilon (n_steps also increased 10→20; verified in an isolated control that this alone accounts for only ~2.4pp of the effect — epsilon is the dominant lever, not optimization depth).**
+
+| Operating point | Relative SIM drop | Watermark ACC | PESQ | STOI | WER |
+|---|---|---|---|---|---|
+| ε=0.002 (gentle, original) | 50.8% | improved (+0.19pp) | 1.747 | 0.887 | not measured at this point |
+| **ε=0.015 (aggressive, recommended)** | **66.7%** | **99.04% (−0.96pp)** | **1.195** | **0.818** | **0.045** |
+| ε=0.02 (pushed further) | 67.1% | 100% (0pp, perfect) | 1.134 | 0.796 | 0.050 |
+| ε=0.0314 (SafeSpeech's exact budget, sim-only ceiling) | 74.7% | not measured with watermark preservation on | — | — | — |
+
+Raising epsilon does close most of the gap: at ε=0.015, relative disruption reaches 66.7% — inside SafeSpeech's own reported range (66–98%) — while watermark detection stays at 99%+. Past ε=0.015 the curve shows clear diminishing returns (ε=0.02 buys only +0.4pp more disruption for a real additional quality cost), so ε=0.015 is the recommended second operating point, not ε=0.02 or SafeSpeech's full budget. The honest cost: PESQ drops from 1.75 to 1.20 — this is no longer the "near-transparent" claim the gentle operating point earns, and should not be described as imperceptible. What holds up well even here: WER stays at 0.045 versus SafeSpeech's own 0.996 — even this more aggressive setting keeps speech almost perfectly intelligible, unlike SafeSpeech's protected audio, which is a real, measured difference in what the two mechanisms optimize for (speaker-identity disruption specifically, versus general signal corruption). **This project now reports two documented operating points on the disruption/quality/traceability tradeoff curve — a fuller characterization than either source paper provides on its own, each of which reports exactly one fixed epsilon.**
+
 ### 4. AudioPure — purification attack
 
 | Condition | ACC before | ACC after purification | Drop |
@@ -262,7 +286,7 @@ Detection generalizes cleanly to a corpus never seen in training. (See Section 3
 ## Known limitations
 
 - Single training corpus (LibriSpeech), modest scale (100–300 training utterances) — a compute-budget tradeoff, not an oversight.
-- SafeSpeech's disruption loss was reimplemented from their published formulas, not validated against their own reported numbers on their own setup.
+- SafeSpeech's disruption loss was reimplemented from their published formulas. Their own reported disruption magnitude (SIM drops of 66–98% across models, WER rising to 99.6%, at epsilon=8/255) is compared against ours directly (Section 3): the gentle operating point (epsilon=0.002) is real but substantially gentler (~51%). A follow-up epsilon sweep (Section 3) confirmed raising epsilon closes most of the gap — a second operating point (epsilon=0.015) reaches 66.7% relative disruption, inside SafeSpeech's own range, while keeping watermark ACC at 99%+ — at a real, honestly-reported quality cost (PESQ drops from 1.75 to 1.20). Not yet done: the same sweep repeated across VCTK/LibriTTS and at n=100 (currently n=25 spot-checks only, matching the original epsilon-calibration methodology).
 - AudioPure's checkpoint is trained on isolated spoken digits (SC09), a domain gap from this project's continuous sentences — addressed via architecture verification and precedent (see `AUDIOPURE_WRITEUP.md`), not eliminated.
 - The PGD-hybrid-protected audio (Section 3) has not been separately re-run through `audiopure_eval.py`; the claim that it also collapses under AudioPure purification (Section 4) is a reasoned inference from the shared signal chain, not a directly confirmed measurement.
 - The PGD hybrid's audio-quality numbers at the final operating point (PESQ 1.747 / STOI 0.887) are a n=4 spot-check, not the n=50 sample size used for the watermark-only baseline in Section 7.
