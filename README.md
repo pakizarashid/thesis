@@ -36,6 +36,59 @@ Read together with Panel B above: 3x more training data moved the false-positive
 
 ## Pipeline overview
 
+                    THESIS QUESTION
+                         │
+                         ▼
+       Can we protect speech from AI voice cloning
+       while keeping the source traceable?
+                         │
+             ┌───────────┴───────────┐
+             ▼                       ▼
+        VoiceMark                 SafeSpeech
+       Traceability              Anti-cloning
+             │                       │
+             └───────────┬───────────┘
+                         ▼
+              First try: train both
+              behaviors into model
+                         │
+                         ▼
+                 ❌ DOES NOT WORK
+                         │
+             6 systematic experiments
+                         │
+                         ▼
+              Diagnose mechanism mismatch
+                         │
+                         ▼
+               Use per-utterance PGD
+                         │
+                         ▼
+                ✅ PGD HYBRID WORKS
+                         │
+              ┌──────────┴──────────┐
+              ▼                     ▼
+       Clone disruption       Watermark preserved
+              │                     │
+              └──────────┬──────────┘
+                         ▼
+              Test against AudioPure
+                         │
+                         ▼
+                 ❌ Watermark lost
+                         │
+                ┌────────┴────────┐
+                ▼                 ▼
+          More training       3× more data
+                │                 │
+                └────────┬────────┘
+                         ▼
+                 ❌ Still fails
+                         │
+                         ▼
+              Vulnerability localized
+              to representation
+
 ![Data flow diagram](./pipeline_diagram.png)
 
 Green boxes are the only trainable components; yellow boxes are large frozen models used as fixed tools; pink ellipses are where measurements come out.
