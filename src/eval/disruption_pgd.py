@@ -371,6 +371,17 @@ def main():
                          "|grad_wm| ratio at delta, which is the value to start lambda_wm at (same "
                          "balancing logic as lambda_disrupt_max in gradient_diagnostic.py).")
 
+    p.add_argument("--check_audiopure", action="store_true",
+                    help="NEW: also purify the final PGD-protected (waveform-space) audio through "
+                         "AudioPure's DiffWave denoiser and report watermark ACC after purification, "
+                         "in this same run. README's own 'Known limitations' flagged this as an "
+                         "untested inference ('the same collapse is expected... but that's an "
+                         "inference, not a confirmed measurement') -- this flag closes that gap with "
+                         "an actual measurement. Use --repo_root to point at the checkout root if not "
+                         "running from repo root.")
+    p.add_argument("--repo_root", type=str, default=".")
+    p.add_argument("--reverse_timestep", type=int, default=25)
+
     p.add_argument("--diagnostic", action="store_true",
                     help="Smoke-test mode: 1 batch, 1 PGD step, verbose per-step printing, exits "
                          "WITHOUT requiring/writing --output. Run this FIRST, same discipline as "
@@ -525,6 +536,30 @@ def main():
     print(f"Perturbation: mean L-inf={means['perturbation_linf']:.5f}, "
           f"mean SNR={means['perturbation_snr_db']:.1f} dB")
 
+    audiopure_result = None
+    if args.check_audiopure:
+        print(f"\n{'=' * 60}\nAudioPure survival check (NEW -- never measured before for "
+              f"waveform-space PGD-protected audio)\n{'=' * 60}")
+        sys.path.insert(0, os.path.dirname(__file__))
+        from audiopure_eval import build_audiopure_denoiser
+        denoiser = build_audiopure_denoiser(args.repo_root, reverse_timestep=args.reverse_timestep)
+        acc_after_purify = []
+        for batch_idx, batch in enumerate(eval_loader):
+            clean_audio = batch["waveform"].to(device)
+            message = random_message(16, clean_audio.shape[0], device, seed=123 + batch_idx)
+            with torch.no_grad():
+                _rw, perturbed_final, _d = pgd_perturb(
+                    backbone, surrogate, clean_audio, message, args.surrogate_text,
+                    args.epsilon, step_size, args.n_steps, args.random_start, lambda_wm=args.lambda_wm,
+                )
+                purified = denoiser(perturbed_final)
+                acc = detect_acc(backbone, purified, message)
+            acc_after_purify.append(acc)
+            print(f"  [audiopure batch {batch_idx}] watermark ACC after purification of protected audio: {acc:.4f}")
+        audiopure_result = sum(acc_after_purify) / len(acc_after_purify)
+        print(f"\nMean watermark ACC after AudioPure purification of WAVEFORM-PGD-protected audio: "
+              f"{audiopure_result:.4f}")
+
     with open(args.output, "w") as f:
         json.dump({
             "label": label, "checkpoint": args.checkpoint, "dataset": args.dataset,
@@ -544,6 +579,7 @@ def main():
                 # Backward-compat key so this drops into aggregate_results.py's
                 # existing "Disruption (SIM)" classification/table unmodified.
                 "sim": means["sim_after"],
+                "audiopure_acc_after_mean": audiopure_result,
             },
         }, f, indent=2)
     print(f"[main] Saved results to {args.output}")
