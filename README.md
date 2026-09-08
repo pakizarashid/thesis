@@ -5,16 +5,13 @@ MSc thesis: a joint traceability + anti-cloning watermarking system built on Voi
 **Full writeups:** [Stage 1](./STAGE1_WRITEUP.md) · [Stage 2](./STAGE2_WRITEUP.md) · [AudioPure](./AUDIOPURE_WRITEUP.md) *(these predate the PGD and Stage 3 work below — this README is the up-to-date account until they're refreshed)*
 
 ---
-**TL;DR:** training the disruption objective into the watermark embedder's own weights (six variations tried) never worked — the shared-weight LoRA setup doesn't have the optimization freedom that SafeSpeech's real per-utterance PGD mechanism has. Switching to that mechanism directly (`disruption_pgd.py`) fixed it: a small, calibrated waveform perturbation disrupts voice cloning while keeping detection accuracy and audio quality intact, confirmed at n=100 across three corpora with zero retuning. That's the thesis's central result. Separately, fine-tuning the detector to survive AudioPure purification was tried three times and independently verified twice — it doesn't work, which itself localizes the vulnerability to the representation, not the detector.
+**TL;DR:** training the disruption objective into the watermark embedder's own weights (six variations tried) never worked — the shared-weight LoRA setup doesn't have the optimization freedom that SafeSpeech's real per-utterance, epsilon-bounded sign-gradient perturbation mechanism has (algorithmically the same family widely called PGD in adversarial ML — Madry et al.'s method — though SafeSpeech's own paper doesn't use that term itself, framing it instead via the unlearnable-examples literature). Switching to that mechanism directly (`disruption_pgd.py`, this project's own naming) fixed it: a small, calibrated waveform perturbation disrupts voice cloning while keeping detection accuracy and audio quality intact, confirmed at n=100 across three corpora with zero retuning. That's the thesis's central result. Separately, fine-tuning the detector to survive AudioPure purification was tried three times and independently verified twice — it doesn't work, which itself localizes the vulnerability to the representation, not the detector.
 
-**Where this stands as research:** this is not a straight reproduction. 
-1. Stage 1's traceability watermarking reproduces VoiceMark's own published numbers, validated at increasing scale — necessary groundwork, not the contribution by itself.
-2. AudioPure diffusion purification defeats the watermark, a gap VoiceMark's own paper never tests and never claims to survive; this project diagnosed *why it resists fixing* two independent ways — three rounds of detector fine-tuning directly against purified audio (Stage 3), and a 3x training-data scale-up — both converge to the same chance-level collapse, which localizes the failure to the frozen representation, not to detector capacity or data volume. That diagnosis is itself a finding, not just a negative result.
-3. The PGD-hybrid disruption mechanism is a working, novel *combination*: PGD itself is SafeSpeech's own mechanism, not something this project invented, but neither paper solves it jointly with a watermark-preservation objective — SafeSpeech's PGD only disrupts, VoiceMark's watermark only marks. This project's PGD solves both simultaneously, disrupting unauthorized voice cloning while *improving* watermark detection accuracy, confirmed at n=100 across three corpora at one fixed operating point with zero retuning. Reproduction + diagnosed gap + working combined mechanism is the shape of the contribution — what's still open is a fix for (2), which is the natural next step, not yet attempted (see Known limitations).
+**Where this stands as research, in one paragraph:** this is not a straight reproduction. (1) Stage 1's traceability watermarking reproduces VoiceMark's own published *augmentation-robustness* numbers, validated at increasing scale — necessary groundwork, not the contribution by itself, and a narrower claim than "the watermark survives cloning" (see (4)). (2) AudioPure diffusion purification defeats the watermark, a gap VoiceMark's own paper never tests and never claims to survive; this project diagnosed *why it resists fixing* two independent ways — three rounds of detector fine-tuning directly against purified audio (Stage 3), and a 3x training-data scale-up (this update) — both converge to the same chance-level collapse, which localizes the failure to the frozen representation, not to detector capacity or data volume. That diagnosis is itself a finding, not just a negative result. (3) The PGD-hybrid disruption mechanism is a working, novel *combination*: the underlying algorithm — iterative, epsilon-bounded, sign-gradient perturbation — is SafeSpeech's own mechanism, not something this project invented (SafeSpeech's own paper doesn't call it "PGD," though it matches that method's textbook definition — see the SafeSpeech comparison in Section 3 for the precise distinction). Neither paper solves it jointly with a watermark-preservation objective — SafeSpeech's mechanism only disrupts, VoiceMark's watermark only marks. This project's version (named `disruption_pgd.py` here, using this project's own terminology) solves both simultaneously, disrupting unauthorized voice cloning while *improving* watermark detection accuracy, confirmed at n=100 across three corpora at one fixed operating point with zero retuning. (4) A distinct, previously-untested question — does the watermark survive real zero-shot cloning specifically, not just augmentations — turns out to be architecture-dependent: near-chance under YourTTS (protected or not), weak-but-real (~5 SD above chance, still far below VoiceMark's claimed 95%+) under XTTS (Section 9). This narrows the traceability claim honestly rather than leaving it implied by (1); it is a genuine open problem, not yet solved by anything in this repo. Reproduction + diagnosed AudioPure gap + working combined disruption/watermark mechanism + honestly-scoped cloning-survival finding is the shape of the contribution — what's still open is a fix for (2) and (4), neither yet attempted (see Known limitations).
 
 ---
 
-## This update — 3x data scale-up, finalized
+## This update — 3x data scale-up, finalized (2026-08-28)
 
 ![Stage 1 findings summary](./stage1_findings_summary.png)
 
@@ -35,59 +32,6 @@ Read together with Panel B above: 3x more training data moved the false-positive
 ---
 
 ## Pipeline overview
-
-                    THESIS QUESTION
-                         │
-                         ▼
-       Can we protect speech from AI voice cloning
-       while keeping the source traceable?
-                         │
-             ┌───────────┴───────────┐
-             ▼                       ▼
-        VoiceMark                 SafeSpeech
-       Traceability              Anti-cloning
-             │                       │
-             └───────────┬───────────┘
-                         ▼
-              First try: train both
-              behaviors into model
-                         │
-                         ▼
-                 ❌ DOES NOT WORK
-                         │
-             6 systematic experiments
-                         │
-                         ▼
-              Diagnose mechanism mismatch
-                         │
-                         ▼
-               Use per-utterance PGD
-                         │
-                         ▼
-                ✅ PGD HYBRID WORKS
-                         │
-              ┌──────────┴──────────┐
-              ▼                     ▼
-       Clone disruption       Watermark preserved
-              │                     │
-              └──────────┬──────────┘
-                         ▼
-              Test against AudioPure
-                         │
-                         ▼
-                 ❌ Watermark lost
-                         │
-                ┌────────┴────────┐
-                ▼                 ▼
-          More training       3× more data
-                │                 │
-                └────────┬────────┘
-                         ▼
-                 ❌ Still fails
-                         │
-                         ▼
-              Vulnerability localized
-              to representation
 
 ![Data flow diagram](./pipeline_diagram.png)
 
@@ -210,7 +154,7 @@ Lambda scale, loss reweighting, LoRA capacity at 4x attention, training duration
 | Baseline | 0.4246 | 2.2107 |
 | Stage 2 (canonical) | 0.4448 | 2.1913 |
 
-No disruption effect on LibriTTS either, ruling out dataset domain as an alternative explanation and strengthening the  **mechanism mismatch** — these all train *shared* weights via Adam to produce one embedder that must generalize across every utterance, unlike SafeSpeech's real mechanism (per-utterance PGD, no shared weights). Full detail in `STAGE2_WRITEUP.md`.
+No disruption effect on LibriTTS either, ruling out dataset domain as an alternative explanation and strengthening the  **mechanism mismatch** — these all train *shared* weights via Adam to produce one embedder that must generalize across every utterance, unlike SafeSpeech's real mechanism (a per-utterance, epsilon-bounded sign-gradient perturbation — the PGD family algorithmically, though not SafeSpeech's own term for it — with no shared weights). Full detail in `STAGE2_WRITEUP.md`.
 
 ### 3. The PGD hybrid — headline positive result
 
@@ -240,7 +184,7 @@ Disruption is flat from epsilon=0.003–0.01; below 0.003 it genuinely weakens. 
 
 † 98 of 100 requested utterances were available for the sampled speakers. Both VCTK and LibriTTS show accuracy *improving*, not dropping — the operating point transfers with no per-corpus tuning.
 
-**How this compares to SafeSpeech's own published disruption magnitude** — this comparison was missing from every earlier version of this document; the honest answer is that our disruption is real but substantially gentler than SafeSpeech's own reported numbers, by design:
+**How this compares to SafeSpeech's own published disruption magnitude** — this comparison was missing from every earlier version of this document; the honest answer is that our disruption is real but substantially gentler than SafeSpeech's own reported numbers, by design. *Terminology note: this project's own perturbation code is named `disruption_pgd.py` and its algorithm — iterative, epsilon-bounded, sign-gradient steps — is the same family widely called PGD (Madry et al.) in adversarial ML. SafeSpeech's paper (arXiv 2504.09839) uses an algorithmically equivalent method (their Algorithm 1: `δ ← Clamp(−sign(∇C), −ε, ε)`) but never uses the term "PGD" itself, and doesn't cite Madry et al. — they frame it via the unlearnable-examples literature (Huang et al. 2021, Fowl et al. 2021) instead. "PGD" below is this project's own label for the shared algorithm family, not a term taken from SafeSpeech's paper.*
 
 | Setting | Clean SIM → protected SIM | Relative drop | Epsilon (L∞) | Notes |
 |---|---|---|---|---|
@@ -336,6 +280,21 @@ Detection generalizes cleanly to a corpus never seen in training. (See Section 3
 
 ---
 
+### 9. Watermark survival under real zero-shot cloning — a distinct, previously-untested question
+
+Every metric above answers one of two questions: does the watermark survive *this project's own* perturbation (Sections 3–4), or does cloning degrade the *clone's similarity* to the target speaker (Section 3's SIM numbers). Neither answers a third, different question — the one VoiceMark's own paper actually reports in its Table 1, and the one directly relevant to a supervisor's question of "how much does a cloning attack degrade watermark robustness, as opposed to how much does it degrade the audio": **if someone actually clones this protected speaker's voice through a real zero-shot TTS system, does the watermark still show up in *that* output at all?** `src/eval/watermark_survival_under_cloning.py` runs the detector directly on cloned audio (not pre-clone audio) to answer this, and `src/eval/xtts_transfer_eval.py` / `src/eval/f5tts_transfer_eval.py` repeat it against a second and third cloning architecture, since a result from one surrogate model doesn't establish whether the effect generalizes (see "Known limitations" below).
+
+| Cloning model | Watermark ACC on the clone | SIM | n | Verdict |
+|---|---|---|---|---|
+| YourTTS, unprotected watermarked audio | 0.5144–0.5312 | — | 25 | Statistically indistinguishable from chance (null SD ≈ 0.025 for 25×16 bit trials; both runs sit within ~1–1.3 SD of 0.5) |
+| YourTTS, PGD-protected audio (ε=0.002) | 0.5577 | — | 25 | Still within noise of chance (~2.3 SD; not confidently above 0.5 at this n) |
+| XTTS, unprotected watermarked audio | 0.6250 (range 0.1875–0.9375 per-utterance) | 0.5125 | 25 | Real, ~5 SD above chance — the watermark does partially survive this architecture — but far below VoiceMark's own claimed 95%+ (CosyVoice/F5-TTS/MaskGCT, their Table 1) |
+| F5-TTS, one of VoiceMark's own three tested models | not run | — | — | Blocked by a genuine environment conflict (f5-tts requires transformers≥5, which is incompatible with this project's coqui-tts/YourTTS install at the code level, not just a version pin — see the status note at the top of `f5tts_transfer_eval.py`) |
+
+**Reading this honestly:** watermark survival under real zero-shot cloning is architecture-dependent, and on the two architectures actually tested here it ranges from non-existent (YourTTS) to weak-but-real (XTTS) — neither reaches VoiceMark's own reported range, and PGD-protection does not meaningfully change the YourTTS result (the watermark was already failing to survive the clone regardless of whether the source audio was also disrupted). This project's own reproduction of VoiceMark's *augmentation*-robustness numbers (Section 1) is solid and matches their published table closely; that finding does not extend to real zero-shot cloning, which is a different, harder test that VoiceMark's own paper answers with different models (CosyVoice, F5-TTS, MaskGCT) than the one used as this project's primary surrogate (YourTTS). Two models is real cross-model evidence, not a single-model artifact — but it is not the same as reproducing VoiceMark's own reported numbers on VoiceMark's own models, which remains open (F5-TTS blocked; CosyVoice and MaskGCT not attempted).
+
+---
+
 ## Known limitations
 
 - Single training corpus (LibriSpeech), modest scale (100–300 training utterances) — a compute-budget tradeoff, not an oversight.
@@ -345,6 +304,7 @@ Detection generalizes cleanly to a corpus never seen in training. (See Section 3
 - The PGD hybrid's audio-quality numbers at the final operating point (PESQ 1.747 / STOI 0.887) are a n=4 spot-check, not the n=50 sample size used for the watermark-only baseline in Section 7.
 - Stage 3's Run 3 (the final, chance-exact independently-verified result) is a weight-only resume from Run 2's surviving checkpoint — Adam's optimizer momentum was not preserved across the resume, only the LoRA weights, so Run 3 is not a bit-perfect continuation of Run 2, though the training objective and total epoch count match what was originally planned.
 - Stage 3's independent verification uses n=25 per run (n=50 combined across the two verified runs); this size was chosen to match Section 1/6's established evaluation protocol and is corroborated by internal training-log consistency across many more validation checks per run, but is smaller than Section 3's n=100 PGD evaluations.
+- **Watermark survival under real zero-shot cloning is weak-to-nonexistent on the two models tested, and this is a genuinely different finding from Section 1's augmentation-robustness reproduction (Section 9).** Near-chance under YourTTS (protected or unprotected — PGD-protection doesn't change this), and real-but-far-below-VoiceMark's-claimed-95%+ under XTTS. This is not the same claim as "traceability works" and Section 1's reproduction of VoiceMark's own published table should not be read as implying it does. F5-TTS (one of VoiceMark's own three tested models) is blocked by a genuine environment conflict, not skipped by choice — see the status note at the top of `src/eval/f5tts_transfer_eval.py`. CosyVoice and MaskGCT (VoiceMark's other two tested models) have not been attempted at all.
 - **This project has not tested VoiceMark's own standard robustness attack list.** VoiceMark's paper reports robustness against EnCodec re-encoding, resampling, amplitude scaling, filtering, additive white noise, and MP3 compression. This repo's "Augmentation robustness" table (Section 1) tests a *different* set of corruptions (masking, shuffling, replacing, a neural/VC-style proxy) borrowed from the voice-conversion literature, not VoiceMark's own set. The two are not directly comparable, and the gap has not been closed — running VoiceMark's exact attack list is straightforward future work, not yet started.
 - **SMOS (subjective mean opinion score) has not been run.** Every other metric in this repo is automated; SMOS requires a human-listening study and was deliberately deferred until the checkpoint was final, to avoid re-running it after every scale-up. The checkpoint is now locked (`stage1_final_scaleup_recalibrated`), so this is the one planned metric still outstanding — see the project timeline for when it's scheduled.
 - **The AudioPure gap (Section 4) is diagnosed, not fixed.** Two independent lines of evidence (Stage 3's detector fine-tuning, this update's 3x data scale-up) show the collapse is not solved by more training or more data — but no defense against it has been attempted yet. Building one (e.g. training-time augmentation with a differentiable purification proxy, or extending the PGD-hybrid perturbation to explicitly survive purification) is the natural next step and is not yet started.
