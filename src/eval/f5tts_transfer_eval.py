@@ -42,6 +42,24 @@ transcripts via --ref_text_source if that becomes worth building.
 DISCIPLINE (same as xtts_transfer_eval.py): this hasn't been run against a
 live f5-tts install. --diagnostic first, always -- see module usage below.
 
+STATUS (2026-09-08): BLOCKED in this project's shared environment, not
+abandoned. `pip install f5-tts` pulls transformers>=5, but this project's
+coqui-tts==0.27.5 install (needed for the YourTTS surrogate + XTTS transfer
+eval, both load-bearing for other results in this repo) hard-depends at
+import time on transformers.pytorch_utils.isin_mps_friendly, a symbol
+removed in transformers 5.x -- true regardless of what coqui-tts's own
+declared metadata floor (transformers>=4.57, no upper bound) claims. So
+f5-tts and coqui-tts want mutually exclusive transformers major versions
+in the same environment; installing f5-tts breaks every YourTTS/XTTS
+script in this repo (confirmed directly -- see commit history), and there
+is no version of transformers that satisfies both at once. Until this
+repo's other results move off coqui-tts/YourTTS entirely (not planned),
+this script stays unrun. The code is complete and believed correct (see
+the ref_text caveat above); the XTTS transfer result already stands as
+this project's cross-model validation against a second, architecturally
+distinct zero-shot model, which was the actual goal this script was
+written to extend.
+
 Usage:
     python src/eval/f5tts_transfer_eval.py \\
         --checkpoint ./checkpoints/stage1_final_scaleup_recalibrated/recalibrated_final.pt \\
