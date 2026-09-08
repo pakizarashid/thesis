@@ -88,6 +88,15 @@ def load_xtts(device: str):
     weights (multi-GB) and caches them, same one-time-cost pattern as
     LibriSpeechSubset's dataset download.
     """
+    import os as _os
+    # Kaggle cells are non-interactive -- XTTS's first download blocks on an
+    # input() prompt asking you to accept Coqui's non-commercial CPML license
+    # (https://coqui.ai/cpml), which raises EOFError instead of hanging. This
+    # env var is coqui-tts's own documented way to auto-accept that prompt.
+    # Setting it IS agreeing to that license for this download -- fine for
+    # academic/thesis (non-commercial) use, but a real legal step, not just a
+    # technical flag, so it's called out explicitly rather than silently set.
+    _os.environ.setdefault("COQUI_TOS_AGREED", "1")
     from TTS.api import TTS
     print("[load_xtts] Loading tts_models/multilingual/multi-dataset/xtts_v2 "
           "(first run downloads weights -- can take a few minutes)...")
