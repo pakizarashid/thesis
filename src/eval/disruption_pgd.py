@@ -536,53 +536,90 @@ def main():
     print(f"Perturbation: mean L-inf={means['perturbation_linf']:.5f}, "
           f"mean SNR={means['perturbation_snr_db']:.1f} dB")
 
-    audiopure_result = None
-    if args.check_audiopure:
-        print(f"\n{'=' * 60}\nAudioPure survival check (NEW -- never measured before for "
-              f"waveform-space PGD-protected audio)\n{'=' * 60}")
-        sys.path.insert(0, os.path.dirname(__file__))
-        from audiopure_eval import build_audiopure_denoiser
-        denoiser = build_audiopure_denoiser(args.repo_root, reverse_timestep=args.reverse_timestep)
-        acc_after_purify = []
-        for batch_idx, batch in enumerate(eval_loader):
-            clean_audio = batch["waveform"].to(device)
-            message = random_message(16, clean_audio.shape[0], device, seed=123 + batch_idx)
-            with torch.no_grad():
-                _rw, perturbed_final, _d = pgd_perturb(
-                    backbone, surrogate, clean_audio, message, args.surrogate_text,
-                    args.epsilon, step_size, args.n_steps, args.random_start, lambda_wm=args.lambda_wm,
-                )
-                purified = denoiser(perturbed_final)
-                acc = detect_acc(backbone, purified, message)
-            acc_after_purify.append(acc)
-            print(f"  [audiopure batch {batch_idx}] watermark ACC after purification of protected audio: {acc:.4f}")
-        audiopure_result = sum(acc_after_purify) / len(acc_after_purify)
-        print(f"\nMean watermark ACC after AudioPure purification of WAVEFORM-PGD-protected audio: "
-              f"{audiopure_result:.4f}")
-
-    with open(args.output, "w") as f:
-        json.dump({
+    # FIX (2026-09-09): save the already-completed disruption results to disk
+    # BEFORE attempting the (separately fragile -- checkpoint download, denoiser
+    # init) AudioPure check. Previously the json.dump for the whole run sat
+    # AFTER this block with no exception handling, so a crash loading
+    # AudioPure's checkpoint (e.g. a corrupt/0-byte .pkl from a bad download
+    # URL) took the entire n=100 disruption run's results down with it, even
+    # though they had already finished computing and printed to console.
+    base_results = {
+        "sim_before": means["sim_before"], "sim_after": means["sim_after"],
+        "sim_drop": means["sim_before"] - means["sim_after"],
+        "pivotal_before": means["pivotal_before"], "pivotal_after": means["pivotal_after"],
+        "detection_acc_before": means["detection_acc_before"],
+        "detection_acc_after": means["detection_acc_after"],
+        "detection_acc_drop": means["detection_acc_before"] - means["detection_acc_after"],
+        "perturbation_linf_mean": means["perturbation_linf"],
+        "perturbation_snr_db_mean": means["perturbation_snr_db"],
+        "n_trials": len(eval_ds),
+        # Backward-compat key so this drops into aggregate_results.py's
+        # existing "Disruption (SIM)" classification/table unmodified.
+        "sim": means["sim_after"],
+        "audiopure_acc_after_mean": None,
+    }
+    if args.output:
+        out = {
             "label": label, "checkpoint": args.checkpoint, "dataset": args.dataset,
             "include_ffn": args.include_ffn, "capacity_lora_r": args.capacity_lora_r if args.include_ffn else None,
             "pgd": {"epsilon": args.epsilon, "step_size": step_size, "n_steps": args.n_steps,
                      "random_start": args.random_start, "lambda_wm": args.lambda_wm},
-            "results": {
-                "sim_before": means["sim_before"], "sim_after": means["sim_after"],
-                "sim_drop": means["sim_before"] - means["sim_after"],
-                "pivotal_before": means["pivotal_before"], "pivotal_after": means["pivotal_after"],
-                "detection_acc_before": means["detection_acc_before"],
-                "detection_acc_after": means["detection_acc_after"],
-                "detection_acc_drop": means["detection_acc_before"] - means["detection_acc_after"],
-                "perturbation_linf_mean": means["perturbation_linf"],
-                "perturbation_snr_db_mean": means["perturbation_snr_db"],
-                "n_trials": len(eval_ds),
-                # Backward-compat key so this drops into aggregate_results.py's
-                # existing "Disruption (SIM)" classification/table unmodified.
-                "sim": means["sim_after"],
-                "audiopure_acc_after_mean": audiopure_result,
-            },
-        }, f, indent=2)
-    print(f"[main] Saved results to {args.output}")
+            "results": base_results,
+        }
+        with open(args.output, "w") as f:
+            json.dump(out, f, indent=2)
+        print(f"[main] Saved disruption results to {args.output} (audiopure_acc_after_mean pending, "
+              f"will be added below if --check_audiopure succeeds)")
+
+    audiopure_result = None
+    if args.check_audiopure:
+        print(f"\n{'=' * 60}\nAudioPure survival check (NEW -- never measured before for "
+              f"waveform-space PGD-protected audio)\n{'=' * 60}")
+        try:
+            sys.path.insert(0, os.path.dirname(__file__))
+            from audiopure_eval import build_audiopure_denoiser
+            denoiser = build_audiopure_denoiser(args.repo_root, reverse_timestep=args.reverse_timestep)
+            acc_after_purify = []
+            for batch_idx, batch in enumerate(eval_loader):
+                clean_audio = batch["waveform"].to(device)
+                message = random_message(16, clean_audio.shape[0], device, seed=123 + batch_idx)
+                # FIX (2026-09-09): pgd_perturb() must NOT be called inside
+                # torch.no_grad() -- it runs its own PGD steps internally via
+                # torch.autograd.grad(), which requires grad-tracked tensors
+                # with a grad_fn. Wrapping the whole call in no_grad() (as
+                # this block originally did) makes every tensor inside grad-
+                # free, so the first internal .grad() call crashes with
+                # "element 0 of tensors does not require grad and does not
+                # have a grad_fn" -- confirmed by an actual n=100 run on the
+                # sibling latent-space script, which has the identical bug.
+                # Only the purify+detect step below (no further optimization,
+                # detached from the PGD graph) needs no_grad.
+                _rw, perturbed_final, _d = pgd_perturb(
+                    backbone, surrogate, clean_audio, message, args.surrogate_text,
+                    args.epsilon, step_size, args.n_steps, args.random_start, lambda_wm=args.lambda_wm,
+                )
+                with torch.no_grad():
+                    purified = denoiser(perturbed_final.detach())
+                    acc = detect_acc(backbone, purified, message)
+                acc_after_purify.append(acc)
+                print(f"  [audiopure batch {batch_idx}] watermark ACC after purification of protected audio: {acc:.4f}")
+            audiopure_result = sum(acc_after_purify) / len(acc_after_purify)
+            print(f"\nMean watermark ACC after AudioPure purification of WAVEFORM-PGD-protected audio: "
+                  f"{audiopure_result:.4f}")
+        except Exception as e:
+            print(f"\n[main] WARNING - AudioPure check FAILED ({type(e).__name__}: {e}). "
+                  f"Disruption results above are already saved to {args.output} regardless "
+                  f"(audiopure_acc_after_mean stays null in that file) -- fix whatever broke "
+                  f"and re-run with ONLY --check_audiopure's underlying issue addressed; the "
+                  f"expensive n={len(eval_ds)} disruption pass does not need to be repeated.")
+
+    if args.output and audiopure_result is not None:
+        with open(args.output) as f:
+            out = json.load(f)
+        out["results"]["audiopure_acc_after_mean"] = audiopure_result
+        with open(args.output, "w") as f:
+            json.dump(out, f, indent=2)
+        print(f"[main] Updated {args.output} with audiopure_acc_after_mean={audiopure_result:.4f}")
 
 
 if __name__ == "__main__":

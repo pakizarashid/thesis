@@ -270,31 +270,45 @@ def latent_pgd_perturb(backbone, surrogate, mel_fn, clean_audio: torch.Tensor, m
     for step in range(n_steps):
         wrapper.set_delta(delta)
         wav_len = clean_audio.size(-1)
-        o, o_wm, acoustic, acoustic_wm = st_model(
-            clean_audio, msg_processor=wrapper, message=message
-        )
-        perturbed = o_wm[..., :wav_len] if o_wm.size(-1) >= wav_len else o_wm
 
-        cloned_output = surrogate.clone_voice(perturbed, text=text)
-        emb_clean = surrogate.compute_speaker_embedding(clean_audio)
-        emb_cloned = surrogate.compute_speaker_embedding(cloned_output)
-        sim_loss = compute_sim_disruption_loss(emb_clean.detach(), emb_cloned)
-
-        pivotal_loss = compute_pivotal_disruption_loss(mel_fn, clean_audio, cloned_output)
-        # We want to MAXIMIZE pivotal distance (attacker's clone should sound
-        # wrong) but the PGD step below MINIMIZES the combined objective --
-        # negate here, matching safespeech_losses.py's own sign convention.
-        pivotal_term = -pivotal_loss
-
+        # FIX (2026-09-09): unlike disruption_pgd.py -- which only ever needs
+        # backward through the DETECTOR, since delta is added AFTER decode
+        # there -- this script needs backward through st_model's own
+        # forward() too, because delta now enters BEFORE decode, and
+        # st_model contains an RNN internally (the same one disruption_pgd.py's
+        # detector call already had to work around). cuDNN's fused RNN kernel
+        # refuses backward in eval mode, and the flag has to be set at
+        # FORWARD time (when the graph is built), not just when .grad() is
+        # later called -- so the whole per-step forward (st_model call,
+        # surrogate clone, detector call) now lives inside this context, not
+        # just the detector piece. First run's traceback confirmed this: the
+        # call-count diagnostic (a no_grad, forward-only call) passed fine;
+        # only the backward-requiring step failed.
         with torch.backends.cudnn.flags(enabled=False):
+            o, o_wm, acoustic, acoustic_wm = st_model(
+                clean_audio, msg_processor=wrapper, message=message
+            )
+            perturbed = o_wm[..., :wav_len] if o_wm.size(-1) >= wav_len else o_wm
+
+            cloned_output = surrogate.clone_voice(perturbed, text=text)
+            emb_clean = surrogate.compute_speaker_embedding(clean_audio)
+            emb_cloned = surrogate.compute_speaker_embedding(cloned_output)
+            sim_loss = compute_sim_disruption_loss(emb_clean.detach(), emb_cloned)
+
+            pivotal_loss = compute_pivotal_disruption_loss(mel_fn, clean_audio, cloned_output)
+            # We want to MAXIMIZE pivotal distance (attacker's clone should sound
+            # wrong) but the PGD step below MINIMIZES the combined objective --
+            # negate here, matching safespeech_losses.py's own sign convention.
+            pivotal_term = -pivotal_loss
+
             detect_feat = st_model.forward_feature(perturbed)
             _logits, chunk_logits = backbone.model.detector(detect_feat)
             wm_loss = compute_ldec(chunk_logits, message)
 
-        grad_sim = torch.autograd.grad(sim_loss, delta, retain_graph=True, create_graph=False)[0]
-        grad_piv = torch.autograd.grad(pivotal_term, delta, retain_graph=True, create_graph=False)[0] \
-            if lambda_pivotal != 0.0 else torch.zeros_like(delta)
-        grad_wm = torch.autograd.grad(wm_loss, delta, retain_graph=False, create_graph=False)[0]
+            grad_sim = torch.autograd.grad(sim_loss, delta, retain_graph=True, create_graph=False)[0]
+            grad_piv = torch.autograd.grad(pivotal_term, delta, retain_graph=True, create_graph=False)[0] \
+                if lambda_pivotal != 0.0 else torch.zeros_like(delta)
+            grad_wm = torch.autograd.grad(wm_loss, delta, retain_graph=False, create_graph=False)[0]
         grad = grad_sim + lambda_pivotal * grad_piv + lambda_wm * grad_wm
         grad_norm = grad.norm().item()
 
@@ -558,52 +572,92 @@ def main():
     print(f"Mean delta/latent relative L2 norm: {means['delta_relative_norm']:.4f} "
           f"(should track close to --epsilon_rel={args.epsilon_rel})")
 
-    audiopure_result = None
-    if args.check_audiopure:
-        print(f"\n{'=' * 60}\nAudioPure survival check (NEW -- never measured before for PGD-protected audio)\n{'=' * 60}")
-        sys.path.insert(0, os.path.dirname(__file__))
-        from audiopure_eval import build_audiopure_denoiser
-        denoiser = build_audiopure_denoiser(args.repo_root, reverse_timestep=args.reverse_timestep)
-        acc_after_purify = []
-        for batch_idx, batch in enumerate(eval_loader):
-            clean_audio = batch["waveform"].to(device)
-            message = random_message(16, clean_audio.shape[0], device, seed=123 + batch_idx)
-            with torch.no_grad():
-                _rw, perturbed_final, _d, _ln = latent_pgd_perturb(
-                    backbone, surrogate, mel_fn, clean_audio, message, args.surrogate_text,
-                    args.epsilon_rel, step_size_rel, args.n_steps, args.random_start,
-                    lambda_wm=args.lambda_wm, lambda_pivotal=args.lambda_pivotal,
-                )
-                purified = denoiser(perturbed_final)
-                acc = detect_acc(backbone, purified, message)
-            acc_after_purify.append(acc)
-            print(f"  [audiopure batch {batch_idx}] watermark ACC after purification of protected audio: {acc:.4f}")
-        audiopure_result = sum(acc_after_purify) / len(acc_after_purify)
-        print(f"\nMean watermark ACC after AudioPure purification of LATENT-PROTECTED audio: {audiopure_result:.4f} "
-              f"(compare against ~0.49-0.53 for unprotected/waveform-PGD-protected audio -- see README Section 4)")
-
+    # SAVE THE DISRUPTION RESULTS NOW, before touching AudioPure at all. This
+    # is the fix for the 2026-09-09 incident: a crash loading the AudioPure
+    # denoiser (corrupt/truncated checkpoint) took the whole n=100 run down
+    # with it, including the SIM/pivotal/ACC numbers that had already
+    # finished successfully. Writing here means those numbers are safe on
+    # disk regardless of what happens next; the AudioPure block below only
+    # ever ADDS to this file (via the re-open-and-update at the end), never
+    # gates it.
+    base_results = {
+        "sim_before": means["sim_before"], "sim_after": means["sim_after"],
+        "sim_drop": means["sim_before"] - means["sim_after"],
+        "pivotal_before": means["pivotal_before"], "pivotal_after": means["pivotal_after"],
+        "detection_acc_before": means["detection_acc_before"],
+        "detection_acc_after": means["detection_acc_after"],
+        "detection_acc_drop": means["detection_acc_before"] - means["detection_acc_after"],
+        "delta_relative_norm_mean": means["delta_relative_norm"],
+        "n_trials": len(eval_ds),
+        "sim": means["sim_after"],
+        "audiopure_acc_after_mean": None,
+    }
     if args.output:
         out = {
             "label": label, "checkpoint": args.checkpoint, "dataset": args.dataset,
             "mechanism": "latent_space_pgd",
             "pgd": {"epsilon_rel": args.epsilon_rel, "step_size_rel": step_size_rel, "n_steps": args.n_steps,
                      "random_start": args.random_start, "lambda_wm": args.lambda_wm, "lambda_pivotal": args.lambda_pivotal},
-            "results": {
-                "sim_before": means["sim_before"], "sim_after": means["sim_after"],
-                "sim_drop": means["sim_before"] - means["sim_after"],
-                "pivotal_before": means["pivotal_before"], "pivotal_after": means["pivotal_after"],
-                "detection_acc_before": means["detection_acc_before"],
-                "detection_acc_after": means["detection_acc_after"],
-                "detection_acc_drop": means["detection_acc_before"] - means["detection_acc_after"],
-                "delta_relative_norm_mean": means["delta_relative_norm"],
-                "n_trials": len(eval_ds),
-                "sim": means["sim_after"],   # backward-compat key for aggregate_results.py's "sim" routing
-                "audiopure_acc_after_mean": audiopure_result,
-            },
+            "results": base_results,
         }
         with open(args.output, "w") as f:
             json.dump(out, f, indent=2)
-        print(f"[main] Saved results to {args.output}")
+        print(f"[main] Saved disruption results to {args.output} (audiopure_acc_after_mean pending, "
+              f"will be added below if --check_audiopure succeeds)")
+
+    audiopure_result = None
+    if args.check_audiopure:
+        print(f"\n{'=' * 60}\nAudioPure survival check (NEW -- never measured before for PGD-protected audio)\n{'=' * 60}")
+        try:
+            sys.path.insert(0, os.path.dirname(__file__))
+            from audiopure_eval import build_audiopure_denoiser
+            denoiser = build_audiopure_denoiser(args.repo_root, reverse_timestep=args.reverse_timestep)
+            acc_after_purify = []
+            for batch_idx, batch in enumerate(eval_loader):
+                clean_audio = batch["waveform"].to(device)
+                message = random_message(16, clean_audio.shape[0], device, seed=123 + batch_idx)
+                # FIX (2026-09-09): latent_pgd_perturb() must NOT be called
+                # inside torch.no_grad() -- confirmed by an actual n=100 run
+                # (epsilon_rel=0.10): the disruption pass itself (unwrapped,
+                # same as here) completed cleanly for all 100 utterances, but
+                # this block crashed immediately with "element 0 of tensors
+                # does not require grad and does not have a grad_fn" the
+                # moment it reached AudioPure, because PGD runs its own steps
+                # internally via torch.autograd.grad(), which needs a live
+                # grad_fn -- the outer no_grad() strips that from every
+                # tensor before latent_pgd_perturb() ever gets to use it.
+                # Only the purify+detect step below (no further optimization,
+                # detached from the PGD graph) needs no_grad.
+                _rw, perturbed_final, _d, _ln = latent_pgd_perturb(
+                    backbone, surrogate, mel_fn, clean_audio, message, args.surrogate_text,
+                    args.epsilon_rel, step_size_rel, args.n_steps, args.random_start,
+                    lambda_wm=args.lambda_wm, lambda_pivotal=args.lambda_pivotal,
+                )
+                with torch.no_grad():
+                    purified = denoiser(perturbed_final.detach())
+                    acc = detect_acc(backbone, purified, message)
+                acc_after_purify.append(acc)
+                print(f"  [audiopure batch {batch_idx}] watermark ACC after purification of protected audio: {acc:.4f}")
+            audiopure_result = sum(acc_after_purify) / len(acc_after_purify)
+            print(f"\nMean watermark ACC after AudioPure purification of LATENT-PROTECTED audio: {audiopure_result:.4f} "
+                  f"(compare against ~0.49-0.53 for unprotected/waveform-PGD-protected audio -- see README Section 4)")
+        except Exception as e:
+            print(f"\n[main] WARNING - AudioPure check FAILED ({type(e).__name__}: {e}). "
+                  f"Disruption results above are already saved to {args.output} regardless "
+                  f"(audiopure_acc_after_mean stays null in that file) -- fix whatever broke "
+                  f"and re-run with ONLY --check_audiopure's underlying issue addressed; the "
+                  f"expensive n={len(eval_ds)} disruption pass does not need to be repeated.")
+
+    if args.output and audiopure_result is not None:
+        # Re-open and update just the one field, rather than re-deriving
+        # everything -- keeps this block a pure "add audiopure result if we
+        # got one" step with no risk of drifting from what was already saved.
+        with open(args.output) as f:
+            out = json.load(f)
+        out["results"]["audiopure_acc_after_mean"] = audiopure_result
+        with open(args.output, "w") as f:
+            json.dump(out, f, indent=2)
+        print(f"[main] Updated {args.output} with audiopure_acc_after_mean={audiopure_result:.4f}")
 
 
 if __name__ == "__main__":
