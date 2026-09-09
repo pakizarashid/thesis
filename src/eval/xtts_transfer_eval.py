@@ -170,7 +170,17 @@ def run_eval(backbone, yourtts_surrogate, xtts, eval_loader, device, text: str,
         if verbose:
             print(f"    recon_wm shape={tuple(recon_wm.shape)} cloned_u shape={tuple(cloned_u.shape)}")
 
-    return {k: sum(v) / len(v) for k, v in metrics.items()}
+    # FIX (2026-09-09): also return the RAW per-utterance lists, not just the
+    # means. Without them the saved JSON supports no post-hoc analysis at all --
+    # no significance test, no correlation between watermark survival and clone
+    # fidelity, no distribution -- and those values then exist only in stdout,
+    # which is gone as soon as the log is overwritten. (This bit for real: the
+    # first n=100 run's ACC/SIM correlation had to be recovered by parsing the
+    # log, because the `*_values` keys any natural analysis reaches for were
+    # never written to the JSON.)
+    out = {k: sum(v) / len(v) for k, v in metrics.items()}
+    out.update({f"{k}_values": v for k, v in metrics.items()})
+    return out
 
 
 def main():
