@@ -580,6 +580,7 @@ def main():
             from audiopure_eval import build_audiopure_denoiser
             denoiser = build_audiopure_denoiser(args.repo_root, reverse_timestep=args.reverse_timestep)
             acc_after_purify = []
+            sim_after_purify = []
             for batch_idx, batch in enumerate(eval_loader):
                 clean_audio = batch["waveform"].to(device)
                 message = random_message(16, clean_audio.shape[0], device, seed=123 + batch_idx)
@@ -601,11 +602,58 @@ def main():
                 with torch.no_grad():
                     purified = denoiser(perturbed_final.detach())
                     acc = detect_acc(backbone, purified, message)
+                    # ADDED (2026-09-10): THE SafeSpeech-comparable measurement, and the
+                    # project's PRIMARY protection goal -- previously never measured.
+                    #
+                    # Everything above measures whether the WATERMARK survives purification.
+                    # That is the secondary (attribution) objective. The primary objective is
+                    # whether the ANTI-CLONING PROTECTION survives: an attacker who purifies
+                    # the protected audio first and THEN clones it -- do they get a good clone
+                    # back, or is it still disrupted?
+                    #
+                    # SafeSpeech's own published AudioPure numbers (sim_after=0.261,
+                    # wer_after=0.857) answer exactly this question for their method, and
+                    # show their protection largely survives. Until now this project has been
+                    # comparing its watermark-survival number against SafeSpeech's
+                    # disruption-survival number, which are different quantities. This makes
+                    # the comparison like-for-like.
+                    #
+                    # Read against the two numbers run_pgd_eval already produces:
+                    #   sim_before  = clone of CLEAN audio        (no protection at all)
+                    #   sim_after   = clone of PROTECTED audio    (protection working)
+                    #   sim_purified (here) = clone of PURIFIED protected audio
+                    # sim_purified ~ sim_after  => protection SURVIVED purification.
+                    # sim_purified ~ sim_before => purification STRIPPED the protection.
+                    cloned_from_purified = surrogate.clone_voice(purified, text=args.surrogate_text)
+                    sim_purified = compute_sim(surrogate, clean_audio, cloned_from_purified)
                 acc_after_purify.append(acc)
-                print(f"  [audiopure batch {batch_idx}] watermark ACC after purification of protected audio: {acc:.4f}")
+                sim_after_purify.append(sim_purified)
+                print(f"  [audiopure batch {batch_idx}] watermark ACC after purification: {acc:.4f} "
+                      f"| SIM of clone made FROM purified protected audio: {sim_purified:.4f}")
             audiopure_result = sum(acc_after_purify) / len(acc_after_purify)
+            sim_purify_result = sum(sim_after_purify) / len(sim_after_purify)
             print(f"\nMean watermark ACC after AudioPure purification of WAVEFORM-PGD-protected audio: "
                   f"{audiopure_result:.4f}")
+
+            # --- PRIMARY PROTECTION GOAL: did the disruption survive purification? ---
+            sim_clean_clone = means["sim_before"]      # clone of unprotected audio
+            sim_protected_clone = means["sim_after"]   # clone of protected audio
+            protection_retained = (
+                (sim_clean_clone - sim_purify_result) / (sim_clean_clone - sim_protected_clone)
+                if abs(sim_clean_clone - sim_protected_clone) > 1e-6 else float("nan")
+            )
+            print(f"\n{'=' * 60}")
+            print(f"PRIMARY PROTECTION GOAL -- does the ANTI-CLONING disruption survive purification?")
+            print(f"{'=' * 60}")
+            print(f"  SIM, clone of CLEAN audio (no protection):            {sim_clean_clone:.4f}")
+            print(f"  SIM, clone of PROTECTED audio (protection working):   {sim_protected_clone:.4f}")
+            print(f"  SIM, clone of PURIFIED protected audio (attacker):    {sim_purify_result:.4f}")
+            print(f"  -> protection retained after purification: {protection_retained * 100:.1f}%")
+            print(f"     (100% = purification did nothing; 0% = purification fully stripped it)")
+            print(f"  SafeSpeech's published AudioPure number for comparison: sim_after = 0.261")
+            print(f"  NOTE: their 0.261 is on THEIR data//models, so treat it as a reference point,")
+            print(f"        not a like-for-like number. The like-for-like comparison is the RETENTION")
+            print(f"        percentage above -- how much of each method's own disruption survives.")
         except Exception as e:
             print(f"\n[main] WARNING - AudioPure check FAILED ({type(e).__name__}: {e}). "
                   f"Disruption results above are already saved to {args.output} regardless "
@@ -617,6 +665,10 @@ def main():
         with open(args.output) as f:
             out = json.load(f)
         out["results"]["audiopure_acc_after_mean"] = audiopure_result
+        # Primary-goal metrics (added 2026-09-10) -- disruption survival, not watermark survival.
+        out["results"]["sim_after_purify_mean"] = sim_purify_result
+        out["results"]["sim_after_purify_values"] = sim_after_purify
+        out["results"]["protection_retained_after_purification"] = protection_retained
         with open(args.output, "w") as f:
             json.dump(out, f, indent=2)
         print(f"[main] Updated {args.output} with audiopure_acc_after_mean={audiopure_result:.4f}")
