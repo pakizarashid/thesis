@@ -317,7 +317,12 @@ def main():
 
     # ---------------- full run ----------------
     keys = ["acc_wm", "acc_wm_denoised", "acc_protected", "acc_protected_denoised",
-            "sim_clean_clone", "sim_protected_clone", "sim_denoised_clone"]
+            "sim_clean_clone", "sim_protected_clone", "sim_denoised_clone",
+            # ADDED 2026-09-10 -- the metrics the research question actually needs.
+            # Everything above detects the watermark on the AUDIO. These detect it on
+            # the CLONE, i.e. "can the deepfake be traced back", which is a different
+            # and harder question than "can this leaked file be proven mine".
+            "acc_clone_clean", "acc_clone_protected", "acc_clone_denoised"]
     m = {k: [] for k in keys}
 
     print(f"\n{'=' * 78}")
@@ -354,20 +359,39 @@ def main():
             m["sim_protected_clone"].append(compute_sim(surrogate, clean_audio, c_prot))
             m["sim_denoised_clone"].append(compute_sim(surrogate, clean_audio, c_den))
 
+            # THE RESEARCH-QUESTION METRICS: watermark detected IN THE CLONE, not in
+            # the audio. acc_clone_denoised completes the attacker's actual pipeline --
+            # protect -> denoise -> clone -> can the clone still be attributed?
+            m["acc_clone_clean"].append(detect_acc(backbone, c_clean, message))
+            m["acc_clone_protected"].append(detect_acc(backbone, c_prot, message))
+            m["acc_clone_denoised"].append(detect_acc(backbone, c_den, message))
+
             if args.save_clones_dir:
                 import soundfile as sf
                 os.makedirs(args.save_clones_dir, exist_ok=True)
 
-                def _w(tag, wav):
-                    sf.write(os.path.join(args.save_clones_dir, f"sample{i}_{tag}.wav"),
+                def _w(tag, wav, subdir=None):
+                    d = os.path.join(args.save_clones_dir, subdir) if subdir else args.save_clones_dir
+                    os.makedirs(d, exist_ok=True)
+                    sf.write(os.path.join(d, f"sample{i}_{tag}.wav"),
                              wav.detach().cpu().reshape(-1).numpy(), 16000)
 
-                # Naming matters: ecapa_sim_eval.py pairs "<n>_reference" with every
-                # other "<n>_*" file and scores each condition separately.
+                # Top level: reference + clones. ecapa_sim_eval.py / clone_wer_eval.py
+                # glob "sample*_*.wav" at THIS level only, so anything in a subdirectory
+                # is invisible to them -- which is why the quality pair goes below.
                 _w("reference", clean_audio[0])
                 _w("clone_clean", c_clean[0])
                 _w("clone_protected", c_prot[0])
                 _w("clone_demucs", c_den[0])
+
+                # audio/ subdir: the human-side quality pair, named exactly as
+                # quality_metrics.py expects (sampleN_clean / sampleN_watermarked), so
+                # PESQ/STOI/SI-SNR on the PUBLISHED audio runs with no new code:
+                #   python src/eval/quality_metrics.py --sample_dir <dir>/audio \
+                #       --n_samples 100 --skip_wer
+                _w("clean", clean_audio[0], subdir="audio")
+                _w("watermarked", perturbed[0], subdir="audio")
+                _w("denoised", prot_den[0], subdir="audio")
 
         print(f"  [{i}] acc: wm={m['acc_wm'][-1]:.4f} prot={m['acc_protected'][-1]:.4f} "
               f"prot+DEMUCS={m['acc_protected_denoised'][-1]:.4f} | "
@@ -393,12 +417,20 @@ def main():
     print(f"\n{'=' * 78}")
     print(f"RESULT  (backend={backend}, n={len(m['acc_wm'])})")
     print(f"{'=' * 78}")
-    print(f"  ATTRIBUTION")
+    print(f"  ATTRIBUTION -- SCENARIO A: can a LEAKED FILE be proven yours?")
+    print(f"    (watermark detected on the AUDIO itself)")
     print(f"    watermarked, no attack:          {means['acc_wm']:.4f}")
     print(f"    watermarked -> DEMUCS:           {means['acc_wm_denoised']:.4f}")
     print(f"    protected (wm + PGD):            {ap:.4f}")
-    print(f"    protected -> DEMUCS   [KEY]:     {ad:.4f}    <-- SafeSpeech has NO equivalent")
+    print(f"    protected -> DEMUCS:             {ad:.4f}")
     print(f"    attribution retained:            {attribution_retained * 100:.1f}%")
+    print(f"\n  ATTRIBUTION -- SCENARIO B: can the CLONE be traced back?")
+    print(f"    (watermark detected on the CLONE -- this is what the research question asks)")
+    print(f"    clone of clean audio:            {means['acc_clone_clean']:.4f}")
+    print(f"    clone of protected audio:        {means['acc_clone_protected']:.4f}")
+    print(f"    clone after DEMUCS    [KEY]:     {means['acc_clone_denoised']:.4f}")
+    print(f"    -> 0.5 is chance. This completes the attacker's real pipeline:")
+    print(f"       protect -> denoise -> clone -> attribute. Scenario A does NOT imply B.")
     print(f"\n  PROTECTION")
     print(f"    SIM, clone of clean audio:       {sc:.4f}")
     print(f"    SIM, clone of protected audio:   {sp:.4f}")
