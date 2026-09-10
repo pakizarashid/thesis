@@ -1,3 +1,4 @@
+
 """
 src/eval/f5tts_watermark_only.py
 
@@ -165,6 +166,24 @@ def main():
     p.add_argument("--diagnostic", action="store_true")
     p.add_argument("--n_utterances", type=int, default=100)
     p.add_argument("--save_clones_dir", type=str, default=None)
+    p.add_argument("--input_wav_dir", type=str, default=None,
+                   help="PROTECTED-ARM MODE. Instead of watermarking here, read already-"
+                        "protected audio as sample{i}_watermarked.wav from this directory "
+                        "(e.g. ./audio_samples/demucs_speech_v2/audio, written by "
+                        "demucs_fallback_eval.py --save_clones_dir). This gives the "
+                        "watermark+PGD arm on F5-TTS WITHOUT needing coqui-tts, because the "
+                        "expensive PGD step already happened when those WAVs were made.")
+    p.add_argument("--message_seed_base", type=int, default=123,
+                   help="Must match the seed base used when --input_wav_dir's WAVs were "
+                        "generated (demucs_fallback_eval.py uses 123 + utterance index). A "
+                        "mismatch silently yields chance accuracy -- the source-ACC sanity "
+                        "check below catches it.")
+    p.add_argument("--wav_suffix", type=str, default="watermarked",
+                   help="Which arm to read from --input_wav_dir: 'watermarked' = protected "
+                        "(watermark + PGD); 'denoised' = protected after the DEMUCS attack; "
+                        "'clean' = unprotected control. demucs_fallback_eval.py writes all "
+                        "three into its audio/ subdirectory under the same sample index, so "
+                        "the same message seed applies to each.")
     p.add_argument("--gen_text", type=str, default="This is a test sentence for voice cloning.")
     p.add_argument("--ref_text", type=str, default="")
     p.add_argument("--tmp_dir", type=str, default="./tmp_f5tts")
@@ -221,13 +240,47 @@ def main():
     print(f"VoiceMark's published F5-TTS number: 0.979 | this project's XTTS: 0.6119, YourTTS: 0.5337")
     print(f"{'=' * 76}")
 
-    for i, batch in enumerate(loader):
+    # Protected-arm mode reads pre-made WAVs; default mode watermarks from the dataset.
+    if args.input_wav_dir:
+        import glob, re, soundfile as sf
+        pattern = f"sample*_{args.wav_suffix}.wav"
+        wavs = sorted(
+            glob.glob(os.path.join(args.input_wav_dir, pattern)),
+            key=lambda p: int(re.search(r"sample(\d+)_", os.path.basename(p)).group(1)),
+        )
+        if not wavs:
+            raise SystemExit(
+                f"No {pattern} in {args.input_wav_dir}\n"
+                f"These WAVs come from demucs_fallback_eval.py --save_clones_dir (audio/ "
+                f"subdirectory). If that directory is missing, re-run that script -- the "
+                f"audio/ writes were added after the original run.")
+        print(f"[input] PRE-MADE-AUDIO MODE ('{args.wav_suffix}' arm): "
+              f"{len(wavs)} WAVs from {args.input_wav_dir}")
+        source = [("wav", w) for w in wavs]
+    else:
+        source = [("batch", b) for b in loader]
+
+    for i, (kind, item) in enumerate(source):
         if i >= args.n_utterances:
             break
-        clean = batch["waveform"].to(device)
-        msg = random_message(16, 1, device, seed=123 + i)
-        with torch.no_grad():
-            recon_wm = backbone.forward_full(clean, msg)["recon_wm"]
+        msg = random_message(16, 1, device, seed=args.message_seed_base + i)
+
+        if kind == "wav":
+            import soundfile as sf
+            arr, sr = sf.read(item)
+            assert sr == 16000, f"{item} is {sr} Hz, expected 16000"
+            recon_wm = torch.as_tensor(arr, dtype=torch.float32).reshape(1, 1, -1).to(device)
+            clean_path = item.replace(f"_{args.wav_suffix}.wav", "_clean.wav")
+            if os.path.exists(clean_path):
+                carr, _ = sf.read(clean_path)
+                clean = torch.as_tensor(carr, dtype=torch.float32).reshape(1, 1, -1).to(device)
+            else:
+                clean = recon_wm
+        else:
+            clean = item["waveform"].to(device)
+            with torch.no_grad():
+                recon_wm = backbone.forward_full(clean, msg)["recon_wm"]
+
         cloned = f5tts_clone(f5tts, recon_wm, args.gen_text, args.tmp_dir, f"u{i}", args.ref_text)
 
         a_src = detect_acc(backbone, recon_wm, msg)
@@ -235,6 +288,20 @@ def main():
         accs_src.append(a_src)
         accs_clone.append(a_cln)
         print(f"  [{i}] acc_source={a_src:.4f}  acc_f5tts_clone={a_cln:.4f}", flush=True)
+
+        # SEED-MISMATCH GUARD (protected-arm mode). acc_source is detection on the input
+        # audio itself, so it must be ~0.99 if the regenerated message matches the one
+        # embedded when these WAVs were made. Near 0.5 means the seed convention differs
+        # and every clone number below is meaningless -- fail loudly rather than let a
+        # silent mismatch be read as "protection destroys attribution".
+        if args.input_wav_dir and i == 0 and a_src < 0.85:
+            raise SystemExit(
+                f"\nABORT: acc_source={a_src:.4f} on the INPUT audio (expected ~0.99).\n"
+                f"The message regenerated with seed {args.message_seed_base}+{i} does not "
+                f"match the one embedded in {args.input_wav_dir}.\n"
+                f"Fix --message_seed_base to match the generating script before trusting "
+                f"any result from this run."
+            )
 
         if args.save_clones_dir:
             import soundfile as sf
@@ -247,6 +314,9 @@ def main():
         if args.output and (i + 1) % 10 == 0:
             with open(args.output, "w") as f:
                 json.dump({"label": "f5tts_watermark_only", "checkpoint": args.checkpoint,
+                           "arm": args.wav_suffix if args.input_wav_dir else "watermarked_here",
+                           "input_wav_dir": args.input_wav_dir,
+                           "message_seed_base": args.message_seed_base,
                            "n_completed": i + 1,
                            "results": {"acc_source_mean": sum(accs_src) / len(accs_src),
                                        "acc_clone_mean": sum(accs_clone) / len(accs_clone),
@@ -273,6 +343,9 @@ def main():
     if args.output:
         with open(args.output, "w") as f:
             json.dump({"label": "f5tts_watermark_only", "checkpoint": args.checkpoint,
+                       "arm": args.wav_suffix if args.input_wav_dir else "watermarked_here",
+                       "input_wav_dir": args.input_wav_dir,
+                       "message_seed_base": args.message_seed_base,
                        "n_completed": len(accs_clone),
                        "reference_points": {"voicemark_published_f5tts": 0.979,
                                              "this_project_xtts": 0.6119,

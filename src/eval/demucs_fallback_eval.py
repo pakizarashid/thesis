@@ -228,6 +228,13 @@ def main():
                    help="One utterance, verbose. Verifies the denoiser loads and does not "
                         "destroy the audio. ALWAYS run this first.")
     p.add_argument("--n_utterances", type=int, default=100)
+    p.add_argument("--audio_only", action="store_true",
+                   help="Write the audio/ WAV set (clean / watermarked / denoised) and the "
+                        "on-audio watermark accuracies, but SKIP YourTTS cloning and all SIM "
+                        "metrics. Use when those were already measured and the only thing "
+                        "missing is the WAVs -- e.g. to feed f5tts_watermark_only.py "
+                        "--input_wav_dir, which runs in a separate env. Requires "
+                        "--save_clones_dir. SIM fields come out as NaN by design.")
     p.add_argument("--save_clones_dir", type=str, default=None,
                    help="Write reference + clone WAVs here so SIM can be RE-SCORED with "
                         "ECAPA-TDNN via ecapa_sim_eval.py. Required for any comparison "
@@ -262,6 +269,9 @@ def main():
     p.add_argument("--include_ffn", action="store_true")
     p.add_argument("--capacity_lora_r", type=int, default=32)
     args = p.parse_args()
+
+    if args.audio_only and not args.save_clones_dir:
+        raise SystemExit("--audio_only writes WAVs and nothing else; pass --save_clones_dir.")
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     step_size = args.step_size if args.step_size is not None else args.epsilon / 4
@@ -352,6 +362,27 @@ def main():
             m["acc_protected"].append(detect_acc(backbone, perturbed, message))
             m["acc_protected_denoised"].append(detect_acc(backbone, prot_den, message))
 
+            # --audio_only: the expensive part below is 3 YourTTS syntheses + 3 ECAPA
+            # passes per utterance, all of which were already measured in the completed
+            # n=100 run. When the ONLY thing needed is the WAV set for a cross-environment
+            # arm (e.g. F5-TTS via f5tts_watermark_only.py --input_wav_dir), skip them.
+            # PGD above still runs -- the perturbation is what the WAVs are for.
+            if args.audio_only:
+                if args.save_clones_dir:
+                    import soundfile as sf
+                    def _wa(tag, wav):
+                        d = os.path.join(args.save_clones_dir, "audio")
+                        os.makedirs(d, exist_ok=True)
+                        sf.write(os.path.join(d, f"sample{i}_{tag}.wav"),
+                                 wav.detach().cpu().reshape(-1).numpy(), 16000)
+                    _wa("clean", clean_audio[0])
+                    _wa("watermarked", perturbed[0])
+                    _wa("denoised", prot_den[0])
+                print(f"  [{i}] acc: wm={m['acc_wm'][-1]:.4f} prot={m['acc_protected'][-1]:.4f} "
+                      f"prot+DEMUCS={m['acc_protected_denoised'][-1]:.4f} | wavs written",
+                      flush=True)
+                continue
+
             c_clean = surrogate.clone_voice(clean_audio, text=args.surrogate_text)
             c_prot = surrogate.clone_voice(perturbed, text=args.surrogate_text)
             c_den = surrogate.clone_voice(prot_den, text=args.surrogate_text)
@@ -400,14 +431,15 @@ def main():
 
         # Incremental save every 10 utterances -- a session timeout must not cost the run.
         if args.output and (i + 1) % 10 == 0:
-            means = {k: sum(v) / len(v) for k, v in m.items()}
+            means = {k: (sum(v) / len(v) if v else float("nan")) for k, v in m.items()}
             with open(args.output, "w") as f:
                 json.dump({"label": "demucs_fallback", "backend": backend,
                            "checkpoint": args.checkpoint, "n_completed": i + 1,
                            "results": {**means, **{f"{k}_values": v for k, v in m.items()}}},
                           f, indent=2)
 
-    means = {k: sum(v) / len(v) for k, v in m.items()}
+    # Empty lists occur only under --audio_only, where the clone/SIM block is skipped.
+    means = {k: (sum(v) / len(v) if v else float("nan")) for k, v in m.items()}
 
     sc, sp, sd = means["sim_clean_clone"], means["sim_protected_clone"], means["sim_denoised_clone"]
     protection_retained = (sc - sd) / (sc - sp) if abs(sc - sp) > 1e-6 else float("nan")
