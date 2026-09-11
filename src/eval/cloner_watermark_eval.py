@@ -324,15 +324,36 @@ def clone_cosyvoice(model, speaker_audio_16k, gen_text, tmp_dir, tag, ref_text, 
 
 def load_maskgct(device, args):
     """
-    Amphion monorepo, not a pip package. espeak-ng is a HARD system dependency:
+    Amphion monorepo, not a pip package. espeak-ng is a HARD system dependency (used by
+    phonemizer's EspeakBackend, which the g2p tokenizer constructs unconditionally --
+    even for English-only text, PhonemeBpeTokenizer.__init__ builds all six language
+    backends):
 
         apt-get install -y espeak-ng
         git clone https://github.com/open-mmlab/Amphion.git
-        pip install -r Amphion/models/tts/maskgct/requirements.txt
 
-    Weights (~10 GB across five components) download from amphion/MaskGCT on first
-    use. --amphion_root must be the repo root, because maskgct_utils imports by the
-    'models.tts.maskgct...' package path.
+    DO NOT `pip install -r Amphion/models/tts/maskgct/requirements.txt` as-is: it pins
+    torch==2.0.1, numpy==1.26.0, transformers==4.41.2 (would replace the working stack).
+
+    Its language-dependency list needs trimming, not skipping wholesale -- traced through
+    the ACTUAL chain (maskgct_utils -> g2p_generation -> g2p/__init__ -> cleaners, which
+    unconditionally imports ALL SIX per-language modules regardless of what language the
+    text is in):
+      NEEDED:     pyopenjtalk + pykakasi (via cleaners -> japanese.py, fetched verbatim --
+                  do not trust a prior summary of this file's imports again), jieba +
+                  cn2an + pypinyin (via cleaners -> mandarin.py), unidecode + inflect
+                  (via english.py), phonemizer + LangSegment (g2p/utils/g2p.py,
+                  g2p/g2p/__init__.py)
+      NOT needed: g2p_en (english.py uses unidecode/inflect, not g2p_en) -- the only
+                  package from the upstream requirements.txt actually confirmed unused
+    pyopenjtalk is the one real build risk (C++ extension); pykakasi and everything
+    else here is pure Python. If pyopenjtalk has no prebuilt wheel for this Python
+    version, expect the same class of failure openai-whisper==20231117 hit for CosyVoice.
+
+    Weights (five safetensors components) download from amphion/MaskGCT on first use.
+    --amphion_root must be the repo root, because maskgct_utils imports by the
+    'models.tts.maskgct...' package path, and utils.util (for load_config) sits at
+    the repo root too.
     """
     root = args.amphion_root
     if not root or not os.path.isdir(root):
@@ -341,45 +362,98 @@ def load_maskgct(device, args):
             f"(got {root!r}). See the docstring of load_maskgct for setup.")
     sys.path.insert(0, root)
 
-    from huggingface_hub import hf_hub_download
-    import safetensors.torch
-    from models.tts.maskgct.maskgct_utils import (
-        build_semantic_model, build_semantic_codec, build_acoustic_codec,
-        build_t2s_model, build_s2a_model, MaskGCT_Inference_Pipeline,
-    )
-    from omegaconf import OmegaConf
+    # Amphion's own code assumes cwd == repo root for a handful of relative resource
+    # paths -- e.g. g2p/g2p/mandarin.py reads
+    # "./models/tts/maskgct/g2p/sources/g2p_chinese_model/polychar.txt" AT IMPORT TIME
+    # and calls exit() if it's not found there (surfaces as NameError outside a REPL,
+    # since exit() isn't a builtin in a plain script). Same convention VoiceMark's own
+    # vendored SBW model uses -- see backbone.py's _prev_cwd chdir pattern, which this
+    # mirrors. chdir for the import + build + checkpoint-loading only, then always
+    # restore, so this script's OWN relative paths (--data_root, --save_clones_dir,
+    # --tmp_dir) keep resolving against the invocation directory afterward.
+    _prev_cwd = os.getcwd()
+    try:
+        os.chdir(root)
 
-    cfg = OmegaConf.load(os.path.join(root, "models/tts/maskgct/config/maskgct.json"))
+        # This script's OWN top-of-file sys.path setup adds .../src/models (for
+        # `from backbone import ...`) and .../src (which ALSO contains a models/
+        # subdirectory) to sys.path for this process's whole lifetime. Amphion's repo
+        # root ALSO has a top-level models/ directory (models/tts/maskgct/...). Two
+        # real 'models' packages compete on sys.path -- whichever gets resolved and
+        # cached in sys.modules FIRST wins for every subsequent `from models.X import
+        # Y` in this process, regardless of what gets inserted at sys.path[0]
+        # afterward (Python checks sys.modules before ever searching sys.path again).
+        # Evict any stale entry so this import resolves fresh, now that Amphion's root
+        # is at sys.path[0].
+        for _mod_name in list(sys.modules):
+            if _mod_name == "models" or _mod_name.startswith("models."):
+                del sys.modules[_mod_name]
 
-    semantic_model, semantic_mean, semantic_std = build_semantic_model(device)
-    semantic_codec = build_semantic_codec(cfg.model.semantic_codec, device)
-    codec_encoder, codec_decoder = build_acoustic_codec(cfg.model.acoustic_codec, device)
-    t2s_model = build_t2s_model(cfg.model.t2s_model, device)
-    s2a_model_1layer = build_s2a_model(cfg.model.s2a_model.s2a_1layer, device)
-    s2a_model_full = build_s2a_model(cfg.model.s2a_model.s2a_full, device)
+        from huggingface_hub import hf_hub_download
+        import safetensors.torch
+        from models.tts.maskgct.maskgct_utils import (
+            build_semantic_model, build_semantic_codec, build_acoustic_codec,
+            build_t2s_model, build_s2a_model, MaskGCT_Inference_Pipeline,
+        )
+        # Verify we actually got AMPHION's models package, not a same-named one from
+        # elsewhere on sys.path -- fail loudly here rather than with a confusing
+        # AttributeError deep inside build_semantic_model() a moment later.
+        import models as _amphion_models_check
+        _root_norm = os.path.normpath(root)
+        _resolved = [os.path.normpath(p) for p in getattr(_amphion_models_check, "__path__", [])]
+        if not any(p.startswith(_root_norm) for p in _resolved):
+            raise RuntimeError(
+                f"'models' resolved to {_resolved}, not under --amphion_root ({root}). "
+                f"A same-named 'models' package elsewhere on sys.path is shadowing "
+                f"Amphion's. sys.path[:6]={sys.path[:6]}")
+        del _amphion_models_check, _root_norm, _resolved
 
-    files = {
-        "semantic_codec": "semantic_codec/model.safetensors",
-        "codec_encoder": "acoustic_codec/model.safetensors",
-        "codec_decoder": "acoustic_codec/model_1.safetensors",
-        "t2s_model": "t2s_model/model.safetensors",
-        "s2a_1layer": "s2a_model/s2a_model_1layer/model.safetensors",
-        "s2a_full": "s2a_model/s2a_model_full/model.safetensors",
-    }
-    ckpt = {k: hf_hub_download("amphion/MaskGCT", filename=v) for k, v in files.items()}
-    safetensors.torch.load_model(semantic_codec, ckpt["semantic_codec"])
-    safetensors.torch.load_model(codec_encoder, ckpt["codec_encoder"])
-    safetensors.torch.load_model(codec_decoder, ckpt["codec_decoder"])
-    safetensors.torch.load_model(t2s_model, ckpt["t2s_model"])
-    safetensors.torch.load_model(s2a_model_1layer, ckpt["s2a_1layer"])
-    safetensors.torch.load_model(s2a_model_full, ckpt["s2a_full"])
+        # NOT omegaconf -- Amphion has its own config loader (utils/util.py) that
+        # returns a JsonHParams object with the same cfg.model.semantic_codec
+        # attribute access OmegaConf would give, but this is what maskgct_utils'
+        # build_* functions were actually written against. Same name-collision risk
+        # as 'models' above ('utils' is an extremely common top-level name) -- evict
+        # defensively here too.
+        for _mod_name in list(sys.modules):
+            if _mod_name == "utils" or _mod_name.startswith("utils."):
+                del sys.modules[_mod_name]
+        from utils.util import load_config
+
+        cfg = load_config(os.path.join(root, "models/tts/maskgct/config/maskgct.json"))
+
+        semantic_model, semantic_mean, semantic_std = build_semantic_model(device)
+        semantic_codec = build_semantic_codec(cfg.model.semantic_codec, device)
+        codec_encoder, codec_decoder = build_acoustic_codec(cfg.model.acoustic_codec, device)
+        t2s_model = build_t2s_model(cfg.model.t2s_model, device)
+        s2a_model_1layer = build_s2a_model(cfg.model.s2a_model.s2a_1layer, device)
+        s2a_model_full = build_s2a_model(cfg.model.s2a_model.s2a_full, device)
+
+        files = {
+            "semantic_codec": "semantic_codec/model.safetensors",
+            "codec_encoder": "acoustic_codec/model.safetensors",
+            "codec_decoder": "acoustic_codec/model_1.safetensors",
+            "t2s_model": "t2s_model/model.safetensors",
+            "s2a_1layer": "s2a_model/s2a_model_1layer/model.safetensors",
+            "s2a_full": "s2a_model/s2a_model_full/model.safetensors",
+        }
+        ckpt = {k: hf_hub_download("amphion/MaskGCT", filename=v) for k, v in files.items()}
+        safetensors.torch.load_model(semantic_codec, ckpt["semantic_codec"])
+        safetensors.torch.load_model(codec_encoder, ckpt["codec_encoder"])
+        safetensors.torch.load_model(codec_decoder, ckpt["codec_decoder"])
+        safetensors.torch.load_model(t2s_model, ckpt["t2s_model"])
+        safetensors.torch.load_model(s2a_model_1layer, ckpt["s2a_1layer"])
+        safetensors.torch.load_model(s2a_model_full, ckpt["s2a_full"])
+
+        pipeline = MaskGCT_Inference_Pipeline(
+            semantic_model, semantic_codec, codec_encoder, codec_decoder,
+            t2s_model, s2a_model_1layer, s2a_model_full,
+            semantic_mean, semantic_std, device,
+        )
+    finally:
+        os.chdir(_prev_cwd)
 
     print("[maskgct] pipeline built")
-    return MaskGCT_Inference_Pipeline(
-        semantic_model, semantic_codec, codec_encoder, codec_decoder,
-        t2s_model, s2a_model_1layer, s2a_model_full,
-        semantic_mean, semantic_std, device,
-    )
+    return pipeline
 
 
 def clone_maskgct(model, speaker_audio_16k, gen_text, tmp_dir, tag, ref_text, args):
@@ -388,12 +462,24 @@ def clone_maskgct(model, speaker_audio_16k, gen_text, tmp_dir, tag, ref_text, ar
                       target_len=...) -> numpy audio @ 24 kHz.
     target_len=None lets the model choose its own duration.
     """
-    ref_path = write_ref_wav(speaker_audio_16k, tmp_dir, tag)
+    # abspath BEFORE any chdir below -- otherwise this relative path would resolve
+    # against the wrong directory once cwd changes.
+    ref_path = os.path.abspath(write_ref_wav(speaker_audio_16k, tmp_dir, tag))
     if not ref_text:
         raise SystemExit("MaskGCT requires a prompt transcript; --auto_transcribe is off "
                          "and --ref_text is empty.")
-    wav = model.maskgct_inference(
-        ref_path, ref_text, gen_text, "en", "en", target_len=args.target_len)
+    # Text-to-phoneme conversion (g2p/chn_eng_g2p) runs PER CALL here, not just at
+    # pipeline-build time -- if it reads any relative-path resource the same way
+    # mandarin.py's module-level polychar.txt load did, this needs cwd == Amphion
+    # root too. Defensive, cheap: same chdir/restore as load_maskgct.
+    _prev_cwd = os.getcwd()
+    try:
+        if args.amphion_root:
+            os.chdir(args.amphion_root)
+        wav = model.maskgct_inference(
+            ref_path, ref_text, gen_text, "en", "en", target_len=args.target_len)
+    finally:
+        os.chdir(_prev_cwd)
     return to_16k_tensor(wav, 24000, speaker_audio_16k.device)
 
 
