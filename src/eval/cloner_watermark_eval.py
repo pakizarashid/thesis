@@ -527,6 +527,17 @@ def main():
                    default="This is a test sentence for voice cloning.")
     p.add_argument("--ref_text", type=str, default="",
                    help="Fixed prompt transcript. Leave empty and use --auto_transcribe.")
+    p.add_argument("--gen_text_from_transcript", action="store_true",
+                   help="CARRIER-PROBE (2026-09-12): use each utterance's own "
+                        "LibriSpeech ground-truth transcript as BOTH the synthesis "
+                        "target (gen_text) and the prompt transcript (ref_text), "
+                        "instead of the fixed --gen_text sentence. Requires "
+                        "LibriSpeech input (ignored in --input_wav_dir mode, where no "
+                        "transcript is available). Makes the clone say the same words "
+                        "as the reference, so a downstream frame-by-frame latent "
+                        "comparison (carrier_probe.py) is not confounded by content "
+                        "mismatch. Default off -- every other use of this script for "
+                        "ACC-style measurement is unaffected.")
     p.add_argument("--auto_transcribe", action="store_true",
                    help="Transcribe each reference with faster-whisper. REQUIRED for "
                         "cosyvoice and maskgct (they do not infer the prompt text); "
@@ -600,20 +611,44 @@ def main():
     backbone.model.to(device)
     model = load_fn(device, args)
 
-    def clone_one(recon_wm, tag):
+    def trim_trailing_silence(waveform, eps: float = 1e-4):
+        """
+        CARRIER-PROBE (2026-09-12, third fix). Cuts trailing near-zero samples --
+        the _crop_or_pad padding LibriSpeechSubset appends when an utterance is
+        shorter than --crop_seconds -- off a reference waveform. Without this,
+        --crop_seconds 20 pads most (shorter) LibriSpeech utterances with several
+        seconds of trailing silence, which carrier_probe.py's frame-count-mismatch
+        check misreads as a content mismatch. Same fix already applied to
+        gen_samples_yourtts.py/gen_samples_xtts.py -- see that file's docstring.
+        """
+        w = waveform.squeeze(0) if waveform.dim() > 1 else waveform
+        nz = (w.abs() > eps).nonzero()
+        if nz.numel() == 0:
+            return waveform
+        last = nz[-1].item()
+        trimmed = w[: last + 1]
+        return trimmed.unsqueeze(0) if waveform.dim() > 1 else trimmed
+
+    def clone_one(recon_wm, tag, own_transcript=None):
+        gen_text = args.gen_text
         ref_text = args.ref_text
-        if transcribe is not None:
+        if args.gen_text_from_transcript and own_transcript:
+            # Known ground truth -- use it for both roles, skip whisper entirely.
+            gen_text = own_transcript
+            ref_text = own_transcript
+        elif transcribe is not None:
             ref_text = transcribe(write_ref_wav(recon_wm, args.tmp_dir, tag))
-        return clone_fn(model, recon_wm, args.gen_text, args.tmp_dir, tag, ref_text, args)
+        return clone_fn(model, recon_wm, gen_text, args.tmp_dir, tag, ref_text, args)
 
     if args.diagnostic:
         print("\n" + "=" * 64 + f"\nDIAGNOSTIC ({args.cloner}, 1 utterance)\n" + "=" * 64)
         batch = next(iter(loader))
-        clean = batch["waveform"].to(device)
+        clean = trim_trailing_silence(batch["waveform"][0]).unsqueeze(0).to(device)
         msg = random_message(16, 1, device, seed=args.message_seed_base)
         with torch.no_grad():
             recon_wm = backbone.forward_full(clean, msg)["recon_wm"]
-        cloned = clone_one(recon_wm, "diag")
+        diag_transcript = (batch.get("transcript") or [None])[0]
+        cloned = clone_one(recon_wm, "diag", own_transcript=diag_transcript)
         print(f"  recon_wm {tuple(recon_wm.shape)}  clone {tuple(cloned.shape)}")
         print(f"  ACC on watermarked source : {detect_acc(backbone, recon_wm, msg):.4f}  (expect ~0.99)")
         print(f"  ACC on {args.cloner} clone     : {detect_acc(backbone, cloned, msg):.4f}  (0.5 = chance)")
@@ -656,11 +691,12 @@ def main():
             assert sr == 16000, f"{item} is {sr} Hz, expected 16000"
             recon_wm = torch.as_tensor(arr, dtype=torch.float32).reshape(1, 1, -1).to(device)
         else:
-            clean = item["waveform"].to(device)
+            clean = trim_trailing_silence(item["waveform"][0]).unsqueeze(0).to(device)
             with torch.no_grad():
                 recon_wm = backbone.forward_full(clean, msg)["recon_wm"]
 
-        cloned = clone_one(recon_wm, f"u{i}")
+        loop_transcript = (item.get("transcript") or [None])[0] if kind == "batch" else None
+        cloned = clone_one(recon_wm, f"u{i}", own_transcript=loop_transcript)
 
         a_src = detect_acc(backbone, recon_wm, msg)
         a_cln = detect_acc(backbone, cloned, msg)
