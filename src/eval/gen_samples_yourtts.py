@@ -110,7 +110,11 @@ def main():
                          "per-layer comparison to be valid; pass --no_use_own_transcript to "
                          "restore the old fixed-sentence behavior for other experiments).")
     p.add_argument("--no_use_own_transcript", dest="use_own_transcript", action="store_false")
-    p.add_argument("--save_clones_dir", type=str, required=True)
+    p.add_argument("--save_clones_dir", type=str, default=None,
+                    help="Omit to skip writing audio to disk entirely -- "
+                         "CARRIER-REWEIGHT only needs the printed "
+                         "acc_yourtts_clone numbers, not the audio itself. Pass "
+                         "a path only when you actually want to keep the clones.")
     p.add_argument("--data_root", type=str, default="./data/librispeech")
     p.add_argument("--n_speakers", type=int, default=60)
     p.add_argument("--utterances_per_speaker", type=int, default=15)
@@ -147,7 +151,8 @@ def main():
     )
     loader = DataLoader(eval_ds, batch_size=1, shuffle=False, collate_fn=collate_librispeech)
 
-    os.makedirs(args.save_clones_dir, exist_ok=True)
+    if args.save_clones_dir:
+        os.makedirs(args.save_clones_dir, exist_ok=True)
     n_written = 0
     accs_clone = []
     for i, batch in enumerate(loader):
@@ -186,13 +191,18 @@ def main():
             if a_src < 0.85:
                 raise SystemExit("ABORT: acc_source too low -- fix checkpoint/seed before saving.")
 
-        sf.write(os.path.join(args.save_clones_dir, f"sample{i}_reference.wav"),
-                 recon_wm[0].detach().cpu().reshape(-1).numpy(), 16000)
-        sf.write(os.path.join(args.save_clones_dir, f"sample{i}_clone_yourtts.wav"),
-                 cloned[0].detach().cpu().reshape(-1).numpy(), 16000)
+        if args.save_clones_dir:
+            sf.write(os.path.join(args.save_clones_dir, f"sample{i}_reference.wav"),
+                     recon_wm[0].detach().cpu().reshape(-1).numpy(), 16000)
+            sf.write(os.path.join(args.save_clones_dir, f"sample{i}_clone_yourtts.wav"),
+                     cloned[0].detach().cpu().reshape(-1).numpy(), 16000)
         n_written += 1
 
-    print(f"[gen_samples_yourtts] wrote {n_written} reference/clone pairs to {args.save_clones_dir}")
+    if args.save_clones_dir:
+        print(f"[gen_samples_yourtts] wrote {n_written} reference/clone pairs to {args.save_clones_dir}")
+    else:
+        print(f"[gen_samples_yourtts] processed {n_written} utterances (audio not saved -- "
+              f"pass --save_clones_dir to keep the .wav files).")
     if accs_clone:
         mean_acc = sum(accs_clone) / len(accs_clone)
         print(f"[gen_samples_yourtts] RESULT mean acc_yourtts_clone={mean_acc:.4f} (n={len(accs_clone)}, "
