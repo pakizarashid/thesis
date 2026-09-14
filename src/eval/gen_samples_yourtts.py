@@ -120,10 +120,21 @@ def main():
                     help="Bumped up from the project's usual 3.0s default -- see the "
                          "CROP_SECONDS note in this file's docstring. Only safe to lower back "
                          "to 3.0 if --no_use_own_transcript is also passed.")
+    p.add_argument("--layer_scales", type=str, default="1,1,1,1,1,1,1",
+                    help="CARRIER-REWEIGHT (2026-09-14): 7 comma-separated floats, one per "
+                         "RVQ layer 2-8 in order, scaling that layer's msg_processor output "
+                         "before summing into acoustic_wm. No retraining. Default all-1.0 "
+                         "leaves behavior exactly unchanged.")
     args = p.parse_args()
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     backbone = build_backbone(args.checkpoint, args.lora_r, args.lora_alpha, False, 32)
+    layer_scales = [float(s) for s in args.layer_scales.split(",")]
+    assert len(layer_scales) == 7, f"--layer_scales needs 7 floats, got {len(layer_scales)}"
+    if any(s != 1.0 for s in layer_scales):
+        from layer_reweight import LayerReweightMsgProcessor
+        backbone.model.msg_processor = LayerReweightMsgProcessor(backbone.model.msg_processor, layer_scales)
+        print(f"[layer_reweight] ACTIVE: scales={layer_scales} (layer2..layer8 in order)")
     print("[gen_samples_yourtts] loading YourTTS surrogate...")
     surrogate = load_yourtts_surrogate(device=device)
 
@@ -138,6 +149,7 @@ def main():
 
     os.makedirs(args.save_clones_dir, exist_ok=True)
     n_written = 0
+    accs_clone = []
     for i, batch in enumerate(loader):
         if i >= args.n_utterances:
             break
@@ -159,6 +171,9 @@ def main():
             out = backbone.forward_full(clean_audio, message)
             recon_wm = out["recon_wm"].detach()
             cloned = surrogate.clone_voice(recon_wm, text=text)
+            a_cln = detect_acc(backbone, cloned, message)
+            accs_clone.append(a_cln)
+            print(f"[gen_samples_yourtts] [{i}] acc_yourtts_clone={a_cln:.4f}")
 
         # Seed-mismatch guard, same discipline as cloner_watermark_eval.py: acc_source
         # should be ~0.99 (watermark decodes from the source itself) before trusting
@@ -178,6 +193,10 @@ def main():
         n_written += 1
 
     print(f"[gen_samples_yourtts] wrote {n_written} reference/clone pairs to {args.save_clones_dir}")
+    if accs_clone:
+        mean_acc = sum(accs_clone) / len(accs_clone)
+        print(f"[gen_samples_yourtts] RESULT mean acc_yourtts_clone={mean_acc:.4f} (n={len(accs_clone)}, "
+              f"layer_scales={layer_scales})")
 
 
 if __name__ == "__main__":
