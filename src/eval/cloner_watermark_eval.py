@@ -119,9 +119,15 @@ def preflight():
     print(f"[preflight] omegaconf {ver} ok; numpy/torch ok")
 
 
-def build_backbone(checkpoint_path, r=8, alpha=16):
+def build_backbone(checkpoint_path, r=8, alpha=16, msgproc_lora_r=None):
+    # msgproc_lora_r wiring (2026-09-14): matches disruption_pgd.py /
+    # xtts_transfer_eval.py / save_audio_samples.py -- only needed to load a
+    # checkpoint trained with train_route2_clone_aware.py --msgproc_lora_r.
+    # MUST match the value used at training time or load_state_dict will hit
+    # a shape mismatch on msg_processor's LoRA tensors.
     backbone = VoiceMarkBackbone()
-    apply_lora_adapters(backbone, r=r, alpha=alpha)
+    target_ranks = {"msg_processor": msgproc_lora_r} if msgproc_lora_r else None
+    apply_lora_adapters(backbone, r=r, alpha=alpha, target_ranks=target_ranks)
     if checkpoint_path is not None:
         ckpt = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
         backbone.model.load_state_dict(ckpt["lora_state_dict"], strict=False)
@@ -558,6 +564,11 @@ def main():
     p.add_argument("--crop_seconds", type=float, default=3.0)
     p.add_argument("--lora_r", type=int, default=8)
     p.add_argument("--lora_alpha", type=int, default=16)
+    p.add_argument("--msgproc_lora_r", type=int, default=None,
+                    help="Only needed to load a checkpoint trained with "
+                         "train_route2_clone_aware.py --msgproc_lora_r -- MUST match "
+                         "the value used at training time or load_state_dict will hit "
+                         "a shape mismatch on msg_processor's LoRA tensors.")
     args = p.parse_args()
 
     preflight()
@@ -579,7 +590,7 @@ def main():
     # unpickling). Building the backbone alone takes seconds; discovering the break
     # after a 10-minute model download and an hour of cloning does not.
     if args.check_env:
-        backbone = build_backbone(args.checkpoint, args.lora_r, args.lora_alpha)
+        backbone = build_backbone(args.checkpoint, args.lora_r, args.lora_alpha, msgproc_lora_r=args.msgproc_lora_r)
         backbone.model.to(device)
         wav = torch.randn(1, 1, 16000, device=device) * 0.01
         msg = random_message(16, 1, device, seed=0)
@@ -607,7 +618,7 @@ def main():
         loader = DataLoader(eval_ds, batch_size=1, shuffle=False,
                             collate_fn=collate_librispeech)
 
-    backbone = build_backbone(args.checkpoint, args.lora_r, args.lora_alpha)
+    backbone = build_backbone(args.checkpoint, args.lora_r, args.lora_alpha, msgproc_lora_r=args.msgproc_lora_r)
     backbone.model.to(device)
     model = load_fn(device, args)
 
