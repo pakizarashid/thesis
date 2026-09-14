@@ -79,7 +79,32 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "losses"))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.dirname(__file__))
 
-from disruption_pgd import build_backbone, random_message
+# 2026-09-14 fix: avoid disruption_pgd.py -- it imports surrogate_vc.py ->
+# coqui-TTS at module scope, which conflicts with transformers==4.41.2 (pinned
+# for Amphion/MaskGCT). Duplicate the two torch-only functions instead, same
+# convention cloner_watermark_eval.py already uses for the same reason.
+from backbone import VoiceMarkBackbone
+from adapters import apply_lora_adapters
+
+
+def build_backbone(checkpoint_path, r=8, alpha=16, include_ffn=False, capacity_lora_r=32):
+    backbone = VoiceMarkBackbone()
+    apply_lora_adapters(backbone, r=r, alpha=alpha)
+    if checkpoint_path is not None:
+        ckpt = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+        backbone.model.load_state_dict(ckpt["lora_state_dict"], strict=False)
+        print(f"[build_backbone] loaded {checkpoint_path} (epoch {ckpt.get('epoch')})")
+    else:
+        print("[build_backbone] No checkpoint given -- LoRA at zero-init (== pretrained VoiceMark).")
+    backbone.model.eval()
+    for p in backbone.model.parameters():
+        p.requires_grad_(False)
+    return backbone
+
+
+def random_message(nbits, batch_size, device, seed):
+    gen = torch.Generator(device=device).manual_seed(seed)
+    return torch.randint(0, 2, (batch_size, nbits), generator=gen, device=device)
 
 RVQ_LAYER_LABELS = [f"layer{k}" for k in range(2, 9)]  # 7 labels, RVQ layers 2-8
 
