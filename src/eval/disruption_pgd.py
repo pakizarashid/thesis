@@ -116,7 +116,8 @@ from train_stage2 import compute_detection_accuracy
 from voicemark_losses import compute_ldec
 
 
-def build_backbone(checkpoint_path: str, r: int, alpha: int, include_ffn: bool, capacity_lora_r: int):
+def build_backbone(checkpoint_path: str, r: int, alpha: int, include_ffn: bool, capacity_lora_r: int,
+                    msgproc_lora_r: int = None):
     """
     Mirrors disruption_effectiveness_capacity.py's build_backbone, generalized
     to handle BOTH plain (stage1 / plain stage2) and capacity (stage2_capacity_ffn)
@@ -139,7 +140,13 @@ def build_backbone(checkpoint_path: str, r: int, alpha: int, include_ffn: bool, 
             include_ffn=True, ffn_r=capacity_lora_r, ffn_targets=("msg_processor",),
         )
     else:
-        apply_lora_adapters(backbone, r=r, alpha=alpha)
+        # 2026-09-14 quality-tradeoff patch: msgproc_lora_r reconstructs a
+        # checkpoint trained with train_route2_clone_aware.py --msgproc_lora_r
+        # (independent, lower rank for msg_processor only) -- MUST match the
+        # value used at training time or load_state_dict will hit a shape
+        # mismatch on msg_processor's LoRA tensors.
+        target_ranks = {"msg_processor": msgproc_lora_r} if msgproc_lora_r else None
+        apply_lora_adapters(backbone, r=r, alpha=alpha, target_ranks=target_ranks)
 
     if checkpoint_path is not None:
         ckpt = torch.load(checkpoint_path, map_location="cpu", weights_only=False)

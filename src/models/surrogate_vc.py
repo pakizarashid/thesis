@@ -42,6 +42,16 @@ import sys
 import torch
 import torch.nn as nn
 
+# --- isin_mps_friendly shim (transformers>=5.1 removed it; TTS's tortoise code still imports it) ---
+import transformers.pytorch_utils as _ptu
+if not hasattr(_ptu, "isin_mps_friendly"):
+    def _isin_mps_friendly_shim(elements, test_elements):
+        # Original only special-cased MPS devices on old torch; on CUDA/CPU
+        # (this project's runtime) it was always just torch.isin.
+        return torch.isin(elements, test_elements)
+    _ptu.isin_mps_friendly = _isin_mps_friendly_shim
+# --- end isin_mps_friendly shim ---
+
 from TTS.tts.utils.helpers import generate_path, sequence_mask
 
 

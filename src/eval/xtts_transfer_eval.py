@@ -188,6 +188,11 @@ def main():
     p.add_argument("--checkpoint", type=str, default=None)
     p.add_argument("--lora_r", type=int, default=8)
     p.add_argument("--lora_alpha", type=int, default=16)
+    p.add_argument("--msgproc_lora_r", type=int, default=None,
+                    help="Only needed to load a checkpoint trained with "
+                         "train_route2_clone_aware.py --msgproc_lora_r -- MUST match "
+                         "the value used at training time or load_state_dict will hit "
+                         "a shape mismatch on msg_processor's LoRA tensors.")
     p.add_argument("--epsilon", type=float, default=0.0)
     p.add_argument("--step_size", type=float, default=None)
     p.add_argument("--n_steps", type=int, default=10)
@@ -248,7 +253,8 @@ def main():
     eval_loader = DataLoader(eval_ds, batch_size=1, shuffle=False, collate_fn=collate_fn, drop_last=False)
 
     backbone = build_backbone(args.checkpoint, args.lora_r, args.lora_alpha,
-                               include_ffn=False, capacity_lora_r=32)
+                               include_ffn=False, capacity_lora_r=32,
+                               msgproc_lora_r=args.msgproc_lora_r)
     print("[main] Loading YourTTS surrogate (frozen, for PGD + SIM embedding only)...")
     yourtts_surrogate = load_yourtts_surrogate(device=device)
     xtts = load_xtts(device=device)

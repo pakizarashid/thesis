@@ -219,7 +219,8 @@ def _replace_mha_with_lora(module: nn.Module, r: int, alpha: int, prefix: str = 
 
 
 def apply_lora_adapters(backbone, r: int = 8, alpha: int = 16, targets=("msg_processor", "detector"),
-                         include_ffn: bool = False, ffn_r: int = None, ffn_targets: tuple = None):
+                         include_ffn: bool = False, ffn_r: int = None, ffn_targets: tuple = None,
+                         target_ranks: dict = None):
     """
     Applies LoRA wrapping to msg_processor and/or detector on a VoiceMarkBackbone
     instance (backbone.model.msg_processor / backbone.model.detector). Call this
@@ -264,7 +265,13 @@ def apply_lora_adapters(backbone, r: int = 8, alpha: int = 16, targets=("msg_pro
         if submodule is None:
             raise ValueError(f"No submodule named '{target_name}' on backbone.model")
         this_include_ffn = include_ffn and (target_name in ffn_targets)
-        this_r = ffn_r if this_include_ffn else r
+        if target_ranks and target_name in target_ranks:
+            # 2026-09-14 quality-tradeoff patch: independent rank override per
+            # target, decoupled from include_ffn -- unlike ffn_r, this does NOT
+            # also turn on FFN-layer wrapping, so it isolates capacity alone.
+            this_r = target_ranks[target_name]
+        else:
+            this_r = ffn_r if this_include_ffn else r
         created = _replace_mha_with_lora(submodule, r=this_r, alpha=alpha, prefix=target_name,
                                           include_ffn=this_include_ffn)
         all_created.extend(created)

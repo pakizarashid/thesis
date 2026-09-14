@@ -34,9 +34,10 @@ from librispeech import LibriSpeechSubset, collate_librispeech
 from torch.utils.data import DataLoader
 
 
-def build_backbone(lora_checkpoint_path: str = None, r: int = 8, alpha: int = 16):
+def build_backbone(lora_checkpoint_path: str = None, r: int = 8, alpha: int = 16, msgproc_lora_r: int = None):
     backbone = VoiceMarkBackbone()
-    apply_lora_adapters(backbone, r=r, alpha=alpha)
+    target_ranks = {"msg_processor": msgproc_lora_r} if msgproc_lora_r else None
+    apply_lora_adapters(backbone, r=r, alpha=alpha, target_ranks=target_ranks)
     if lora_checkpoint_path is not None:
         ckpt = torch.load(lora_checkpoint_path, map_location="cpu", weights_only=False)
         backbone.model.load_state_dict(ckpt["lora_state_dict"], strict=False)
@@ -66,6 +67,8 @@ def main():
     p.add_argument("--surrogate_text", type=str, default="This is a test sentence for voice cloning.")
     p.add_argument("--lora_r", type=int, default=8)
     p.add_argument("--lora_alpha", type=int, default=16)
+    p.add_argument("--msgproc_lora_r", type=int, default=None,
+                    help="Must match --msgproc_lora_r used at training time, if any.")
     args = p.parse_args()
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -80,7 +83,8 @@ def main():
     )
     loader = DataLoader(eval_ds, batch_size=1, shuffle=False, collate_fn=collate_librispeech)
 
-    backbone = build_backbone(lora_checkpoint_path=args.checkpoint, r=args.lora_r, alpha=args.lora_alpha)
+    backbone = build_backbone(lora_checkpoint_path=args.checkpoint, r=args.lora_r, alpha=args.lora_alpha,
+                               msgproc_lora_r=args.msgproc_lora_r)
     surrogate = load_yourtts_surrogate(device=device)
     backbone.model.eval()
 

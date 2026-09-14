@@ -118,18 +118,49 @@ from voicemark_losses import compute_ldec
 from disruption_pgd import random_message, detect_acc
 
 
-def build_trainable_backbone(checkpoint_path, lora_r, lora_alpha, train_msg_processor):
+def build_trainable_backbone(checkpoint_path, lora_r, lora_alpha, train_msg_processor, msgproc_lora_r=None):
     """
     Loads the Stage-1 checkpoint, then unfreezes ONLY what this run trains.
     Everything else -- codec, base weights, and (by default) msg_processor --
     stays frozen, exactly as every other script in this project assumes.
+
+    msgproc_lora_r (2026-09-14, quality-tradeoff patch): optional lower rank
+    applied ONLY to msg_processor's LoRA adapters, independent of detector's
+    rank (stays at lora_r). Motivated by the finding that neither --epochs nor
+    --lambda_clone changed --train_msg_processor's PESQ/SIM cost at all (both
+    landed statistically identical to the untouched run) -- pointing at LoRA
+    capacity itself, not training duration or loss weighting, as the lever.
     """
     backbone = VoiceMarkBackbone()
-    apply_lora_adapters(backbone, r=lora_r, alpha=lora_alpha)
+    target_ranks = {"msg_processor": msgproc_lora_r} if msgproc_lora_r else None
+    apply_lora_adapters(backbone, r=lora_r, alpha=lora_alpha, target_ranks=target_ranks)
 
     if checkpoint_path is not None:
         ckpt = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
-        backbone.model.load_state_dict(ckpt["lora_state_dict"], strict=False)
+        state_dict = ckpt["lora_state_dict"]
+        # 2026-09-14 msgproc_lora_r patch: the init checkpoint's LoRA tensors
+        # were saved at their ORIGINAL rank (e.g. Stage 1's msg_processor LoRA
+        # is rank 8). If msgproc_lora_r asks for a different rank, those specific
+        # tensors can't be loaded -- LoRA A/B factors at different ranks aren't
+        # reshapeable into each other (no clean truncation), so msg_processor's
+        # adapters fall back to LoRA zero-init instead (the same starting point
+        # any first --train_msg_processor run has before msg_processor is ever
+        # trained). strict=False alone does NOT handle this -- it only tolerates
+        # missing/extra key NAMES, not a shape mismatch on a key present in both
+        # -- so mismatched keys are dropped explicitly first, loudly, before
+        # load_state_dict runs.
+        own_state = backbone.model.state_dict()
+        skipped = [k for k in state_dict
+                   if k in own_state and state_dict[k].shape != own_state[k].shape]
+        if skipped:
+            print(f"[build] msgproc_lora_r={msgproc_lora_r}: {len(skipped)} checkpoint "
+                  f"tensor(s) don't match the new rank and will NOT be warm-started "
+                  f"(LoRA zero-init instead):")
+            for k in skipped:
+                print(f"    {k}: checkpoint {tuple(state_dict[k].shape)} "
+                      f"vs model {tuple(own_state[k].shape)}")
+            state_dict = {k: v for k, v in state_dict.items() if k not in skipped}
+        backbone.model.load_state_dict(state_dict, strict=False)
         print(f"[build] Loaded LoRA weights from {checkpoint_path} "
               f"(epoch {ckpt.get('epoch')}, train-time avg_acc={ckpt.get('avg_acc')})")
     else:
@@ -250,6 +281,15 @@ def main():
     p.add_argument("--crop_seconds", type=float, default=3.0)
     p.add_argument("--lora_r", type=int, default=8)
     p.add_argument("--lora_alpha", type=int, default=16)
+    p.add_argument("--msgproc_lora_r", type=int, default=None,
+                    help="Lower LoRA rank for msg_processor ONLY (detector stays at "
+                         "--lora_r). Quality-tradeoff test: --epochs and --lambda_clone "
+                         "both failed to change --train_msg_processor's PESQ/SIM cost at "
+                         "all, suggesting the cost comes from LoRA capacity itself, not "
+                         "training duration or loss weighting. Only takes effect with "
+                         "--train_msg_processor. Try e.g. 2 or 4 (full rank default is 8). "
+                         "MUST be passed again, matching, to any eval script loading the "
+                         "resulting checkpoint (e.g. xtts_transfer_eval.py --msgproc_lora_r).")
     args = p.parse_args()
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -275,7 +315,8 @@ def main():
                              collate_fn=collate_librispeech)
 
     backbone, trainable = build_trainable_backbone(
-        args.checkpoint, args.lora_r, args.lora_alpha, args.train_msg_processor)
+        args.checkpoint, args.lora_r, args.lora_alpha, args.train_msg_processor,
+        msgproc_lora_r=args.msgproc_lora_r)
     backbone.model.to(device)
     optimizer = torch.optim.Adam(trainable, lr=args.lr)
 
