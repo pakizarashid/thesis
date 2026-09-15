@@ -140,13 +140,89 @@ earlier n=100 result).
 ---
 
 ## Stage 4 — Clone-aware joint training of the watermark encoder and detector
-Route 2: Training the watermark encoder jointly with the detector, cloning inside the loop
+Route 2: training the watermark encoder jointly with the detector, cloning inside the loop
 
-The selected Stage 4 direction was to retrain the watermark encoder and detector jointly with cloning inside the training loop, rather than further modifying the anti-cloning perturbation objective or building a second differentiable TTS surrogate. LoRA adapters were added on top of the frozen VoiceMark backbone. Training used a joint objective combining clean-audio watermark detection with watermark detection on a differentiable YourTTS clone of the watermarked audio. 
+Route 2 retrains the watermark encoder (`msg_processor`) and detector together, with a differentiable YourTTS clone inside the training loop, so the watermark itself becomes more recoverable after cloning — not just detected better by a smarter detector. LoRA adapters sit on the frozen VoiceMark backbone. Training used `checkpoints/stage1_scaleup_aug` (the original Stage-1 checkpoint meant for Route 2 was lost with its Kaggle session; this separately-trained, git-tracked checkpoint is the base, and its own fresh baselines are the control throughout).
 
-The purpose was to make the watermark itself more recoverable after cloning, rather than relying only on a detector trained for clean or generic augmented audio.
+**Main contribution:** training `msg_processor` jointly with the detector substantially improves watermark attribution after zero-shot cloning, and the gain generalizes across datasets and cloner architectures never seen during training.
 
-**Main contribution:** clone-aware joint training of the watermark encoder (msg_processor) and detector substantially improves watermark attribution after zero-shot voice cloning, including on architectures that were not used as the training cloner.
+**Core ablation** (held-out XTTS, n=100):
+
+| Checkpoint | ACC ↑ | SIM ↓ | Params |
+|---|---|---|---|
+| untrained baseline | 0.5537 | 0.4900 | — |
+| detector-only | 0.6031 | 0.4908 | — |
+| + msg_processor, rank 8 | 0.6913 | 0.3939 | 295K |
+| + msg_processor, rank 2 | 0.7288 | ties rank 8 (p=0.44) | 221K |
+
+Training `msg_processor` (not just the detector) drives the real gain, at a real SIM/PESQ cost (paired p<0.01 throughout). Three independent levers tried against that cost — training duration, clone-loss weight, LoRA rank — all came back non-significant (p>0.18): the cost is structural to touching `msg_processor`'s weights, not tunable away. Rank 2 is statistically tied with rank 8 on ACC/SIM (p=0.21/0.44) with 25% fewer parameters and the best ACC of any variant, so it's the checkpoint used from here on. The same gain and cost pattern replicate on VCTK (speaker-disjoint from training, p<0.00001 both metrics).
+
+**Cross-cloner generalization**, rank-2 checkpoint, pretrained VoiceMark → Route 2:
+
+| Cloner | Before | After | VoiceMark published |
+|---|---|---|---|
+| F5-TTS (n=100) | 0.930 | 0.988 | 0.979 |
+| MaskGCT (n=100) | 0.914 | 0.959 | 0.957 |
+| CosyVoice (n=98/100†) | 0.767 | 0.880 | 0.964 |
+
+† 2/100 utterances skipped where CosyVoice's own text normalizer crashed on an unusual whisper transcript — a cloner-side issue, handled by skip-and-continue, not a watermarking result.
+
+F5-TTS and MaskGCT were already near-ceiling; CosyVoice was not, and Route 2 closes a real chunk of that gap on all three, confirming the gain isn't specific to the YourTTS surrogate used in training. Cross-cloner validation is now complete for all four tested architectures (YourTTS/XTTS, F5-TTS, MaskGCT, CosyVoice).
+
+**Composability** — does Stage 2/3's anti-cloning PGD still work on a Route 2 checkpoint? PGD vs. the differentiable YourTTS surrogate, then cloned through the real XTTS-v2, n=100:
+
+| | ACC | SIM |
+|---|---|---|
+| unprotected clone | 0.7244 | 0.3996 |
+| protected clone | 0.6631 | 0.3032 |
+| paired p | 0.0016 | <0.00001 |
+
+The disruption transfers (SIM drop is real and large); unlike Stage 2's DEMUCS result, ACC here takes a real hit (−0.061, significant) rather than holding flat — reported as a genuine cost, though ACC stays well above chance. Composability against CosyVoice, MaskGCT, and F5-TTS hasn't been measured yet — XTTS-v2 is the only architecture tested so far.
+
+**Status: Route 2 rank-2 is the leading Stage 4 contribution.** Training ablation, quality-cost nulls, and cross-dataset (VCTK) replication are settled. Cross-cloner validation is done for all four architectures. Remaining: composability testing (PGD + Route 2 checkpoint) against CosyVoice, MaskGCT, and F5-TTS, using the same held-out-transfer pattern already validated on XTTS-v2.
+---
+
+## Stage 5 — Final evaluation
+
+**Status: in progress, not pending.** Route 2 (Stage 4's chosen direction) already has
+real head-to-head numbers against the detector-only control across two datasets (LibriSpeech/
+XTTS, VCTK) and cross-cloner validation across all four tested architectures (F5-TTS, CosyVoice,
+MaskGCT, plus the training-time XTTS numbers); what remains is re-measuring composability (PGD +
+Route 2 checkpoint, held-out cloning) against CosyVoice, MaskGCT and F5-TTS rather than XTTS-v2
+alone. A success threshold for the overall dual-defense claim (attribution ACC,
+SIM/attack-success-rate, and audio quality together) is still to be fixed explicitly once that
+full table exists.
+
+---
+
+## Limitations
+
+- **Zero-shot threat model only.** No fine-tuning-based cloning attack is evaluated.
+- **Protection is YourTTS-surrogate-specific below Stage 4.** It transfers black-box to
+  XTTS-v2 but not, at the original operating point, to F5-TTS — the exact gap Stage 4
+  targets.
+- **No real SafeSpeech baseline in this harness** — all "vs SafeSpeech" comparisons use
+  their published numbers, same encoder and threshold, corpus/model differences stated as a
+  caveat throughout.
+- **No compression-robustness arm** (MP3/Opus) alongside the denoising attack already
+  characterised.
+- **No subjective listening test (SMOS).** All quality evidence is objective (PESQ/STOI/SI-SNR).
+- **Single corpus** — LibriSpeech only; VoiceMark itself trained on VCTK.
+
+---
+
+## References
+
+VoiceMark ([Interspeech 2025](https://www.isca-archive.org/interspeech_2025/li25g_interspeech.pdf)) ·
+SafeSpeech ([USENIX Security 2025](https://www.usenix.org/system/files/usenixsecurity25-zhang-zhisheng.pdf)) ·
+Dual Defense ([IEEE TIFS](https://arxiv.org/abs/2310.16540)) ·
+AudioPure · ECAPA-TDNN (speechbrain)
+
+Full experimental record, including negative results and withdrawn claims: `docs/experimental_writeup.md`
+
+---
+
+## Stage 4  
 
 **At a glance — what's done, in one table:**
 
@@ -160,13 +236,9 @@ The purpose was to make the watermark itself more recoverable after cloning, rat
 | Does Stage 2/3's anti-cloning PGD still work on a Route 2 checkpoint? | Tested against XTTS-v2 only so far — disruption transfers (SIM drops), but watermark ACC takes a real hit (0.724 → 0.663), not free | "Composability" |
 | What's left | Composability against CosyVoice, MaskGCT, F5-TTS (only XTTS-v2 measured) | "Composability" |
 
-**Checkpoint provenance:** The original Stage-1 checkpoint intended for Route 2 (`checkpoints/stage1_aug/`)  was not committed to git and was lost when its Kaggle session ended. Route 2 therefore uses `checkpoints/stage1_scaleup_aug/`, a separately trained and git-tracked checkpoint produced with augmentation and the larger 900-utterance training set. Because this checkpoint belongs to a different Stage-1 lineage from Stages 1–3, its own fresh baseline measurements are used as the control for all Route 2 comparisons rather than mixing results across checkpoint lineages.
 
-### Detector-only baseline (control)
 
-Training only the detector's LoRA adapters, `msg_processor` frozen, 20 epochs, same `stage1_scaleup_aug` base checkpoint used throughout this stage.
-
-Held-out XTTS, n=100:
+Held-out XTTS, n=100, 20 epochs, λ_clone = 1.0:
 
 | Condition | ACC ↑ | SIM ↓ |
 |---|---|---|
@@ -176,10 +248,8 @@ Held-out XTTS, n=100:
 Paired significance (same 100 utterances, matched ordering): ACC p = 0.0031 (t), p = 0.0050
 (Wilcoxon) — training the detector alone gives a real, if modest, attribution gain.
 
-### Adding msg_processor to the trainable set
 
-Same setup, but msg_processor's LoRA adapters are unfrozen too (`--train_msg_processor`),
-20 epochs, λ_clone = 1.0:
+
 
 | Condition | ACC ↑ | SIM ↓ | PESQ ↑ | STOI ↑ | SI-SNR ↑ |
 |---|---|---|---|---|---|
@@ -312,41 +382,3 @@ thing left before this stage is fully closed out: composability (PGD + Route 2 c
 against CosyVoice, MaskGCT and F5-TTS — currently measured only against XTTS-v2.
 
 ---
-
-## Stage 5 — Final evaluation
-
-**Status: in progress, not pending.** Route 2 (Stage 4's chosen direction) already has
-real head-to-head numbers against the detector-only control across two datasets (LibriSpeech/
-XTTS, VCTK) and cross-cloner validation across all four tested architectures (F5-TTS, CosyVoice,
-MaskGCT, plus the training-time XTTS numbers); what remains is re-measuring composability (PGD +
-Route 2 checkpoint, held-out cloning) against CosyVoice, MaskGCT and F5-TTS rather than XTTS-v2
-alone. A success threshold for the overall dual-defense claim (attribution ACC,
-SIM/attack-success-rate, and audio quality together) is still to be fixed explicitly once that
-full table exists.
-
----
-
-## Limitations
-
-- **Zero-shot threat model only.** No fine-tuning-based cloning attack is evaluated.
-- **Protection is YourTTS-surrogate-specific below Stage 4.** It transfers black-box to
-  XTTS-v2 but not, at the original operating point, to F5-TTS — the exact gap Stage 4
-  targets.
-- **No real SafeSpeech baseline in this harness** — all "vs SafeSpeech" comparisons use
-  their published numbers, same encoder and threshold, corpus/model differences stated as a
-  caveat throughout.
-- **No compression-robustness arm** (MP3/Opus) alongside the denoising attack already
-  characterised.
-- **No subjective listening test (SMOS).** All quality evidence is objective (PESQ/STOI/SI-SNR).
-- **Single corpus** — LibriSpeech only; VoiceMark itself trained on VCTK.
-
----
-
-## References
-
-VoiceMark ([Interspeech 2025](https://www.isca-archive.org/interspeech_2025/li25g_interspeech.pdf)) ·
-SafeSpeech ([USENIX Security 2025](https://www.usenix.org/system/files/usenixsecurity25-zhang-zhisheng.pdf)) ·
-Dual Defense ([IEEE TIFS](https://arxiv.org/abs/2310.16540)) ·
-AudioPure · ECAPA-TDNN (speechbrain)
-
-Full experimental record, including negative results and withdrawn claims: `docs/experimental_writeup.md`
