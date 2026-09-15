@@ -1,25 +1,58 @@
-# Dual-Defense Audio Protection: Watermarking + Anti-Cloning Perturbation
+# Dual-Defense Audio Protection: Watermarking (Traceability) + Perturbation (Anti-Cloning)
 
-Combines VoiceMark-style traceable watermarking with SafeSpeech-style adversarial
-perturbation, and asks whether both survive contact with real zero-shot voice cloning.
+Combines **VoiceMark-style traceable watermarking** with **SafeSpeech-style adversarial
+perturbation--, and study whether a zero-shot voice clone can be made harder to impersonate while the source remains traceable.
 
 **Core question:** attribution needs speaker information to *survive* cloning; anti-cloning
 protection needs it *destroyed*. Can one system do both — and if not everywhere, exactly
 where does it break, and can that be fixed?
 
-The work below is a five-stage progression. Stages 1–3 are complete and their findings are
+### Main research goal:
+**Can a watermark-bearing adversarial protection system reduce usable speaker information and clone usability, while preserving watermark-based attribution and acceptable quality of the protected source audio, across heterogeneous zero-shot TTS architectures?**
+
+The system has two complementary jobs:
+
+```text
+Protected speech
+      │
+      ├── Watermark  →  trace / attribute the source
+      │
+      └── Perturbation →  disrupt cloning and reduce usable speaker information
+                               │
+                               ↓
+                         Zero-shot TTS
+                               │
+                    ┌──────────┴──────────┐
+                    ↓                     ↓
+              lower speaker SIM       watermark survives
+                    ↓                     ↓
+             harder impersonation      traceability
+```
+
+A further objective is to reduce **clone usability/intelligibility** where measurable (e.g. higher WER), while keeping the original protected speech usable to a human listener.
+
+---
+
+### Notes
+
+This project have:
+- **Reproduction:** same published setup where feasible.
+- **Independent evaluation:** controlled experiments using this project's datasets, samples, or additional TTS architectures.
+- **Our contribution:** comparisons made under the same conditions between our baseline and our proposed modification.
+
+> The work below is a five-stage progression. Stages 1–3 are complete and their findings are
 final. Stage 4 is the open decision — three candidate directions are sized below, none
 started yet. Stage 5 depends on which direction Stage 4 takes.
 
 ---
+# Research progression
 
-## Stage 1 — Baseline: does the watermark survive being cloned?
+## Stage 1 — Watermark 
+> ### Does the watermark survive being cloned?
 
-VoiceMark's own released watermark, tested against all five zero-shot TTS architectures its
-own paper evaluates, using the same detector, the same 16-bit payload, and the same harness
-throughout.
+VoiceMark's released watermark was evaluated on five zero-shot TTS architectures: the three used in the VoiceMark paper (CosyVoice, F5-TTS, MaskGCT) plus YourTTS and XTTS-v2, using the same detector, the same 16-bit payload, and the same harness throughout.
 
-| cloner      | speaker conditioning                                       | watermark ACC in the clone |
+| Cloner      | Main reference-conditioning path                           | Watermark ACC ↑            |
 | ----------- | ---------------------------------------------------------- | -------------------------- |
 | YourTTS     | fixed d-vector (single speaker embedding)                  | 0.5337                     |
 | XTTS-v2     | GPT audio-prompt tokens (discretised)                      | 0.6119                     |
@@ -27,14 +60,18 @@ throughout.
 | MaskGCT     | masked infilling, quantised RVQ tokens retained in-context | 0.9137                     |
 | F5-TTS      | mel infilling, reference mel retained                      | 0.9300                     |
 
-**Finding: watermark survival is architecture/reference-pathway dependent, not a fixed
-property of the watermark.** The ordering is monotone across all five points, zero ties, zero
-inversions. It tracks two things: how much raw reference acoustic detail an architecture is
-exposed to, and — more decisive — whether that detail reaches the output **retained** (F5-TTS, MaskGCT) or **regenerated** through a decoder (CosyVoice). This also explains
-VoiceMark's own published numbers (0.957–0.979): their evaluation set is entirely
-high-bandwidth, retained-conditioning architectures.
+### Finding
+> watermark survival is architecture/reference-pathway dependent, not a fixed property of the watermark.
 
-**Status: done.**
+The same watermark produced substantially different attribution across cloning architectures. This motivates the hypothesis that watermark survival depends on the **reference transformation/conditioning pathway**, rather than being a fixed property of the watermark alone.
+
+It tracks two things: how much raw reference acoustic detail an architecture is exposed to, and — more decisive — whether that detail reaches the output **retained** (F5-TTS, MaskGCT) or **regenerated** through a decoder (CosyVoice). This also explains VoiceMark's own published numbers (0.957–0.979): their evaluation set is entirely high-bandwidth, retained-conditioning architectures.
+
+**CARRIER-PROBE:** The watermark-bearing VoiceMark RVQ representation was re-encoded from clone audio and compared with the original carrier. Across the reliably measured architectures, higher latent survival followed the same ordering as attribution. Per-layer analysis further showed that Layer 2 was the most architecture-sensitive layer.
+
+A simple inference-time attempt to reweight/remove Layer 2 did **not** improve clone attribution, so the layer-survival finding is treated as a diagnostic result, not as the final redesign.
+
+**Status: completed**
 
 ---
 
