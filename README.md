@@ -65,11 +65,9 @@ VoiceMark's released watermark was evaluated on five zero-shot TTS architectures
 
 The same watermark produced substantially different attribution across cloning architectures. This motivates the hypothesis that watermark survival depends on the **reference transformation/conditioning pathway**, rather than being a fixed property of the watermark alone.
 
-It tracks two things: how much raw reference acoustic detail an architecture is exposed to, and — more decisive — whether that detail reaches the output **retained** (F5-TTS, MaskGCT) or **regenerated** through a decoder (CosyVoice). This also explains VoiceMark's own published numbers (0.957–0.979): their evaluation set is entirely high-bandwidth, retained-conditioning architectures.
+Across all five architectures (monotone, no ties/inversions), survival is higher when the cloner retains reference audio (F5-TTS, MaskGCT) rather than regenerating it through a decoder (CosyVoice) — consistent with VoiceMark's own published numbers, whose eval set is entirely retained-conditioning.
 
-**CARRIER-PROBE:** The watermark-bearing VoiceMark RVQ representation was re-encoded from clone audio and compared with the original carrier. Across the reliably measured architectures, higher latent survival followed the same ordering as attribution. Per-layer analysis further showed that Layer 2 was the most architecture-sensitive layer.
-
-A simple inference-time attempt to reweight/remove Layer 2 did **not** improve clone attribution, so the layer-survival finding is treated as a diagnostic result, not as the final redesign.
+**CARRIER-PROBE** confirms this at the latent level: re-encoded clone audio vs. the original watermark carrier shows the same ordering on 4/5 architectures (CosyVoice excluded — clone/reference durations didn't align closely enough to compare), across all seven RVQ layers (n=15/architecture). Layer 2 is the most fragile; an inference-time attempt to reweight/remove it didn't improve attribution, so this stays a diagnostic, not a fix.
 
 **Status: completed**
 
