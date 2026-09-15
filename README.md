@@ -15,8 +15,7 @@ started yet. Stage 5 depends on which direction Stage 4 takes.
 
 ## Stage 1 — Baseline: does the watermark survive being cloned?
 
-VoiceMark's own released watermark, tested against all five zero-shot TTS architectures its
-own paper evaluates, using the same detector, the same 16-bit payload, and the same harness
+VoiceMark's own released watermark, evaluated across five zero-shot TTS architectures: the three reported in the VoiceMark paper (CosyVoice, F5-TTS, MaskGCT) plus YourTTS and XTTS-v2, using the same detector, the same 16-bit payload, and the same harness
 throughout.
 
 | cloner | speaker conditioning | watermark ACC in the clone |
@@ -27,15 +26,12 @@ throughout.
 | MaskGCT | masked infilling, quantised RVQ tokens retained in-context | 0.9137 |
 | F5-TTS | mel infilling, reference mel retained | 0.9300 |
 
-**Finding: watermark survival is architecture/reference-pathway dependent, not a fixed
-property of the watermark.** The ordering is monotone across all five points, zero ties, zero
-inversions. It tracks two things: how much raw reference acoustic detail an architecture is
-exposed to, and — more decisive — whether that detail reaches the output **retained**
-(F5-TTS, MaskGCT) or **regenerated** through a decoder (CosyVoice). This also explains
-VoiceMark's own published numbers (0.957–0.979): their evaluation set is entirely
-high-bandwidth, retained-conditioning architectures.
+**Finding: watermark survival is architecture/reference-pathway dependent, not a fixed property of the watermark.**
+> The same VoiceMark watermark produced substantially different attribution accuracy across the five zero-shot TTS architectures, with lower ACC on YourTTS/XTTS-v2 and higher ACC on F5-TTS/MaskGCT.
 
-**Status: done.**
+The result is consistent with the architectures' different reference-conditioning pathways: systems that preserve more reference acoustic structure tend to retain more watermark information than systems that compress or regenerate the speaker information more aggressively. This interpretation is further supported by CARRIER-PROBE, which found the same cross-architecture ordering in the raw watermark-bearing latent representation across the reliably measured architectures..
+
+**Status: done**
 
 ---
 
@@ -53,8 +49,7 @@ On the architecture it was built for (YourTTS), denoising-attack scenario, n=100
 | Watermark ACC | 0.9931 | 1.0000 | 0.9844–0.9950 |
 
 Both objectives compose at zero cost here (adding disruption costs nothing in watermark
-survival, p = 0.75), and this is comparable to or better than SafeSpeech's own published
-protection strength at the same threshold.
+survival, p = 0.75), and using the project's ECAPA-TDNN-based evaluation protocol and SafeSpeech's SIM > 0.25 threshold, the observed protection strength is broadly comparable to the published SafeSpeech result, although direct numerical comparison is limited by corpus and cloner differences.
 
 Measured on the other architectures:
 
@@ -64,12 +59,16 @@ Measured on the other architectures:
 | F5-TTS | no — SIM stays at 0.41–0.43, attack success 91–92%, barely below the *unprotected* baseline |
 
 **Finding: protection transfer is also architecture-dependent — and it fails specifically on
-the architecture where attribution is strongest.** Attribution survives cloning on F5-TTS
+the architecture where attribution is strongest.** 
+
+Attribution survives cloning on F5-TTS
 (ACC 0.8381 protected, 0.8187 after DEMUCS — a real but modest ~0.09 cost from protection
 itself), but the perturbation that works on YourTTS and transfers to XTTS-v2 essentially does
-nothing to F5-TTS's cloning success. The two halves of the defense decouple by architecture.
+nothing to F5-TTS's cloning success. 
 
-**Status: done.**
+>The two halves of the defense decouple by architecture.
+
+**Status: done**
 
 ---
 
