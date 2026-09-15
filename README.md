@@ -76,35 +76,27 @@ Across all five architectures (monotone, no ties/inversions), survival is higher
 ## Stage 2 — Anti-cloning protection
 > **Does the protection transfer to the same five architectures?**
 
-A waveform-domain PGD-style adversarial perturbation, optimised against a differentiable YourTTS surrogate,
-layered on top of the watermark.
+### Mechanism
+The main anti-cloning is **waveform-domain PGD**. The protected, decoded waveform is perturbed directly:
+```text
+watermarked waveform + bounded δ → protected waveform → zero-shot TTS → clone
+```
+optimized against a differentiable **YourTTS surrogate** — the only differentiable target available; every other cloner is evaluated black-box.
 
-On the architecture it was built for (YourTTS), denoising-attack scenario, n=100:
+On YourTTS with ECAPA-TDNN similarity scoring, denoising-attack scenario, n=100:
 
-| metric                           | clean  | protected | after DEMUCS  |
-| -------------------------------- | ------ | --------- | ------------- |
-| Speaker similarity (ECAPA-TDNN)  | 0.4400 | 0.1468    | 0.1953        |
-| Attack success rate (SIM > 0.25) | 95.0%  | 17.0%     | 34.0%         |
-| Watermark ACC                    | 0.9931 | 1.0000    | 0.9844–0.9950 |
+| Metric                             | Clean  | Protected | After DEMUCS  |
+| ---------------------------------- | ------ | --------- | ------------- |
+| Speaker similarity (ECAPA-TDNN) ↓  | 0.4400 | 0.1468    | 0.1953        |
+| Attack success rate (SIM > 0.25) ↓ | 95%    | 17%       | 34%           |
+| Watermark ACC ↑                    | 0.9931 | 1.0000    | 0.9844–0.9950 |
 
-Both objectives compose at zero cost here (adding disruption costs nothing in watermark
-survival, p = 0.75), and this is comparable to or better than SafeSpeech's own published
-protection strength at the same threshold.
+Both disruption objectives composes with attribution at zero cost here (adding disruption costs nothing in watermark
+survival, p = 0.75), and this is comparable to or better than SafeSpeech's own published protection strength at the same threshold.
 
+
+### Transfer
 Measured on the other architectures:
-
-| cloner  | does the YourTTS-trained perturbation transfer?                                             |
-| ------- | ------------------------------------------------------------------------------------------- |
-| XTTS-v2 | yes — SIM 0.4930 → 0.3747, p = 1.9 × 10⁻⁸                                                   |
-| F5-TTS  | no — SIM stays at 0.41–0.43, attack success 91–92%, barely below the *unprotected* baseline |
-
-
-| Metric | Clean | Protected | after DEMUCS |
-|---|---|---|---|
-| Speaker similarity (ECAPA-TDNN) ↓ | 0.4400 | 0.1468 | 0.1953 |
-| Attack success rate (SIM > 0.25) ↓| 95.0% | 17.0% | 34.0% |
-| Watermark ACC ↑ | 0.9931 | 1.0000 | 0.9844–0.9950 |
-
 <table>
   <thead>
     <tr>
@@ -133,38 +125,29 @@ Measured on the other architectures:
   </tbody>
 </table>
 
-**Finding: protection transfer is also architecture-dependent — and it fails specifically on
-the architecture where attribution is strongest.** Attribution survives cloning on F5-TTS
-(ACC 0.8381 protected, 0.8187 after DEMUCS — a real but modest ~0.09 cost from protection
-itself), but the perturbation that works on YourTTS and transfers to XTTS-v2 essentially does
-nothing to F5-TTS's cloning success. The two halves of the defense decouple by architecture.
+### Finding
+> protection transfer is also architecture-dependent, and it fails specifically on the architecture where attribution is strongest.
 
-**Status: done.**
+Attribution survives cloning on F5-TTS (ACC 0.8381 protected, 0.8187 after DEMUCS — a real but modest ~0.09 cost from protection itself), but the perturbation that works on YourTTS and transfers to XTTS-v2 essentially does nothing to F5-TTS's cloning success. 
+
+> The two halves of the defense decouple by architecture.
+
+**Status: completed**
 
 ---
 
-## Stage 3 — Epsilon sweep: does a bigger perturbation budget buy back protection on F5-TTS?
+## Stage 3 — Epsilon sweep
+> **Protection/attribution/quality trade-off**
 
-Same YourTTS-trained PGD objective, perturbation budget raised well past the original
-operating point (ε = 0.002), re-measured on F5-TTS.
+Same YourTTS-trained PGD objective, an epsilon sweep showed that stronger waveform perturbation eventually reduces speaker similarity, but simultaneously damages watermark attribution and source-audio quality.
 
-| ε                                | attribution ACC (F5-TTS clone) | SIM mean | SIM median | attack success rate |
-| -------------------------------- | ------------------------------ | -------- | ---------- | -------------------- |
-| 0.002 (original operating point) | 0.8381                         | 0.4140   | 0.4154     | 91.0%                |
-| 0.01                             | 0.7000                         | 0.3250   | 0.3096     | 75.0%                |
-| 0.02                             | 0.6844                         | 0.2713   | 0.2708     | 55.0%                |
-| 0.04                             | 0.6062                         | 0.1605   | 0.1573     | 15.0%                |
-| 0.08                             | 0.5875                         | 0.0969   | 0.1010     | 5.0%                 |
-
-Audio quality at the same budgets, measured independently:
-
-| ε                                 | PESQ  | STOI  | SI-SNR   |
-| ---------------------------------- | ----- | ----- | -------- |
-| 0.002 (original operating point)  | 1.919 | 0.885 | 0.43 dB  |
-| 0.01                               | 1.337 | 0.834 | 0.24 dB  |
-| 0.02                               | 1.155 | 0.784 | −0.28 dB |
-| 0.04                               | 1.069 | 0.708 | −1.77 dB |
-| 0.08                               | 1.042 | 0.610 | −4.95 dB |
+| ε     | F5 clone WM ACC ↑ | SIM ↓ | ASR ↓ | PESQ ↑ | STOI ↑ | SI-SNR ↑ |
+|---:   |---:    |---:    |---:  |---:  |---:   |---:      |
+| 0.002 | 0.8381 | 0.4140 | 91% | 1.919 | 0.885 | 0.43 dB  |
+| 0.01  | 0.7000 | 0.3250 | 75% | 1.337 | 0.834 | 0.24 dB  |
+| 0.02  | 0.6844 | 0.2713 | 55% | 1.155 | 0.784 | -0.28 dB |
+| 0.04  | 0.6062 | 0.1605 | 15% | 1.069 | 0.708 | -1.77 dB |
+| 0.08  | 0.5875 | 0.0969 | 5%  | 1.042 | 0.610 | -4.95 dB |
 
 (YourTTS-side sanity, same runs, own architecture rather than the F5-TTS transfer question
 above: protected ACC stays 0.94–0.99 and protected-after-DEMUCS ACC declines from 0.91 to
@@ -179,7 +162,7 @@ itself (negative SI-SNR). There is no ε in this range where protection, attribu
 usable audio all hold at once — it's a three-way trade-off across the full swept range, not
 a clean case of the protection simply not working on F5-TTS.
 
-**Status: done** (trend pass, n=20 per point above ε = 0.002; the ε = 0.002 row is the
+**Status: completed** (trend pass, n=20 per point above ε = 0.002; the ε = 0.002 row is the
 earlier n=100 result).
 
 ---
