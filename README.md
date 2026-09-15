@@ -18,7 +18,7 @@ started yet. Stage 5 depends on which direction Stage 4 takes.
 VoiceMark's own released watermark, evaluated across five zero-shot TTS architectures: the three reported in the VoiceMark paper (CosyVoice, F5-TTS, MaskGCT) plus YourTTS and XTTS-v2, using the same detector, the same 16-bit payload, and the same harness
 throughout.
 
-| cloner | speaker conditioning | watermark ACC in the clone |
+| Cloner | Speaker conditioning | ↑ Watermark ACC |
 |---|---|---|
 | YourTTS | fixed d-vector (single speaker embedding) | 0.5337 |
 | XTTS-v2 | GPT audio-prompt tokens (discretised) | 0.6119 |
@@ -42,21 +42,44 @@ layered on top of the watermark.
 
 On the architecture it was built for (YourTTS), denoising-attack scenario, n=100:
 
-| metric | clean | protected | after DEMUCS |
+| Metric | Clean | Protected | after DEMUCS |
 |---|---|---|---|
-| Speaker similarity (ECAPA-TDNN) | 0.4400 | 0.1468 | 0.1953 |
-| Attack success rate (SIM > 0.25) | 95.0% | 17.0% | 34.0% |
-| Watermark ACC | 0.9931 | 1.0000 | 0.9844–0.9950 |
+| Speaker similarity (ECAPA-TDNN) ↓ | 0.4400 | 0.1468 | 0.1953 |
+| Attack success rate (SIM > 0.25) ↓| 95.0% | 17.0% | 34.0% |
+| Watermark ACC ↑ | 0.9931 | 1.0000 | 0.9844–0.9950 |
 
 Both objectives compose at zero cost here (adding disruption costs nothing in watermark
 survival, p = 0.75), and using the project's ECAPA-TDNN-based evaluation protocol and SafeSpeech's SIM > 0.25 threshold, the observed protection strength is broadly comparable to the published SafeSpeech result, although direct numerical comparison is limited by corpus and cloner differences.
 
 Measured on the other architectures:
 
-| cloner | does the YourTTS-trained perturbation transfer? |
-|---|---|
-| XTTS-v2 | yes — SIM 0.4930 → 0.3747, p = 1.9 × 10⁻⁸ |
-| F5-TTS | no — SIM stays at 0.41–0.43, attack success 91–92%, barely below the *unprotected* baseline |
+<table>
+  <thead>
+    <tr>
+      <th rowspan="2">Cloner</th>
+      <th colspan="3">Does the YourTTS-trained perturbation transfer?</th>
+    </tr>
+    <tr>
+      <th>Protection effect</th>
+      <th>Significance / interpretation</th>
+      <th>Speaker SIM ↓</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>XTTS-v2</strong></td>
+      <td><strong>Yes</strong></td>
+      <td>p = 1.9 × 10⁻⁸</td>
+      <td>0.4930 → <strong>0.3747</strong></td>
+    </tr>
+    <tr>
+      <td><strong>F5-TTS</strong></td>
+      <td><strong>No</strong></td>
+      <td>Attack success 91–92%; barely below the <em>unprotected</em> baseline</td>
+      <td>0.41–0.43</td>
+    </tr>
+  </tbody>
+</table>
 
 **Finding: protection transfer is also architecture-dependent — and it fails specifically on
 the architecture where attribution is strongest.** 
@@ -77,7 +100,7 @@ nothing to F5-TTS's cloning success.
 Same YourTTS-trained PGD objective, perturbation budget raised well past the original
 operating point (ε = 0.002), re-measured on F5-TTS.
 
-| ε | attribution ACC (F5-TTS clone) | SIM mean | SIM median | attack success rate |
+| ε | attribution ACC (F5-TTS clone) ↑ | SIM mean ↓ | SIM median ↓ | attack success rate ↓ |
 |---|---|---|---|---|
 | 0.002 (original operating point) | 0.8381 | 0.4140 | 0.4154 | 91.0% |
 | 0.01 | 0.7000 | 0.3250 | 0.3096 | 75.0% |
@@ -87,7 +110,7 @@ operating point (ε = 0.002), re-measured on F5-TTS.
 
 Audio quality at the same budgets, measured independently:
 
-| ε | PESQ | STOI | SI-SNR |
+| ε | PESQ ↑ | STOI ↑ | SI-SNR ↑ |
 |---|---|---|---|
 | 0.002 (original operating point) | 1.919 | 0.885 | 0.43 dB |
 | 0.01 | 1.337 | 0.834 | 0.24 dB |
@@ -101,13 +124,15 @@ above: protected ACC stays 0.94–0.99 and protected-after-DEMUCS ACC declines f
 it's specifically the transfer to F5-TTS that's in question.)
 
 **Finding: increasing ε eventually does buy back protection on F5-TTS — SIM falls from 0.41
-to 0.10, attack success from 91% to 5% — but not for free.** Attribution degrades toward
+to 0.10, attack success from 91% to 5% — but not for free.** 
+> Attribution degrades toward
 chance in parallel (0.84 → 0.59), and, independently, audio quality collapses: PESQ is near
 its floor by ε = 0.04, and by ε = 0.08 the perturbation is on average louder than the speech
-itself (negative SI-SNR). There is no ε in this range where protection, attribution, and
-usable audio all hold at once — it's a three-way trade-off across the full swept range, not
-a clean case of the protection simply not working on F5-TTS.
+itself (negative SI-SNR).
 
+There is no ε in this range where protection, attribution, and
+usable audio all hold at once — it's a three-way trade-off across the full swept range, not a clean case of the protection simply not working on F5-TTS.
+ 
 **Status: done** (trend pass, n=20 per point above ε = 0.002; the ε = 0.002 row is the
 earlier n=100 result).
 
