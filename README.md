@@ -238,8 +238,24 @@ regress relative to this project's own earlier F5-TTS baseline (0.9300) — unsu
 F5-TTS was already near-ceiling before Route 2, but confirms training msg_processor doesn't
 cost anything on the architecture where attribution was already easiest.
 
-**CosyVoice and MaskGCT cross-cloner validation for the Route 2 checkpoints: not yet run** —
-next step, same harness, same checkpoints already pushed.
+**Cross-cloner (CosyVoice, n=98/100 — 2 utterances skipped when CosyVoice's own text
+normalizer crashed on an unusual whisper transcript, an unrelated cloner-side issue handled by
+skipping and continuing), the rank-2 checkpoint:**
+
+| checkpoint | ACC on CosyVoice clone |
+|---|---|
+| pretrained VoiceMark (zero-init LoRA) | 0.7669 |
+| rank 2 (Route 2) | 0.8801 |
+| VoiceMark published | 0.964 |
+
+Unlike F5-TTS, CosyVoice was not near-ceiling before Route 2: training msg_processor moves ACC
+from 0.767 to 0.880 on this architecture, a real generalization of the gain already seen on
+LibriSpeech/XTTS and VCTK to a third, independent cloner. Still below VoiceMark's own published
+0.964, landing in the "gradient, not two clusters" middle of the conditioning-bandwidth ladder
+rather than at the high-bandwidth end with F5-TTS.
+
+**MaskGCT cross-cloner validation for the Route 2 checkpoints: not yet run** — next step, same
+harness, same checkpoints already pushed.
 
 ### Composability: does Stage 2/3's anti-cloning PGD still transfer, on a Route 2 checkpoint?
 
@@ -266,9 +282,10 @@ architecture) has not yet been measured.
 Stage 4's contribution.** Detector-only vs. +msg_processor is a settled, well-replicated
 finding (two datasets). The quality/SIM cost is a settled negative result (three levers ruled
 out). Rank-2 is the current best checkpoint (best ACC, fewest parameters) and is statistically
-equivalent to rank-8 everywhere it's been tested. Remaining before this stage can be called
-complete: CosyVoice/MaskGCT cross-cloner validation, and composability against those two
-architectures plus F5-TTS.
+equivalent to rank-8 everywhere it's been tested. CosyVoice cross-cloner validation is now done
+(0.767 -> 0.880, a real generalization of the Route 2 gain to a third cloner). Remaining before
+this stage can be called complete: MaskGCT cross-cloner validation, and composability against
+CosyVoice/MaskGCT/F5-TTS.
 
 ---
 
