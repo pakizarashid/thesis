@@ -48,7 +48,7 @@ started yet. Stage 5 depends on which direction Stage 4 takes.
 # Research progression
 
 ## Stage 1 — Watermark 
-> ### Does the watermark survive being cloned?
+> **Does the watermark survive being cloned?**
 
 VoiceMark's released watermark was evaluated on five zero-shot TTS architectures: the three used in the VoiceMark paper (CosyVoice, F5-TTS, MaskGCT) plus YourTTS and XTTS-v2, using the same detector, the same 16-bit payload, and the same harness throughout.
 
@@ -73,9 +73,10 @@ Across all five architectures (monotone, no ties/inversions), survival is higher
 
 ---
 
-## Stage 2 — Anti-cloning: does the protection transfer to the same five architectures?
+## Stage 2 — Anti-cloning protection
+> **Does the protection transfer to the same five architectures?**
 
-A PGD-style adversarial perturbation, optimised against a differentiable YourTTS surrogate,
+A waveform-domain PGD-style adversarial perturbation, optimised against a differentiable YourTTS surrogate,
 layered on top of the watermark.
 
 On the architecture it was built for (YourTTS), denoising-attack scenario, n=100:
