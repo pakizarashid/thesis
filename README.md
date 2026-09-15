@@ -138,30 +138,24 @@ earlier n=100 result).
 
 ---
 
-## Stage 4 — Route 2: training the watermark encoder jointly with the detector, cloning inside the loop
+## Stage 4 — Clone-aware joint training of the watermark encoder and detector
+Route 2: Training the watermark encoder jointly with the detector, cloning inside the loop
 
-The direction chosen from Stage 4's three candidates was the third: retraining the watermark
-itself with the cloning operation inside the training loop, rather than reshaping the
-perturbation objective or building a second surrogate cloner. LoRA adapters on top of the
-frozen pretrained backbone are trained against a joint loss (clean-audio detection + detection
-on a differentiable YourTTS clone of the watermarked audio), so the watermark itself learns to
-leave a signal that survives being cloned — not just a perturbation reacting to a fixed
-watermark.
+The selected Stage 4 direction was to retrain the watermark encoder and detector jointly with cloning inside the training loop, rather than further modifying the anti-cloning perturbation objective or building a second differentiable TTS surrogate. LoRA adapters were added on top of the frozen VoiceMark backbone. Training used a joint objective combining clean-audio watermark detection with watermark detection on a differentiable YourTTS clone of the watermarked audio. 
 
-**Checkpoint provenance note:** the original Stage-1 checkpoint this work was meant to start
-from (`checkpoints/stage1_aug/`) was never committed to git and was lost when its Kaggle
-session ended. All Route 2 results below start instead from `checkpoints/stage1_scaleup_aug/`
-(augmentation + the full 900-utterance scaled-up data — a different training run, git-tracked).
-Its own baseline XTTS numbers (measured fresh, both trained and untrained) are used as the
-Route 2 control throughout, rather than mixing in Stage 1–3's numbers, which used a different
-Stage-1 lineage.
+The purpose was to make the watermark itself more recoverable after cloning, rather than relying only on a detector trained for clean or generic augmented audio.
+
+**Main contribution:** clone-aware joint training of the watermark encoder (msg_processor) and detector substantially improves watermark attribution after zero-shot voice cloning, including on architectures that were not used as the training cloner.
+
+**Checkpoint provenance:** The original Stage-1 checkpoint intended for Route 2 (`checkpoints/stage1_aug/`)  was not committed to git and was lost when its Kaggle session ended. Route 2 therefore uses `checkpoints/stage1_scaleup_aug/`, a separately trained and git-tracked checkpoint produced with augmentation and the larger 900-utterance training set. Because this checkpoint belongs to a different Stage-1 lineage from Stages 1–3, its own fresh baseline measurements are used as the control for all Route 2 comparisons rather than mixing results across checkpoint lineages.
 
 ### Detector-only baseline (control)
 
-Training only the detector's LoRA adapters (msg_processor frozen), 20 epochs, same
-`stage1_scaleup_aug` base checkpoint used throughout this stage. Held-out XTTS, n=100:
+Training only the detector's LoRA adapters, `msg_processor` frozen, 20 epochs, same `stage1_scaleup_aug` base checkpoint used throughout this stage.
 
-| | ACC | SIM |
+Held-out XTTS, n=100:
+
+| Condition | ACC ↑ | SIM ↓ |
 |---|---|---|
 | untrained (`stage1_scaleup_aug`, zero LoRA training) | 0.5537 | 0.4900 |
 | detector-only trained | 0.6031 | 0.4908 |
@@ -174,7 +168,7 @@ Paired significance (same 100 utterances, matched ordering): ACC p = 0.0031 (t),
 Same setup, but msg_processor's LoRA adapters are unfrozen too (`--train_msg_processor`),
 20 epochs, λ_clone = 1.0:
 
-| | ACC | SIM | PESQ | STOI | SI-SNR |
+| Condition | ACC ↑ | SIM ↓ | PESQ ↑ | STOI ↑ | SI-SNR ↑ |
 |---|---|---|---|---|---|
 | detector-only | 0.6031 | 0.4908 | — | — | — |
 | + msg_processor (20 epochs) | 0.6913 | 0.3939 | 1.963 | 0.888 | 3.10 dB |
@@ -191,11 +185,11 @@ which is exactly what both the attribution improvement and the quality/SIM cost 
 Three separate levers were tried against the PESQ/SIM cost, each testing a different
 hypothesis for what was driving it:
 
-| lever tested | result vs. the untouched run |
-|---|---|
-| `--epochs` (early-stopped at epoch 9 vs. the full 20) | not significant (ACC p = 0.235, SIM p = 0.183) |
-| `--lambda_clone` (0.5 vs. 1.0) | not significant (ACC p = 0.907, SIM p = 0.607) |
-| `--msgproc_lora_r` (rank 2 vs. the default rank 8) | not significant (ACC p = 0.205, SIM p = 0.438, vs. the closest rank-8 match) |
+| Lever | ACC ↑	| SIM ↓ |	Conclusion |
+|---|---|---|---|
+| `--epochs` (early-stopped at epoch 9 vs. the full 20)	| p = 0.235	| p = 0.183 | No significant difference |
+| `--lambda_clone` (0.5 vs. 1.0) |	p = 0.907 |	p = 0.607 |	No significant difference |
+| `--msgproc_lora_r` (rank 2 vs. the default rank 8) |	p = 0.205 |	p = 0.438 |	No significant difference |
 
 None of training duration, clone-loss weighting, or LoRA capacity itself moves the quality/SIM
 cost. Taken together, this is a well-powered negative result: the cost looks structural to
@@ -214,7 +208,7 @@ needing the Stage-1 warm start.
 
 **VCTK (fully speaker-disjoint from the LibriSpeech training data), n=100, unprotected:**
 
-| checkpoint | ACC | SIM |
+| checkpoint | ACC ↑ | SIM ↓ |
 |---|---|---|
 | detector-only | 0.6169 | 0.5317 |
 | + msg_processor (rank 8, epoch 9) | 0.6913 | 0.4475 |
@@ -225,9 +219,14 @@ independent dataset (rank-8 vs. detector-only: p < 0.00001 both metrics; rank-2 
 detector-only: p < 0.00001 both metrics; rank-2 vs. rank-8: not significant, p = 0.49/0.71 —
 consistent with the rank-8/rank-2 equivalence found above).
 
+| Checkpoint / rank |	XTTS ACC ↑	| Trainable parameters ↓ |
+|---|---|---|
+| Rank 8 (epoch 9) |	— |	295K |
+| Rank 2	| 0.7288 |	221K|
+
 **Cross-cloner (F5-TTS, n=100), the msg_processor checkpoints only:**
 
-| checkpoint | ACC on F5-TTS clone |
+| checkpoint | F5-TTS clone ACC ↑ |
 |---|---|
 | rank 8 (epoch 9) | 0.9875 |
 | rank 2 | 0.9881 |
