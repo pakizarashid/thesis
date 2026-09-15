@@ -8,8 +8,9 @@ protection needs it *destroyed*. Can one system do both — and if not everywher
 where does it break, and can that be fixed?
 
 The work below is a five-stage progression. Stages 1–3 are complete and their findings are
-final. Stage 4 is the open decision — three candidate directions are sized below, none
-started yet. Stage 5 depends on which direction Stage 4 takes.
+final. Stage 4 (Route 2: clone-aware joint training) is underway and its core result is in —
+see the summary table at the top of that section for the fast version. Stage 5 is in progress
+alongside it; what's left in both is listed at the end of Stage 4.
 
 ---
 
@@ -147,6 +148,18 @@ The purpose was to make the watermark itself more recoverable after cloning, rat
 
 **Main contribution:** clone-aware joint training of the watermark encoder (msg_processor) and detector substantially improves watermark attribution after zero-shot voice cloning, including on architectures that were not used as the training cloner.
 
+**At a glance — what's done, in one table:**
+
+| Question | Result | Detail below |
+|---|---|---|
+| Does training msg_processor jointly beat detector-only training? | Yes — 0.603 → 0.691 ACC (held-out XTTS, n=100), real and significant | "Adding msg_processor" |
+| Is there a cost? | Yes — SIM drops ~0.10, PESQ lower. Real, not tunable away (3 levers ruled out) | "Chasing the quality/SIM cost" |
+| Which checkpoint is best? | Rank-2 LoRA on msg_processor — best ACC (0.729), 25% fewer params, no warm-start needed, statistically tied with rank-8 everywhere | "Bonus finding" |
+| Does the gain replicate on a second dataset? | Yes — VCTK (speaker-disjoint), same gain and same cost pattern | "Generalization: dataset..." |
+| Does the gain generalize to cloners never seen in training? | Yes, on all 4 tested — F5-TTS 0.988 ↑, MaskGCT 0.959 ↑, CosyVoice 0.880 ↑, all ≥ pretrained baseline | "Generalization: ...cloner architecture" |
+| Does Stage 2/3's anti-cloning PGD still work on a Route 2 checkpoint? | Tested against XTTS-v2 only so far — disruption transfers (SIM drops), but watermark ACC takes a real hit (0.724 → 0.663), not free | "Composability" |
+| What's left | Composability against CosyVoice, MaskGCT, F5-TTS (only XTTS-v2 measured) | "Composability" |
+
 **Checkpoint provenance:** The original Stage-1 checkpoint intended for Route 2 (`checkpoints/stage1_aug/`)  was not committed to git and was lost when its Kaggle session ended. Route 2 therefore uses `checkpoints/stage1_scaleup_aug/`, a separately trained and git-tracked checkpoint produced with augmentation and the larger 900-utterance training set. Because this checkpoint belongs to a different Stage-1 lineage from Stages 1–3, its own fresh baseline measurements are used as the control for all Route 2 comparisons rather than mixing results across checkpoint lineages.
 
 ### Detector-only baseline (control)
@@ -253,8 +266,19 @@ LibriSpeech/XTTS and VCTK to a third, independent cloner. Still below VoiceMark'
 0.964, landing in the "gradient, not two clusters" middle of the conditioning-bandwidth ladder
 rather than at the high-bandwidth end with F5-TTS.
 
-**MaskGCT cross-cloner validation for the Route 2 checkpoints: not yet run** — next step, same
-harness, same checkpoints already pushed.
+**Cross-cloner (MaskGCT, n=100, zero skipped), the rank-2 checkpoint:**
+
+| checkpoint | ACC on MaskGCT clone ↑ |
+|---|---|
+| pretrained VoiceMark (zero-init LoRA) | 0.9138 |
+| rank 2 (Route 2) | 0.9594 |
+| VoiceMark published | 0.957 |
+
+MaskGCT was already near-ceiling before Route 2, like F5-TTS: training msg_processor moves ACC
+from 0.914 to 0.959, at or slightly above VoiceMark's own published number, and lands with
+F5-TTS at the high-bandwidth end of the conditioning ladder. Cross-cloner validation for the
+Route 2 rank-2 checkpoint is now complete across all four architectures (YourTTS/XTTS via the
+LibriSpeech eval, F5-TTS, CosyVoice, MaskGCT).
 
 ### Composability: does Stage 2/3's anti-cloning PGD still transfer, on a Route 2 checkpoint?
 
@@ -275,16 +299,17 @@ takes a real, statistically significant hit under the combined attack (−0.061)
 holding flat — reported honestly as a real cost, not rounded up to "free." ACC remains well
 above chance (0.66 vs. 0.5), so the watermark survives meaningfully, just not without cost.
 F5-TTS/CosyVoice/MaskGCT composability (PGD + Route 2 checkpoint, cloned through each
-architecture) has not yet been measured.
+architecture) has not yet been measured — the XTTS-v2 result above is the only composability
+number so far.
 
-**Status: Route 2 (msg_processor training, either rank) is the current leading candidate for
-Stage 4's contribution.** Detector-only vs. +msg_processor is a settled, well-replicated
-finding (two datasets). The quality/SIM cost is a settled negative result (three levers ruled
-out). Rank-2 is the current best checkpoint (best ACC, fewest parameters) and is statistically
-equivalent to rank-8 everywhere it's been tested. CosyVoice cross-cloner validation is now done
-(0.767 -> 0.880, a real generalization of the Route 2 gain to a third cloner). Remaining before
-this stage can be called complete: MaskGCT cross-cloner validation, and composability against
-CosyVoice/MaskGCT/F5-TTS.
+**Status: Route 2 (msg_processor training, rank 2) is Stage 4's contribution.** Detector-only
+vs. +msg_processor is a settled, well-replicated finding (two datasets). The quality/SIM cost
+is a settled negative result (three levers ruled out). Rank-2 is the best checkpoint (best ACC,
+fewest parameters) and statistically tied with rank-8 everywhere it's been tested. Cross-cloner
+validation is complete across all four architectures (0.767 → 0.880 on CosyVoice, 0.914 → 0.959
+on MaskGCT, both real generalizations of the Route 2 gain, not an F5-TTS-only effect). Only
+thing left before this stage is fully closed out: composability (PGD + Route 2 checkpoint)
+against CosyVoice, MaskGCT and F5-TTS — currently measured only against XTTS-v2.
 
 ---
 
@@ -292,11 +317,12 @@ CosyVoice/MaskGCT/F5-TTS.
 
 **Status: in progress, not pending.** Route 2 (Stage 4's chosen direction) already has
 real head-to-head numbers against the detector-only control across two datasets (LibriSpeech/
-XTTS, VCTK) and one additional cloner architecture (F5-TTS); what remains is finishing that
-same protocol against CosyVoice and MaskGCT, and re-measuring composability (PGD + Route 2
-checkpoint, held-out cloning) across the full five-architecture set rather than XTTS alone. A
-success threshold for the overall dual-defense claim (attribution ACC, SIM/attack-success-rate,
-and audio quality together) is still to be fixed explicitly once that full table exists.
+XTTS, VCTK) and cross-cloner validation across all four tested architectures (F5-TTS, CosyVoice,
+MaskGCT, plus the training-time XTTS numbers); what remains is re-measuring composability (PGD +
+Route 2 checkpoint, held-out cloning) against CosyVoice, MaskGCT and F5-TTS rather than XTTS-v2
+alone. A success threshold for the overall dual-defense claim (attribution ACC,
+SIM/attack-success-rate, and audio quality together) is still to be fixed explicitly once that
+full table exists.
 
 ---
 
