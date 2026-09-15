@@ -216,7 +216,7 @@ full table exists.
 VoiceMark ([Interspeech 2025](https://www.isca-archive.org/interspeech_2025/li25g_interspeech.pdf)) ·
 SafeSpeech ([USENIX Security 2025](https://www.usenix.org/system/files/usenixsecurity25-zhang-zhisheng.pdf)) ·
 Dual Defense ([IEEE TIFS](https://arxiv.org/abs/2310.16540)) ·
-AudioPure · ECAPA-TDNN (speechbrain)
+AudioPure · ECAPA-TDNN ([speechbrain](https://huggingface.co/speechbrain/spkrec-ecapa-voxceleb)) 
 
 Full experimental record, including negative results and withdrawn claims: `docs/experimental_writeup.md`
 
