@@ -219,7 +219,16 @@ class Transcriber:
         # An empty transcript makes CosyVoice/MaskGCT produce garbage rather than
         # error. Fall back to a neutral prompt and say so, loudly.
         if not text:
-            print(f"[transcribe] WARNING empty transcript for {wav_path}")
+            # 2026-09-15 fix: this used to warn and then return the empty string
+            # anyway, which crashes CosyVoice/MaskGCT deep inside their own text
+            # normalizers (wetext's token_parser.load does `assert len(input) > 0`)
+            # -- not on utterance 0, so the seed/config guard never catches it.
+            # Substitute a short, content-neutral, definitely-non-empty prompt so
+            # the cloner backend has something to normalize.
+            text = "This is a voice sample."
+            print(f"[transcribe] WARNING empty transcript for {wav_path} -- "
+                  f"substituting neutral fallback prompt {text!r} so the cloner "
+                  f"backend does not crash on an empty string.")
         return text
 
 
@@ -707,7 +716,19 @@ def main():
                 recon_wm = backbone.forward_full(clean, msg)["recon_wm"]
 
         loop_transcript = (item.get("transcript") or [None])[0] if kind == "batch" else None
-        cloned = clone_one(recon_wm, f"u{i}", own_transcript=loop_transcript)
+        # 2026-09-15 fix: a cloner backend (CosyVoice/MaskGCT, via wetext's text
+        # normalizer) can raise on a single pathological utterance -- not just a
+        # literally-empty transcript (handled separately in Transcriber.__call__),
+        # but also a short/unusual one that its OWN internal reordering reduces to
+        # zero tokens. Rather than enumerate every string a third-party normalizer
+        # chokes on, skip this utterance loudly and keep the unattended run alive;
+        # n_completed (see _dump) already tolerates fewer results than n_utterances.
+        try:
+            cloned = clone_one(recon_wm, f"u{i}", own_transcript=loop_transcript)
+        except Exception as e:
+            print(f"  [{i}] SKIPPED -- {args.cloner} cloning failed: "
+                  f"{type(e).__name__}: {e}", flush=True)
+            continue
 
         a_src = detect_acc(backbone, recon_wm, msg)
         a_cln = detect_acc(backbone, cloned, msg)
