@@ -155,8 +155,9 @@ The surrogate's own architecture keeps working throughout; it's specifically the
 | 0.002 | 0.94   | 0.91 | 
 | 0.08  | 0.99   | 0.62 | 
 
-| Protected ACC	stays 0.94–0.99
-| Protected → DEMUCS ACC	0.91 → 0.62
+| Protected ACC	stays 0.94–0.99 |
+
+| Protected → DEMUCS ACC	0.91 → 0.62|
 
 ### Finding
 > increasing ε does buy back protection on F5-TTS — SIM falls from 0.41
@@ -263,7 +264,7 @@ The Route 2 gain therefore transfers beyond the YourTTS training loop to multipl
 | + msg\_processor (rank 2)          | 0.7006 | 0.4457 |
 
 a) **Cross-cloner (XTTS):**
-| Checkpoint / rank | ↑ ACC on XTTS clone | Trainable parameters ↓ |
+| Checkpoint        | ↑ ACC on XTTS clone | Trainable parameters ↓ |
 |-------------------|---------------------|------------------------|
 | Rank 8 (epoch 9)  |	                — |	              295K |
 | Rank 2	        | 0.7288               |	               221K|
@@ -276,39 +277,30 @@ b) **Cross-cloner (F5-TTS), the msg_processor checkpoints only:**
 | Rank 2              | 0.9881               |
 | VoiceMark published | **0.979**            |
 
-> Both checkpoints land at or slightly above VoiceMark's own published number and do not regress relative to this project's own earlier F5-TTS baseline (0.9300) — unsurprising, since F5-TTS was already near-ceiling before Route 2, but confirms training msg_processor doesn't cost anything on the architecture where attribution was already easiest.
+c) **Cross-cloner (MaskGCT):**
 
-c) **Cross-cloner (CosyVoice)**
-> n=98/100 — 2 utterances skipped when CosyVoice's own text normalizer crashed on an unusual whisper transcript, the rank-2 checkpoint:**
-
-| checkpoint | ACC on CosyVoice clone |
-|---|---|
-| pretrained VoiceMark (zero-init LoRA) | 0.7669 |
-| rank 2 (Route 2) | 0.8801 |
-| VoiceMark published | 0.964 |
-
-Unlike F5-TTS, CosyVoice was not near-ceiling before Route 2: training msg_processor moves ACC
-from 0.767 to 0.880 on this architecture, a real generalization of the gain already seen on
-LibriSpeech/XTTS and VCTK to a third, independent cloner. Still below VoiceMark's own published
-0.964, landing in the "gradient, not two clusters" middle of the conditioning-bandwidth ladder
-rather than at the high-bandwidth end with F5-TTS.
-
-**CosyVoice cross-cloner validation**
-**not treated as reliable** (see the Composability section below for why: the underlying clone audio shows signs of not being genuine cloned speech for a large fraction of samples, so this ACC number is reported for completeness but should not be read as validated watermark survival through real CosyVoice cloning).
-
-**Cross-cloner (MaskGCT, n=100, zero skipped), the rank-2 checkpoint:**
-
-| checkpoint | ACC on MaskGCT clone ↑ |
-|---|---|
+| Checkpoint            | ↑ ACC on MaskGCT clone |
+|---------------------------------------|--------|
 | pretrained VoiceMark (zero-init LoRA) | 0.9138 |
-| rank 2 (Route 2) | 0.9594 |
-| VoiceMark published | 0.957 |
+| rank 2 (Route 2)                      | 0.9594 |
+| VoiceMark published                   | 0.957  |
 
-MaskGCT was already near-ceiling before Route 2, like F5-TTS: training msg_processor moves ACC
-from 0.914 to 0.959, at or slightly above VoiceMark's own published number, and lands with
-F5-TTS at the high-bandwidth end of the conditioning ladder. Cross-cloner validation for the
-Route 2 rank-2 checkpoint is now complete across all four architectures (YourTTS/XTTS via the
-LibriSpeech eval, F5-TTS, CosyVoice, MaskGCT).
+> Both checkpoints land at or slightly above VoiceMark's own published number, and lands with F5-TTS at the high-bandwidth end of the conditioning ladder. 
+
+d) **Cross-cloner (CosyVoice)**
+> n=98/100 — 2 utterances skipped when CosyVoice's own text normalizer crashed on an unusual whisper transcript, the rank-2 checkpoint:
+
+| Checkpoint          | ↑ ACC on CosyVoice clone |
+|---------------------------------------|--------|
+| pretrained VoiceMark (zero-init LoRA) | 0.7669 |
+| Rank 2 (Route 2)                      | 0.8801 |
+| VoiceMark published                   | 0.964  |
+
+> Still below VoiceMark's own published 0.964, landing in the "gradient, not two clusters" middle of the conditioning-bandwidth ladder rather than at the high-bandwidth end with F5-TTS.
+
+**CosyVoice cross-cloner validation is not treated as reliable:** 
+
+(see the Composability section below for why: the underlying clone audio shows signs of not being genuine cloned speech for a large fraction of samples, so this ACC number is reported for completeness but should not be read as validated watermark survival through real CosyVoice cloning).
 
 ### 4) Composability
 > Does Stage 2/3's anti-cloning PGD still transfer, on a Route 2 checkpoint?
