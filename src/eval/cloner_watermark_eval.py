@@ -743,11 +743,23 @@ def main():
         # 'clean' is the unprotected control -- it carries NO watermark, so a_src near
         # 0.5 is the correct result there, not a seed mismatch. Guard the marked arms only.
         if args.input_wav_dir and args.wav_suffix != "clean" and i == 0 and a_src < 0.85:
-            raise SystemExit(
-                f"\nABORT: acc_source={a_src:.4f} on the INPUT audio (expected ~0.99).\n"
-                f"The message regenerated with seed {args.message_seed_base}+{i} does not "
-                f"match the one embedded in {args.input_wav_dir}.\n"
-                f"Fix --message_seed_base to match the generating script.")
+            if os.environ.get("ALLOW_LOW_SOURCE_ACC") == "1":
+                print(
+                    f"\nWARNING: acc_source={a_src:.4f} on sample 0 of the INPUT audio "
+                    f"(expected ~0.99 if undamaged). Continuing because "
+                    f"ALLOW_LOW_SOURCE_ACC=1 is set -- treat accuracy numbers from this run "
+                    f"as reflecting real attack-induced degradation, not a seed mismatch "
+                    f"(this assumption should already be verified against other successful "
+                    f"runs on the same checkpoint before trusting it).\n", flush=True)
+            else:
+                raise SystemExit(
+                    f"\nABORT: acc_source={a_src:.4f} on the INPUT audio (expected ~0.99).\n"
+                    f"The message regenerated with seed {args.message_seed_base}+{i} does not "
+                    f"match the one embedded in {args.input_wav_dir}.\n"
+                    f"Fix --message_seed_base to match the generating script, or set "
+                    f"ALLOW_LOW_SOURCE_ACC=1 to continue anyway if you've already confirmed "
+                    f"low accuracy here reflects genuine attack damage rather than "
+                    f"misconfiguration.")
 
         if args.save_clones_dir:
             import soundfile as sf
