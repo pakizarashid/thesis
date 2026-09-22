@@ -355,6 +355,12 @@ def main():
     p.add_argument("--capacity_lora_r", type=int, default=32)
     p.add_argument("--lora_r", type=int, default=8)
     p.add_argument("--lora_alpha", type=int, default=16)
+    p.add_argument("--msgproc_lora_r", type=int, default=None,
+                    help="msgproc_lora_r wiring (2026-09-14): matches xtts_transfer_eval.py -- "
+                         "only needed to load a checkpoint trained with "
+                         "train_route2_clone_aware.py --msgproc_lora_r. MUST match the value "
+                         "used at training time or load_state_dict will hit a shape mismatch "
+                         "on msg_processor's LoRA tensors.")
 
     p.add_argument("--epsilon", type=float, default=0.01,
                     help="L-infinity perturbation budget in raw waveform amplitude "
@@ -463,7 +469,8 @@ def main():
                               collate_fn=collate_fn, drop_last=False)
 
     backbone = build_backbone(args.checkpoint, args.lora_r, args.lora_alpha,
-                               args.include_ffn, args.capacity_lora_r)
+                               args.include_ffn, args.capacity_lora_r,
+                               msgproc_lora_r=args.msgproc_lora_r)
     print("[main] Loading YourTTS surrogate (frozen)...")
     surrogate = load_yourtts_surrogate(device=device)
     mel_fn = SafeSpeechMelSpectrogram(sampling_rate=args.surrogate_sample_rate).to(device)
