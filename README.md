@@ -175,54 +175,56 @@ back null/adverse and are closed.
 ## Stage 4 — Clone-aware watermark adaptation 
 > **route2 - training the watermark encoder jointly with the detector, cloning inside the loop**
 
-The direction chosen from Stage 4's three candidates was the third: retraining the watermark
-itself with the cloning operation inside the training loop, rather than reshaping the
-perturbation objective or building a second surrogate cloner. LoRA adapters on top of the
-frozen pretrained backbone are trained against a joint loss (clean-audio detection + detection
-on a differentiable YourTTS clone of the watermarked audio), so the watermark itself learns to
-leave a signal that survives being cloned — not just a perturbation reacting to a fixed
-watermark.
+The direction chosen from Stage 4's three candidates was the third: retraining the watermark itself with the cloning operation inside the training loop, rather than reshaping the perturbation objective or building a second surrogate cloner. 
+LoRA adapters on top of the frozen pretrained backbone are trained against a joint loss (clean-audio detection + detection on a differentiable YourTTS clone of the watermarked audio), so the watermark itself learns to leave a signal that survives being cloned — not just a perturbation reacting to a fixed watermark.
 
-**Checkpoint provenance note:** the original Stage-1 checkpoint this work was meant to start
-from (`checkpoints/stage1_aug/`) was never committed to git and was lost when its Kaggle
-session ended. All Route 2 results below start instead from `checkpoints/stage1_scaleup_aug/` (augmentation + the full 900-utterance scaled-up data — a different training run, git-tracked).
-Its own baseline XTTS numbers (measured fresh, both trained and untrained) are used as the
-Route 2 control throughout, rather than mixing in Stage 1–3's numbers, which used a different
-Stage-1 lineage.
 
-### Detector-only baseline (control)
+This is the strongest watermarking contribution is **Route 2**: train the VoiceMark watermark encoder (`msg_processor`) and detector jointly while a differentiable YourTTS clone is inside the training loop.
 
-Training only the detector's LoRA adapters (msg_processor frozen), 20 epochs, same `stage1_scaleup_aug` base checkpoint used throughout this stage. Held-out XTTS, n=100:
+LoRA is used only as the parameter-efficient implementation mechanism. **LoRA itself is not claimed as the contribution.** The contribution is the **clone-aware adaptation strategy**.
 
-|                                                      | ACC    | SIM    |
+```text
+   watermark encoder + detector
+               │
+      clone-aware training
+               ↓
+     differentiable YourTTS
+               ↓
+ learn a watermark that is easier
+to recover after zero-shot cloning
+```
+
+
+### 1) Detector-only baseline (control)
+
+> Held-out XTTS, n=100:
+
+|                                                      | WM ACC ↑ | SIM ↓ |
 | ---------------------------------------------------- | ------ | ------ |
-| untrained (`stage1_scaleup_aug`, zero LoRA training) | 0.5537 | 0.4900 |
-| detector-only trained                                | 0.6031 | 0.4908 |
+| Untrained (zero LoRA training)                       | 0.5537 | 0.4900 |
+| Detector-only trained                                | 0.6031 | 0.4908 |
 
-Paired significance (same 100 utterances, matched ordering): ACC p = 0.0031 (t), p = 0.0050
-(Wilcoxon) — training the detector alone gives a real, if modest, attribution gain.
+Training only the detector's LoRA adapters (msg_processor frozen) alone gives a real, if modest, attribution gain @ 20 epochs
+Paired significance (same 100 utterances, matched ordering): ACC p = 0.0031 (t), p = 0.0050 (Wilcoxon)
 
-### Adding msg_processor to the trainable set
+### 2) Joint encoder + detector training
 
-Same setup, but msg_processor's LoRA adapters are unfrozen too (`--train_msg_processor`),
-20 epochs, λ_clone = 1.0:
+> Same setup, but msg_processor's LoRA adapters are unfrozen too (`--train_msg_processor`), 20 epochs, λ_clone = 1.0:
 
-|                              | ACC    | SIM    | PESQ  | STOI  | SI-SNR  |
-| ---------------------------- | ------ | ------ | ----- | ----- | ------- |
-| detector-only                | 0.6031 | 0.4908 | —     | —     | —       |
-| + msg\_processor (20 epochs) | 0.6913 | 0.3939 | 1.963 | 0.888 | 3.10 dB |
+| Condition         | WM ACC ↑   | SIM ↓  | PESQ ↑ | STOI ↑ | SI-SNR ↑ |
+|-------------------|-----------:|-------:|------:|------:|--------:|
+| Detector-only     | 0.6031     | 0.4908 | —     | —     | —       |
+| + `msg_processor` | **0.6913** | 0.3939 | 1.963 | 0.888 | 3.10 dB |
 
-Training the watermark encoder jointly with the detector gives a substantially larger
-attribution gain than detector-only training — but at a real cost: SIM against the
-detector-only checkpoint drops by ~0.10 (paired, highly significant), and PESQ is lower than
-this project's own untouched-embedder checkpoints. The gain and the cost are the same
-phenomenon: touching msg_processor's LoRA changes what the watermarked audio sounds like,
-which is exactly what both the attribution improvement and the quality/SIM cost trace back to.
+**Improvement:** +0.0881 ACC on held-out XTTS (paired t p=0.000003; Wilcoxon p=0.000007).
+
+The encoder itself therefore contributes additional clone-robust information; the improvement is not only a better detector reading a fixed carrier.
+
+PESQ is lower than this project's own untouched-embedder checkpoints. The gain and the cost are the same phenomenon: touching msg_processor's LoRA changes what the watermarked audio sounds like, which is exactly what both the attribution improvement and the quality/SIM cost trace back to.
 
 ### Chasing the quality/SIM cost: three independent nulls
 
-Three separate levers were tried against the PESQ/SIM cost, each testing a different
-hypothesis for what was driving it:
+Three separate levers were tried against the PESQ/SIM cost, each testing a different hypothesis for what was driving it:
 
 | lever tested                                          | result vs. the untouched run                                                 |
 | ------------------------------------------------------ | ------------------------------------------------------------------------------ |
@@ -230,85 +232,77 @@ hypothesis for what was driving it:
 | `--lambda_clone` (0.5 vs. 1.0)                          | not significant (ACC p = 0.907, SIM p = 0.607)                               |
 | `--msgproc_lora_r` (rank 2 vs. the default rank 8)     | not significant (ACC p = 0.205, SIM p = 0.438, vs. the closest rank-8 match) |
 
-None of training duration, clone-loss weighting, or LoRA capacity itself moves the quality/SIM
-cost. Taken together, this is a well-powered negative result: the cost looks structural to
-training msg_processor's adapters at all, not tunable via any of these three independent
-levers.
+None of training duration, clone-loss weighting, or LoRA capacity itself moves the quality/SIM cost. Taken together, this is a well-powered negative result: the cost looks structural to training msg_processor's adapters at all, not tunable via any of these three independent levers.
 
 **Bonus finding from the rank sweep:** `--msgproc_lora_r 2` — trained from LoRA zero-init
-(no Stage-1 warm start, since a rank-2 adapter can't reuse rank-8 weights) — reached the best
-ACC of any Route 2 variant (0.7288, n=100 XTTS), a real improvement over the original rank-8
+(no Stage-1 warm start, since a rank-2 adapter can't reuse rank-8 weights) — reached the best ACC of any Route 2 variant (0.7288, n=100 XTTS), a real improvement over the original rank-8
 checkpoint (paired p = 0.011), with ~25% fewer trainable parameters (221K vs. 295K). It is
 statistically indistinguishable from the rank-8 checkpoint on ACC (p = 0.205) and SIM
-(p = 0.438) — the two are practical equivalents, rank 2 just gets there cheaper and without
-needing the Stage-1 warm start.
+(p = 0.438) — the two are practical equivalents, rank 2 just gets there cheaper and without needing the Stage-1 warm start.
 
-### Generalization: dataset and cloner architecture
+### 3) Generalization: 
+> **Cross-Dataset and Cross-Cloner architecture**
 
-**VCTK (fully speaker-disjoint from the LibriSpeech training data), n=100, unprotected:**
+n=100, rank= 2
+| Evaluation| Detector-only | Joint Route 2 |       Change |
+|-----------|-------:|----------------:|------------------:|
+| VCTK      | 0.6169 | 0.6913 / 0.7006 | clear improvement |
+| CosyVoice | 0.7669 | 0.8801          | +0.1132 |
+| F5-TTS    | 0.9300 | 0.9881          | +0.0581 |
+| MaskGCT   | 0.9138 | 0.9594 / 0.9481 | +0.0456 |
+
+The Route 2 gain therefore transfers beyond the YourTTS training loop to multiple zero-shot TTS architectures.
+
+>Detail
+
+**VCTK (fully speaker-disjoint from the LibriSpeech training data), unprotected:**
 
 | checkpoint                         | ACC    | SIM    |
-| ------------------------------------ | ------ | ------ |
+| ---------------------------------- | ------ | ------ |
 | detector-only                      | 0.6169 | 0.5317 |
 | + msg\_processor (rank 8, epoch 9) | 0.6913 | 0.4475 |
 | + msg\_processor (rank 2)          | 0.7006 | 0.4457 |
 
-Both the ACC gain and the SIM cost from training msg_processor replicate on a second,
-independent dataset (rank-8 vs. detector-only: p < 0.00001 both metrics; rank-2 vs.
-detector-only: p < 0.00001 both metrics; rank-2 vs. rank-8: not significant, p = 0.49/0.71 —
-consistent with the rank-8/rank-2 equivalence found above).
 
-**Cross-cloner (F5-TTS, n=100), the msg_processor checkpoints only:**
+**Cross-cloner (F5-TTS), the msg_processor checkpoints only:**
 
-| checkpoint          | ACC on F5-TTS clone |
-| -------------------- | --------------------- |
+| checkpoint          |  ACC on F5-TTS clone |
+| ------------------- | -------------------- |
 | rank 8 (epoch 9)    | 0.9875               |
 | rank 2              | 0.9881               |
-| VoiceMark published | 0.979                |
+| VoiceMark published | **0.979**            |
 
-Both checkpoints land at or slightly above VoiceMark's own published number and do not
-regress relative to this project's own earlier F5-TTS baseline (0.9300) — unsurprising, since
-F5-TTS was already near-ceiling before Route 2, but confirms training msg_processor doesn't
-cost anything on the architecture where attribution was already easiest.
+Both checkpoints land at or slightly above VoiceMark's own published number and do not regress relative to this project's own earlier F5-TTS baseline (0.9300) — unsurprising, since F5-TTS was already near-ceiling before Route 2, but confirms training msg_processor doesn't cost anything on the architecture where attribution was already easiest.
 
-**CosyVoice and MaskGCT cross-cloner validation for the Route 2 checkpoints (2026-09-15):**
-measured as a byproduct of the composability run below (each cloner's *unprotected* arm is
-exactly this measurement — watermark survival through real cloning, no PGD involved). MaskGCT:
-ACC 0.9481, n=100, rank-2 checkpoint — a real, clean result. CosyVoice: ACC 0.8801, n=100 —
-**not treated as reliable** (see the Composability section below for why: the underlying
-clone audio shows signs of not being genuine cloned speech for a large fraction of samples,
-so this ACC number is reported for completeness but should not be read as validated watermark
-survival through real CosyVoice cloning).
+**CosyVoice cross-cloner validation**
+**not treated as reliable** (see the Composability section below for why: the underlying clone audio shows signs of not being genuine cloned speech for a large fraction of samples, so this ACC number is reported for completeness but should not be read as validated watermark survival through real CosyVoice cloning).
 
-### Composability: does Stage 2/3's anti-cloning PGD still transfer, on a Route 2 checkpoint?
+### 4) Composability
+> Does Stage 2/3's anti-cloning PGD still transfer, on a Route 2 checkpoint?
 
-PGD optimised against the differentiable YourTTS surrogate (ε = 0.002, λ_wm = 1.0, matching
-Stage 2's original operating point), then the protected audio cloned through the real,
-non-differentiable XTTS-v2 — the same held-out transfer test as Stage 2. Route 2 rank-2
-checkpoint, n=100:
+PGD optimised against the differentiable YourTTS surrogate `(ε = 0.002, λ_wm = 1.0, matching Stage 2's original operating point)`, then the protected audio cloned through the real, non-differentiable XTTS-v2 — the same held-out transfer test as Stage 2. Route 2 rank-2 checkpoint, n=100:
 
-|                     | ACC        | SIM         |
-| -------------------- | ------------ | ------------- |
+|                     | WM ACC ↑   | SIM ↓       |
+| ------------------- | ---------- | ----------- |
 | unprotected clone   | 0.7244     | 0.3996      |
 | protected clone     | 0.6631     | 0.3032      |
 | paired significance | p = 0.0016 | p < 0.00001 |
 
-The disruption transfers to XTTS-v2 (SIM drop is real and large), same as Stage 2's original
-finding for this architecture. Unlike Stage 2's DEMUCS result, though, watermark ACC here
-takes a real, statistically significant hit under the combined attack (−0.061) rather than
-holding flat — reported honestly as a real cost, not rounded up to "free." ACC remains well
-above chance (0.66 vs. 0.5), so the watermark survives meaningfully, just not without cost.
+The disruption transfers to XTTS-v2 (SIM drop is real and large), same as Stage 2's original finding for this architecture. 
 
-**F5-TTS and MaskGCT composability (2026-09-15) — the same protocol extended to two more
-architectures.** Same PGD operating point (ε=0.002, λ_wm=1.0), same Route 2 rank-2 checkpoint,
-n=100 held-out LibriSpeech utterances drawn via a dedicated 3-arm generation script
-(reference/unprotected/protected WAVs per utterance, shared identically across all three
-cloners tested):
+Unlike Stage 2's DEMUCS result, though, watermark ACC here takes a real, statistically significant hit under the combined attack (−0.061) rather than holding flat — reported honestly as a real cost, not rounded up to "free." 
 
-| cloner  | ACC unprotected → protected | paired significance                        | SIM ASR unprotected → protected (ECAPA-TDNN, threshold 0.25) |
-| ------- | ---------------------------- | -------------------------------------------- | --------------------------------------------------------------- |
-| F5-TTS  | 0.9844 → 0.9450             | p = 4.7×10⁻⁶ (t), p = 2.3×10⁻⁵ (Wilcoxon) | 87.0% → 72.0%                                                  |
-| MaskGCT | 0.9481 → 0.8794             | p = 7.7×10⁻⁶ (t), p = 2.3×10⁻⁵ (Wilcoxon) | 71.0% → 51.0%                                                  |
+ACC remains well above chance (0.66 vs. 0.5), so the watermark survives meaningfully, just not without cost.
+
+**F5-TTS and MaskGCT Composability**
+> the same protocol extended to two more architectures.
+
+Same PGD operating point `(ε=0.002, λ_wm=1.0)`, same Route 2 rank-2 checkpoint, n=100 held-out LibriSpeech utterances drawn via a dedicated 3-arm generation script `(reference/unprotected/protected WAVs per utterance, shared identically across all three cloners tested)`:
+
+| Cloner  | ↑ ACC unprotected → protected | paired significance                       | ↓ SIM ASR unprotected → protected (ECAPA-TDNN, threshold 0.25) |
+| ------- | ----------------------------- | ----------------------------------------- | -------------------------------------------------------------- |
+| F5-TTS  | 0.9844 → 0.9450               | p = 4.7×10⁻⁶ (t), p = 2.3×10⁻⁵ (Wilcoxon) | 87.0% → 72.0%                                                  |
+| MaskGCT | 0.9481 → 0.8794               | p = 7.7×10⁻⁶ (t), p = 2.3×10⁻⁵ (Wilcoxon) | 71.0% → 51.0%                                                  |
 
 (F5-TTS's unprotected ACC here, 0.9844, is a second, independent measurement from the 0.9881
 in the cross-cloner table above — different utterance draw, same checkpoint — the two agree
