@@ -501,6 +501,23 @@ gain, noise additive white Gaussian at a target SNR), n=100 each:
 | resample 16k→8k→16k | aggressive | 0.7488 | 0.022 | 0.4214 | 96.0% |
 | noise 10dB SNR | aggressive | 0.6569 | 0.018 | 0.3656 | 87.0% |
 
+1) How much watermark survives these attacks — direct answer from the table already measured:
+
+Detection ACC is watermark survival. Against the protected-no-attack baseline (0.9431), retention by condition:
+
+| Attack | Severity | Detection ACC (clone) | % of basline retrained |
+|---|---|---|---|
+| amplitude ±3dB | mild | 0.9406 | 99.7% |
+| amplitude ±6dB | aggressive | 0.9400 | 99.7% |
+| opus 64kbps | mild | 0.9400 |  99.7% |
+| resample 16k→22.05k→16k | mild | 0.9256 |  98.2% |
+| mp3 128kbps | mild | 0.9019 | 95.6% |
+| mp3 32kbps | aggressive | 0.8931 | 94.7% |
+| opus 16kbps | aggressive | 0.8725 |  92.5% |
+| noise 20dB SNR | mild | 0.8275 | 987.7% |
+| resample 16k→8k→16k | aggressive | 0.7488 | 79.4% |
+| noise 10dB SNR | aggressive | 0.6569 |  69.7% |
+
 **Finding 1 (watermark detection / intelligibility): the watermark degrades gradually under
 compression/resampling and fails specifically under additive noise, while the underlying
 speech stays almost perfectly intelligible throughout (WER ≤ 0.041 in every condition).**
