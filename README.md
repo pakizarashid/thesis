@@ -305,13 +305,17 @@ d) **Cross-cloner (CosyVoice)**
 ### 4) Composability
 > Does Stage 2/3's anti-cloning PGD still transfer, on a Route 2 checkpoint?
 
-PGD optimised against the differentiable YourTTS surrogate `(ε = 0.002, λ_wm = 1.0, matching Stage 2's original operating point)`, then the protected audio cloned through the real, non-differentiable XTTS-v2 — the same held-out transfer test as Stage 2. Route 2 rank-2 checkpoint, n=100:
+PGD optimised against the differentiable YourTTS surrogate `(ε = 0.002, λ_wm = 1.0, matching Stage 2's original operating point)`, then the protected audio cloned through the real, non-differentiable XTTS-v2 — the same held-out transfer test as Stage 2. Route 2 rank-2 checkpoint, 
+
+** XTTS-v2, n=100:**
 
 |                     | WM ACC ↑   | SIM ↓       |
 | ------------------- | ---------- | ----------- |
 | unprotected clone   | 0.7244     | 0.3996      |
 | protected clone     | 0.6631     | 0.3032      |
 | paired significance | p = 0.0016 | p < 0.00001 |
+
+This shows cross-architecture anti-cloning transfer while the watermark remains above chance. The ACC decrease is real and is reported as a trade-off
 
 The disruption transfers to XTTS-v2 (SIM drop is real and large), same as Stage 2's original finding for this architecture. 
 
@@ -374,14 +378,20 @@ ACC in the table further up are built on audio that likely isn't genuine cloned 
 large share of samples — not folded into either the composability comparison or the
 cross-cloner validation table as if it were a clean measurement.
 
-**Status: Route 2 (msg_processor training, either rank) is the current leading candidate for
-Stage 4's contribution.** Detector-only vs. +msg_processor is a settled, well-replicated
-finding (two datasets). The quality/SIM cost is a settled negative result (three levers ruled
-out). Rank-2 is the current best checkpoint (best ACC, fewest parameters) and is statistically
-equivalent to rank-8 everywhere it's been tested. F5-TTS and MaskGCT cross-cloner validation
-and composability are both now measured and positive. **Remaining before this stage can be
-called complete: a reliable CosyVoice measurement** (the current attempt is excluded for a
-stated, architecture-specific reason — see above — not a defense-side finding either way).
+**Status: Route 2 (msg_processor training,  rank 2) is the current leading candidate for Stage 4's contribution.** 
+
+1. Detector-only vs. +msg_processor is a settled, well-replicated finding (two datasets). 
+2. The quality/SIM cost is a settled negative result (three levers ruled out). 
+3. Rank-2 is the current best checkpoint (best ACC, fewest parameters) and is statistically equivalent to rank-8 everywhere it's been tested. 
+4. F5-TTS and MaskGCT cross-cloner validation and composability are both now measured and positive.
+5. or Cross-cloner validation is complete across all four architectures (0.767 → 0.880 on CosyVoice, 0.914 → 0.959 on MaskGCT, both real generalizations of the Route 2 gain, not an F5-TTS-only effect).
+
+**Remaining before this stage can be called complete:**
+1. a reliable CosyVoice measurement** (the current attempt is excluded for a stated, architecture-specific reason — see above — not a defense-side finding either way).
+2. Composability (PGD + Route 2 checkpoint) against CosyVoice, MaskGCT and F5-TTS — currently measured only against XTTS-v2.
+
+
+> **Route 2's watermark composes with the *existing* Stage 2/3 PGD anti-cloning perturbation on F5-TTS/MaskGCT (both significantly reduced together, protected vs. unprotected) — that composability result is real and already verified. It is a separate, narrower checkpoint (watermark only, no PGD) that was used as this doc's Post-Processing Robustness baseline above, which is why that section's SIM numbers should not be read as a statement about Route 2 + PGD's combined robustness to attack.**
 
 ---
 
@@ -451,18 +461,13 @@ Full experimental record, including negative results and withdrawn claims: `docs
 | Does Stage 2/3's anti-cloning PGD still work on a Route 2 checkpoint? | Tested against XTTS-v2 only so far — disruption transfers (SIM drops), but watermark ACC takes a real hit (0.724 → 0.663), not free | "Composability" |
 | What's left | Composability against CosyVoice, MaskGCT, F5-TTS (only XTTS-v2 measured) | "Composability" |
 
-
-**Status: Route 2 (msg_processor training, rank 2) is Stage 4's contribution.** Detector-only
-vs. +msg_processor is a settled, well-replicated finding (two datasets). The quality/SIM cost
-is a settled negative result (three levers ruled out). Rank-2 is the best checkpoint (best ACC,
-fewest parameters) and statistically tied with rank-8 everywhere it's been tested. Cross-cloner
-validation is complete across all four architectures (0.767 → 0.880 on CosyVoice, 0.914 → 0.959
-on MaskGCT, both real generalizations of the Route 2 gain, not an F5-TTS-only effect). Only
-thing left before this stage is fully closed out: composability (PGD + Route 2 checkpoint)
-against CosyVoice, MaskGCT and F5-TTS — currently measured only against XTTS-v2.
-
 ---
 
+Stage 3 diagnosed *why* the trade-off exists, not just *that* it exists: the PGD objective
+optimises purely for reduced speaker similarity — it has no term that requires the watermark
+to keep decoding, and no exposure to F5-TTS's conditioning behaviour at all. Pushing ε further
+is not really "more protection" so much as "a blunter perturbation that damages everything in
+the same acoustic budget the watermark and the audio quality also depend on."
 
 ---
 
@@ -552,34 +557,3 @@ success against a working anti-cloning defense) is new, unscheduled work — see
 question" above, not a gap in what's reported here.**
 
 ---
-
-## Stage 4 — The actual contribution: a defense that knows the watermark exists
-
-Stage 3 diagnosed *why* the trade-off exists, not just *that* it exists: the PGD objective
-optimises purely for reduced speaker similarity — it has no term that requires the watermark
-to keep decoding, and no exposure to F5-TTS's conditioning behaviour at all. Pushing ε further
-is not really "more protection" so much as "a blunter perturbation that damages everything in
-the same acoustic budget the watermark and the audio quality also depend on."
-
-The goal for this stage: a defense that reaches low speaker similarity, high watermark ACC,
-and acceptable audio quality *together*, at a smaller perturbation budget than the naive
-sweep needs. Three candidate directions, sized honestly:
-
-| direction | what it requires | rough cost | risk to the December deadline |
-|---|---|---|---|
-| watermark-aware perturbation objective (add a term that keeps the watermark decodable through the same cloning process the perturbation is optimised against, alongside the existing anti-cloning and quality terms) | extends the existing optimisation loop, no new models | days | low |
-| ensemble / F5-TTS-aware surrogate (optimise the perturbation against more than one cloning architecture, or one built to resemble F5-TTS's conditioning) | a new differentiable cloning model to optimise against | weeks, uncertain convergence | high |
-| end-to-end watermark retraining with the cloning operation inside the training loop (the mechanism that solved this exact antagonism in the face-swap domain) | retraining the watermark itself against F5-TTS's actual cloning behaviour | weeks or more | very high |
-
-**Status: per `claude/composability-route2-2026-09-15.md` (which reconciled this project's
-docs against the live GitHub README, more current than this doc), Route 2
-(`route2_scaleupaug_msgproc_r2`) is the third candidate — end-to-end watermark LoRA
-retraining (detector + msg_processor) jointly with a differentiable-clone loss, cloning
-inside the training loop — not the "watermark-aware perturbation objective" this doc
-previously guessed. Route 2's watermark composes with the *existing* Stage 2/3 PGD anti-
-cloning perturbation on F5-TTS/MaskGCT (both significantly reduced together, protected vs.
-unprotected) — that composability result is real and already verified. It is a separate,
-narrower checkpoint (watermark only, no PGD) that was used as this doc's Post-Processing
-Robustness baseline above, which is why that section's SIM numbers should not be read as a
-statement about Route 2 + PGD's combined robustness to attack.**
-
