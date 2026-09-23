@@ -7,7 +7,7 @@ Combines **VoiceMark-style traceable watermarking** with **SafeSpeech-style adve
 ### Main research goal:
 **Can a watermark-bearing adversarial protection system reduce usable speaker information and clone usability, while preserving watermark-based attribution and acceptable quality of the protected source audio, across heterogeneous zero-shot TTS architectures?**
 
-The system has two complementary jobs:
+### Two complementary defenses
 
 ```text
 Protected speech
@@ -26,7 +26,14 @@ Protected speech
              harder impersonation      traceability
 ```
 
-A further objective is to reduce **clone usability/intelligibility** where measurable (e.g. higher WER), while keeping the original protected speech usable to a human listener.
+| Objective | Main metric | Desired direction |
+|---|---|---:|
+| Destroy speaker identity | ECAPA-TDNN SIM | ↓ |
+| Reduce clone usability | WER / ASR | WER ↑ / ASR ↓ |
+| Preserve traceability | Watermark ACC | ↑ |
+| Preserve protected-source quality | PESQ / STOI / SI-SNR | ↑ |
+
+---
 
 **Central hypothesis:**
 A watermark trained with the cloning transformation inside the optimization loop can improve traceability across heterogeneous zero-shot cloning architectures, while a complementary adversarial perturbation can reduce speaker identity; however, the two objectives introduce architecture-dependent trade-offs that must be explicitly characterized.
@@ -70,15 +77,27 @@ This project have:
 - **Independent evaluation:** controlled experiments using this project's datasets, samples, or additional TTS architectures.
 - **Our contribution:** comparisons made under the same conditions between our baseline and our proposed modification.
 
-> The work below is a five-stage progression. Stages 1–3 are complete and their findings are
-final. Stage 4 is the open decision — three candidate directions are sized below, none
-started yet. Stage 5 depends on which direction Stage 4 takes.
+> The work below is a five-stage progression.
+
+# Research contributions
+
+| Contribution | Evidence |
+|---|---|
+| **1. Architecture-dependent watermark survival** | VoiceMark attribution varies strongly across five zero-shot TTS systems; CARRIER-PROBE supports the same trend in the watermark-bearing latent. |
+| **2. Clone-aware watermark adaptation** | Jointly training VoiceMark `msg_processor` + detector with a differentiable YourTTS clone improves attribution across multiple unseen cloners. |
+| **3. Transferable anti-cloning perturbation** | Waveform PGD trained with YourTTS transfers to unseen XTTS-v2, F5-TTS and MaskGCT under tested conditions. |
+| **4. Dual-defense composability** | Route 2 watermark + PGD simultaneously reduces speaker similarity while retaining meaningful watermark detection on multiple architectures. |
+| **5. Trade-off characterization** | Epsilon sweep and robustness attacks quantify protection, attribution, intelligibility, and quality interactions. |
+
+**LoRA is an implementation choice, not the claimed novelty.** The contribution is the **clone-aware adaptation strategy**.
+
+---
 
 ---
 # Research progression
 
 ## Stage 1 — Watermark 
-> **Does the watermark survive being cloned?**
+> **Does the same watermark survive different zero-shot TTS architectures?**
 
 VoiceMark's released watermark was evaluated on five zero-shot TTS architectures: the three used in the VoiceMark paper (CosyVoice, F5-TTS, MaskGCT) plus YourTTS and XTTS-v2, using the same detector, the same 16-bit payload, and the same harness throughout.
 
@@ -91,13 +110,24 @@ VoiceMark's released watermark was evaluated on five zero-shot TTS architectures
 | F5-TTS      | mel infilling, reference mel retained                      | 0.9300                     |
 
 ### Finding
-> watermark survival is architecture/reference-pathway dependent, not a fixed property of the watermark.
+> watermark survival is architecture/reference-pathway dependent.
 
 The same watermark produced substantially different attribution across cloning architectures. This motivates the hypothesis that watermark survival depends on the **reference transformation/conditioning pathway**, rather than being a fixed property of the watermark alone.
 
 Across all five architectures (monotone, no ties/inversions), survival is higher when the cloner retains reference audio (F5-TTS, MaskGCT) rather than regenerating it through a decoder (CosyVoice) — consistent with VoiceMark's own published numbers, whose eval set is entirely retained-conditioning.
 
-**CARRIER-PROBE** confirms this at the latent level: re-encoded clone audio vs. the original watermark carrier shows the same ordering on 4/5 architectures (CosyVoice excluded — clone/reference durations didn't align closely enough to compare), across all seven RVQ layers (n=15/architecture). Layer 2 is the most fragile; an inference-time attempt to reweight/remove it didn't improve attribution, so this stays a diagnostic, not a fix.
+**CARRIER-PROBE**
+Re-encoding clone audio with VoiceMark's own SpeechTokenizer measured raw carrier survival independent of the detector.
+
+| Result | Finding |
+|---|---|
+| Pooled similarity | Higher survival tracks higher ACC on the reliably measured architectures |
+| Per-layer result | All 7 watermark-bearing layers show the same architecture ordering |
+| Most fragile layer | **Layer 2** shows the largest architecture sensitivity |
+| Simple layer reweighting | **Null**: inference-time down-weighting/removal of Layer 2 did not improve ACC |
+| CosyVoice | Excluded from the clean carrier-sim subset because of reference-duration mismatch |
+
+**Interpretation:** carrier survival is a useful diagnostic, but simple inference-time carrier reweighting is not a fix.
 
 **Status: completed**
 
@@ -107,11 +137,11 @@ Across all five architectures (monotone, no ties/inversions), survival is higher
 > **Does the protection transfer to the same five architectures?**
 
 ### Mechanism
-The main anti-cloning is **waveform-domain PGD**. The protected, decoded waveform is perturbed directly:
+The main anti-cloning is **waveform-domain PGD**. 
 ```text
 watermarked waveform + bounded δ → protected waveform → zero-shot TTS → clone
 ```
-optimized against a differentiable **YourTTS surrogate** — the only differentiable target available; every other cloner is evaluated black-box.
+The perturbation is optimized through a differentiable **YourTTS surrogate**; the other TTS systems are black-box evaluation targets.
 
 On YourTTS with ECAPA-TDNN similarity scoring, denoising-attack scenario, n=100:
 
@@ -186,20 +216,39 @@ The surrogate's own architecture keeps working throughout; it's specifically the
 | 0.002 | 0.94   | 0.91 | 
 | 0.08  | 0.99   | 0.62 | 
 
-| Protected ACC	stays 0.94–0.99 |
-
-| Protected → DEMUCS ACC	0.91 → 0.62|
-
 ### Finding
-> increasing ε does buy back protection on F5-TTS — SIM falls from 0.41
-to 0.10, attack success from 91% to 5% — but not for free
+> Increasing ε eventually makes F5-TTS cloning much harder, but stronger protection also reduces watermark attribution and protected-source quality.
 
 Attribution degrades toward chance in parallel (ACC 0.84 → 0.59), and audio quality collapses independently (PESQ near floor by ε = 0.04; SI-SNR negative by ε = 0.08 — perturbation louder than the speech itself). There is no ε in this range where protection, attribution, and usable audio all hold at once — a genuine three-way **trade-off**.
 
-Two later attempts to fix this by reformulating the PGD objective (H-SPEC, H-DIRECT) came
-back null/adverse and are closed.
+Two later attempts to fix this by reformulating the PGD objective (H-SPEC, H-DIRECT) came back null/adverse and are closed.
+
+### Reformulation attempts
+
+| Attempt | Result |
+|---|---|
+| H-SPEC: SafeSpeech-style KL/L1 terms through surrogate clone | **Null / adverse** |
+| H-DIRECT: KL/L1 directly on perturbed input mel | **Null / adverse** |
+| Simple RVQ layer reweighting | **Null** |
+
+These closed the simple **loss-reformulation / inference-time carrier-eweighting** paths.
 
 **Status: completed** 
+---
+
+### Stage 4 result — Route 2 epsilon sweep
+
+In route 2 was then evaluated across the same five ε values used in Stage 3 (F5-TTS, n=100).
+
+| ε | ACC (orig → Route2) | SIM mean (orig → Route2) | ASR (orig → Route2) | PESQ (orig → Route2) | STOI (orig → Route2) | SI-SNR (orig → Route2) |
+|---|---|---|---|---|---|---|
+| 0.002 | 0.8381 → **0.9575** | 0.4140 → **0.3122** | 91% → **70.0%** | 1.919 → 1.786 | 0.885 → 0.863 | 0.43 → 0.35 dB |
+| 0.01  | 0.7000 → **0.8575** | 0.3250 → **0.2260** | 75% → **44.0%** | 1.337 → 1.317 | 0.834 → 0.809 | 0.24 → 0.22 dB |
+| 0.02  | 0.6844 → **0.7819** | 0.2713 → **0.1685** | 55% → **26.0%** | 1.155 → 1.152 | 0.784 → 0.763 | −0.28 → −0.18 dB |
+| 0.04  | 0.6062 → **0.6900** | 0.1605 → **0.1269** | 15% → **12.0%** | 1.069 → 1.070 | 0.708 → 0.697 | −1.77 → −1.37 dB |
+| 0.08  | 0.5875 → 0.5988 | 0.0969 → **0.0669** | 5% → 8.0% | 1.042 → 1.043 | 0.610 → 0.612 | −4.95 → −4.12 dB |
+
+**SEE STAGE 4 for finding**
 
 ---
 
@@ -212,18 +261,21 @@ LoRA adapters on top of the frozen pretrained backbone are trained against a joi
 
 This is the strongest watermarking contribution is **Route 2**: train the VoiceMark watermark encoder (`msg_processor`) and detector jointly while a differentiable YourTTS clone is inside the training loop.
 
-LoRA is used only as the parameter-efficient implementation mechanism. **LoRA itself is not claimed as the contribution.** The contribution is the **clone-aware adaptation strategy**.
+### Idea
+Instead of changing the anti-cloning perturbation, adapt the watermark itself to cloning:
 
 ```text
-   watermark encoder + detector
-               │
-      clone-aware training
-               ↓
-     differentiable YourTTS
-               ↓
- learn a watermark that is easier
-to recover after zero-shot cloning
+Watermark encoder (`msg_processor`) + detector
+                    ↓
+          clone-aware training
+                    ↓
+       differentiable YourTTS clone
+                    ↓
+        watermark learns to remain
+       recoverable after zero-shot cloning
 ```
+
+The LoRA adapters are trained on top of the frozen VoiceMark backbone. **YourTTS is the single differentiable training cloner; XTTS/F5-TTS/CosyVoice/MaskGCT are evaluation targets.**
 
 
 ### 1) Detector-only baseline (control)
@@ -247,9 +299,9 @@ Paired significance (same 100 utterances, matched ordering): ACC p = 0.0031 (t),
 | Detector-only     | 0.6031     | 0.4908 | —     | —     | —       |
 | + `msg_processor` | **0.6913** | 0.3939 | 1.963 | 0.888 | 3.10 dB |
 
-**Improvement:** +0.0881 ACC on held-out XTTS (paired t p=0.000003; Wilcoxon p=0.000007).
+**Improvement:** +8% ACC on held-out XTTS (paired t p=0.000003; Wilcoxon p=0.000007).
 
-The encoder itself therefore contributes additional clone-robust information; the improvement is not only a better detector reading a fixed carrier.
+> The encoder itself therefore contributes additional clone-robust information; the improvement is not only a better detector reading a fixed carrier.
 
 PESQ is lower than this project's own untouched-embedder checkpoints. The gain and the cost are the same phenomenon: touching msg_processor's LoRA changes what the watermarked audio sounds like, which is exactly what both the attribution improvement and the quality/SIM cost trace back to.
 
@@ -257,27 +309,40 @@ PESQ is lower than this project's own untouched-embedder checkpoints. The gain a
 
 Three separate levers were tried against the PESQ/SIM cost, each testing a different hypothesis for what was driving it:
 
+### Quality-cost analysis
+
+Three controlled attempts did not remove the quality/SIM cost of adapting `msg_processor`:
 | Lever | ACC ↑	| SIM ↓ |	Conclusion |
 |---|---|---|---|
-| `--epochs` (early-stopped at epoch 9 vs. the full 20)	| p = 0.235	| p = 0.183 | No significant difference |
-| `--lambda_clone` (0.5 vs. 1.0) |	p = 0.907 |	p = 0.607 |	No significant difference |
-| `--msgproc_lora_r` (rank 2 vs. the default rank 8) |	p = 0.205 |	p = 0.438 |	No significant difference |
+| `--epochs`, Fewer epochs (9 vs. 20) | p = 0.235	| p = 0.183 | No significant difference |
+| `--lambda_clone`, Lower clone-loss weight (0.5 vs. 1.0) |	p = 0.907 |	p = 0.607 |	No significant difference |
+| `--msgproc_lora_r`, Lower LoRA rank (2 vs. 8) |	p = 0.205 |	p = 0.438 |	No significant difference |
 
-None of training duration, clone-loss weighting, or LoRA capacity itself moves the quality/SIM cost. Taken together, this is a well-powered negative result: the cost looks structural to training msg_processor's adapters at all, not tunable via any of these three independent levers.
+**Conclusion:** the observed quality cost appears associated with adapting `msg_processor` itself rather than training duration, clone-loss weight, or LoRA capacity among the tested settings.
 
-**Bonus finding from the rank sweep:** `--msgproc_lora_r 2` — trained from LoRA zero-init
-(no Stage-1 warm start, since a rank-2 adapter can't reuse rank-8 weights) — reached the best ACC of any Route 2 variant (0.7288, n=100 XTTS), a real improvement over the original rank-8
-checkpoint (paired p = 0.011), with ~25% fewer trainable parameters (221K vs. 295K). It is
-statistically indistinguishable from the rank-8 checkpoint on ACC (p = 0.205) and SIM
-(p = 0.438) — the two are practical equivalents, rank 2 just gets there cheaper and without needing the Stage-1 warm start.
+
+### Rank-2 efficiency
+
+> **Bonus finding from the rank sweep:** `--msgproc_lora_r 2` — trained from LoRA zero-init (no Stage-1 warm start, since a rank-2 adapter can't reuse rank-8 weights)
+
+| Metric | Rank 8 | Rank 2 |
+|---|---:|---:|
+| XTTS ACC, n=100 | 0.69–0.71 | **0.7288** |
+| Trainable parameters | 295K | **221K** |
+| Relative parameter count | 100% | **~75%** |
+| ACC vs rank-8 | — | not significant, p = 0.205 |
+| SIM vs rank-8 | — | not significant, p = 0.438 |
+
+Rank 2 is the preferred checkpoint for final evaluation because it is smaller and statistically equivalent to rank 8 in tested comparisons.
+
 
 ### 3) Generalization: 
 > **Cross-Dataset and Cross-Cloner architecture**
 
 n=100, rank= 2
-| Evaluation| Detector-only | Joint Route 2 |       Change |
-|-----------|-------:|----------------:|------------------:|
-| VCTK      | 0.6169 | 0.6913 / 0.7006 | clear improvement |
+| Evaluation| Detector-only | Joint Route 2 | Change |
+|-----------|-------:|----------------:|------------:|
+| VCTK      | 0.6169 | 0.6913 / 0.7006 | +0.0837 |
 | CosyVoice | 0.7669 | 0.8801          | +0.1132 |
 | F5-TTS    | 0.9300 | 0.9881          | +0.0581 |
 | MaskGCT   | 0.9138 | 0.9594 / 0.9481 | +0.0456 |
@@ -295,10 +360,10 @@ The Route 2 gain therefore transfers beyond the YourTTS training loop to multipl
 | + msg\_processor (rank 2)          | 0.7006 | 0.4457 |
 
 a) **Cross-cloner (XTTS):**
-| Checkpoint        | ↑ ACC on XTTS clone | Trainable parameters ↓ |
-|-------------------|---------------------|------------------------|
-| Rank 8 (epoch 9)  |	                — |	              295K |
-| Rank 2	        | 0.7288               |	               221K|
+| Checkpoint        | ↑ ACC on XTTS clone |
+|-------------------|---------------------|
+| Rank 8 (epoch 9)  |	                — |	         
+| Rank 2	        | 0.7288              |	               
 
 b) **Cross-cloner (F5-TTS), the msg_processor checkpoints only:**
 
@@ -364,105 +429,121 @@ Same PGD operating point `(ε=0.002, λ_wm=1.0)`, same Route 2 rank-2 checkpoint
 | F5-TTS  | 0.9844 → 0.9450               | p = 4.7×10⁻⁶ (t), p = 2.3×10⁻⁵ (Wilcoxon) | 87.0% → 72.0%                                                  |
 | MaskGCT | 0.9481 → 0.8794               | p = 7.7×10⁻⁶ (t), p = 2.3×10⁻⁵ (Wilcoxon) | 71.0% → 51.0%                                                  |
 
-(F5-TTS's unprotected ACC here, 0.9844, is a second, independent measurement from the 0.9881
-in the cross-cloner table above — different utterance draw, same checkpoint — the two agree
-closely.) Quality of the shared protected source at this budget: PESQ 1.787, STOI 0.864,
-SI-SNR 0.35 dB, consistent with Stage 3's own ε=0.002 quality numbers measured on a different
-checkpoint (PESQ 1.919, STOI 0.885, SI-SNR 0.43 dB) — Route 2 isn't buying this composability
-result with a louder or quieter perturbation than already characterised.
 
-**Finding: protection composes with attribution — both significantly reduced together — on
-two more held-out architectures beyond XTTS-v2**, extending the composability result above
-rather than repeating it. Effect size differs by cloner (MaskGCT's ACC drop is larger than
-F5-TTS's, and both are smaller than the corresponding SIM-ASR reduction), but the direction
-and significance hold on both.
+### Stage 4 result — Route 2 epsilon sweep
 
-**CosyVoice: attempted, excluded.** Its ACC-only number looks ordinary (0.8801 → 0.7191,
-p = 3.7×10⁻¹³, the largest and most significant drop of the three cloners) — but its SIM
-collapsed even in the *unprotected* arm (6.1% attack success, mean SIM 0.128, against
-F5-TTS/MaskGCT's 87%/71% on this identical protocol and SafeSpeech's own ~60% unprotected
-reference point). Three checks, each targeting a different candidate explanation, converged on
-one root cause:
+In route 2 was then evaluated across the same five ε values used in Stage 3 (F5-TTS, n=100).
+>> see Stage 3 for table
+>> 
+### Finding
+> **Route 2 shifts the protection/attribution curve outward at ε=0.002–0.04.**
 
-1. **Audio sanity** — reference/clone duration and sample rate were normal (3.00s reference,
-   7.20s clone, 16kHz throughout); nothing malformed in our own pipeline.
-2. **Control run** — ECAPA SIM between the true reference and the *watermarked-but-uncloned*
-   audio (no cloning involved) came back normal (100%/94% attack success unprotected/
-   protected, means 0.538/0.432) — ruling out a bug in our watermarking, PGD, or SIM-scoring
-   code.
-3. **Intelligibility check** — transcribing the actual CosyVoice clones against the known
-   target text ("This is a test sentence for voice cloning.") gave a mean WER of 1.43–1.49
-   (worse than chance), dominated by empty transcriptions, non-English tokens, and
-   non-terminating repetition loops ("go, go, go, go...", "I don't know. I don't know. I
-   don't know."), echoed in generation logs showing a suspiciously fixed ~7.2s output length
-   regardless of content — the classic signature of an autoregressive decoder failing to hit
-   its stop condition.
+At matched ε, Route 2 generally gives:
+- higher watermark ACC,
+- lower speaker SIM / ASR,
+- similar protected-source quality.
 
-The reference transcripts themselves (obtained via the same faster-whisper pathway used
-identically for all three cloners) were verified legitimate — real, on-topic, just naturally
-truncated mid-utterance, since each is a 3-second crop of continuous speech rather than a
-clean sentence boundary. F5-TTS and MaskGCT clone these same crops and transcripts without
-issue; CosyVoice2's zero-shot decoder appears specifically brittle to a non-sentence-final
-prompt in a way the other two architectures are not. This is reported as an excluded,
-root-caused protocol limitation — both the composability numbers above and the cross-cloner
-ACC in the table further up are built on audio that likely isn't genuine cloned speech for a
-large share of samples — not folded into either the composability comparison or the
-cross-cloner validation table as if it were a clean measurement.
+**Caveat:** the original non-baseline sweep points were n=20 while Route 2 uses n=100; therefore the comparison is a strong direction/magnitude result, not a formal paired significance test across the two sweeps.
 
-**Status: Route 2 (msg_processor training,  rank 2) is the current leading candidate for Stage 4's contribution.** 
-
-1. Detector-only vs. +msg_processor is a settled, well-replicated finding (two datasets). 
-2. The quality/SIM cost is a settled negative result (three levers ruled out). 
-3. Rank-2 is the current best checkpoint (best ACC, fewest parameters) and is statistically equivalent to rank-8 everywhere it's been tested. 
-4. F5-TTS and MaskGCT cross-cloner validation and composability are both now measured and positive.
-5. or Cross-cloner validation is complete across all four architectures (0.767 → 0.880 on CosyVoice, 0.914 → 0.959 on MaskGCT, both real generalizations of the Route 2 gain, not an F5-TTS-only effect).
-
-**Remaining before this stage can be called complete:**
-1. a reliable CosyVoice measurement** (the current attempt is excluded for a stated, architecture-specific reason — see above — not a defense-side finding either way).
-2. Composability (PGD + Route 2 checkpoint) against CosyVoice, MaskGCT and F5-TTS — currently measured only against XTTS-v2.
-
-
-> **Route 2's watermark composes with the *existing* Stage 2/3 PGD anti-cloning perturbation on F5-TTS/MaskGCT (both significantly reduced together, protected vs. unprotected) — that composability result is real and already verified. It is a separate, narrower checkpoint (watermark only, no PGD) that was used as this doc's Post-Processing Robustness baseline above, which is why that section's SIM numbers should not be read as a statement about Route 2 + PGD's combined robustness to attack.**
+**Status: ✅ Complete**
 
 ---
 
-## Stage 5 — Final evaluation
+# Post-processing robustness
 
-**Status: in progress, not pending.** 
-* Route 2 (Stage 4's chosen direction) now has real head-to-head numbers against the detector-only control across two datasets (LibriSpeech/XTTS, VCTK), and both cross-cloner validation and PGD composability across three additional cloner architectures (F5-TTS, MaskGCT, and an excluded, root-caused CosyVoice attempt), alongside the original XTTS-v2 composability result.
-* What remains is a reliable CosyVoice measurement (current attempt excluded for a stated architecture-specific reason — a longer or sentence-aligned reference crop might resolve it, not yet attempted) and fixing an explicit success threshold for the overall dual-defense claim now that F5-TTS and MaskGCT composability numbers exist alongside XTTS-v2's.
-* As before Stage 4 begins the Stage 3 numbers above are a trend pass (n=20 per point), not the full n=100 with paired per-utterance statistics this project otherwise uses throughout. A clean re-run to get that — now that the environment split between the two evaluation stages is a known, working procedure — is cheap. That re-run is worth doing, but it makes more sense to fold it together with whichever Stage 4 direction gets chosen than to run it twice. Holding off on scheduling it until that decision is made.
+Route 2 dual-defense audio was tested against 10 pre-cloning attacks: MP3, Opus, resampling, amplitude scaling, and additive noise; each at mild/aggressive severity, n=100.
 
-Once a direction is chosen and implemented, this stage re-measures it against the same protocol as Stage 3 — attribution ACC, SIM/attack-success-rate, and audio quality together — and checks whether it shifts the trade-off curve Stage 3 established, or merely moves along it. A threshold for what counts as success is meant to be fixed before that run, not after.
+### No-attack baseline
 
-**Status: F5-TTS and MaskGCT composability (Route 2 watermark + Stage 2/3 PGD) are measured and verified (see Stage 4 note above); CosyVoice is excluded/documented as an evaluation-protocol artifact, not a defense finding (see `claude/composability-route2-2026-09-15.md`).
-Remaining: a reliable CosyVoice measurement, and fixing an explicit success threshold for the
-overall dual-defense claim now that F5-TTS/MaskGCT numbers exist.**
+| Condition | WM ACC ↑ | SIM ↓ | ASR ↓ |
+|---|---:|---:|---:|
+| Unprotected | 0.9825 | 0.3680 | 88% |
+| Protected (WM + PGD) | **0.9431** | **0.3106** | **70%** |
+
+### 10 attack conditions
+
+| Attack | Severity | WM ACC ↑ | WER ↑ | SIM ↓ | ASR ↓ |
+|---|---|---:|---:|---:|---:|
+| Amplitude ±3 dB | Mild | 0.9494 | 0.021 | 0.3018 | 63% |
+| Amplitude ±6 dB | Aggressive | 0.9431 | 0.026 | 0.3068 | 68% |
+| Opus 64 kbps | Mild | 0.9275 | 0.016 | 0.3030 | 70% |
+| Resample 16k→22.05k→16k | Mild | 0.9175 | 0.021 | 0.3040 | 68% |
+| MP3 128 kbps | Mild | 0.8988 | 0.041 | 0.3067 | 62% |
+| MP3 32 kbps | Aggressive | 0.8875 | 0.016 | 0.2974 | 69% |
+| Opus 16 kbps | Aggressive | 0.8719 | 0.013 | 0.3051 | 71% |
+| Noise 20 dB SNR | Mild | 0.8206 | 0.024 | 0.2883 | 61% |
+| Resample 16k→8k→16k | Aggressive | 0.7525 | 0.022 | 0.2745 | 63% |
+| Noise 10 dB SNR | Aggressive | 0.6375 | 0.018 | 0.2137 | 35% |
+
+### Finding
+
+> **Post-processing did not provide a route back to successful cloning against genuinely protected audio.**
+
+Nine of ten attack conditions have ASR at or below the 70% protected baseline; the 71% Opus-16 kbps result is only a 1-point difference.
+
+The harshest noise condition simultaneously gives the lowest watermark ACC and the lowest cloning ASR, showing that stronger signal damage can hurt both sides rather than restoring cloning.
+
+### Important metric distinction
+
+| Metric | What it measures |
+|---|---|
+| PESQ / STOI / SI-SNR | Quality of the **protected source audio** compared with the clean original |
+| Watermark ACC | Watermark/traceability in the **clone** |
+| ECAPA SIM | Similarity of the **clone speaker identity** to the true source speaker |
+| WER | Intelligibility of the **clone speech** |
+| ASR (SIM > 0.25) | Fraction of clones above the chosen speaker-similarity threshold |
+
+A separate human listening test (SMOS) has not been run.
+
+**Status: ✅ Complete**
+
 
 ---
 
-### Metrics: what each one means
 
-| Goal | Metric | Desired direction |
-|---|---|---|
-| Preserve traceability | Watermark ACC | ↑ |
-| Destroy speaker identity | ECAPA speaker SIM | ↓ |
-| Reduce clone usability/intelligibility | WER / ASR | ↑ |
-| Preserve protected-source quality | PESQ / STOI / SI-SNR | ↑ |
+# Final dual-defense evidence
+
+The current strongest evidence is that watermark attribution and anti-cloning protection can operate together rather than one automatically destroying the other.
+
+| TTS | WM ACC before → after PGD | Speaker/clone result | Interpretation |
+|---|---:|---:|---|
+| XTTS-v2 | 0.7244 → **0.6631** | SIM 0.3996 → **0.3032** | Both mechanisms survive; ACC cost is significant |
+| F5-TTS | 0.9844 → **0.9450** | ASR 87% → **72%** | Both mechanisms survive; protection transfers |
+| MaskGCT | 0.9481 → **0.8794** | ASR 71% → **51%** | Both mechanisms survive; protection transfers |
+| CosyVoice | Excluded | Unreliable clone control | Protocol limitation, not a defense finding |
+
+### Final interpretation
+
+> **The proposed dual-defense system can make zero-shot voice cloning harder while retaining watermark-based traceability across multiple heterogeneous TTS architectures.**
+
+The evidence also shows a real trade-off: stronger perturbations and some combined-attack conditions can reduce watermark attribution. The system should therefore be evaluated using **all four dimensions together**: speaker identity, clone usability, watermark attribution, and protected-source quality.
+
+---
+
+# What is established vs. what is not
+
+| Established by experiments | Not claimed |
+|---|---|
+| Clone-aware `msg_processor` + detector training improves attribution | Universal protection against every TTS |
+| Waveform PGD can transfer to unseen TTS architectures | Perfect prevention of cloning |
+| Route 2 improves the measured attribution/protection curve at ε=0.002–0.04 | Zero-cost interaction at every architecture/condition |
+| Post-processing did not restore cloning success in the tested 10 conditions | That every possible post-processing attack will fail |
+| Watermark and anti-cloning can coexist | That cloned audio is always unintelligible |
+| WER provides a separate measure of clone usability | That low SIM alone means the clone is unusable |
 
 ---
 
 ## Limitations
 
 - **Zero-shot threat model only.** No fine-tuning-based cloning attack is evaluated.
-- **Protection is YourTTS-surrogate-specific below Stage 4.** It transfers black-box to XTTS-v2 but not, at the original operating point, to F5-TTS — the exact gap Stage 4 targets.
-- **No real SafeSpeech baseline in this harness** — all "vs SafeSpeech" comparisons use their published numbers, same encoder and threshold, corpus/model differences stated as a caveat throughout.
-- **No subjective listening test (SMOS).** All quality evidence is objective (PESQ/STOI/SI-SNR).
-- **Single corpus** — LibriSpeech only; VoiceMark itself trained on VCTK.
-- **Compression/resampling/amplitude/noise robustness characterised** for detection accuracy, cloned-speech intelligibility, and speaker similarity on F5-TTS/Route 2 — but the speaker-similarity result only covers the watermark-only condition; whether the same attacks restore cloning success when the PGD anti-cloning layer is also present  is still open.
-- **CosyVoice2 zero-shot cloning is unreliable under this protocol's 3-second, non-sentence-aligned reference crops** — confirmed via a control experiment and WER check, not fixed (see Stage 4's Composability section). Affects both the cross-cloner validation and composability measurements for this one architecture only.
-  
-- The strongest remaining limitation is that the anti-cloning perturbation is optimized through a **single differentiable YourTTS surrogate**, so transfer strength varies by target architecture. The project therefore does not claim universal protection against all future TTS systems.
+- **YourTTS is the differentiable training cloner.** Other TTS architectures are black-box evaluation targets.
+- **No exact VoiceMark & SafeSpeech reproduction.** Published Voicemark & SafeSpeech comparisons differ in corpus/model setup and are reported only as contextual comparisons.
+- **CosyVoice composability is excluded.** Its standardized reference-crop protocol produced unreliable unprotected clones, so it is not treated as evidence for or against the defense.
+- **No subjective listening test (SMOS).** All quality evidence is objective (PESQ/STOI/SI-SNR/WER).
+- **Single primary training corpus.** Main development uses LibriSpeech; VCTK is used as an independent evaluation set for Route 2.
+- **Route 2 vs. original epsilon sweep is not a formal paired comparison** because the original non-baseline sweep used n=20 while Route 2 used n=100.
+
+- **Future attack scope.** Fine-tuning attacks and additional compression codecs remain outside the current thesis evaluation.
   
 ---
 
@@ -494,26 +575,7 @@ Full experimental record, including negative results and withdrawn claims: `docs
 
 ---
 
-Stage 3 diagnosed *why* the trade-off exists, not just *that* it exists: the PGD objective
-optimises purely for reduced speaker similarity — it has no term that requires the watermark
-to keep decoding, and no exposure to F5-TTS's conditioning behaviour at all. Pushing ε further
-is not really "more protection" so much as "a blunter perturbation that damages everything in
-the same acoustic budget the watermark and the audio quality also depend on."
-
----
-
 ## Robustness to Post-Processing Attacks (Route 2, F5-TTS)
-
-Tests whether watermark detection on Route 2's dual-defense checkpoint
-(`route2_scaleupaug_msgproc_r2`, msgproc_lora_r=2) survives common post-processing attacks
-applied to the protected audio *before* cloning, whether the cloned speech stays intelligible
-under those attacks, and whether cloning success (speaker similarity to the true source
-speaker) is affected.
-
-Baselines (F5-TTS clone, n=100, same checkpoint, no post-processing): detection ACC = 0.9431
-(protected) / 0.9825 (unprotected); speaker similarity (ECAPA-TDNN, against a fixed true
-source reference — see method note below) mean 0.5380, ASR 99.0% (protected) / mean 0.6212,
-ASR 100.0% (unprotected).
 
 Ten attack conditions (5 attack types × 2 severities — mp3/opus lossy re-encode via ffmpeg,
 resample via a polyphase round-trip through an intermediate rate, amplitude a random ±dB
@@ -548,60 +610,5 @@ Detection ACC is watermark survival. Against the protected-no-attack baseline (0
 | noise 20dB SNR | mild | 0.8275 | 987.7% |
 | resample 16k→8k→16k | aggressive | 0.7488 | 79.4% |
 | noise 10dB SNR | aggressive | 0.6569 |  69.7% |
-
-**Finding 1 (watermark detection / intelligibility): the watermark degrades gradually under
-compression/resampling and fails specifically under additive noise, while the underlying
-speech stays almost perfectly intelligible throughout (WER ≤ 0.041 in every condition).**
-This decouples watermark survival from audio quality — mp3/opus/resample/amplitude all leave
-clean, transcribable speech while still meaningfully weakening or (aggressive noise)
-collapsing detection, so an attacker is not "destroying the audio" to break the mark.
-Amplitude scaling is essentially free for the watermark at both severities; mp3 shows almost
-no mild→aggressive gap (0.902 → 0.893), while noise and resampling both show steep
-mild→aggressive drops.
-
-**Finding 2 (speaker similarity — corrected, see method note): this battery's baseline
-"protected" condition shows almost no anti-cloning effect at all — ASR 99.0% vs. 100.0%
-unprotected, essentially the unprotected level before any attack is even applied.** That is a
-materially different result from `claude/composability-route2-2026-09-15.md`'s finding for
-the *same* Route 2 checkpoint (protected ASR 72.0% vs. unprotected 87.0% on F5-TTS,
-p=2.3e-05, Wilcoxon), which applied Route 2's watermark **plus** a separate PGD anti-cloning
-perturbation (ε=0.002, λ_wm=1.0, via `composability_gen_protected_audio.py`). The "protected"
-audio used for this robustness battery most likely carries the Route 2 watermark only,
-without that PGD layer — watermarking alone was never designed to reduce speaker similarity,
-so a ~99% baseline ASR is the expected result of testing a different, narrower condition, not
-a new discovery that anti-cloning protection has failed. **This section therefore answers a
-narrower question than originally framed: whether watermark detection and cloned-speech
-intelligibility survive these attacks (yes, characterised above) — not whether anti-cloning
-protection survives them.** Across the 10 attack conditions, SIM/ASR stays close to both
-baselines (93–99%) except under noise (mild 93%, aggressive 87%), which tracks the same
-general source-audio degradation visible in the sanity-ACC collapse for those two conditions
-(0.7206 / 0.5731) rather than any protection-specific effect.
-
-**Open question, not yet answered by any run in this project:** does an attack that degrades
-watermark detection also restore an attacker's cloning success, when the source audio
-actually carries both the watermark *and* the PGD anti-cloning perturbation together?
-Answering it requires re-running this same 10-condition attack battery against audio
-generated the way `composability_audio_protected/` was (watermark + PGD ε=0.002), not against
-the watermark-only audio used here — not yet scheduled.
-
-*Method note: an initial SIM pass in this section (superseded) paired each clone against
-whatever audio was saved as `sample{i}_reference.wav` inside its own output directory. That
-file turned out to differ between the protected and unprotected arms (confirmed via hash
-comparison) — i.e. it was each arm's own cloning prompt, not a fixed ground truth. Comparing
-a clone's similarity to the exact audio it was cloned from is close to tautological and stays
-high regardless of protection or attack, which is why the first pass showed ~99–100% ASR
-almost everywhere. The corrected numbers above instead compare every condition's clones
-against one fixed reference — `clones_f5tts_unprotected`'s saved reference audio, held
-constant across all 12 conditions (2 baselines + 10 attacks). See
-`claude/metric-interpretation-notes-2026-09-10.md` §4 for the general form of this pitfall.
-Separately: WER continues to have no clean/watermarked reference pair for these directories
-(only `_cloned.wav`), so PESQ/STOI/SI-SNR were not computed here — this section measures
-intelligibility, not perceptual quality.*
-
-**Status: complete for the question this section can actually answer — watermark detection,
-WER, and SIM against a fixed reference, n=100, all 10 attack conditions plus 2 baselines. The
-PGD-inclusive version of the SIM question (does attack restore an attacker's actual cloning
-success against a working anti-cloning defense) is new, unscheduled work — see "Open
-question" above, not a gap in what's reported here.**
 
 ---
