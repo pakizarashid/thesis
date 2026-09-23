@@ -1,10 +1,8 @@
-# Dual-Defense Audio Protection: Watermarking (Traceability) + Perturbation (Anti-Cloning)
+# Clone-Aware Dual-Defense Audio Protection: Joint Watermarking (Traceability) + Perturbation (Anti-Cloning) Robustness Against Zero-Shot Speech Synthesis
 
-Combines **VoiceMark-style traceable watermarking** with **SafeSpeech-style adversarial perturbation**, and study whether a zero-shot voice clone can be made harder to impersonate while the source remains traceable.
+Combines **VoiceMark-style traceable watermarking** with **SafeSpeech-style adversarial perturbation**, and studies whether both survive contact with real zero-shot voice cloning.
 
-**Core question:** attribution needs speaker information to *survive* cloning; anti-cloning
-protection needs it *destroyed*. Can one system do both — and if not everywhere, exactly
-where does it break, and can that be fixed?
+**Core question:** attribution needs speaker information to *survive* cloning; anti-cloning protection needs it *destroyed*. Can one system do both — and if not everywhere, exactly where does it break, and can that be fixed?
 
 ### Main research goal:
 **Can a watermark-bearing adversarial protection system reduce usable speaker information and clone usability, while preserving watermark-based attribution and acceptable quality of the protected source audio, across heterogeneous zero-shot TTS architectures?**
@@ -30,6 +28,39 @@ Protected speech
 
 A further objective is to reduce **clone usability/intelligibility** where measurable (e.g. higher WER), while keeping the original protected speech usable to a human listener.
 
+**Central hypothesis:**
+A watermark trained with the cloning transformation inside the optimization loop can improve traceability across heterogeneous zero-shot cloning architectures, while a complementary adversarial perturbation can reduce speaker identity; however, the two objectives introduce architecture-dependent trade-offs that must be explicitly characterized.
+
+```
+                YOUR RESEARCH
+                     │
+        ┌────────────┴────────────┐
+        ↓                         ↓
+ VoiceMark limitation       SafeSpeech limitation
+        │                         │
+ watermark survival         perturbation transfer
+ depends on cloner          depends on cloner
+        │                         │
+        └────────────┬────────────┘
+                     ↓
+             Architecture-aware
+              dual protection
+                     │
+             ┌───────┴───────┐
+             ↓               ↓
+       Clone-aware       Anti-cloning
+       watermarking      perturbation
+             │               │
+             └───────┬───────┘
+                     ↓
+              Joint evaluation
+          WM × SIM × ASR × WER
+                × quality
+                     ↓
+          characterize where the
+             defense succeeds,
+              fails, and why
+```
 ---
 
 ### Notes
