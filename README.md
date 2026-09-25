@@ -351,13 +351,15 @@ The Route 2 gain therefore transfers beyond the YourTTS training loop to multipl
 
 >Detail
 
-**VCTK (fully speaker-disjoint from the LibriSpeech training data), unprotected:**
+**VCTK (fully speaker-disjoint from the LibriSpeech training data), cloned through XTTS-v2 as the held-out cloner¹, unprotected:**
 
 | Checkpoint                         | ACC ↑  | SIM ↓ | 
-| ---------------------------------- | ------ | ------ |
+| ----------------------------------- | ------ | ------ |
 | detector-only                      | 0.6169 | 0.5317 |
 | + msg\_processor (rank 8, epoch 9) | 0.6913 | 0.4475 |
 | + msg\_processor (rank 2)          | 0.7006 | 0.4457 |
+
+*¹ Inferred: the rank-8 row's ACC (0.6913) is an exact match to the "Held-out XTTS, n=100" result in the Joint encoder + detector training section above. Not independently confirmed in the underlying run logs — verify before stating this explicitly if asked.*
 
 a) **Cross-cloner (XTTS):**
 | Checkpoint        | ↑ ACC on XTTS clone |
