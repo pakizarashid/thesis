@@ -342,7 +342,7 @@ Rank 2 is the preferred checkpoint for final evaluation because it is smaller an
 n=100, rank= 2
 | Evaluation| Detector-only | Joint Route 2 | Change |
 |-----------|-------:|----------------:|------------:|
-| VCTK      | 0.6169 | 0.6913 / 0.7006 | +0.0837 |
+| VCTK(Dataset) | 0.6169 | 0.6913 / 0.7006 | +0.0837 |
 | CosyVoice | 0.7669 | 0.8801          | +0.1132 |
 | F5-TTS    | 0.9300 | 0.9881          | +0.0581 |
 | MaskGCT   | 0.9138 | 0.9594 / 0.9481 | +0.0456 |
