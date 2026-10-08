@@ -103,11 +103,12 @@ codec. This is the central tension the project measures.
   from training. VCTK (speaker-disjoint) used as a second dataset.
 - **Payload:** 16 bits, random per clip (`seed = 123 + index`).
 - **Checkpoints:** Route 2 starts from `checkpoints/stage1_scaleup_aug/` (the original Stage-1
-  checkpoint was lost, see §7). Controls always use the same starting point.
+  checkpoint was lost, see §6). The matched "untrained" control is epoch 9. Caveat: the XTTS-v2 / LibriSpeech control (0.5537) used epoch 9, but the YourTTS / LibriSpeech (0.5269) and XTTS-v2 / VCTK (0.5344) controls used epoch 29. Epoch-9 reruns are in notebook 01 §4.
 
 | Name | Checkpoint |
 |---|---|
-| Untrained (Stage 1) | `checkpoints/stage1_scaleup_aug/stage1_epoch29.pt` |
+| Untrained, Route-2 starting point (matched control) | `checkpoints/stage1_scaleup_aug/stage1_epoch9.pt` (dropped from HEAD in the repo reorganisation; restore with `git show de2cc49:checkpoints/stage1_scaleup_aug/stage1_epoch9.pt`) |
+| Untrained, converged Stage 1 | `checkpoints/stage1_scaleup_aug/stage1_epoch29.pt` |
 | Detector-only | `checkpoints/route2_scaleupaug_detector_only/route2_final.pt` |
 | Route 2, rank 8 (20 epochs) | `checkpoints/route2_scaleupaug_train_msgproc/route2_final.pt` |
 | Route 2, rank 8 (epoch 9) | `checkpoints/route2_scaleupaug_train_msgproc/route2_epoch9.pt` |
@@ -224,8 +225,12 @@ perturbation (ε = 0).
 Detector-only training gives a small, real gain; adding `msg_processor` gives a much larger
 one, and the gain is the same shape on a second dataset with a cloner never used in training.
 Paired significance for the XTTS-v2 LibriSpeech comparison: detector-only vs. untrained
-ACC p = 0.003; the SIM drop for Route 2 vs. detector-only is highly significant. Significance
-tests for the YourTTS and VCTK runs have not been run yet.
+ACC p = 0.003; the SIM drop for Route 2 vs. detector-only is highly significant. For the new
+XTTS-v2 / VCTK runs, paired over the same 100 clips: Route 2 vs. detector-only ACC +0.073
+(p = 1.8×10⁻⁴ t-test, 3.3×10⁻⁴ Wilcoxon) and SIM −0.087 (p < 10⁻¹⁶); detector-only vs. untrained
+ACC +0.057 (p = 5.4×10⁻⁴). Computed from the per-clip values recovered from the notebook output
+(`docs/notebook_only_results.json`). Significance tests for the
+YourTTS / LibriSpeech run have not been run (no per-clip file was saved).
 
 **Every cloner, before and after Route 2.**
 
@@ -247,19 +252,24 @@ not lift it to F5-TTS levels. Rank 2 is the best checkpoint overall (XTTS-v2 ACC
 
 | Stage | PESQ | STOI | SI-SNR |
 |---|---|---|---|
-| Codec reconstruction only (no watermark) | 2.601 | 0.892 | 3.76 dB |
-| Untrained embedder, watermarked | 2.123 | 0.905 | 3.36 dB |
+| Codec reconstruction only (no watermark) ¹ | 2.601 | 0.892 | 3.76 dB |
+| Detector-only checkpoint, watermarked (`msg_processor` not retrained in Route 2) | 2.123 | 0.905 | 3.36 dB |
 | Route 2, rank 2, watermarked | 1.977 | 0.891 | 3.04 dB |
+| Route 2, rank 8 (20 epochs) / rank 8 (epoch 9) / rank 8, λ_clone = 0.5 | 1.963 / 1.907 / 1.738 | 0.888 / 0.888 / 0.890 | 3.10 / 3.02 / 3.17 dB |
 | VoiceMark paper (VCTK) | 2.20 | 0.89 | 2.01 dB |
 
-(5-clip check; also a 20-epoch rank-8 run: PESQ 1.963, STOI 0.888, SI-SNR 3.10 dB. The
-5-clip pair has not yet been re-run and saved as a results file.) The watermark itself
+(4–5 clips each, read from notebook output; only the rank-2 row has a saved results file, and that
+file reports 2.017 on 4 clips for the same checkpoint, so treat ±0.04 as clip-selection noise. The
+5-clip numbers have not been re-run on n = 100.)
+
+¹ The codec-only row (2.601 / 0.892 / 3.76 dB) was not found in any of the three Kaggle
+notebooks or in `results/`. Re-run `quality_metrics.py` on `audio_samples/codec_only_check`
+before quoting it. The watermark itself
 costs about −0.48 PESQ; Route 2's training adds about −0.15 more. Three levers tried against
 this cost (fewer epochs, lower clone-loss weight, lower rank) were not significant, so the
 cost looks structural to training `msg_processor`.
 
-##Composability 
- `(ε = 0.002, λ_wm = 1.0,rank 2, n = 100.)`, (anti-cloning perturbation + Route 2 watermark)
+**Composability: anti-cloning perturbation + Route 2 watermark** (ε = 0.002, λ_wm = 1.0, rank 2, n = 100).
 
 | Cloner  | ↑ ACC unprotected → protected | paired significance | ↓ SIM unprotected → protected | ASR |
 | ------- | ----------------------------- | ----------------------------------------- | -----------------------------------------|--------------------- |
@@ -284,6 +294,9 @@ STOI 0.864, SI-SNR 0.35 dB. Attack success of 72% on F5-TTS at this strength is 
 | 0.04 | 0.6900 | 0.1269 | 12% | 1.070 | 0.697 | −1.37 dB |
 | 0.08 | 0.5988 | 0.0669 | 8% | 1.043 | 0.612 | −4.12 dB |
 
+Within this sweep every ε differs from ε = 0.002 on the same 100 clips (ACC t-test p ≤ 1.1×10⁻¹⁰,
+SIM p ≤ 4.7×10⁻¹⁴ at ε = 0.01, smaller above).
+
 Against the original watermark at matched ε (§5.3), Route 2 has higher ACC, lower SIM and lower
 ASR at ε = 0.002–0.04, with quality essentially unchanged (PESQ within 0.13, STOI within
 0.03). At ε = 0.08 both are at their floor and ASR is slightly worse (5% → 8%), which reads as
@@ -303,8 +316,12 @@ the watermark most also suppresses the attacker's own clone similarity most.
 
 Experiments are finished. Left to do: a reliable CosyVoice measurement (§6), a formal listening
 check, an explicit success threshold for the dual-defense claim, and the unified results table.
-The perturbation-side counterpart of Route 2 (making the anti-cloning step generalize across
-cloners) is future work.
+
+Supervisor's reading (2026-10): clone-aware training is an improvement, but attack success on
+F5-TTS (70% at ε = 0.002) and MaskGCT (51%) is still high, so the most valuable remaining work
+is a way to lessen cloning itself. The perturbation-side counterpart of Route 2 (making the
+anti-cloning step generalize across cloners instead of relying on one YourTTS surrogate) is the
+main candidate; it is not implemented yet. Re-run the MaskGCT composability arm first (§6).
 
 ---
 
@@ -323,20 +340,41 @@ cloners) is future work.
 - **Checkpoint lineage.** The original Stage-1 checkpoint (`stage1_aug`) was never committed
   and was lost. All Route 2 results start from `stage1_scaleup_aug`, so Stage 1–3 numbers
   (original watermark, a different lineage) are not mixed with Route 2 numbers.
-- **Result-file naming.** The JSONs written by `watermark_survival_under_cloning.py` and
-  `xtts_transfer_eval.py` all use the key `detection_acc_on_xtts_clone_of_unprotected`, but
-  `watermark_survival_under_cloning.py` always clones with YourTTS. Only `xtts_transfer_eval.py`
-  uses XTTS-v2. The earlier VCTK/YourTTS numbers (`results_vctk_route2_*.json`) are YourTTS, not
-  XTTS-v2. VCTK + XTTS-v2 is the newer `results_vctk_xtts_*` set.
+- **Result-file naming (corrected 2026-10-08).** `xtts_transfer_eval.py` writes
+  `detection_acc_on_xtts_clone_of_*` and labels runs `xtts_...`; `watermark_survival_under_cloning.py`
+  (YourTTS) writes `detection_acc_on_clone_of_*` and labels runs `clonewm_...`. An earlier version of
+  this README claimed the VCTK files were YourTTS; they are not. `results_vctk_route2_*` are
+  **XTTS-v2 on VCTK** (label and script both say so).
+- **Two VCTK draws, not comparable clip-for-clip.** `results_vctk_route2_*` used
+  `--n_speakers 60 --n_eval_speakers 20`; the newer `results_vctk_xtts_*` used the default
+  `--n_speakers`, which selects different clips (per-clip SIM correlation between the two
+  detector-only runs is 0.14). The same detector-only checkpoint scores 0.6169 on one draw and
+  0.5913 on the other, so draw-to-draw variation is about 0.03 and cross-draw comparisons should
+  not be quoted. Pairing within a set is valid (per-clip SIM correlation 0.6–0.84 between the
+  three new runs).
 - **Coincidence, not an error.** Two different experiments both reported ACC 0.6913 (XTTS-v2 on
-  LibriSpeech with the 20-epoch checkpoint, YourTTS on VCTK with the epoch-9 checkpoint). They
+  LibriSpeech with the 20-epoch checkpoint, XTTS-v2 on VCTK with the epoch-9 checkpoint). They
   are different checkpoints and different clips (86 of 100 per-clip scores differ).
 - **Listening check.** Informal check by the author on all sample clips: the watermark is not
   audible, but watermarked audio sounds slightly quieter than the original (loudness not yet
   measured). No formal listening test (SMOS) yet.
+- **MaskGCT composability has no evidence file.** The MaskGCT row of the composability table
+  (ACC 0.9481 → 0.8794, ASR 71% → 51%) and its paired p-values are not backed by any JSON in
+  `results/` or any output in the saved notebooks. The MaskGCT notebook's composability step
+  produced no clones in its last run (`clones_maskgct_*` did not exist). Treat the row as
+  unverified until the arm is re-run (notebook 03 §8).
+- **Missing result files for numbers already quoted.** `results_quality_wer_attacked_*_f5tts.json`
+  (the per-attack WER column in the robustness table) and the YourTTS / LibriSpeech control
+  files `results_yourtts_*_n100.json` named in §8 are not in `results/`. The XTTS-v2 / VCTK
+  controls were recovered from notebook output (see `results/results_vctk_xtts_*`).
+- **F5-TTS composability, two nearby values.** The notebook printed 0.9844 → 0.9450; the
+  committed `results_f5tts_unprotected.json` / `results_f5tts_protected_noattack.json` hold
+  0.9825 → 0.9431 (later overwrite of the same files). Quote the committed values.
 - **Reference-file bug (fixed).** A earlier robustness run scored clones against each
   condition's own input rather than the true original, giving a false ~99% ASR. Re-scoring
-  against the true reference reproduced the verified 70% / 87%.
+  against the true reference reproduced the verified 70% / 87%. The wrong-reference numbers
+  (SIM 0.37–0.55, ASR 87–99% in every attack condition) must not be quoted; the corrected
+  ones are in Appendix C.
 
 ## 7. Limitations
 
@@ -390,7 +428,7 @@ python src/eval/xtts_transfer_eval.py --dataset vctk --epsilon 0 \
   --output results/results_vctk_xtts_route2_msgproc_n100.json
 ```
 
-Result files for §5.4: `results_yourtts_{untrained_scaleupaug,detector_only,route2_msgproc}_n100.json`,
+Result files for §5.4 (YourTTS ones still to be regenerated, see §6): `results_yourtts_{untrained_scaleupaug,detector_only,route2_msgproc}_n100.json`,
 `results_vctk_xtts_{untrained_scaleupaug,detector_only,route2_msgproc}_n100.json`,
 `results_xtts_route2_scaleupaug_*_n100.json`. Full experimental record, including negative
 results and withdrawn claims: `docs/experimental_writeup.md`.
@@ -410,7 +448,107 @@ Full experimental record, including negative results and withdrawn claims: `docs
 
 ---
 
+---
 
+## Appendix A — CARRIER-PROBE (latent-level survival)
+
+Re-encoding clone audio with VoiceMark's own SpeechTokenizer measures raw carrier survival
+independent of the detector (n = 15 per cloner, same-transcript protocol).
+
+| Result | Finding |
+|---|---|
+| Pooled similarity | Higher survival tracks higher ACC on the reliably measured architectures |
+| Per-layer | All 7 watermark-bearing layers show the same architecture ordering |
+| Most fragile layer | Layer 2 shows the largest architecture sensitivity |
+| Layer reweighting | Null: inference-time down-weighting or removal of layer 2 did not improve ACC |
+| CosyVoice | Excluded from the clean subset (reference-duration mismatch, 15 of 15 flagged) |
+
+The ACC column printed next to the CARRIER-PROBE table in the MaskGCT notebook was hard-coded
+from an earlier n = 15 pass (CosyVoice 0.6667, MaskGCT 0.9792). The n = 100 values are 0.7669 and
+0.9137; the regenerated notebooks read them from the result files.
+
+## Appendix B — Route 2 design checks (rank sweep and three nulls)
+
+Three levers tried against the quality/SIM cost of adapting `msg_processor` (XTTS-v2, n = 100):
+
+| Lever | ACC p | SIM p | Conclusion |
+|---|---|---|---|
+| Fewer epochs (9 vs. 20) | 0.235 | 0.183 | no significant difference |
+| Lower clone-loss weight (0.5 vs. 1.0) | 0.907 | 0.607 | no significant difference |
+| Lower LoRA rank (2 vs. 8) | 0.205 | 0.438 | no significant difference |
+
+Rank 2 is trained from zero-init LoRA (a rank-2 adapter cannot reuse rank-8 weights): XTTS-v2
+ACC 0.7288 vs. 0.69–0.71 for rank 8, with 221K vs. 295K trainable parameters. It is the preferred
+checkpoint because it is smaller and not significantly different from rank 8.
+
+Detector-only vs. untrained on XTTS-v2 / LibriSpeech: ACC p = 0.0031 (t), 0.0050 (Wilcoxon).
+
+Stage 3 attempts to reshape the perturbation objective (H-SPEC: SafeSpeech-style KL/L1 terms
+through the surrogate clone; H-DIRECT: KL/L1 directly on the perturbed mel) and simple RVQ layer
+reweighting were all null or adverse and are closed.
+
+## Appendix C — Post-processing robustness (Route 2, F5-TTS, n = 100 each)
+
+Protected audio (ε = 0.002) is attacked, cloned with F5-TTS, and scored. SIM is ECAPA-TDNN against
+the true clean original. No-attack baseline: unprotected ACC 0.9825, SIM 0.3680, ASR 88%;
+protected ACC 0.9431, SIM 0.3106, ASR 70%.
+
+| Attack | Severity | WM ACC ↑ | Mean WER | SIM ↓ | ASR ↓ | ACC kept vs. no-attack protected |
+|---|---|---:|---:|---:|---:|---:|
+| Amplitude ±3 dB | mild | 0.9494 | 0.021 | 0.3018 | 63% | 100.7% |
+| Amplitude ±6 dB | aggressive | 0.9431 | 0.026 | 0.3068 | 68% | 100.0% |
+| Opus 64 kbps | mild | 0.9275 | 0.016 | 0.3030 | 70% | 98.3% |
+| Resample 16k→22.05k→16k | mild | 0.9175 | 0.021 | 0.3040 | 68% | 97.3% |
+| MP3 128 kbps | mild | 0.8988 | 0.041 | 0.3067 | 62% | 95.3% |
+| MP3 32 kbps | aggressive | 0.8875 | 0.016 | 0.2974 | 69% | 94.1% |
+| Opus 16 kbps | aggressive | 0.8719 | 0.013 | 0.3051 | 71% | 92.5% |
+| Noise 20 dB SNR | mild | 0.8206 | 0.024 | 0.2883 | 61% | 87.0% |
+| Resample 16k→8k→16k | aggressive | 0.7525 | 0.022 | 0.2745 | 63% | 79.8% |
+| Noise 10 dB SNR | aggressive | 0.6375 | 0.018 | 0.2137 | 35% | 67.6% |
+
+Post-processing did not give the attacker a way back: nine of ten conditions have ASR at or below
+the 70% protected baseline (Opus 16 kbps is 71%, a one-point difference). The harshest noise
+condition gives both the lowest watermark ACC and the lowest ASR. The WER column comes from
+`results_quality_wer_attacked_*_f5tts.json`, which is not currently in `results/` (§6).
+
+## Appendix D — Original vs. Route 2 across ε (F5-TTS)
+
+| ε | ACC (orig → Route 2) | SIM (orig → Route 2) | ASR (orig → Route 2) | PESQ (orig → Route 2) |
+|---|---|---|---|---|
+| 0.002 | 0.8381 → 0.9575 | 0.4140 → 0.3122 | 91% → 70% | 1.919 → 1.786 |
+| 0.01 | 0.7000 → 0.8575 | 0.3250 → 0.2260 | 75% → 44% | 1.337 → 1.317 |
+| 0.02 | 0.6844 → 0.7819 | 0.2713 → 0.1685 | 55% → 26% | 1.155 → 1.152 |
+| 0.04 | 0.6062 → 0.6900 | 0.1605 → 0.1269 | 15% → 12% | 1.069 → 1.070 |
+| 0.08 | 0.5875 → 0.5988 | 0.0969 → 0.0669 | 5% → 8% | 1.042 → 1.043 |
+
+Original rows above ε = 0.002 are n = 20 (§5.3), so this is a direction-and-size comparison.
+
+## Appendix E — Other cloners and datasets, labelled correctly
+
+| Evaluation | Pretrained VoiceMark / untrained | Route 2 | Notes |
+|---|---|---|---|
+| XTTS-v2 on VCTK, 60-speaker draw | detector-only 0.6169 | rank 8 (epoch 9) 0.6913, rank 2 0.7006 | `results_vctk_route2_*`; a different clip draw from the §5.4 VCTK row (§6) |
+| XTTS-v2 on VCTK, default draw | untrained (epoch 29) 0.5344; detector-only 0.5913 | rank 8 (20 ep) 0.6637 | §5.4 |
+| CosyVoice 2 | pretrained 0.7669 | rank 2 0.8801 (n = 98) | unreliable protocol (§6) |
+| F5-TTS | pretrained 0.9300 | rank 2 0.9881 | |
+| MaskGCT | pretrained 0.9137 | rank 2 0.9594 | |
+
+The pretrained-VoiceMark column is not a detector-only control: no detector-only run exists for
+F5-TTS, MaskGCT or CosyVoice.
+
+## Appendix F — CosyVoice composability (reported, not validated)
+
+Paired over the 97 clips present in both arms: watermark ACC unprotected 0.8789, protected 0.7178
+(t-test p = 3.7×10⁻¹³, Wilcoxon p = 4.4×10⁻¹¹). ECAPA SIM of the CosyVoice clones against the true
+original: unprotected 0.1283 (ASR 6.1%, n = 98), protected 0.0984 (ASR 5.1%, n = 99). The clones
+are already unusable without protection, so there is nothing for the perturbation to remove.
+
+Uncloned control (ECAPA SIM of the watermarked *source* audio vs. the original): watermarked only
+0.5384, watermarked + PGD 0.4324. The pipeline preserves identity before cloning; the collapse
+happens inside CosyVoice on the 3-second crop (§6). Mean WER of the clones is 1.43–1.49, so the
+speech itself is not intelligible.
+
+---
 
 
 
@@ -469,22 +607,6 @@ This project have:
 # Research progression
 
 ## Stage 1 — Watermark 
-
-### Finding
-> watermark survival is architecture/reference-pathway dependent.
-
-**CARRIER-PROBE**
-Re-encoding clone audio with VoiceMark's own SpeechTokenizer measured raw carrier survival independent of the detector.
-
-| Result | Finding |
-|---|---|
-| Pooled similarity | Higher survival tracks higher ACC on the reliably measured architectures |
-| Per-layer result | All 7 watermark-bearing layers show the same architecture ordering |
-| Most fragile layer | **Layer 2** shows the largest architecture sensitivity |
-| Simple layer reweighting | **Null**: inference-time down-weighting/removal of Layer 2 did not improve ACC |
-| CosyVoice | Excluded from the clean carrier-sim subset because of reference-duration mismatch |
-
-**Interpretation:** carrier survival is a useful diagnostic, but simple inference-time carrier reweighting is not a fix.
 
 ---
 
@@ -551,15 +673,6 @@ PESQ is lower than this project's own untouched-embedder checkpoints. The gain a
 ### Chasing the quality/SIM cost: three independent nulls
 
 Three separate levers were tried against the PESQ/SIM cost, each testing a different hypothesis for what was driving it:
-
-### Quality-cost analysis
-
-Three controlled attempts did not remove the quality/SIM cost of adapting `msg_processor`:
-| Lever | ACC ↑	| SIM ↓ |	Conclusion |
-|---|---|---|---|
-| `--epochs`, Fewer epochs (9 vs. 20) | p = 0.235	| p = 0.183 | No significant difference |
-| `--lambda_clone`, Lower clone-loss weight (0.5 vs. 1.0) |	p = 0.907 |	p = 0.607 |	No significant difference |
-| `--msgproc_lora_r`, Lower LoRA rank (2 vs. 8) |	p = 0.205 |	p = 0.438 |	No significant difference |
 
 **Conclusion:** the observed quality cost appears associated with adapting `msg_processor` itself rather than training duration, clone-loss weight, or LoRA capacity among the tested settings.
 
@@ -642,94 +755,6 @@ d) **Cross-cloner (CosyVoice)**
 **CosyVoice cross-cloner validation is not treated as reliable:** 
 
 (see the Composability section below for why: the underlying clone audio shows signs of not being genuine cloned speech for a large fraction of samples, so this ACC number is reported for completeness but should not be read as validated watermark survival through real CosyVoice cloning).
-
- Route 2 epsilon sweep
-
-In route 2 was then evaluated across the same five ε values used in Stage 3 (F5-TTS, n=100).
-
-| ε | ACC (orig → Route2) | SIM mean (orig → Route2) | ASR (orig → Route2) | PESQ (orig → Route2) | STOI (orig → Route2) | SI-SNR (orig → Route2) |
-|---|---|---|---|---|---|---|
-| 0.002 | 0.8381 → **0.9575** | 0.4140 → **0.3122** | 91% → **70.0%** | 1.919 → 1.786 | 0.885 → 0.863 | 0.43 → 0.35 dB |
-| 0.01  | 0.7000 → **0.8575** | 0.3250 → **0.2260** | 75% → **44.0%** | 1.337 → 1.317 | 0.834 → 0.809 | 0.24 → 0.22 dB |
-| 0.02  | 0.6844 → **0.7819** | 0.2713 → **0.1685** | 55% → **26.0%** | 1.155 → 1.152 | 0.784 → 0.763 | −0.28 → −0.18 dB |
-| 0.04  | 0.6062 → **0.6900** | 0.1605 → **0.1269** | 15% → **12.0%** | 1.069 → 1.070 | 0.708 → 0.697 | −1.77 → −1.37 dB |
-| 0.08  | 0.5875 → 0.5988 | 0.0969 → **0.0669** | 5% → 8.0% | 1.042 → 1.043 | 0.610 → 0.612 | −4.95 → −4.12 dB |
-
----
-
-# Post-processing robustness
-
-Route 2 dual-defense audio was tested against 10 pre-cloning attacks: MP3, Opus, resampling, amplitude scaling, and additive noise; each at mild/aggressive severity, n=100.
-
-### No-attack baseline
-
-| Condition | WM ACC ↑ | SIM ↓ | ASR ↓ |
-|---|---:|---:|---:|
-| Unprotected | 0.9825 | 0.3680 | 88% |
-| Protected (WM + PGD) | **0.9431** | **0.3106** | **70%** |
-
-### 10 attack conditions
-
----
-
-## Robustness to Post-Processing Attacks (Route 2, F5-TTS)
-
-Ten attack conditions (5 attack types × 2 severities — mp3/opus lossy re-encode via ffmpeg,
-resample via a polyphase round-trip through an intermediate rate, amplitude a random ±dB
-gain, noise additive white Gaussian at a target SNR), n=100 each:
-
-| Attack | Severity | Detection ACC (clone) | Mean WER (cloned speech) | SIM mean | SIM ASR |
-|---|---|---|---|---|---|
-| amplitude ±3dB | mild | 0.9406 | 0.021 | 0.5298 | 97.0% |
-| amplitude ±6dB | aggressive | 0.9400 | 0.026 | 0.5295 | 99.0% |
-| opus 64kbps | mild | 0.9400 | 0.016 | 0.5392 | 98.0% |
-| resample 16k→22.05k→16k | mild | 0.9256 | 0.021 | 0.5354 | 99.0% |
-| mp3 128kbps | mild | 0.9019 | 0.041 | 0.5273 | 99.0% |
-| mp3 32kbps | aggressive | 0.8931 | 0.016 | 0.5011 | 99.0% |
-| opus 16kbps | aggressive | 0.8725 | 0.013 | 0.5502 | 99.0% |
-| noise 20dB SNR | mild | 0.8275 | 0.024 | 0.4571 | 93.0% |
-| resample 16k→8k→16k | aggressive | 0.7488 | 0.022 | 0.4214 | 96.0% |
-| noise 10dB SNR | aggressive | 0.6569 | 0.018 | 0.3656 | 87.0% |
-
-1) How much watermark survives these attacks — direct answer from the table already measured:
-
-Detection ACC is watermark survival. Against the protected-no-attack baseline (0.9431), retention by condition:
-
-| Attack | Severity | Detection ACC (clone) | % of basline retrained |
-|---|---|---|---|
-| amplitude ±3dB | mild | 0.9406 | 99.7% |
-| amplitude ±6dB | aggressive | 0.9400 | 99.7% |
-| opus 64kbps | mild | 0.9400 |  99.7% |
-| resample 16k→22.05k→16k | mild | 0.9256 |  98.2% |
-| mp3 128kbps | mild | 0.9019 | 95.6% |
-| mp3 32kbps | aggressive | 0.8931 | 94.7% |
-| opus 16kbps | aggressive | 0.8725 |  92.5% |
-| noise 20dB SNR | mild | 0.8275 | 987.7% |
-| resample 16k→8k→16k | aggressive | 0.7488 | 79.4% |
-| noise 10dB SNR | aggressive | 0.6569 |  69.7% |
-
----
-
-| Attack | Severity | WM ACC ↑ | WER ↑ | SIM ↓ | ASR ↓ |
-|---|---|---:|---:|---:|---:|
-| Amplitude ±3 dB | Mild | 0.9494 | 0.021 | 0.3018 | 63% |
-| Amplitude ±6 dB | Aggressive | 0.9431 | 0.026 | 0.3068 | 68% |
-| Opus 64 kbps | Mild | 0.9275 | 0.016 | 0.3030 | 70% |
-| Resample 16k→22.05k→16k | Mild | 0.9175 | 0.021 | 0.3040 | 68% |
-| MP3 128 kbps | Mild | 0.8988 | 0.041 | 0.3067 | 62% |
-| MP3 32 kbps | Aggressive | 0.8875 | 0.016 | 0.2974 | 69% |
-| Opus 16 kbps | Aggressive | 0.8719 | 0.013 | 0.3051 | 71% |
-| Noise 20 dB SNR | Mild | 0.8206 | 0.024 | 0.2883 | 61% |
-| Resample 16k→8k→16k | Aggressive | 0.7525 | 0.022 | 0.2745 | 63% |
-| Noise 10 dB SNR | Aggressive | 0.6375 | 0.018 | 0.2137 | 35% |
-
-### Finding
-
-> **Post-processing did not provide a route back to successful cloning against genuinely protected audio.**
-
-Nine of ten attack conditions have ASR at or below the 70% protected baseline; the 71% Opus-16 kbps result is only a 1-point difference.
-
-The harshest noise condition simultaneously gives the lowest watermark ACC and the lowest cloning ASR, showing that stronger signal damage can hurt both sides rather than restoring cloning.
 
 ---
 
