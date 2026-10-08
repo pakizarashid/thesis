@@ -407,18 +407,7 @@ results and withdrawn claims: `docs/experimental_writeup.md`.
   
 Full experimental record, including negative results and withdrawn claims: `docs/experimental_writeup.md`
 
-## Limitations
 
-- **Zero-shot threat model only.** No fine-tuning-based cloning attack is evaluated.
-- **YourTTS is the differentiable training cloner.** 
-- **No exact VoiceMark & SafeSpeech reproduction.** Published Voicemark & SafeSpeech comparisons differ in corpus/model setup and are reported only as contextual comparisons.
-- **CosyVoice composability is excluded.** Its standardized reference-crop protocol produced unreliable unprotected clones, so it is not treated as evidence for or against the defense.
-- **No subjective listening test (SMOS).** All quality evidence is objective (PESQ/STOI/SI-SNR/WER).
-- **Single primary training corpus.** Main development uses LibriSpeech; VCTK is used as an independent evaluation set for Route 2.
-- **Route 2 vs. original epsilon sweep is not a formal paired comparison** because the original non-baseline sweep used n=20 while Route 2 used n=100.
-
-- **Future attack scope.** Fine-tuning attacks and additional compression codecs remain outside the current thesis evaluation.
-  
 ---
 
 
@@ -483,10 +472,6 @@ This project have:
 
 ### Finding
 > watermark survival is architecture/reference-pathway dependent.
-
-The same watermark produced substantially different attribution across cloning architectures. This motivates the hypothesis that watermark survival depends on the **reference transformation/conditioning pathway**, rather than being a fixed property of the watermark alone.
-
-Across all five architectures (monotone, no ties/inversions), survival is higher when the cloner retains reference audio (F5-TTS, MaskGCT) rather than regenerating it through a decoder (CosyVoice) — consistent with VoiceMark's own published numbers, whose eval set is entirely retained-conditioning.
 
 **CARRIER-PROBE**
 Re-encoding clone audio with VoiceMark's own SpeechTokenizer measured raw carrier survival independent of the detector.
