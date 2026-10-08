@@ -88,7 +88,7 @@ codec. This is the central tension the project measures.
 | Can strength fix the weak transfer? | Raising ε helps but lowers watermark ACC and audio quality: a three-way trade-off with no free setting. | §5.3 |
 | Does cloning-aware training (Route 2) improve traceability? | Yes, on all five cloners tested, including four never used in training, and on a new dataset (VCTK) with a new cloner. | §5.4 |
 | Is the encoder retraining needed, or is detector retraining enough? | Retraining the detector alone barely helps. The larger gain needs `msg_processor` retraining too. | §5.4 |
-| What does Route 2 cost? | About −0.15 PESQ for the encoder retraining, not recoverable by the three levers tried. | §5.4 |
+| What does Route 2 cost? | About −0.22 to −0.28 PESQ for the encoder retraining (100 paired clips), not recoverable by the three levers tried. | §5.4 |
 | Does Route 2 improve the trade-off curve? | Yes, from ε = 0.002 to 0.04: better ACC, SIM and ASR at matched strength with no extra quality cost. At ε = 0.08 both are near their floor. | §5.5 |
 | Does protection survive tampering? | 9 of 10 post-processing conditions leave attack success at or below the untampered protected baseline. | §5.6 |
 
@@ -217,8 +217,8 @@ perturbation (ε = 0).
 |---|---|---|---|
 | XTTS-v2, LibriSpeech (held-out cloner) ACC | 0.5537 | 0.6031 | 0.6913 |
 | XTTS-v2, LibriSpeech SIM | 0.4900 | 0.4908 | 0.3939 |
-| YourTTS, LibriSpeech (training cloner) ACC | 0.5269 | 0.5881 | 0.6919 |
-| YourTTS, LibriSpeech SIM | 0.494 | 0.475 | 0.412 |
+| YourTTS, LibriSpeech (training cloner) ACC ² | 0.5450 | 0.6050 | 0.6631 |
+| YourTTS, LibriSpeech SIM ² | 0.4860 | 0.4872 | 0.4166 |
 | XTTS-v2, **VCTK** (new data, new cloner) ACC | 0.5344 | 0.5913 | 0.6637 |
 | XTTS-v2, VCTK SIM | 0.5695 | 0.5539 | 0.4670 |
 
@@ -230,13 +230,15 @@ XTTS-v2 / VCTK runs, paired over the same 100 clips: Route 2 vs. detector-only A
 (p = 1.8×10⁻⁴ t-test, 3.3×10⁻⁴ Wilcoxon) and SIM −0.087 (p < 10⁻¹⁶); detector-only vs. untrained
 ACC +0.057 (p = 5.4×10⁻⁴). Computed from the per-clip values recovered from the notebook output
 (`docs/notebook_only_results.json`). Significance tests for the
-YourTTS / LibriSpeech run have not been run (no per-clip file was saved).
+YourTTS / LibriSpeech run use the 50 per-batch values printed by the run (2 clips per batch; the result file keeps only means): Route 2 vs. detector-only ACC +0.058 (t-test p = 0.0022, Wilcoxon p = 0.0042), detector-only vs. untrained (epoch 9) +0.060 (p = 0.0071), Route 2 vs. untrained +0.118 (p = 5×10⁻⁷).
+
+² Regenerated on 2026-10-08 (`results_yourtts_*_n100.json`; untrained = epoch 9, the matched control; epoch 29 gives 0.5238 / SIM 0.4928). These replace the earlier chat-only values 0.5269 / 0.5881 / 0.6919, which came from a different clip draw; the Route 2 value moved by 0.029, about the draw-to-draw spread. SIM is the YourTTS speaker encoder.
 
 **Every cloner, before and after Route 2.**
 
 | Cloner | Untrained | Route 2 | Used in training? | Route 2 checkpoint |
 |---|---|---|---|---|
-| YourTTS | 0.527 | 0.692 | yes | rank 8, 20 epochs |
+| YourTTS | 0.545 | 0.663 | yes | rank 8, 20 epochs |
 | XTTS-v2 | 0.554 | 0.691 | no | rank 8, 20 epochs |
 | F5-TTS | 0.930 | 0.988 | no | rank 2 (rank 8: 0.9875) |
 | MaskGCT | 0.914 | 0.959 | no | rank 2 |
@@ -253,21 +255,21 @@ not lift it to F5-TTS levels. Rank 2 is the best checkpoint overall (XTTS-v2 ACC
 | Stage | PESQ | STOI | SI-SNR |
 |---|---|---|---|
 | Codec reconstruction only (no watermark) ¹ | 2.601 | 0.892 | 3.76 dB |
-| Detector-only checkpoint, watermarked (`msg_processor` not retrained in Route 2) | 2.123 | 0.905 | 3.36 dB |
-| Route 2, rank 2, watermarked | 1.977 | 0.891 | 3.04 dB |
-| Route 2, rank 8 (20 epochs) / rank 8 (epoch 9) / rank 8, λ_clone = 0.5 | 1.963 / 1.907 / 1.738 | 0.888 / 0.888 / 0.890 | 3.10 / 3.02 / 3.17 dB |
+| Detector-only checkpoint, watermarked (`msg_processor` not retrained in Route 2) | 2.387 | 0.912 | 2.68 dB |
+| Route 2, rank 8 (20 epochs) | 2.171 | 0.895 | 2.27 dB |
+| Route 2, rank 2 | 2.109 | 0.894 | 2.45 dB |
 | VoiceMark paper (VCTK) | 2.20 | 0.89 | 2.01 dB |
 
-(4–5 clips each, read from notebook output; only the rank-2 row has a saved results file, and that
-file reports 2.017 on 4 clips for the same checkpoint, so treat ±0.04 as clip-selection noise. The
-5-clip numbers have not been re-run on n = 100.)
+(Run on 2026-10-08, **100 clips each** (20 speakers × 5), the same clips for all three checkpoints, ε = 0. Paired over those clips: Route 2 rank 8 vs. detector-only −0.216 PESQ (t-test p = 7×10⁻²², Wilcoxon p = 6×10⁻¹⁶), rank 2 vs. detector-only −0.278 (p = 8×10⁻²⁴), rank 2 vs. rank 8 −0.062 (p = 0.002). A first run saved only 25 clips because the sample-saving script defaults to 5 evaluation speakers; those numbers (2.355 / 2.125 / 2.066) are superseded. Per-clip PESQ values are in `docs/run_2026-10-08_results.json`. 98%, 96% and 94% of clips reach PESQ ≥ 1.70 for detector-only, rank 8 and rank 2.)
+
+Two features of the per-clip results are properties of the recordings rather than of Route 2, because the same clips are worst under all three checkpoints: clips 91 and 93 (speaker 625) have STOI of 0.58–0.67, and about 18 of 100 clips have negative SI-SNR (for example clip 65: −8.4, −7.4 and −6.0 dB), concentrated in a few speakers. This is why mean SI-SNR is lower at n = 100 (2.3–2.7 dB) than in the earlier 25-clip run (3.3–3.8 dB).
 
 ¹ The codec-only row (2.601 / 0.892 / 3.76 dB) was not found in any of the three Kaggle
 notebooks or in `results/`. Re-run `quality_metrics.py` on `audio_samples/codec_only_check`
 before quoting it. The watermark itself
-costs about −0.48 PESQ; Route 2's training adds about −0.15 more. Three levers tried against
-this cost (fewer epochs, lower clone-loss weight, lower rank) were not significant, so the
-cost looks structural to training `msg_processor`.
+costs about −0.21 PESQ against the unverified codec-only row (not safe to quote); retraining `msg_processor` for Route 2 costs a further −0.22 (rank 8) to −0.28 (rank 2) against the detector-only checkpoint, measured on 100 paired clips. Earlier levers (fewer epochs, lower clone-loss weight, lower rank) did not recover it, so the cost looks structural to training `msg_processor`. Route 2 sits just below the VoiceMark paper's 2.20 on PESQ (2.11–2.17) and at or above it on STOI (0.89) and SI-SNR (2.01 dB).
+
+**Loudness (n = 100 clips).** Watermarked minus clean RMS: detector-only −0.09 dB, Route 2 rank 2 +1.13 dB. The watermarked audio is therefore **not quieter**; the earlier "sounds slightly quieter" impression is not explained by RMS level (spectral balance or perceived loudness could still differ, and a listening test is still outstanding).
 
 **Composability: anti-cloning perturbation + Route 2 watermark** (ε = 0.002, λ_wm = 1.0, rank 2, n = 100).
 
@@ -356,8 +358,9 @@ main candidate; it is not implemented yet. Re-run the MaskGCT composability arm 
   LibriSpeech with the 20-epoch checkpoint, XTTS-v2 on VCTK with the epoch-9 checkpoint). They
   are different checkpoints and different clips (86 of 100 per-clip scores differ).
 - **Listening check.** Informal check by the author on all sample clips: the watermark is not
-  audible, but watermarked audio sounds slightly quieter than the original (loudness not yet
-  measured). No formal listening test (SMOS) yet.
+  audible, but watermarked audio sounds slightly quieter than the original. Measured RMS says otherwise
+  (watermarked is −0.09 dB for detector-only and +1.13 dB for Route 2 rank 2, n = 100), so the
+  impression is not a level difference. No formal listening test (SMOS) yet.
 - **MaskGCT composability has no evidence file.** The MaskGCT row of the composability table
   (ACC 0.9481 → 0.8794, ASR 71% → 51%) and its paired p-values are not backed by any JSON in
   `results/` or any output in the saved notebooks. The MaskGCT notebook's composability step
@@ -365,7 +368,7 @@ main candidate; it is not implemented yet. Re-run the MaskGCT composability arm 
   unverified until the arm is re-run (notebook 03 §8).
 - **Missing result files for numbers already quoted.** `results_quality_wer_attacked_*_f5tts.json`
   (the per-attack WER column in the robustness table) and the YourTTS / LibriSpeech control
-  files `results_yourtts_*_n100.json` named in §8 are not in `results/`. The XTTS-v2 / VCTK
+  files `results_yourtts_*_n100.json` named in §8 were regenerated on 2026-10-08 and must be pushed from Kaggle. The XTTS-v2 / VCTK
   controls were recovered from notebook output (see `results/results_vctk_xtts_*`).
 - **F5-TTS composability, two nearby values.** The notebook printed 0.9844 → 0.9450; the
   committed `results_f5tts_unprotected.json` / `results_f5tts_protected_noattack.json` hold
@@ -381,7 +384,7 @@ main candidate; it is not implemented yet. Re-run the MaskGCT composability arm 
 - **Zero-shot threat model only.** No fine-tuning-based cloning attack is evaluated.
 - The perturbation is optimized through a single YourTTS surrogate, so transfer varies by cloner. The project does not claim protection against all future systems; attack success is above 50% on several cloners at ε = 0.002.
 - **No exact VoiceMark & SafeSpeech reproduction.** Published Voicemark & SafeSpeech comparisons differ in corpus/model setup and are reported only as contextual comparisons.
-- **No subjective listening test (SMOS).** All quality evidence is objective (PESQ/STOI/SI-SNR/WER). No formal subjective listening test; loudness change of watermarked audio not yet measured.
+- **No subjective listening test (SMOS).** All quality evidence is objective (PESQ/STOI/SI-SNR/WER). No formal subjective listening test. Measured RMS loudness change (n = 100): detector-only −0.09 dB, Route 2 rank 2 +1.13 dB.
 - No MP3/Opus robustness arm beyond the 10-condition battery above.
 - **Single primary training corpus.** Main development uses LibriSpeech; VCTK is used as an independent evaluation set for Route 2.
 - **Route 2 vs. original epsilon sweep is not a formal paired comparison** because the original non-baseline sweep used n=20 while Route 2 used n=100.
@@ -428,7 +431,7 @@ python src/eval/xtts_transfer_eval.py --dataset vctk --epsilon 0 \
   --output results/results_vctk_xtts_route2_msgproc_n100.json
 ```
 
-Result files for §5.4 (YourTTS ones still to be regenerated, see §6): `results_yourtts_{untrained_scaleupaug,detector_only,route2_msgproc}_n100.json`,
+Result files for §5.4 (YourTTS ones regenerated 2026-10-08, push pending): `results_yourtts_{untrained_scaleupaug,detector_only,route2_msgproc}_n100.json`,
 `results_vctk_xtts_{untrained_scaleupaug,detector_only,route2_msgproc}_n100.json`,
 `results_xtts_route2_scaleupaug_*_n100.json`. Full experimental record, including negative
 results and withdrawn claims: `docs/experimental_writeup.md`.
@@ -549,9 +552,6 @@ happens inside CosyVoice on the 3-second crop (§6). Mean WER of the clones is 1
 speech itself is not intelligible.
 
 ---
-
-
-
 ### Two complementary defenses
 
 ```text
