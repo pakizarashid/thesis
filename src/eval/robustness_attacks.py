@@ -155,11 +155,11 @@ ATTACK_FNS = {
 }
 
 
-def run_one_attack(input_dir, output_dir, attack, severity, sr=16000):
+def run_one_attack(input_dir, output_dir, attack, severity, sr=16000, pattern="*.wav"):
     os.makedirs(output_dir, exist_ok=True)
-    wavs = sorted(glob.glob(os.path.join(input_dir, "*.wav")))
+    wavs = sorted(glob.glob(os.path.join(input_dir, pattern)))
     if not wavs:
-        print(f"WARNING: no .wav files found in {input_dir}", file=sys.stderr)
+        print(f"WARNING: no files matching {pattern!r} found in {input_dir}", file=sys.stderr)
         return 0
     fn = ATTACK_FNS[attack]
     n_ok = 0
@@ -183,6 +183,11 @@ def main():
     ap.add_argument("--input_dir", required=True, help="Directory of protected WAVs to attack")
     ap.add_argument("--sr", type=int, default=16000)
     ap.add_argument("--tag", default="", help="Suffix used in --all mode output dir names")
+    ap.add_argument("--pattern", default="*.wav",
+                     help="Glob pattern (relative to --input_dir) selecting which files to attack. "
+                          "Use this when input_dir has multiple arms mixed together, e.g. "
+                          "'*_protected.wav' to attack only the protected arm and skip "
+                          "*_reference.wav / *_unprotected.wav sitting in the same directory.")
 
     single = ap.add_argument_group("single-attack mode")
     single.add_argument("--output_dir")
@@ -200,11 +205,11 @@ def main():
         for attack in ATTACK_FNS:
             for severity in ("mild", "aggressive"):
                 out_dir = f"{args.output_root}_{attack}_{severity}_{args.tag}".rstrip("_")
-                run_one_attack(args.input_dir, out_dir, attack, severity, args.sr)
+                run_one_attack(args.input_dir, out_dir, attack, severity, args.sr, args.pattern)
     else:
         if not (args.output_dir and args.attack and args.severity):
             ap.error("single-attack mode requires --output_dir --attack --severity (or pass --all)")
-        run_one_attack(args.input_dir, args.output_dir, args.attack, args.severity, args.sr)
+        run_one_attack(args.input_dir, args.output_dir, args.attack, args.severity, args.sr, args.pattern)
 
 
 if __name__ == "__main__":
