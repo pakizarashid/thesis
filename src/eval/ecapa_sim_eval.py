@@ -114,6 +114,7 @@ def main():
     print(f"[ecapa] found {len(refs)} reference files")
 
     per_condition = {}
+    per_index = {}          # sample index of each value: 'values' is in sorted-FILENAME order (sample0, sample10 ... sample1), not numeric
     for ref_path in refs:
         idx = re.search(r"sample(\d+)_reference\.wav$", os.path.basename(ref_path)).group(1)
         emb_ref = embed(model, ref_path, device)
@@ -125,6 +126,7 @@ def main():
             emb_c = embed(model, clone_path, device)
             sim = F.cosine_similarity(emb_ref.unsqueeze(0), emb_c.unsqueeze(0)).item()
             per_condition.setdefault(cond, []).append(sim)
+            per_index.setdefault(cond, []).append(int(idx))
 
     print(f"\n{'=' * 78}")
     print(f"ECAPA-TDNN SPEAKER SIMILARITY  (comparable to SafeSpeech; threshold {args.threshold})")
@@ -137,7 +139,7 @@ def main():
         mean = sum(v) / n
         median = v[n // 2] if n % 2 else (v[n // 2 - 1] + v[n // 2]) / 2
         asr = sum(1 for x in v if x > args.threshold) / n
-        results[cond] = {"mean": mean, "median": median, "asr": asr, "n": n, "values": vals}
+        results[cond] = {"mean": mean, "median": median, "asr": asr, "n": n, "values": vals, "indices": per_index[cond]}
         print(f"{cond:<26}{mean:>9.4f}{median:>9.4f}{asr * 100:>8.1f}%{n:>5}")
 
     print(f"\nASR = fraction of clones exceeding {args.threshold} -- SafeSpeech's own success")

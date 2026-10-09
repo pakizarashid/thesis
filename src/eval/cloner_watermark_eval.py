@@ -498,10 +498,38 @@ def clone_maskgct(model, speaker_audio_16k, gen_text, tmp_dir, tag, ref_text, ar
     return to_16k_tensor(wav, 24000, speaker_audio_16k.device)
 
 
+# --------------------------------------------------------------------------------
+# backend: XTTS-v2  (GPT audio-prompt tokens; measured 0.6119 by xtts_transfer_eval.py)
+# --------------------------------------------------------------------------------
+
+def load_xtts(device, args):
+    # Kaggle cells are non-interactive: coqui-tts asks to accept the non-commercial CPML licence with input() and
+    # raises EOFError otherwise. This env var is its documented way to auto-accept (academic / non-commercial use).
+    os.environ.setdefault("COQUI_TOS_AGREED", "1")
+    from TTS.api import TTS
+    print("[xtts] loading tts_models/multilingual/multi-dataset/xtts_v2 (first run downloads weights)...")
+    return TTS("tts_models/multilingual/multi-dataset/xtts_v2").to(device)
+
+
+def clone_xtts(model, speaker_audio_16k, gen_text, tmp_dir, tag, ref_text, args):
+    import torchaudio
+    ref_path = write_ref_wav(speaker_audio_16k, tmp_dir, tag)
+    out_path = os.path.join(tmp_dir, f"out_{tag}.wav")
+    model.tts_to_file(text=gen_text, speaker_wav=ref_path, language="en", file_path=out_path)
+    wav, sr = torchaudio.load(out_path)
+    if wav.shape[0] > 1:
+        wav = wav.mean(dim=0, keepdim=True)
+    return to_16k_tensor(wav, sr, speaker_audio_16k.device)
+
+
+_DONE_IDX = []          # indices of the utterances that completed (see _dump)
+
+
 BACKENDS = {
     "f5tts":     (load_f5tts,     clone_f5tts,     "mel infilling",                 0.979),
     "cosyvoice": (load_cosyvoice, clone_cosyvoice, "flow matching on prompt mel",   0.964),
     "maskgct":   (load_maskgct,   clone_maskgct,   "masked RVQ acoustic infilling", 0.957),
+    "xtts":      (load_xtts,      clone_xtts,      "GPT audio-prompt tokens",       None),
 }
 
 
@@ -734,6 +762,7 @@ def main():
         a_cln = detect_acc(backbone, cloned, msg)
         accs_src.append(a_src)
         accs_clone.append(a_cln)
+        _DONE_IDX.append(i)
         print(f"  [{i}] acc_source={a_src:.4f}  acc_{args.cloner}_clone={a_cln:.4f}", flush=True)
 
         # SEED-MISMATCH GUARD. acc_source is detection on the INPUT audio itself, so it
@@ -821,6 +850,7 @@ def _dump(args, mechanism, published, accs_src, accs_clone):
                 "acc_clone_mean": sum(accs_clone) / len(accs_clone),
                 "acc_source_values": accs_src,
                 "acc_clone_values": accs_clone,
+                "completed_indices": list(_DONE_IDX),
             },
         }, f, indent=2)
 
