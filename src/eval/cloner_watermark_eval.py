@@ -214,7 +214,12 @@ class Transcriber:
         return self._m
 
     def __call__(self, wav_path):
-        segments, _info = self._model().transcribe(wav_path, language="en", beam_size=5)
+        import soundfile as _sf, numpy as _np  # THESIS_TRANSCRIBE_ARRAY: decode here; faster-whisper's PyAV path fails on this image
+        _x, _sr = _sf.read(wav_path, dtype="float32")
+        if _x.ndim > 1: _x = _x.mean(axis=1)
+        if _sr != 16000:
+            import librosa; _x = librosa.resample(_x, orig_sr=_sr, target_sr=16000)
+        segments, _info = self._model().transcribe(_np.ascontiguousarray(_x, dtype=_np.float32), language="en", beam_size=5)
         text = " ".join(s.text for s in segments).strip()
         # An empty transcript makes CosyVoice/MaskGCT produce garbage rather than
         # error. Fall back to a neutral prompt and say so, loudly.
