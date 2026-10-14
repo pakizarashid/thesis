@@ -14,7 +14,18 @@ import ast, os, re, sys, py_compile
 TARGET = sys.argv[1] if len(sys.argv) > 1 else "src/eval/composability_gen_protected_audio.py"
 src = open(TARGET).read()
 if "lambda_ecapa_clone" in src:
-    print(f"[hensemble-gen patch] already applied to {TARGET}"); raise SystemExit(0)
+    OLD_W = ('    if _ENS_STATE["base"] is not None:\n'
+             '        k["noise_seed"] = _ENS_STATE["base"] + _ENS_STATE["calls"]\n')
+    NEW_W = ('    if _ENS_STATE["base"] is not None:\n'
+             '        _s = _ENS_STATE["base"] + _ENS_STATE["calls"]\n'
+             '        k["noise_seed"] = _s\n'
+             '        torch.manual_seed(_s); torch.cuda.manual_seed_all(_s)   # YourTTS (VITS) samples noise on every clone call: seed it so arms see the same draws\n')
+    if "torch.manual_seed(_s)" in src:
+        print(f"[hensemble-gen patch] already applied (with seeding) to {TARGET}"); raise SystemExit(0)
+    if src.count(OLD_W) != 1:
+        raise SystemExit("[hensemble-gen patch] upgrade ABORTED: wrapper text not found exactly once")
+    open(TARGET, "w").write(src.replace(OLD_W, NEW_W, 1)); py_compile.compile(TARGET, doraise=True)
+    print(f"[hensemble-gen patch] upgraded {TARGET}: per-clip global seeding added"); raise SystemExit(0)
 
 
 def once(old, new, label):
@@ -48,7 +59,9 @@ _pgd_perturb_orig = pgd_perturb
 def pgd_perturb(*a, **k):
     k.update(_ENS_STATE["kw"])
     if _ENS_STATE["base"] is not None:
-        k["noise_seed"] = _ENS_STATE["base"] + _ENS_STATE["calls"]
+        _s = _ENS_STATE["base"] + _ENS_STATE["calls"]
+        k["noise_seed"] = _s
+        torch.manual_seed(_s); torch.cuda.manual_seed_all(_s)   # YourTTS (VITS) samples noise on every clone call: seed it so arms see the same draws
     _ENS_STATE["calls"] += 1
     return _pgd_perturb_orig(*a, **k)
 
