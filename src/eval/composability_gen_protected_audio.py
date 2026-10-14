@@ -106,6 +106,21 @@ from surrogate_vc import load_yourtts_surrogate
 from librispeech import LibriSpeechSubset, collate_librispeech
 
 
+# ---- H-ENSEMBLE (2026-10-14): shadow pgd_perturb so every call gets the ECAPA terms and a per-clip random-start seed ----
+_ENS_STATE = {"kw": {}, "base": None, "calls": 0}
+_pgd_perturb_orig = pgd_perturb
+
+
+def pgd_perturb(*a, **k):
+    k.update(_ENS_STATE["kw"])
+    if _ENS_STATE["base"] is not None:
+        _s = _ENS_STATE["base"] + _ENS_STATE["calls"]
+        k["noise_seed"] = _s
+        torch.manual_seed(_s); torch.cuda.manual_seed_all(_s)   # YourTTS (VITS) samples noise on every clone call: seed it so arms see the same draws
+    _ENS_STATE["calls"] += 1
+    return _pgd_perturb_orig(*a, **k)
+
+
 def _write(save_dir, tag, wav):
     os.makedirs(save_dir, exist_ok=True)
     sf.write(os.path.join(save_dir, f"{tag}.wav"),
@@ -132,6 +147,12 @@ def main():
     p.add_argument("--step_size", type=float, default=None)
     p.add_argument("--n_steps", type=int, default=10)
     p.add_argument("--lambda_wm", type=float, default=1.0)
+    p.add_argument("--lambda_ecapa_clone", type=float, default=0.0,
+                   help="H-ENSEMBLE: weight of the ECAPA-TDNN disruption term on the YourTTS clone.")
+    p.add_argument("--lambda_ecapa_direct", type=float, default=0.0,
+                   help="H-ENSEMBLE: weight of the ECAPA-TDNN disruption term on the protected audio itself.")
+    p.add_argument("--noise_seed_base", type=int, default=None,
+                   help="If set, the k-th pgd_perturb call (= clip k) uses PGD random-start seed noise_seed_base + k, so arms share their random start.")
     p.add_argument("--random_start", action="store_true", default=True)
     p.add_argument("--surrogate_text", type=str,
                    default="This is a test sentence for voice cloning.")
@@ -172,6 +193,19 @@ def main():
     print("[main] Loading YourTTS surrogate (PGD objective only -- no cloning "
           "happens in this script)...")
     surrogate = load_yourtts_surrogate(device=device)
+    ens_kw = {}
+    if args.lambda_ecapa_clone > 0 or args.lambda_ecapa_direct > 0:
+        from disruption_pgd import load_ecapa_differentiable      # exists only after apply_hensemble_patch_v2.py
+        ens_kw = dict(ecapa_model=load_ecapa_differentiable(device), lambda_ecapa_clone=args.lambda_ecapa_clone,
+                      lambda_ecapa_direct=args.lambda_ecapa_direct, ecapa_native_sr=16000)
+        print(f"[main] H-ENSEMBLE on: lambda_ecapa_clone={args.lambda_ecapa_clone} lambda_ecapa_direct={args.lambda_ecapa_direct}")
+    _ENS_STATE.update(kw=ens_kw, base=args.noise_seed_base, calls=0)
+    if args.save_dir:
+        os.makedirs(args.save_dir, exist_ok=True)
+        with open(os.path.join(args.save_dir, "_ensemble.json"), "w") as _f:
+            json.dump({"lambda_ecapa_clone": args.lambda_ecapa_clone, "lambda_ecapa_direct": args.lambda_ecapa_direct,
+                       "noise_seed_base": args.noise_seed_base, "epsilon": args.epsilon, "n_steps": args.n_steps,
+                       "lambda_wm": args.lambda_wm}, _f, indent=2)
 
     if args.diagnostic:
         print("\n" + "=" * 60 + "\nDIAGNOSTIC MODE: 1 utterance, nothing written\n" + "=" * 60)

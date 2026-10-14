@@ -97,6 +97,7 @@ import json
 import argparse
 import torch
 import torch.nn.functional as F
+import torchaudio
 import soundfile as sf
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "models"))
@@ -195,9 +196,33 @@ def detect_acc(backbone, wm_audio: torch.Tensor, message: torch.Tensor) -> float
     return compute_detection_accuracy(chunk_logits, message)
 
 
+def load_ecapa_differentiable(device):
+    """
+    H-ENSEMBLE (2026-10-14 addendum). ECAPA-TDNN (speechbrain/spkrec-ecapa-voxceleb) loaded for use INSIDE the PGD loop. Unlike
+    ecapa_sim_eval.py (separate process, torch.no_grad on purpose) gradients must flow here, so encode_batch is never wrapped in no_grad.
+    """
+    from speechbrain.inference.speaker import EncoderClassifier
+    return EncoderClassifier.from_hparams(
+        source="speechbrain/spkrec-ecapa-voxceleb",
+        savedir="pretrained_models/spkrec-ecapa-voxceleb",
+        run_opts={"device": device},
+    )
+
+
+def ecapa_embed(model, audio: torch.Tensor, native_sr: int):
+    """Differentiable ECAPA embedding of an in-memory waveform batch [B, T] or [B, 1, T]; resample (if needed) is inside the autograd graph."""
+    if audio.dim() == 3:
+        audio = audio.squeeze(1)
+    if native_sr != 16000:
+        audio = torchaudio.functional.resample(audio, native_sr, 16000)
+    return model.encode_batch(audio).squeeze(1)
+
+
 def pgd_perturb(backbone, surrogate, clean_audio: torch.Tensor, message: torch.Tensor, text: str,
                  epsilon: float, step_size: float, n_steps: int, random_start: bool,
-                 lambda_wm: float = 0.0, verbose: bool = False):
+                 lambda_wm: float = 0.0, verbose: bool = False,
+                 ecapa_model=None, lambda_ecapa_clone: float = 0.0, lambda_ecapa_direct: float = 0.0,
+                 ecapa_native_sr: int = 16000, noise_seed: int = None):
     """
     The actual mechanism. recon_wm is computed once (frozen backbone, no_grad)
     and detached -- it is the fixed base every step perturbs. `delta` is the
@@ -235,9 +260,15 @@ def pgd_perturb(backbone, surrogate, clean_audio: torch.Tensor, message: torch.T
         out = backbone.forward_full(clean_audio, message)
         recon_wm = out["recon_wm"].detach()
         emb_clean = surrogate.compute_speaker_embedding(clean_audio).detach()
+        emb_clean_ecapa = (ecapa_embed(ecapa_model, clean_audio, ecapa_native_sr).detach()
+                           if ecapa_model is not None else None)
 
     if random_start:
-        delta = (torch.rand_like(recon_wm) * 2 - 1) * epsilon
+        if noise_seed is not None:      # H-ENSEMBLE: same random start in every arm of a paired comparison
+            _g = torch.Generator(device=recon_wm.device).manual_seed(int(noise_seed))
+            delta = (torch.rand(recon_wm.shape, generator=_g, device=recon_wm.device, dtype=recon_wm.dtype) * 2 - 1) * epsilon
+        else:
+            delta = (torch.rand_like(recon_wm) * 2 - 1) * epsilon
     else:
         delta = torch.zeros_like(recon_wm)
     delta = delta.detach().requires_grad_(True)
@@ -248,6 +279,13 @@ def pgd_perturb(backbone, surrogate, clean_audio: torch.Tensor, message: torch.T
         cloned_output = surrogate.clone_voice(perturbed, text=text)
         emb_cloned = surrogate.compute_speaker_embedding(cloned_output)
         sim_loss = compute_sim_disruption_loss(emb_clean, emb_cloned)
+
+        # H-ENSEMBLE: second speaker encoder in the disruption objective (inert unless ecapa_model is given)
+        ecapa_loss_clone = ecapa_loss_direct = None
+        if ecapa_model is not None and (lambda_ecapa_clone > 0 or verbose):
+            ecapa_loss_clone = compute_sim_disruption_loss(emb_clean_ecapa, ecapa_embed(ecapa_model, cloned_output, ecapa_native_sr))
+        if ecapa_model is not None and (lambda_ecapa_direct > 0 or verbose):
+            ecapa_loss_direct = compute_sim_disruption_loss(emb_clean_ecapa, ecapa_embed(ecapa_model, perturbed, ecapa_native_sr))
 
         # backbone.model is in eval() mode (build_backbone calls .eval() -- correct
         # for a frozen inference pipeline). st_model/detector contain an RNN
@@ -272,8 +310,15 @@ def pgd_perturb(backbone, surrogate, clean_audio: torch.Tensor, message: torch.T
             wm_loss = compute_ldec(chunk_logits, message)
 
         grad_sim = torch.autograd.grad(sim_loss, delta, retain_graph=True, create_graph=False)[0]
-        grad_wm = torch.autograd.grad(wm_loss, delta, retain_graph=False, create_graph=False)[0]
+        _want_c, _want_d = ecapa_loss_clone is not None, ecapa_loss_direct is not None
+        grad_wm = torch.autograd.grad(wm_loss, delta, retain_graph=(_want_c or _want_d), create_graph=False)[0]
+        grad_ec_c = torch.autograd.grad(ecapa_loss_clone, delta, retain_graph=_want_d, create_graph=False)[0] if _want_c else None
+        grad_ec_d = torch.autograd.grad(ecapa_loss_direct, delta, retain_graph=False, create_graph=False)[0] if _want_d else None
         grad = grad_sim + lambda_wm * grad_wm
+        if lambda_ecapa_clone > 0 and grad_ec_c is not None:
+            grad = grad + lambda_ecapa_clone * grad_ec_c
+        if lambda_ecapa_direct > 0 and grad_ec_d is not None:
+            grad = grad + lambda_ecapa_direct * grad_ec_d
         grad_norm = grad.norm().item()
 
         if verbose:
@@ -282,6 +327,11 @@ def pgd_perturb(backbone, surrogate, clean_audio: torch.Tensor, message: torch.T
                   f"|grad_sim|={grad_sim.norm().item():.4e} |grad_wm|={grad_wm.norm().item():.4e} "
                   f"(sim:wm raw ratio={ratio:.2f}, i.e. lambda_wm~={ratio:.2f} would roughly balance them) "
                   f"|grad_combined|={grad_norm:.4e} delta_linf={delta.abs().max().item():.6f}")
+        if verbose and (grad_ec_c is not None or grad_ec_d is not None):
+            for _nm, _l, _g in (("ecapa_clone", ecapa_loss_clone, grad_ec_c), ("ecapa_direct", ecapa_loss_direct, grad_ec_d)):
+                if _g is not None:
+                    print(f"  [pgd step {step}] {_nm}_loss={_l.item():.4f} |grad_{_nm}|={_g.norm().item():.4e} "
+                          f"(sim:{_nm} raw ratio={grad_sim.norm().item() / max(_g.norm().item(), 1e-12):.2f})")
         if step == 0 and grad_norm == 0.0:
             print(f"  [pgd_perturb] WARNING: zero gradient reached delta at step 0 -- "
                   f"either the losses are saturated at this epsilon/init, or the autograd "
