@@ -86,11 +86,14 @@ codec. This is the central tension the project measures.
 | Does the published watermark survive every cloner? | No. ACC after cloning ranges from 0.53 (YourTTS) to 0.93 (F5-TTS), set by how much of the reference audio the cloner keeps. Checked at the latent level too. | §5.1 |
 | Does the anti-cloning perturbation transfer? | Yes to XTTS-v2. Only weakly to F5-TTS at the default strength. | §5.2 |
 | Can strength fix the weak transfer? | Raising ε helps but lowers watermark ACC and audio quality: a three-way trade-off with no free setting. | §5.3 |
-| Does cloning-aware training (Route 2) improve traceability? | Yes, on all five cloners tested, including four never used in training, and on a new dataset (VCTK) with a new cloner. | §5.4 |
+| Does cloning-aware training (Route 2) improve traceability? | Yes, on all five cloners tested (CosyVoice's number is not validated, §6), including four never used in training, and on a new dataset (VCTK) with a new cloner. | §5.4 |
 | Is the encoder retraining needed, or is detector retraining enough? | Retraining the detector alone barely helps. The larger gain needs `msg_processor` retraining too. | §5.4 |
 | What does Route 2 cost? | About −0.22 to −0.28 PESQ for the encoder retraining (100 paired clips), not recoverable by the three levers tried. | §5.4 |
 | Does Route 2 improve the trade-off curve? | Yes, from ε = 0.002 to 0.04: better ACC, SIM and ASR at matched strength with no extra quality cost. At ε = 0.08 both are near their floor. | §5.5 |
 | Does protection survive tampering? | 9 of 10 post-processing conditions leave attack success at or below the untampered protected baseline. | §5.6 |
+| Do protection and attribution work together on the same clips, across cloners? | Partly. The perturbation lowers speaker similarity on every working cloner. On F5-TTS and MaskGCT the watermark survives (80–94% of protected clones traced) but 60–72% of clones still pass as the speaker. On XTTS-v2 only 29% of the clones that pass as the speaker are traced. | §5.7 |
+| Is the protected audio inaudible? | No. A blind test picked out protected audio 10/10 (loudness matched) and watermark-only audio 8/10. Shaping the noise to sit under speech did not improve protection. | §5.8 |
+| Which success criteria are met? | Quality rows 1a–1d met at ε = 0.002; blind test, protected ASR ≤ 50% (F5-TTS, MaskGCT) and attacker-wins ≤ 10% (MaskGCT, XTTS) not met. | §5.9 |
 
 ---
 
@@ -98,7 +101,8 @@ codec. This is the central tension the project measures.
 
 - **Cloners (5):** YourTTS (fixed d-vector), XTTS-v2 (audio-prompt tokens), CosyVoice 2
   (flow matching), MaskGCT (masked infilling, retained tokens), F5-TTS (mel infilling,
-  retained reference mel). All zero-shot, text-conditioned.
+  retained reference mel). All zero-shot, text-conditioned. CosyVoice 2 did not produce usable
+  clones under any prompt length tried (§6), so it is excluded from the composability results (§5.7).
 - **Data:** LibriSpeech held-out speakers, 100 clips (20 speakers × 5 clips), speaker-disjoint
   from training. VCTK (speaker-disjoint) used as a second dataset.
 - **Payload:** 16 bits, random per clip (`seed = 123 + index`).
@@ -277,8 +281,12 @@ costs about −0.21 PESQ against the unverified codec-only row (not safe to quot
 | ------- | ----------------------------- | ----------------------------------------- | -----------------------------------------|--------------------- |
 | XTTS-v2 | 0.7244 → 0.6631 | p = 0.0016, p < 10⁻⁵ | 0.3996 → 0.3032 |...|
 | F5-TTS  | 0.9844 → 0.9450 | p = 4.7×10⁻⁶ (t), p = 2.3×10⁻⁵ (Wilcoxon) | SIM 0.370 → 0.315| 87.0% → 72.0% |
-| MaskGCT | 0.9481 → 0.8794 | p = 7.7×10⁻⁶ (t), p = 2.3×10⁻⁵ (Wilcoxon) |...| 71.0% → 51.0% |
+| MaskGCT | 0.940 → 0.889 (measured 2026-10-09, §5.7) | p = 3.1×10⁻⁴ (t), p = 3.4×10⁻⁴ (Wilcoxon) | 0.323 → 0.267 | 78% → 60% |
 | YourTTS (surrogate) | pre-clone ACC 0.998 → 1.000 |...| 0.409 → 0.208 |...|
+
+The earlier MaskGCT row (ACC 0.9481 → 0.8794, ASR 71% → 51%) had no result file behind it and is
+replaced by the measured values above. Section 5.7 repeats the comparison for F5-TTS, MaskGCT and
+XTTS-v2 on one shared set of 100 clips, scored identically.
 
 **Finding.** Protection and attribution coexist: ACC drops modestly (−0.03 to −0.07) while
 SIM and ASR drop sharply on the same audio, so the two do not cancel each other. The cost to
@@ -314,31 +322,146 @@ untampered protected baseline (35–69% vs. 70%); the one exception is a one-poi
 (71%, Opus-aggressive), read as noise. Noise at 10 dB SNR gives 35% ASR: the attack that hurts
 the watermark most also suppresses the attacker's own clone similarity most.
 
-### 5.7 Stage 5 — Final evaluation: status
+### 5.7 Composability on one shared clip set, four cloners (2026-10-09)
 
-Experiments are finished. Left to do: a reliable CosyVoice measurement (§6), a formal listening
-check, an explicit success threshold for the dual-defense claim, and the unified results table.
+The same 100 protected clips (Route 2 rank 2, ε = 0.002, 3 s prompts; PESQ 1.79, STOI 0.864,
+SI-SNR +0.35 dB) were cloned by each tool in its own fresh session (notebook
+`04_multi_cloner_composability.ipynb`) and scored identically: ECAPA-TDNN speaker similarity
+against the true original, Whisper-base WER against the fixed sentence, watermark ACC. Per-clip
+values are joined by clip index, never by list position.
+
+Definitions, fixed in advance: **traced** = ACC ≥ 13/16 bits; **ASR** = share of clones with
+SIM > 0.25; **attacker wins** = SIM > 0.25 and not traced. **Cloner-works gate** (not relaxed):
+the unprotected clone must reach SIM > 0.30 and WER < 20%, otherwise the protected numbers are
+not a valid test of protection strength.
+
+| Cloner | Gate | Arm | ACC | SIM | ASR | Traced | Attacker wins | Traced given SIM > 0.25 | WER |
+|---|---|---|---:|---:|---:|---:|---:|---:|---:|
+| F5-TTS | pass | unprotected → protected | 0.984 → 0.945 | 0.370 → 0.315 | 87% → 72% | – → ~94% | – → ~3% | – | – |
+| MaskGCT | **pass** (SIM 0.323, WER 11.5%) | unprotected | 0.940 | 0.323 | 78% | 91% | 5% | 94% | 11.5% |
+| | | protected | 0.889 | 0.267 | 60% | 80% | 11% | 82% | 17.2% |
+| XTTS-v2 | **fail** (SIM 0.240) | unprotected | 0.709 | 0.240 | 46% | 35% | 30% | 35% | 19.9% |
+| | | protected | 0.688 | 0.159 | 17% | 30% | 12% | 29% | 16.5% |
+| CosyVoice 2 | **fail** (twice) | unprotected | 0.90 (not valid) | 0.13 | 9–11% | – | – | – | ≈ 150% |
+
+F5-TTS is the earlier committed composability run (the notebook printed 0.9844 → 0.9450; the
+committed JSONs hold 0.9825 → 0.9431). Paired over the same clips: MaskGCT ACC −0.051
+(t-test p = 3.1×10⁻⁴, Wilcoxon p = 3.4×10⁻⁴) and SIM −0.056 (p = 5.9×10⁻¹⁰, 7.6×10⁻⁹); XTTS-v2
+SIM −0.082 (p = 2.5×10⁻¹⁷, 3.6×10⁻¹⁴) and ACC −0.021 (p = 0.22, not significant).
+
+**Reading.**
+
+- The perturbation lowers speaker similarity by a similar absolute amount on F5-TTS and MaskGCT
+  (about −0.055) and by −0.08 on XTTS-v2, which only looks better because its baseline is low.
+- On the two high-conditioning-bandwidth cloners the watermark carries the defence: 80–94% of
+  protected clones are traced, and 82% of the MaskGCT clones that pass as the speaker are
+  traced. But 60% (MaskGCT) and 72% (F5-TTS) of clones still pass as the speaker.
+- On XTTS-v2 the watermark fails: only 5 of the 17 protected clones above SIM 0.25 (29%) are
+  traced. The success definition "where a clone still sounds like the speaker it carries the
+  watermark" is therefore not met for this cloner. Only the perturbation lowers attacker success
+  there (ASR 46% → 17%), and XTTS-v2 is a weak attacker to begin with (it failed the gate).
+- Composition is not free: on MaskGCT the perturbation costs watermark accuracy (traced 91% →
+  80%).
+- The two defences cover different cloners, and neither is sufficient alone. This is the
+  conditioning-bandwidth ordering of §5.1 again (XTTS-v2 < MaskGCT ≈ F5-TTS).
+
+**CosyVoice 2 was attempted twice and excluded.** With 3 s prompts (September) and then with
+longer prompts built by trimming whole LibriSpeech utterances (`DATASET = L10` and `L25`), the
+unprotected clones failed the gate in the same way:
+
+| CosyVoice 2, unprotected | Clips cloned | SIM | ASR | WER |
+|---|---:|---:|---:|---:|
+| 3 s prompts (September) | 98 | 0.128 | 6% | ≈ 145% |
+| L10 (about 10 s) | 44 of 100 | 0.132 | 11% | 154% |
+| L25 (whole utterance, up to about 17 s) | 46 of 100 | 0.137 | 9% | 153% |
+
+Every clone is 7.2 s long regardless of prompt or text, and 54–56 of 100 clips fail in
+the transcription step. Because longer prompts change nothing, the earlier explanation (3 s
+crops cut mid-utterance) is not supported; the cause is in how this harness drives CosyVoice 2
+and was not resolved. The protected arm was not run (gate failed). CosyVoice's watermark
+survival values (0.77, 0.88, 0.90) come from clones that do not say the target sentence and
+are not used as evidence.
+
+### 5.8 Is the protected audio inaudible?
+
+Blind test: original and processed audio, "which is the processed one?", one listener (the
+author, who knows what to listen for), 4 distinct source clips reused.
+
+| Test | Condition | Correct |
+|---|---|---|
+| Loudness not matched | ε = 0.002, 0.01, 0.02, 0.04, 0.08 | 10/10 at every ε (50/50) |
+| Loudness matched | watermark only (ε = 0) | 8/10 (chance p ≈ 0.055) |
+| Loudness matched | protected, ε = 0.002 | 10/10 (chance p ≈ 0.001) |
+
+The perturbation is audible even at ε = 0.002, the only strength that passes the PESQ, STOI and
+SI-SNR bars: the added noise has a mean SNR of 2.4 dB and about 10 of 100 clips are below 0 dB.
+The watermark alone is probably audible to an attentive listener. The limits of this check are one
+listener and about 4 independent items; a fair test needs 20+ clips and listeners who have not
+heard them.
+
+**Shaped-noise attempt (negative result).** Instead of a flat bound, the perturbation bound was
+made proportional to the local signal envelope (`bound[t] = ε_peak × clamp(env[t]^α, 0.03, 1)`,
+α = 1), so the noise sits under speech instead of in the pauses. F5-TTS, n = 100, rule written
+before the run:
+
+| Setting | PESQ | STOI | SIM | ASR | ACC | Traced | Attacker wins |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| shaped 0.005 | 1.96 | 0.875 | 0.333 | 79% | 0.946 | 93% | 5% |
+| shaped 0.01 | 1.83 | 0.867 | 0.310 | 69% | 0.924 | 87% | 7% |
+| shaped 0.02 | 1.61 | 0.850 | 0.269 | 57% | 0.874 | 79% | 8% |
+| flat 0.002 | 1.79 | 0.864 | 0.312 | 69% | 0.943 | 94% | 3% |
+| flat 0.005 | 1.53 | 0.840 | 0.271 | 54% | 0.922 | 87% | 5% |
+| flat 0.008 | 1.38 | 0.819 | 0.234 | 44% | 0.860 | 71% | 9% |
+
+Success (ASR ≤ 50% at PESQ ≥ 1.70) was not met: the best ASR at PESQ ≥ 1.70 is 69%, the same as
+flat ε = 0.002. Shaped 0.01 and flat 0.002 have the same ASR, PESQ and speech-frame SNR (about
+28–30 dB) while pause SNR is 16.8 dB against 0.5 dB, so removing 16 dB of noise from the pauses
+cost nothing: the effect on the cloner comes from noise inside speech. Whether shaped noise
+sounds better at equal protection is untested.
+
+### 5.9 Success-criteria scorecard (thresholds fixed in advance; supervisor confirmation pending)
+
+| Row | Criterion | Target | Measured at ε = 0.002 | Status |
+|---|---|---|---|---|
+| 1a–1c | PESQ / STOI / SI-SNR | ≥ 1.70 / ≥ 0.85 / ≥ 0 | 1.79 / 0.864 / +0.35 dB | met |
+| 1d | loudness change | \|ΔRMS\| ≤ 1 dB | +0.84 dB | met |
+| 1e | blind listening | ≤ 60% correct | 80% (watermark only), 100% (protected) | not met |
+| 2a / 2b / 2c | protected ASR (F5-TTS / MaskGCT / XTTS) | ≤ 50% | 72% / 60% / 17% | missed / missed / met (uninformative: unprotected ASR is already 46%) |
+| 3a / 3b / 3c | attacker wins (F5-TTS / MaskGCT / XTTS) | ≤ 10% | ≈ 3% / 11% / 12% | met / missed by 1 clip / missed by 2 clips |
+| 2d | clone WER gain | ≥ 0.30 | clone WER stays 1–9% | unreachable with this mechanism |
+
+On F5-TTS no ε satisfies the quality rows and ASR ≤ 50% together: ε = 0.002 passes 1a–1d but has
+ASR 69–72%, and ε ≈ 0.008 reaches ASR 44% but fails 1a and 1b (PESQ 1.38, STOI 0.819). Row 1e as
+worded ("inaudible") cannot be met by the current method; whether the criterion should be an
+acceptability test (MOS or ABX with naive listeners) is for the supervisor to decide.
+
+### 5.10 Stage 5 — status
+
+Experiments are finished; per the plan no new experiment starts after 28 October 2026. Open items:
+supervisor sign-off on the thresholds, a larger listening check (20+ clips, naive listeners),
+and the decision between building a stronger or quieter anti-cloning step and reporting these
+limits in the thesis.
 
 Supervisor's reading (2026-10): clone-aware training is an improvement, but attack success on
-F5-TTS (70% at ε = 0.002) and MaskGCT (51%) is still high, so the most valuable remaining work
-is a way to lessen cloning itself. The perturbation-side counterpart of Route 2 (making the
-anti-cloning step generalize across cloners instead of relying on one YourTTS surrogate) is the
-main candidate; it is not implemented yet. Re-run the MaskGCT composability arm first (§6).
+F5-TTS (70% at ε = 0.002) and MaskGCT (60%, measured in §5.7) is still high, so the most valuable
+remaining work is a way to lessen cloning itself. The perturbation-side counterpart of Route 2
+(making the anti-cloning step generalize across cloners instead of relying on one YourTTS
+surrogate) is the main candidate; it is not implemented yet.
 
 ---
 
 ## 6. Known problems and honest caveats
 
-- **CosyVoice 2 is unreliable under this protocol.** Its zero-shot decoder breaks on the
-  3-second, non-sentence-final reference crops used for every cloner: unprotected SIM
-  collapses (mean 0.128, ASR 6%, against F5-TTS 87% and MaskGCT 71%), transcripts are empty
-  or looping (mean WER 1.43–1.49), and output length is fixed near 7.2 s. Three checks
-  (audio sanity, an uncloned watermarked control, a WER check) point to the crop, not the
-  watermark or the PGD. Its ACC (0.880) and composability numbers are reported but not
-  treated as validated. A longer or sentence-aligned reference crop is the named, untried fix.
-- **Two MaskGCT numbers.** Route 2 unprotected ACC is 0.9594 in the cross-cloner run and
-  0.9481 in the composability run (different 100-clip draws). Both are near VoiceMark's
-  published 0.957.
+- **CosyVoice 2 is excluded (tried twice, cause unresolved).** With 3 s prompts and with
+  longer, whole-utterance prompts (L10, L25) its unprotected clones fail the cloner-works gate in the
+  same way: SIM 0.13 (need > 0.30), WER about 150% (need < 20%), output length fixed near 7.2 s,
+  and 54–56 of 100 clips fail in transcription (§5.7). The earlier explanation (3 s crops cut
+  mid-utterance) is not supported, because longer prompts change nothing. The retry allowed by the
+  plan is used up. Its ACC values (0.767 pretrained, 0.880 Route 2, 0.90 on L25) are reported but not
+  validated, and CosyVoice is not a point on the conditioning-bandwidth ladder.
+- **Three MaskGCT numbers.** Route 2 unprotected ACC is 0.9594 in the cross-cloner run, 0.9481
+  in the earlier composability run and 0.940 in the 2026-10-09 run (different 100-clip draws).
+  All are near VoiceMark's published 0.957. Quote 0.940 (§5.7) with the composability row.
 - **Checkpoint lineage.** The original Stage-1 checkpoint (`stage1_aug`) was never committed
   and was lost. All Route 2 results start from `stage1_scaleup_aug`, so Stage 1–3 numbers
   (original watermark, a different lineage) are not mixed with Route 2 numbers.
@@ -357,15 +480,13 @@ main candidate; it is not implemented yet. Re-run the MaskGCT composability arm 
 - **Coincidence, not an error.** Two different experiments both reported ACC 0.6913 (XTTS-v2 on
   LibriSpeech with the 20-epoch checkpoint, XTTS-v2 on VCTK with the epoch-9 checkpoint). They
   are different checkpoints and different clips (86 of 100 per-clip scores differ).
-- **Listening check.** Informal check by the author on all sample clips: the watermark is not
-  audible, but watermarked audio sounds slightly quieter than the original. Measured RMS says otherwise
-  (watermarked is −0.09 dB for detector-only and +1.13 dB for Route 2 rank 2, n = 100), so the
-  impression is not a level difference. No formal listening test (SMOS) yet.
-- **MaskGCT composability has no evidence file.** The MaskGCT row of the composability table
-  (ACC 0.9481 → 0.8794, ASR 71% → 51%) and its paired p-values are not backed by any JSON in
-  `results/` or any output in the saved notebooks. The MaskGCT notebook's composability step
-  produced no clones in its last run (`clones_maskgct_*` did not exist). Treat the row as
-  unverified until the arm is re-run (notebook 03 §8).
+- **Listening check (one listener).** Blind tests by the author only (§5.8): protected audio is
+  picked out 10/10, watermark-only audio 8/10 with loudness matched. Mean loudness change is small
+  (watermarked minus clean RMS: −0.09 dB detector-only, +1.13 dB Route 2 rank 2, n = 100), so level
+  is not the cue. 4 distinct clips, one listener who knows the system: indicative, not a formal test.
+- **MaskGCT composability (resolved 2026-10-09).** The earlier row (0.9481 → 0.8794, ASR 71% → 51%)
+  had no evidence file. It was re-run on the shared clip set and replaced by the measured values in
+  §5.7 (ACC 0.940 → 0.889, ASR 78% → 60%).
 - **Missing result files for numbers already quoted.** `results_quality_wer_attacked_*_f5tts.json`
   (the per-attack WER column in the robustness table) and the YourTTS / LibriSpeech control
   files `results_yourtts_*_n100.json` named in §8 were regenerated on 2026-10-08 and must be pushed from Kaggle. The XTTS-v2 / VCTK
@@ -384,7 +505,10 @@ main candidate; it is not implemented yet. Re-run the MaskGCT composability arm 
 - **Zero-shot threat model only.** No fine-tuning-based cloning attack is evaluated.
 - The perturbation is optimized through a single YourTTS surrogate, so transfer varies by cloner. The project does not claim protection against all future systems; attack success is above 50% on several cloners at ε = 0.002.
 - **No exact VoiceMark & SafeSpeech reproduction.** Published Voicemark & SafeSpeech comparisons differ in corpus/model setup and are reported only as contextual comparisons.
-- **No subjective listening test (SMOS).** All quality evidence is objective (PESQ/STOI/SI-SNR/WER). No formal subjective listening test. Measured RMS loudness change (n = 100): detector-only −0.09 dB, Route 2 rank 2 +1.13 dB.
+- **The protected audio is audible.** A blind test by one listener picks out protected audio 10/10 and watermark-only audio 8/10 (§5.8). Objective bars (PESQ/STOI/SI-SNR) were met at ε = 0.002 but do not guarantee inaudibility. No formal subjective test (SMOS/MOS) with naive listeners yet.
+- **Anti-cloning strength is limited.** At ε = 0.002, 72% (F5-TTS) and 60% (MaskGCT) of clones still pass as the speaker; raising ε lowers quality and watermark accuracy (§5.3, §5.5), and shaping the noise did not change this (§5.8).
+- **The watermark is mostly lost on XTTS-v2 clones** (29% of clones that pass as the speaker are traced), so attribution does not back up the perturbation on low-conditioning-bandwidth cloners (§5.7).
+- **CosyVoice 2 is excluded** after two protocols failed the cloner-works gate (§5.7, §6).
 - No MP3/Opus robustness arm beyond the 10-condition battery above.
 - **Single primary training corpus.** Main development uses LibriSpeech; VCTK is used as an independent evaluation set for Route 2.
 - **Route 2 vs. original epsilon sweep is not a formal paired comparison** because the original non-baseline sweep used n=20 while Route 2 used n=100.
@@ -550,6 +674,10 @@ Uncloned control (ECAPA SIM of the watermarked *source* audio vs. the original):
 0.5384, watermarked + PGD 0.4324. The pipeline preserves identity before cloning; the collapse
 happens inside CosyVoice on the 3-second crop (§6). Mean WER of the clones is 1.43–1.49, so the
 speech itself is not intelligible.
+
+Update 2026-10-09: two further protocols (L10, L25 prompts) failed the cloner-works gate in the
+same way (SIM 0.13, WER about 150%, output fixed near 7.2 s), so the 3 s crop was not the cause.
+See §5.7 and §6.
 
 ---
 ### Two complementary defenses
