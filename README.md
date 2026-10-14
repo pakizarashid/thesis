@@ -7,6 +7,33 @@ adversarial perturbation, and asks whether one system can do both jobs at once: 
 clone of a protected recording unconvincing, and still let the source be traced if a clone
 partly works.
 
+*Updated 2026-10-14. New since 2026-10-09: the H-ENSEMBLE result (§5.11), why the trade-off keeps
+recurring (§5.12), and the pre-registered white-box test that has not been run yet (§5.13). The old
+row codes (1a, 2c, ...) are gone; criteria are now named in words (§5.9).*
+
+---
+
+## Plain-language glossary
+
+Read this first if you are new to the project. Every later section uses these terms.
+
+| Term | Meaning |
+|---|---|
+| **Cloner / cloning tool** | A zero-shot voice-cloning model (F5-TTS, MaskGCT, XTTS-v2, YourTTS, CosyVoice). It takes a short recording of a voice and speaks new text in it. |
+| **Prompt / reference** | The short recording (3 s here) given to the cloner. |
+| **Protected clip** | The audio we would publish: original + hidden 16-bit watermark + small protective noise (perturbation). |
+| **Clone** | What the cloner produces from a protected (or unprotected) clip. |
+| **Strength (epsilon, ε)** | How large the protective noise may be. Default 0.002 (full volume = 1). |
+| **Watermark ACC** | Share of the 16 hidden bits read correctly from the clone. 0.5 = guessing. |
+| **Traced** | Watermark ACC of at least 13/16 bits for that clone. |
+| **Speaker similarity (SIM)** | Score from a speaker-verification model comparing the clone with the true original voice (higher = sounds more like the speaker). Always name the model: ECAPA-TDNN, YourTTS speaker encoder or WavLM-SV. |
+| **Passes as the speaker / ASR** | SIM above 0.25 (ECAPA). ASR (attack success rate) is the share of clones that pass. Lower is better for the defender. |
+| **Attacker wins** | The clone passes as the speaker AND is not traced. |
+| **Cloner-works gate** | A cloner is only meaningful if, on unprotected audio, SIM > 0.30 and WER < 20%. CosyVoice fails it and is excluded. XTTS-v2 fails it on ASR (46% unprotected) and is reported as a weak cloner. |
+| **Audio quality** | PESQ / STOI / SI-SNR of the protected clip against the original. Bars: 1.70 / 0.85 / 0. |
+| **Surrogate** | The small stand-in model (YourTTS speaker encoder) the noise is optimised against, because the strong cloners are too heavy to optimise through. |
+| **Route 2** | Retraining the watermark with a cloning-like step in the training loop (rank-2 LoRA). |
+
 ---
 
 ## 1. Goal and success criteria
@@ -93,7 +120,10 @@ codec. This is the central tension the project measures.
 | Does protection survive tampering? | 9 of 10 post-processing conditions leave attack success at or below the untampered protected baseline. | §5.6 |
 | Do protection and attribution work together on the same clips, across cloners? | Partly. The perturbation lowers speaker similarity on every working cloner. On F5-TTS and MaskGCT the watermark survives (80–94% of protected clones traced) but 60–72% of clones still pass as the speaker. On XTTS-v2 only 29% of the clones that pass as the speaker are traced. | §5.7 |
 | Is the protected audio inaudible? | No. A blind test picked out protected audio 10/10 (loudness matched) and watermark-only audio 8/10. Shaping the noise to sit under speech did not improve protection. | §5.8 |
-| Which success criteria are met? | Quality rows 1a–1d met at ε = 0.002; blind test, protected ASR ≤ 50% (F5-TTS, MaskGCT) and attacker-wins ≤ 10% (MaskGCT, XTTS) not met. | §5.9 |
+| Which success criteria are met? | Audio-quality scores and loudness are met at ε = 0.002. The blind listening test, clones passing ≤ 50% (F5-TTS, MaskGCT) and attacker-wins ≤ 10% (MaskGCT, XTTS-v2) are not met. | §5.9 |
+| Can a second verifier in the noise optimisation break the trade-off? (H-ENSEMBLE, 2026-10-14) | Partly. On clips held out from tuning, clones passing fell 72% → 34% and ECAPA similarity 0.298 → 0.192, with no change in watermark or audio quality. But ECAPA is also the scorer; an independent verifier (WavLM-SV) moved only 0.835 → 0.828 (p = 0.10), and a listener still hears the speaker. | §5.11 |
+| Why does the trade-off keep returning? | Working hypothesis: the noise is tuned against a surrogate (a compressed speaker vector), but F5-TTS copies the prompt spectrogram and has no such vector. Consistent with the data, not proven. | §5.12 |
+| What is the next test? | H-WHITEBOX (pre-registered 2026-10-14, **not yet run**): put F5-TTS's own sampling loop inside the noise optimisation. | §5.13 |
 
 ---
 
@@ -421,26 +451,38 @@ sounds better at equal protection is untested.
 
 ### 5.9 Success-criteria scorecard (thresholds fixed in advance; supervisor confirmation pending)
 
-| Row | Criterion | Target | Measured at ε = 0.002 | Status |
-|---|---|---|---|---|
-| 1a–1c | PESQ / STOI / SI-SNR | ≥ 1.70 / ≥ 0.85 / ≥ 0 | 1.79 / 0.864 / +0.35 dB | met |
-| 1d | loudness change | \|ΔRMS\| ≤ 1 dB | +0.84 dB | met |
-| 1e | blind listening | ≤ 60% correct | 80% (watermark only), 100% (protected) | not met |
-| 2a / 2b / 2c | protected ASR (F5-TTS / MaskGCT / XTTS) | ≤ 50% | 72% / 60% / 17% | missed / missed / met (uninformative: unprotected ASR is already 46%) |
-| 3a / 3b / 3c | attacker wins (F5-TTS / MaskGCT / XTTS) | ≤ 10% | ≈ 3% / 11% / 12% | met / missed by 1 clip / missed by 2 clips |
-| 2d | clone WER gain | ≥ 0.30 | clone WER stays 1–9% | unreachable with this mechanism |
+All values at ε = 0.002, 100 clips, unless stated. Criteria are named in words (the old row codes are retired).
 
-On F5-TTS no ε satisfies the quality rows and ASR ≤ 50% together: ε = 0.002 passes 1a–1d but has
-ASR 69–72%, and ε ≈ 0.008 reaches ASR 44% but fails 1a and 1b (PESQ 1.38, STOI 0.819). Row 1e as
-worded ("inaudible") cannot be met by the current method; whether the criterion should be an
-acceptability test (MOS or ABX with naive listeners) is for the supervisor to decide.
+| Criterion | Target | Measured | Status |
+|---|---|---|---|
+| Audio quality: PESQ / STOI / SI-SNR | ≥ 1.70 / ≥ 0.85 / ≥ 0 | 1.79 / 0.864 / +0.35 dB | met |
+| Loudness change | \|ΔRMS\| ≤ 1 dB | +0.84 dB | met |
+| Blind listening | ≤ 60% correct | 80% (watermark only), 100% (protected) | not met |
+| Clones passing as the speaker: F5-TTS | ≤ 50% | 72% | missed |
+| Clones passing as the speaker: MaskGCT | ≤ 50% | 60% | missed |
+| Clones passing as the speaker: XTTS-v2 | ≤ 50% | 17% | met, but uninformative (unprotected is already 46%) |
+| Attacker wins: F5-TTS | ≤ 10% | ≈ 3% | met |
+| Attacker wins: MaskGCT | ≤ 10% | 11% | missed by 1 clip |
+| Attacker wins: XTTS-v2 | ≤ 10% | 12% | missed by 2 clips |
+| Clone made unintelligible (clone WER gain) | ≥ 0.30 | clone WER stays 1–9% | unreachable with this mechanism |
+
+On F5-TTS no ε satisfies the audio-quality criteria and clones passing ≤ 50% together: ε = 0.002
+passes the quality criteria but has 69–72% of clones passing, and ε ≈ 0.008 reaches 44% but fails
+PESQ and STOI (1.38, 0.819). The blind-listening criterion as worded ("inaudible") cannot be met by the
+current method; whether it should be an acceptability test (MOS or ABX with naive listeners) is for the
+supervisor to decide.
+
+After H-ENSEMBLE (§5.11) the F5-TTS clones-passing figure on held-out clips is 34% (80 clips), but that
+is measured with the same verifier used in the optimisation, so the scorecard above is **not** updated
+to "met" until an independent verifier and listeners agree (§5.13).
 
 ### 5.10 Stage 5 — status
 
 Experiments are finished; per the plan no new experiment starts after 28 October 2026. Open items:
 supervisor sign-off on the thresholds, a larger listening check (20+ clips, naive listeners),
 and the decision between building a stronger or quieter anti-cloning step and reporting these
-limits in the thesis.
+limits in the thesis. (2026-10-14: one further pre-registered attempt, §5.13, runs until the
+28 October hard stop; the hard stop itself is unchanged.)
 
 Supervisor's reading (2026-10): clone-aware training is an improvement, but attack success on
 F5-TTS (70% at ε = 0.002) and MaskGCT (60%, measured in §5.7) is still high, so the most valuable
@@ -448,10 +490,92 @@ remaining work is a way to lessen cloning itself. The perturbation-side counterp
 (making the anti-cloning step generalize across cloners instead of relying on one YourTTS
 surrogate) is the main candidate; it is not implemented yet.
 
+### 5.11 H-ENSEMBLE — a second verifier in the noise optimisation (2026-10-14)
+
+**Question.** The noise is optimised against the YourTTS speaker encoder only. Does adding a
+different verifier (ECAPA-TDNN) to the optimisation loss lower the clone's speaker similarity beyond
+what the surrogate achieved, without hurting the watermark or audio quality?
+
+**Design (pre-registered, `claude/pre-registration-hensemble-2026-09-12.md` and the 2026-10-14 addendum).**
+Four arms on 100 F5-TTS clips: unchanged baseline, clone-aware, ECAPA in the loss, both. Arm selection on clips 0–19 (screen);
+confirmation on clips 20–99 (n = 80) that were never used for tuning. Chosen arm: ECAPA in the loss with
+weight 1 ("Bdirect"). Score: ECAPA SIM against the true original, watermark ACC, ASR (SIM > 0.25), PESQ/STOI/SI-SNR, clone WER.
+
+| Measure | Baseline | ECAPA in loss | Change |
+|---|---:|---:|---|
+| ECAPA SIM, held-out 80 clips | 0.2982 | 0.1919 | −0.1063, 95% CI [0.0858, 0.1275], p = 6.5e-13 |
+| Clones passing (ASR), held-out 80 | 72% | 34% | −38 points |
+| Watermark ACC | 0.955 | 0.953 | no change |
+| Traced / attacker wins | 96% / 2% | 92% / 1% | within noise |
+| PESQ / STOI / SI-SNR (all 100) | 1.79 / 0.864 / +0.35 | 1.78 / 0.862 / +0.35 | no change |
+| Clone WER | 1.50% | 1.62% | no change |
+| All 100 clips: ECAPA SIM / ASR | 0.3113 / 74% | 0.2003 / 35% | consistent |
+
+Screen (clips 0–19): baseline 0.364 / 80%, clone-aware 0.340 / 85%, ECAPA in loss 0.239 / 40%, both 0.274 / 55%.
+
+**Independent check (WavLM-SV, never in the loss).** Held-out clips: 0.8354 → 0.8276, drop +0.0077,
+CI [−0.0033, +0.0186], p = 0.101 (all 100: drop 0.0052, p = 0.13). **Not significant.**
+
+**Is the independent verifier blind?** No. Scale check on this verifier: a genuine clone against its
+own speaker scores 0.8385, against other speakers 0.6565, a gap of 0.182. The 0.005–0.008 drop is
+about 3–4% of that gap, and 56% of clips moved the right way. This is an informative null (little transfer),
+not evidence that the scorer cannot see speaker differences.
+
+**Verdict: PARTIAL.** The gain is large and statistically solid on ECAPA, but **ECAPA is both in the loss and the scorer**,
+so it may reflect fitting to the verifier. Transfer to an independent verifier was small and not significant.
+
+**Listening (informal, one listener, a few clips).** Baseline and ECAPA-in-loss protected clips sound the same, and the clones of
+the ECAPA-in-loss clips still sound like the speaker. This is the observation that most limits the claim:
+the verifier moved, the perceived voice mostly did not.
+
+### 5.12 Why the trade-off keeps returning (working hypothesis)
+
+Across every attempt the same three-way pattern recurs: more anti-cloning costs audio quality and watermark accuracy
+(§5.3, §5.5); shaping the noise (§5.8) and targeting spectral or embedding layers did not escape it; adding a second verifier
+helped that verifier more than an independent one (§5.11).
+
+Hypothesis, stated as such: the limit is **where the loss is computed**, not the noise budget. The noise is tuned against the
+YourTTS speaker encoder, which compresses a voice into one summary vector. F5-TTS has no such speaker encoder; it copies the
+prompt's mel spectrogram into its working context. A perturbation aimed at a summary vector reaches that route only weakly.
+Supporting but not conclusive: the effect is largest on XTTS-v2, the cloner closest to the surrogate (but XTTS-v2 is also a weak cloner, so
+the two explanations are confounded). The perturbation has to live in the waveform; what we can change is which model's output the loss looks at.
+
+Missing cheap check: clone the same protected clips with YourTTS itself. If YourTTS clones are strongly disrupted while F5-TTS clones are not, the limit is a
+transfer gap; if YourTTS is also weakly disrupted, the optimiser is weak. Not yet run.
+
+### 5.13 H-WHITEBOX — F5-TTS inside the optimisation (pre-registered 2026-10-14, NOT YET RUN)
+
+Full pre-registration: `claude/pre-registration-hwhitebox-2026-10-14.md`. Code: `src/eval/f5_whitebox_pgd.py`, `src/eval/gen_whitebox_audio.py`,
+`notebooks/06_hwhitebox_f5_attack.ipynb`. **Status: code written and compile-checked only; no GPU run, so no result exists.**
+
+**Method.** A differentiable re-implementation of F5-TTS's sampling loop (6 Euler steps, classifier-free guidance 2.0, sway −1,
+gradient checkpointing) is placed in the PGD loss. Two arms: *wmel* (push the generated mel for the protected prompt away from the one for the
+unprotected prompt) and *wspk* (push the ECAPA embedding of the generated voice away from the clean utterance). The disruption gradient is rescaled per step
+to a calibrated multiple of the watermark gradient. Safety gates before any number is trusted: a canary and ECAPA-gradient check, parity of the
+re-implementation with F5's own sampler (relative difference < 1e-3), gradient-flow and memory/time check, ratio calibration.
+
+**Selection** on clips 0–19, guarded so the watermark (ACC ≥ baseline − 0.03) and audio quality (PESQ ≥ baseline − 0.10, STOI ≥ baseline − 0.01)
+do not degrade; need ECAPA drop ≥ 0.04 and WavLM-SV drop ≥ 0.02; pick the arm with the larger WavLM drop, otherwise STOP.
+**Confirmation** on clips 20–99.
+
+**Success requires all of:** ECAPA SIM drop ≥ 0.04 (p < 0.05); WavLM-SV drop ≥ 0.25 × the 0.182 gap ≈ 0.045 (p < 0.05); watermark ACC ≥ 0.90 and attacker wins ≤ 10%; PESQ / STOI / SI-SNR bars met; and
+at least 75% of 20+ pooled blind trials pick the unprotected clone as closer to the real speaker. Without the listening result the claim is
+"supported by verifiers; perceptual claim untested". PARTIAL and NULL tiers are defined in the pre-registration.
+
+**Calendar.** 21 Oct: checkpoint; if selection fails, switch to an ensemble of several speaker verifiers in the loss, scored on one verifier outside it
+(a fourth verifier must be named before that run). 28 Oct: hard stop for experiments; no new cloning models.
+
+**Possible outcome the thesis must be ready to report:** a single audio that gives both strong protection and clean quality is not guaranteed; the earlier
+sweeps show a steep trade-off. A measured limit with the evidence above is a valid thesis outcome.
+
 ---
 
 ## 6. Known problems and honest caveats
 
+- **ECAPA is both in the loss and the scorer (H-ENSEMBLE, §5.11).** The 72% → 34% figure is measured with the verifier that was optimised against. The independent
+  verifier (WavLM-SV) moved 0.8354 → 0.8276 (p = 0.101). Do not quote 34% as a protection result without this caveat.
+- **Listening observations are informal.** One listener (the author), a few clips; the H-ENSEMBLE listening note and the earlier blind test are indicative only.
+- **Notebook 06 (white-box) has never been run.** The differentiable F5 sampler is checked only by compile and name checks locally; its gates (sampler parity, odeint method, memory and time of about 35 s per clip) may fail.
 - **CosyVoice 2 is excluded (tried twice, cause unresolved).** With 3 s prompts and with
   longer, whole-utterance prompts (L10, L25) its unprotected clones fail the cloner-works gate in the
   same way: SIM 0.13 (need > 0.30), WER about 150% (need < 20%), output length fixed near 7.2 s,
@@ -503,7 +627,7 @@ surrogate) is the main candidate; it is not implemented yet.
 ## 7. Limitations
 
 - **Zero-shot threat model only.** No fine-tuning-based cloning attack is evaluated.
-- The perturbation is optimized through a single YourTTS surrogate, so transfer varies by cloner. The project does not claim protection against all future systems; attack success is above 50% on several cloners at ε = 0.002.
+- The perturbation is optimized through a single YourTTS surrogate (plus ECAPA in the H-ENSEMBLE arm), so transfer varies by cloner; an independent verifier saw little transfer (§5.11). The project does not claim protection against all future systems; attack success is above 50% on several cloners at ε = 0.002.
 - **No exact VoiceMark & SafeSpeech reproduction.** Published Voicemark & SafeSpeech comparisons differ in corpus/model setup and are reported only as contextual comparisons.
 - **The protected audio is audible.** A blind test by one listener picks out protected audio 10/10 and watermark-only audio 8/10 (§5.8). Objective bars (PESQ/STOI/SI-SNR) were met at ε = 0.002 but do not guarantee inaudibility. No formal subjective test (SMOS/MOS) with naive listeners yet.
 - **Anti-cloning strength is limited.** At ε = 0.002, 72% (F5-TTS) and 60% (MaskGCT) of clones still pass as the speaker; raising ε lowers quality and watermark accuracy (§5.3, §5.5), and shaping the noise did not change this (§5.8).
@@ -512,6 +636,7 @@ surrogate) is the main candidate; it is not implemented yet.
 - No MP3/Opus robustness arm beyond the 10-condition battery above.
 - **Single primary training corpus.** Main development uses LibriSpeech; VCTK is used as an independent evaluation set for Route 2.
 - **Route 2 vs. original epsilon sweep is not a formal paired comparison** because the original non-baseline sweep used n=20 while Route 2 used n=100.
+- **Possible negative outcome.** If H-WHITEBOX (§5.13) fails, the thesis reports a measured limit of combining the two defences rather than a solution.
 - **Future attack scope.** Fine-tuning attacks and additional compression codecs remain outside the current thesis evaluation.
 
 ---
@@ -532,6 +657,9 @@ src/
     carrier_probe.py                      latent-level survival check
     ecapa_sim_eval.py quality_metrics.py  SIM and PESQ/STOI/SI-SNR
     robustness_attacks.py                 post-processing battery
+    f5_whitebox_pgd.py                    differentiable F5-TTS attacker for the noise optimisation (H-WHITEBOX, not yet run)
+    gen_whitebox_audio.py                 generator for the white-box arms (same output layout as composability_gen_protected_audio.py)
+notebooks/ 04 (evaluation, DATASET="ens" supported)  05 (H-ENSEMBLE)  06 (H-WHITEBOX: gates, selection, confirmation, listening pack)
 scripts/   setup_env.sh and small helpers
 results/   one JSON per run (flat; aggregate_results.py reads it non-recursively)
 checkpoints/  LoRA checkpoints (final per run; see §4)
