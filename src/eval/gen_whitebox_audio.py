@@ -60,6 +60,8 @@ def main():
     p.add_argument("--msgproc_lora_r", type=int, default=None)
     p.add_argument("--arm", type=str, choices=["wmel", "wspk", "wens"], default="wspk")
     p.add_argument("--epsilon", type=float, default=0.002)
+    p.add_argument("--shape_alpha", type=float, default=0.0, help="0 = flat L-inf ball (default, unchanged behaviour); 1 = bound follows the signal envelope")
+    p.add_argument("--shape_floor", type=float, default=0.03, help="lowest bound as a fraction of --epsilon (peak bound) when --shape_alpha > 0")
     p.add_argument("--step_size", type=float, default=None)
     p.add_argument("--n_steps", type=int, default=10)
     p.add_argument("--lambda_wm", type=float, default=1.0)
@@ -138,12 +140,14 @@ def main():
         recon_wm, perturbed, _d, diag = wb.whitebox_pgd(
             backbone, f5a, clean, msg, ref_text, args.gen_text, args.epsilon, step_size, args.n_steps, args.arm,
             lambda_wm=args.lambda_wm, dis_to_wm_ratio=args.dis_to_wm_ratio, ecapa_model=ecapa,
-            noise_seed=args.noise_seed_base + i, f5_seed=args.f5_seed_base + i, verbose=args.diagnostic, verifiers=verifiers)
+            noise_seed=args.noise_seed_base + i, f5_seed=args.f5_seed_base + i, verbose=args.diagnostic, verifiers=verifiers,
+            shape_alpha=args.shape_alpha, shape_floor=args.shape_floor)
         acc_u, acc_p = detect_acc(backbone, recon_wm, msg), detect_acc(backbone, perturbed, msg)
         if args.diagnostic:
             print(f"\nPGD time: {time.time() - _t:.1f} s for {args.n_steps} steps  | peak GPU memory {torch.cuda.max_memory_allocated() / 1e9:.1f} GB")
             print(f"\ntranscript: {ref_text!r}\nACC unprotected {acc_u:.4f}  protected {acc_p:.4f}\n"
-                  f"dis_loss first/last: {diag['dis_loss'][0]:.4f} / {diag['dis_loss'][-1]:.4f}   skipped steps: {diag['skipped']}")
+                  f"dis_loss first/last: {diag['dis_loss'][0]:.4f} / {diag['dis_loss'][-1]:.4f}   skipped steps: {diag['skipped']}\n"
+                  f"mean bound {diag['mean_bound']:.6f} (peak {args.epsilon}, shape_alpha {args.shape_alpha})")
             return
         accs_u.append(acc_u); accs_p.append(acc_p); done.append(i)
         _write(args.save_dir, f"sample{i}_reference", clean[0]); _write(args.save_dir, f"sample{i}_unprotected", recon_wm[0])
@@ -160,7 +164,7 @@ def main():
     json.dump(transcripts, open(tpath, "w"), indent=1)
     manifest = {"label": "hwhitebox_audio_gen", "arm": args.arm, "checkpoint": args.checkpoint, "msgproc_lora_r": args.msgproc_lora_r,
                 "pgd": {"epsilon": args.epsilon, "step_size": step_size, "n_steps": args.n_steps, "lambda_wm": args.lambda_wm,
-                        "dis_to_wm_ratio": args.dis_to_wm_ratio, "f5_steps": args.f5_steps, "f5_cfg": args.f5_cfg,
+                        "dis_to_wm_ratio": args.dis_to_wm_ratio, "shape_alpha": args.shape_alpha, "shape_floor": args.shape_floor, "f5_steps": args.f5_steps, "f5_cfg": args.f5_cfg,
                         "noise_seed_base": args.noise_seed_base, "f5_seed_base": args.f5_seed_base, "gen_text": args.gen_text},
                 "completed_indices": done, "n_completed": len(done),
                 "sanity_acc_unprotected_mean": float(np.mean(accs_u)), "sanity_acc_protected_mean": float(np.mean(accs_p))}

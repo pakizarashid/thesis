@@ -173,8 +173,21 @@ def _random_start(like, epsilon, noise_seed):
     return (torch.rand_like(like) * 2 - 1) * epsilon
 
 
+def envelope_bound(ref, epsilon, alpha, floor, win=321):
+    """Per-sample L-inf bound, same shape as `ref` (the fixed watermarked waveform): epsilon * clamp(env^alpha, floor, 1), env = 20 ms RMS envelope / its max.
+    Identical to composability_gen_shaped_audio.envelope_bound (H-BUDGET-SWEEP, notebook 01b variant)."""
+    shape = ref.shape
+    x2 = ref.detach().reshape(1, 1, -1).pow(2)
+    k = torch.ones(1, 1, win, device=ref.device, dtype=ref.dtype) / win
+    env = torch.sqrt(F.conv1d(x2, k, padding=win // 2) + 1e-12)[..., : x2.shape[-1]]
+    env = env / env.max().clamp_min(1e-9)
+    m = env.pow(alpha).clamp(min=floor, max=1.0) if alpha > 0 else torch.ones_like(env)
+    return (epsilon * m).reshape(shape)
+
+
 def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilon, step_size, n_steps, arm,
-                 lambda_wm=1.0, dis_to_wm_ratio=1.0, ecapa_model=None, noise_seed=None, f5_seed=7000, verbose=False, verifiers=None):
+                 lambda_wm=1.0, dis_to_wm_ratio=1.0, ecapa_model=None, noise_seed=None, f5_seed=7000, verbose=False, verifiers=None,
+                 shape_alpha=0.0, shape_floor=0.03):
     """Returns (recon_wm, perturbed_final, delta, diag). arm in {"wmel", "wspk", "wens"}.  wens: mean cosine similarity over several verifiers (list of (name, fn))."""
     from voicemark_losses import compute_ldec
     from safespeech_losses import compute_sim_disruption_loss
@@ -194,8 +207,11 @@ def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilo
         emb_clean = ecapa_embed(ecapa_model, clean_audio, 16000).detach() if arm == "wspk" else None
         embs_clean = [fn(clean_audio, 16000).detach() for _n, fn in verifiers] if arm == "wens" else None
 
-    delta = _random_start(recon_wm, epsilon, noise_seed).detach().requires_grad_(True)
-    diag = {"dis_loss": [], "wm_loss": [], "gn_dis": [], "gn_wm": [], "skipped": 0}
+    shaped = shape_alpha > 0                                                         # H-SHAPED-WENS: time-varying bound that follows the loudness envelope
+    bound = envelope_bound(recon_wm, epsilon, shape_alpha, shape_floor) if shaped else epsilon
+    step_vec = step_size * (bound / epsilon) if shaped else step_size
+    delta = _random_start(recon_wm, bound, noise_seed).detach().requires_grad_(True)
+    diag = {"dis_loss": [], "wm_loss": [], "gn_dis": [], "gn_wm": [], "skipped": 0, "mean_bound": float(bound.mean().item()) if shaped else float(epsilon)}
 
     for step in range(n_steps):
         perturbed = torch.clamp(recon_wm + delta, -1.0, 1.0)
@@ -237,7 +253,10 @@ def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilo
         if step == 0 and gn_dis == 0.0:
             print("  [whitebox] WARNING: zero disruption gradient at step 0 -- the path waveform -> F5 -> loss is broken; do not trust a full run.")
         with torch.no_grad():
-            delta = torch.clamp(delta - step_size * grad.sign(), -epsilon, epsilon)
+            if shaped:
+                delta = torch.max(torch.min(delta - step_vec * grad.sign(), bound), -bound)
+            else:
+                delta = torch.clamp(delta - step_size * grad.sign(), -epsilon, epsilon)
         delta = delta.detach().requires_grad_(True)
 
     with torch.no_grad():
