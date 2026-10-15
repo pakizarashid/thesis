@@ -45,6 +45,8 @@ class Transcriber:
         if self._m is None:
             from faster_whisper import WhisperModel
             self._m = WhisperModel("base.en", device=self.device, compute_type="float16" if self.device == "cuda" else "int8")
+        # Pass the float32 16 kHz array directly: faster-whisper then skips its file decoder (PyAV), which is version-mismatched on this Kaggle image
+        # (TypeError: open() got an unexpected keyword argument 'metadata_errors', 2026-10-14).
         segs, _ = self._m.transcribe(np.asarray(wav_np, dtype=np.float32).reshape(-1), language="en", beam_size=5)
         text = " ".join(s.text for s in segs).strip()
         return text if text else "the quick brown fox jumps over the lazy dog"
@@ -56,7 +58,7 @@ def main():
     p.add_argument("--lora_r", type=int, default=8)
     p.add_argument("--lora_alpha", type=int, default=16)
     p.add_argument("--msgproc_lora_r", type=int, default=None)
-    p.add_argument("--arm", type=str, choices=["wmel", "wspk"], default="wspk")
+    p.add_argument("--arm", type=str, choices=["wmel", "wspk", "wens"], default="wspk")
     p.add_argument("--epsilon", type=float, default=0.002)
     p.add_argument("--step_size", type=float, default=None)
     p.add_argument("--n_steps", type=int, default=10)
@@ -113,7 +115,11 @@ def main():
     from f5_tts.api import F5TTS
     print("[main] loading F5-TTS as the differentiable attacker...")
     f5a = wb.F5Attacker(F5TTS(device=device), steps=args.f5_steps, cfg=args.f5_cfg)
-    ecapa = wb.load_ecapa_differentiable(device) if args.arm == "wspk" else None
+    ecapa = wb.load_ecapa_differentiable(device) if args.arm in ("wspk", "wens") else None
+    verifiers = None
+    if args.arm == "wens":
+        verifiers = wb.make_verifiers(ecapa, wb.load_xvector(device), wb.load_wavlm_sv_differentiable(device))
+        print("[main] in-loop verifiers:", [n for n, _f in verifiers])
     transcribe = Transcriber(device)
     tpath = os.path.join(args.save_dir, "_transcripts.json") if args.save_dir else None
     transcripts = json.load(open(tpath)) if tpath and os.path.exists(tpath) else {}
@@ -132,7 +138,7 @@ def main():
         recon_wm, perturbed, _d, diag = wb.whitebox_pgd(
             backbone, f5a, clean, msg, ref_text, args.gen_text, args.epsilon, step_size, args.n_steps, args.arm,
             lambda_wm=args.lambda_wm, dis_to_wm_ratio=args.dis_to_wm_ratio, ecapa_model=ecapa,
-            noise_seed=args.noise_seed_base + i, f5_seed=args.f5_seed_base + i, verbose=args.diagnostic)
+            noise_seed=args.noise_seed_base + i, f5_seed=args.f5_seed_base + i, verbose=args.diagnostic, verifiers=verifiers)
         acc_u, acc_p = detect_acc(backbone, recon_wm, msg), detect_acc(backbone, perturbed, msg)
         if args.diagnostic:
             print(f"\nPGD time: {time.time() - _t:.1f} s for {args.n_steps} steps  | peak GPU memory {torch.cuda.max_memory_allocated() / 1e9:.1f} GB")

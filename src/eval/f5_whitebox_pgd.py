@@ -41,6 +41,38 @@ def ecapa_embed(model, audio, native_sr):
     return model.encode_batch(audio).squeeze(1)
 
 
+def load_xvector(device):
+    from speechbrain.inference.speaker import EncoderClassifier
+    return EncoderClassifier.from_hparams(source="speechbrain/spkrec-xvect-voxceleb", savedir="pretrained_models/spkrec-xvect-voxceleb",
+                                          run_opts={"device": device})
+
+
+def load_wavlm_sv_differentiable(device):
+    """WavLM-base-plus-sv called WITHOUT no_grad (H-MULTIVERIFIER: in the loss, so it can no longer be the held-out scorer)."""
+    from transformers import WavLMForXVector
+    m = WavLMForXVector.from_pretrained("microsoft/wavlm-base-plus-sv").to(device).eval()
+    for p in m.parameters():
+        p.requires_grad_(False)
+    return m
+
+
+def wavlm_embed(model, audio, native_sr):
+    """Same waveform normalisation as the HF feature extractor ((x - mean) / sqrt(var + 1e-7)), but differentiable. Unit-norm embedding [B, D]."""
+    if audio.dim() == 3:
+        audio = audio.squeeze(1)
+    if native_sr != 16000:
+        audio = torchaudio.functional.resample(audio, native_sr, 16000)
+    x = (audio - audio.mean(-1, keepdim=True)) / torch.sqrt(audio.var(-1, keepdim=True, unbiased=False) + 1e-7)
+    return F.normalize(model(input_values=x.to(torch.float32)).embeddings, dim=-1)
+
+
+def make_verifiers(ecapa, xvec, wavlm):
+    """The three in-loop verifiers of arm wens: list of (name, fn(wave, sample_rate) -> embedding [B, D]). Equal weights, no tuning."""
+    return [("ecapa", lambda a, sr: ecapa_embed(ecapa, a, sr)),
+            ("wavlm", lambda a, sr: wavlm_embed(wavlm, a, sr)),
+            ("xvec", lambda a, sr: ecapa_embed(xvec, a, sr))]
+
+
 class F5Attacker:
     """Differentiable re-implementation of CFM.sample for a single utterance (batch 1)."""
 
@@ -125,6 +157,8 @@ class F5Attacker:
 
     def vocode(self, mel):
         """mel [1, frames, d] -> waveform [1, T] at 24 kHz (Vocos decode, gradient carrying)."""
+        # Vocos.decode is decorated @torch.inference_mode(), so it returns tensors with NO autograd graph (G6 failure 2026-10-14).
+        # Call the same two modules it calls (backbone -> head) outside inference mode.
         feats = mel.permute(0, 2, 1).to(torch.float32)
         if hasattr(self.vocoder, "backbone") and hasattr(self.vocoder, "head"):
             return self.vocoder.head(self.vocoder.backbone(feats))
@@ -140,13 +174,15 @@ def _random_start(like, epsilon, noise_seed):
 
 
 def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilon, step_size, n_steps, arm,
-                 lambda_wm=1.0, dis_to_wm_ratio=1.0, ecapa_model=None, noise_seed=None, f5_seed=7000, verbose=False):
-    """Returns (recon_wm, perturbed_final, delta, diag). arm in {"wmel", "wspk"}."""
+                 lambda_wm=1.0, dis_to_wm_ratio=1.0, ecapa_model=None, noise_seed=None, f5_seed=7000, verbose=False, verifiers=None):
+    """Returns (recon_wm, perturbed_final, delta, diag). arm in {"wmel", "wspk", "wens"}.  wens: mean cosine similarity over several verifiers (list of (name, fn))."""
     from voicemark_losses import compute_ldec
     from safespeech_losses import compute_sim_disruption_loss
-    assert arm in ("wmel", "wspk")
+    assert arm in ("wmel", "wspk", "wens")
     if arm == "wspk":
         assert ecapa_model is not None
+    if arm == "wens":
+        assert verifiers and len(verifiers) >= 2, "arm wens needs the verifier list"
 
     with torch.no_grad():
         recon_wm = backbone.forward_full(clean_audio, message)["recon_wm"].detach()
@@ -156,6 +192,7 @@ def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilo
         n = cond_ref.shape[1]
         y_ref = f5a.generate_mel(cond_ref, text_list, duration, seed=f5_seed)[:, n:] if arm == "wmel" else None
         emb_clean = ecapa_embed(ecapa_model, clean_audio, 16000).detach() if arm == "wspk" else None
+        embs_clean = [fn(clean_audio, 16000).detach() for _n, fn in verifiers] if arm == "wens" else None
 
     delta = _random_start(recon_wm, epsilon, noise_seed).detach().requires_grad_(True)
     diag = {"dis_loss": [], "wm_loss": [], "gn_dis": [], "gn_wm": [], "skipped": 0}
@@ -165,12 +202,19 @@ def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilo
         y_p = f5a.generate_mel(f5a.prompt_mel(perturbed), text_list, duration, seed=f5_seed)[:, n:]
         if arm == "wmel":
             dis_loss = -F.l1_loss(y_p, y_ref)                                        # minimising this MAXIMISES the divergence
-        else:
+        elif arm == "wspk":
             emb = ecapa_embed(ecapa_model, f5a.vocode(y_p), f5a.sr)
             dis_loss = compute_sim_disruption_loss(emb_clean, emb)
+        else:
+            wave = f5a.vocode(y_p)
+            sims = [F.cosine_similarity(ec, fn(wave, f5a.sr)).mean() for ec, (_n, fn) in zip(embs_clean, verifiers)]
+            dis_loss = torch.stack(sims).mean()                                      # mean cosine similarity of the rollout to the clean voice, three verifiers
+            diag.setdefault("parts", []).append({n_: float(v.item()) for (n_, _f), v in zip(verifiers, sims)})
         g_dis = torch.autograd.grad(dis_loss, delta, retain_graph=False, create_graph=False)[0]
         del y_p
 
+        # The first autograd.grad freed the saved buffers of `perturbed` (the clamp node), so the watermark branch needs its own copy of that node
+        # (G7b failure 2026-10-14: "Trying to backward through the graph a second time").
         perturbed = torch.clamp(recon_wm + delta, -1.0, 1.0)
         with torch.backends.cudnn.flags(enabled=False):                              # same cuDNN-RNN workaround as pgd_perturb
             feat = backbone.model.st_model.forward_feature(perturbed)
@@ -188,7 +232,8 @@ def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilo
             continue
         if verbose:
             print(f"  [wb step {step}] {arm} dis_loss={dis_loss.item():.4f} wm_loss={wm_loss.item():.4f} |g_dis|={gn_dis:.3e} |g_wm|={gn_wm:.3e} "
-                  f"(dis:wm raw {gn_dis / max(gn_wm, 1e-12):.2f}) delta_linf={delta.abs().max().item():.6f}")
+                  f"(dis:wm raw {gn_dis / max(gn_wm, 1e-12):.2f}) delta_linf={delta.abs().max().item():.6f}"
+                  + (f" parts={ {k: round(v, 3) for k, v in diag['parts'][-1].items()} }" if arm == "wens" else ""))
         if step == 0 and gn_dis == 0.0:
             print("  [whitebox] WARNING: zero disruption gradient at step 0 -- the path waveform -> F5 -> loss is broken; do not trust a full run.")
         with torch.no_grad():
