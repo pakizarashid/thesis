@@ -77,6 +77,7 @@ def main():
     p.add_argument("--diagnostic", action="store_true")
     p.add_argument("--save_dir", type=str, default=None)
     p.add_argument("--n_utterances", type=int, default=100)
+    p.add_argument("--indices", type=str, default=None, help="comma-separated clip indices to generate (e.g. 0,5,10); overrides --start/--n_utterances; files keep their absolute index")
     p.add_argument("--start", type=int, default=0, help="first clip index to generate (selection run uses 0..19)")
     p.add_argument("--data_root", type=str, default="./data/librispeech")
     p.add_argument("--n_speakers", type=int, default=60)
@@ -127,11 +128,19 @@ def main():
     transcripts = json.load(open(tpath)) if tpath and os.path.exists(tpath) else {}
 
     accs_u, accs_p, done, t0 = [], [], [], time.time()
+    sel = sorted({int(x) for x in args.indices.split(",")}) if args.indices else None
+    first_i, total = (sel[0], len(sel)) if sel else (args.start, args.n_utterances)
     for i, batch in enumerate(loader):
-        if i < args.start:
-            continue
-        if i >= args.start + args.n_utterances:
-            break
+        if sel is not None:
+            if i > sel[-1]:
+                break
+            if i not in sel:
+                continue
+        else:
+            if i < args.start:
+                continue
+            if i >= args.start + args.n_utterances:
+                break
         clean = batch["waveform"].to(device)
         msg = random_message(16, clean.shape[0], device, seed=123 + i)
         ref_text = transcripts.get(str(i)) or transcribe(clean.detach().cpu().reshape(-1).numpy())
@@ -152,11 +161,11 @@ def main():
         accs_u.append(acc_u); accs_p.append(acc_p); done.append(i)
         _write(args.save_dir, f"sample{i}_reference", clean[0]); _write(args.save_dir, f"sample{i}_unprotected", recon_wm[0])
         _write(args.save_dir, f"sample{i}_protected", perturbed[0])
-        if i == args.start and acc_u < 0.85:
+        if i == first_i and acc_u < 0.85:
             raise SystemExit(f"ABORT: acc_unprotected={acc_u:.4f} (expected ~0.99). Check --checkpoint / --msgproc_lora_r.")
         el = time.time() - t0
         print(f"  [{i}] acc_u={acc_u:.4f} acc_p={acc_p:.4f} dis {diag['dis_loss'][0]:.3f}->{diag['dis_loss'][-1]:.3f} skip={diag['skipped']} "
-              f"| {el / len(done):.1f} s/clip, ~{el / len(done) * (args.n_utterances - len(done)) / 60:.0f} min left", flush=True)
+              f"| {el / len(done):.1f} s/clip, ~{el / len(done) * (total - len(done)) / 60:.0f} min left", flush=True)
         if len(done) % 5 == 0:
             json.dump(transcripts, open(tpath, "w"), indent=1)
 
