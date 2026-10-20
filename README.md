@@ -7,9 +7,11 @@ adversarial perturbation, and asks whether one system can do both jobs at once: 
 clone of a protected recording unconvincing, and still let the source be traced if a clone
 partly works.
 
-*Updated 2026-10-14. New since 2026-10-09: the H-ENSEMBLE result (§5.11), why the trade-off keeps
-recurring (§5.12), and the pre-registered white-box test that has not been run yet (§5.13). The old
-row codes (1a, 2c, ...) are gone; criteria are now named in words (§5.9).*
+*Updated : the white-box test was run (§5.13, null on the first screen), then
+a chain of pre-registered follow-ups that did find a small, reproducible effect on a verifier outside the loss
+(§5.14-5.18), human listening tests (§5.19), transfer to MaskGCT, XTTS-v2 and FishSpeech (§5.20), and the
+narrowed claim (§5.21). The claim "Both" (clean to humans AND clone no longer like the speaker) is **not made**.
+Sections 5.1-5.12 are unchanged except where marked "(status 2026-10-20)".*
 
 ---
 
@@ -33,6 +35,10 @@ Read this first if you are new to the project. Every later section uses these te
 | **Audio quality** | PESQ / STOI / SI-SNR of the protected clip against the original. Bars: 1.70 / 0.85 / 0. |
 | **Surrogate** | The small stand-in model (YourTTS speaker encoder) the noise is optimised against, because the strong cloners are too heavy to optimise through. |
 | **Route 2** | Retraining the watermark with a cloning-like step in the training loop (rank-2 LoRA). |
+| **Held-out verifier** | Resemblyzer GE2E: a speaker-verification model that is in no loss and is used only for scoring. ECAPA, WavLM-SV and x-vector were put in the noise optimisation, so their numbers are not evidence of protection. |
+| **dHELD** | Drop in clone-to-speaker Resemblyzer similarity against the flat-noise control A0, paired per clip (one-sided Wilcoxon). The bar is 0.0449 = 25% of the F5 gap 0.1795 (borrowed; the supervisor decides). Run-to-run noise is about ±0.015. Resemblyzer values around 0.6 do **not** mean "same person". |
+| **Arms** | A0 = flat 0.002 noise from the YourTTS surrogate (control). White-box arms use F5-TTS's sampling loop and three verifiers in the loss, noise shaped to the speech envelope, peak 0.015, 40 PGD steps: s40f (alpha 1, floor 0.03), Q2 (alpha 1, floor 0.003), Q3 (alpha 2, floor 0.003, quietest). |
+| **Gate (status 2026-10-20)** | Passed: F5-TTS, MaskGCT. Failed: CosyVoice (twice), XTTS-v2 (ECAPA 0.205, WER 31.9%), FishSpeech v1.5 (ECAPA 0.207, WER 6.0%). Rows of failed cloners are descriptive only. |
 
 ---
 
@@ -121,9 +127,12 @@ codec. This is the central tension the project measures.
 | Do protection and attribution work together on the same clips, across cloners? | Partly. The perturbation lowers speaker similarity on every working cloner. On F5-TTS and MaskGCT the watermark survives (80–94% of protected clones traced) but 60–72% of clones still pass as the speaker. On XTTS-v2 only 29% of the clones that pass as the speaker are traced. | §5.7 |
 | Is the protected audio inaudible? | No. A blind test picked out protected audio 10/10 (loudness matched) and watermark-only audio 8/10. Shaping the noise to sit under speech did not improve protection. | §5.8 |
 | Which success criteria are met? | Audio-quality scores and loudness are met at ε = 0.002. The blind listening test, clones passing ≤ 50% (F5-TTS, MaskGCT) and attacker-wins ≤ 10% (MaskGCT, XTTS-v2) are not met. | §5.9 |
-| Can a second verifier in the noise optimisation break the trade-off? (H-ENSEMBLE, 2026-10-14) | Partly. On clips held out from tuning, clones passing fell 72% → 34% and ECAPA similarity 0.298 → 0.192, with no change in watermark or audio quality. But ECAPA is also the scorer; an independent verifier (WavLM-SV) moved only 0.835 → 0.828 (p = 0.10), and a listener still hears the speaker. | §5.11 |
-| Why does the trade-off keep returning? | Working hypothesis: the noise is tuned against a surrogate (a compressed speaker vector), but F5-TTS copies the prompt spectrogram and has no such vector. Consistent with the data, not proven. | §5.12 |
-| What is the next test? | H-WHITEBOX (pre-registered 2026-10-14, **not yet run**): put F5-TTS's own sampling loop inside the noise optimisation. | §5.13 |
+| Can a second verifier in the noise optimisation break the trade-off? (H-ENSEMBLE, 2026-10-14) | Partly, and only for the verifier in the loss. Clones passing fell 72% → 34% on ECAPA (in the loss); an independent verifier moved 0.835 → 0.828 (p = 0.10). | §5.11 |
+| Why does the trade-off keep returning? (status 2026-10-20) | Not only the surrogate. Reformulating the loss did not help; the budget alone transfers but at PESQ 1.10; a white-box loss helps at equal budget; the noise is verifier-specific. | §5.12-5.16 |
+| Did the white-box test (F5-TTS in the loss) work? | Screen: no (ECAPA in the loss −0.195, independent WavLM-SV −0.004). Follow-ups with more verifiers, shaping and 40 steps: held-out drop +0.033 to +0.048 on 12 new speakers at PESQ ≥ 1.70, 18-27% of the gap, below the 25% bar in the latest session. | §5.13-5.18 |
+| Does it transfer to other cloners? | MaskGCT (gate passed): partial, +0.022 to +0.026, significant, below the bar. XTTS-v2 and FishSpeech fail the gate: descriptive only (+0.013 to +0.030 for Q2/s40f). No arm reaches the bar on any cloner. | §5.20 |
+| Do humans hear it? | Q3 sounds clean (noisiness 1.56 vs 1.25 for watermark-only); Q2 and s40f are rated noisier (≈2.1-2.2). No arm was shown to make the clone audibly less like the speaker (test underpowered). | §5.19 |
+| What is claimed? | A measured trade-off, not "Both": traceable clones on strong cloners plus a small, significant, held-out reduction in clone similarity; the quiet setting is clean but weak, the stronger settings are audible. | §5.21 |
 
 ---
 
@@ -474,21 +483,21 @@ supervisor to decide.
 
 After H-ENSEMBLE (§5.11) the F5-TTS clones-passing figure on held-out clips is 34% (80 clips), but that
 is measured with the same verifier used in the optimisation, so the scorecard above is **not** updated
-to "met" until an independent verifier and listeners agree (§5.13).
+to "met" until an independent verifier and listeners agree. (Status 2026-10-20: the independent verifier and listeners were
+tested later; see §5.14-5.19. "Both" is not met.)
 
-### 5.10 Stage 5 — status
+### 5.10 Stage 5 — status (2026-10-20)
 
-Experiments are finished; per the plan no new experiment starts after 28 October 2026. Open items:
-supervisor sign-off on the thresholds, a larger listening check (20+ clips, naive listeners),
-and the decision between building a stronger or quieter anti-cloning step and reporting these
-limits in the thesis. (2026-10-14: one further pre-registered attempt, §5.13, runs until the
-28 October hard stop; the hard stop itself is unchanged.)
+Experiments end on 28 October 2026 (hard stop; no new cloning model after the single FishSpeech extension, §5.20).
+Open items: supervisor sign-off on the five choices listed in the claim document (effect bar, SI-SNR bar, operating
+point, wording of the target, listening evidence), one more naive listener on the noisiness test, an optional
+robustness check of the quiet setting Q3 (MP3 / resampling / purification), and writing. The claim, evidence and limits are in
+the supervisor document "Dual Defense: claim, evidence and limits" (a Claude Doc in the project) and in §5.21.
 
-Supervisor's reading (2026-10): clone-aware training is an improvement, but attack success on
-F5-TTS (70% at ε = 0.002) and MaskGCT (60%, measured in §5.7) is still high, so the most valuable
-remaining work is a way to lessen cloning itself. The perturbation-side counterpart of Route 2
-(making the anti-cloning step generalize across cloners instead of relying on one YourTTS
-surrogate) is the main candidate; it is not implemented yet.
+Supervisor's reading (2026-10): clone-aware training is an improvement, but attack success on F5-TTS (70% at ε = 0.002)
+and MaskGCT (60%, §5.7) is still high, so the most valuable remaining work is a way to lessen cloning itself.
+Status 2026-10-20: the perturbation-side attempts (§5.13-5.18) lowered held-out clone similarity by a small, significant
+amount but not to the 25% bar at acceptable quality.
 
 ### 5.11 H-ENSEMBLE — a second verifier in the noise optimisation (2026-10-14)
 
@@ -543,30 +552,116 @@ the two explanations are confounded). The perturbation has to live in the wavefo
 Missing cheap check: clone the same protected clips with YourTTS itself. If YourTTS clones are strongly disrupted while F5-TTS clones are not, the limit is a
 transfer gap; if YourTTS is also weakly disrupted, the optimiser is weak. Not yet run.
 
-### 5.13 H-WHITEBOX — F5-TTS inside the optimisation (pre-registered 2026-10-14, NOT YET RUN)
+**Status 2026-10-20.** The hypothesis was tested and is only partly supported (§5.13-5.16). Replacing the surrogate by F5-TTS's own
+sampling loop made the noise strongly effective against the verifiers in the loss but barely against verifiers outside it, so
+verifier-specific adversarial vulnerability looks like a limit alongside the surrogate. The noise budget is also a lever: a flat
+noise at 15× the default transfers, but at PESQ 1.10 and with the watermark broken.
 
-Full pre-registration: `claude/pre-registration-hwhitebox-2026-10-14.md`. Code: `src/eval/f5_whitebox_pgd.py`, `src/eval/gen_whitebox_audio.py`,
-`notebooks/06_hwhitebox_f5_attack.ipynb`. **Status: code written and compile-checked only; no GPU run, so no result exists.**
+### 5.13 H-WHITEBOX — F5-TTS inside the optimisation (run 2026-10-14; screen NULL)
 
-**Method.** A differentiable re-implementation of F5-TTS's sampling loop (6 Euler steps, classifier-free guidance 2.0, sway −1,
-gradient checkpointing) is placed in the PGD loss. Two arms: *wmel* (push the generated mel for the protected prompt away from the one for the
-unprotected prompt) and *wspk* (push the ECAPA embedding of the generated voice away from the clean utterance). The disruption gradient is rescaled per step
-to a calibrated multiple of the watermark gradient. Safety gates before any number is trusted: a canary and ECAPA-gradient check, parity of the
-re-implementation with F5's own sampler (relative difference < 1e-3), gradient-flow and memory/time check, ratio calibration.
+Pre-registration `claude/pre-registration-hwhitebox-2026-10-14.md`; result `claude/hwhitebox-screen-result-2026-10-14.md`; notebook
+`06_hwhitebox_f5_attack.ipynb`. A differentiable re-implementation of F5-TTS's sampling loop (6 Euler steps, guidance 2.0) is placed in the PGD
+loss. All gates passed after three code fixes (sampler parity with F5's own sampler: relative difference 0; gradient reaches the waveform; 16 s per clip
+for 10 steps). Screen on clips 0-19 (n = 20):
 
-**Selection** on clips 0–19, guarded so the watermark (ACC ≥ baseline − 0.03) and audio quality (PESQ ≥ baseline − 0.10, STOI ≥ baseline − 0.01)
-do not degrade; need ECAPA drop ≥ 0.04 and WavLM-SV drop ≥ 0.02; pick the arm with the larger WavLM drop, otherwise STOP.
-**Confirmation** on clips 20–99.
+| arm | clone ACC | ECAPA SIM | ASR | PESQ | STOI | drop ECAPA (in loss) | drop WavLM-SV (outside) | result |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| A0 (YourTTS surrogate) | 0.963 | 0.337 | 90% | 1.83 | 0.884 | | | |
+| wmel (push generated mel away) | 0.891 | 0.310 | 65% | 1.81 | 0.880 | +0.027 | −0.004 | watermark guard failed |
+| wspk (push generated ECAPA voice away) | 0.959 | 0.142 | 20% | 1.82 | 0.883 | +0.195 | −0.004 | STOP |
 
-**Success requires all of:** ECAPA SIM drop ≥ 0.04 (p < 0.05); WavLM-SV drop ≥ 0.25 × the 0.182 gap ≈ 0.045 (p < 0.05); watermark ACC ≥ 0.90 and attacker wins ≤ 10%; PESQ / STOI / SI-SNR bars met; and
-at least 75% of 20+ pooled blind trials pick the unprotected clone as closer to the real speaker. Without the listening result the claim is
-"supported by verifiers; perceptual claim untested". PARTIAL and NULL tiers are defined in the pre-registration.
+The rule required a drop of at least 0.04 on ECAPA **and** 0.02 on the independent WavLM-SV, so both arms stop. wspk gave the largest ECAPA drop in the
+project but the independent verifier did not move: the noise exploits the verifier in the loss, not the perceived voice. ECAPA is both loss and scorer,
+so the 20% figure must not be quoted as protection. Putting the real cloner in the loss did transfer for ECAPA to clones made with 32 steps and other
+seeds. Cloner sampling noise on n = 20 is about 0.03 ECAPA SIM, which is why small drops are not read.
 
-**Calendar.** 21 Oct: checkpoint; if selection fails, switch to an ensemble of several speaker verifiers in the loss, scored on one verifier outside it
-(a fourth verifier must be named before that run). 28 Oct: hard stop for experiments; no new cloning models.
+### 5.14 H-MULTIVERIFIER — three verifiers in the loss (run 2026-10-15; screen NULL)
 
-**Possible outcome the thesis must be ready to report:** a single audio that gives both strong protection and clean quality is not guaranteed; the earlier
-sweeps show a steep trade-off. A measured limit with the evidence above is a valid thesis outcome.
+`claude/hmultiverifier-screen-result-2026-10-15.md`. Arm wens: mean similarity of the F5 rollout to the clean voice over ECAPA, WavLM-SV and x-vector in the
+loss, ε = 0.002, 10 steps. Held-out verifier: Resemblyzer (in no loss). Screen n = 20: held-out drop **+0.018** (rule: continue if ≥ 0.02), ECAPA −0.138 and
+WavLM-SV −0.039 (both in the loss), quality and watermark unchanged (PESQ 1.82, traced 100%). STOP, no rerun. Same pattern as before: large drops on verifiers in the loss, a small drop outside it.
+
+### 5.15 The held-out verifier and the bar
+
+Resemblyzer GE2E is installed with one pip command and is in no loss. Sanity (clips 0-19): real recordings of the same speaker 0.772, of different speakers
+0.510; A0 clones against their own speaker 0.6609, against other speakers 0.4814, a gap of **0.1795**. The success bar was fixed in advance as 25% of that
+gap, **0.0449**; it is borrowed from this one cloner and the supervisor may set another. A held-out drop varies by about ±0.015 between sessions on the same audio
+(flat wens 0.006 measured +0.050 in one session and +0.035 in the next), so any call within 0.015 of the bar is "at the bar", not "above". Scale warning: Resemblyzer
+values near 0.6 are not "same person" (F5 unprotected clones ≈ 0.65, rated 2.6 of 5 by a listener who knew the voices).
+
+### 5.16 H-BUDGET and H-BUDGET-SWEEP — is it the loss or the budget?
+
+`claude/hbudget-result-2026-10-15.md`, `claude/hbudget-sweep-result-partial-2026-10-16.md` (notebooks 08, 09). n = 20 and n = 40.
+
+| arm | ε (peak) | clone ACC | traced | PESQ | STOI | held-out drop vs A0 |
+|---|---:|---:|---:|---:|---:|---:|
+| A0 (YourTTS) | 0.031 | 0.728 | 35% | 1.11 | 0.740 | +0.079 (p 0.001) |
+| wens (white-box) | 0.031 | 0.719 | 35% | 1.10 | 0.737 | +0.139 |
+| wens flat | 0.006 | 0.919 | 90% | 1.50 | 0.840 | +0.050 / +0.035 (two sessions) |
+| wens flat | 0.012 | 0.853 | 70% | 1.27 | 0.801 | +0.082 |
+| wens flat | 0.018 | 0.827 | 60% | 1.17 | 0.773 | +0.115 |
+| wens at default | 0.002 | 0.966 | 95% | 1.82 | 0.882 | +0.036 (n = 20) |
+
+Findings: at SafeSpeech-like budgets the budget alone transfers (even the YourTTS surrogate drops the held-out similarity by 0.079) but PESQ is 1.10, the watermark is broken
+(traced 35%) and the audio is far below the quality bars; SafeSpeech's good F5-TTS numbers are bought with about 15× the default budget. At equal ε, which means equal PESQ, the white-box
+loss lowers the held-out similarity more than the YourTTS surrogate (paired, same session: +0.044 at 0.006, +0.057 at 0.012, +0.075 at 0.018, p < 0.001). Shaped noise on the YourTTS surrogate
+does nothing on the held-out verifier (+0.004, +0.006). No arm reached the bar and the quality bars together.
+
+### 5.17 Shaped white-box noise, more PGD steps, and quiet variants (notebooks 10, 13, 14, 15)
+
+- **H-SHAPED-WENS** (`claude/hshapedwens-result-2026-10-16.md`, n = 40): the white-box noise shaped to the speech envelope at peak 0.015 gives the same held-out drop as flat 0.006 (+0.034 vs +0.035) at PESQ 1.71 vs 1.50 and a pause-frame SNR of +10.8 dB vs −11.4 dB. Shaping buys quality at equal effect, not extra protection.
+- **H-STEPS** (`claude/hsteps-result-2026-10-16.md`, n = 40): 40 PGD steps at a smaller step size (s40f) gain +0.021 held-out over 10 steps (p 0.012); s40f +0.046 at PESQ 1.73, clone ACC 0.928. "At the bar", not above it; a prediction (steps gain < 0.02) was missed.
+- **H-CONFIRM** (`claude/hconfirm-result-2026-10-18.md`, notebook 14, 12 new speakers, n = 60): s40f +0.048 [+0.036, +0.060] at PESQ 1.70, STOI 0.854, ACC 0.918; verdict PARTIAL because the SI-SNR bar fails (−0.56 dB). The watermark alone scores −0.53 dB on these speakers (`claude/hconfirm-quality-attribution-2026-10-18.md`), so the failure is inherited from the watermark, not caused by the noise. The noise costs PESQ about −0.33 against watermark-only audio.
+- **H-QUIET** (`claude/hquiet-result-2026-10-18.md`, notebook 15, n = 40): lowering the noise in the pauses (floor 0.03 → 0.003, Q2) kept the effect (+0.048, pause SNR 22 dB, PESQ 1.76); lowering the noise in speech as well (alpha 2, Q3) gave a clean arm with a smaller effect (+0.030, PESQ 1.98). The effect lives in the speech frames.
+- **H-BAND** (`claude/hband-result-2026-10-18.md`): low-passing the noise at 4 kHz kept 83% of the effect for Q2 (+0.039) and 74% for Q3 (inconclusive); a post-hoc filter on the development clips, not confirmed.
+
+### 5.18 H-QUIET-CONFIRM — Q2 and Q3 on new speakers (notebook 16, 2026-10-19)
+
+`claude/hquiet-confirm-result-2026-10-19.md`. Clips 40-99, 12 speakers never used to choose the arms, n = 60, everything generated and scored in one session.
+
+| arm | clone ACC | traced | PESQ | STOI | SI-SNR | held-out drop | p | 95% CI | share of gap |
+|---|---:|---:|---:|---:|---:|---:|---:|---|---:|
+| A0 (control) | 0.948 | 93% | 1.75 | 0.858 | −0.53 | 0 | | | |
+| Q3 | 0.953 | 97% | 1.90 | 0.868 | −0.54 | +0.012 | 0.098 | [−0.002, +0.026] | 7% |
+| Q2 | 0.908 | 85% | 1.72 | 0.855 | −0.56 | +0.033 | <0.001 | [+0.016, +0.050] | 18% |
+| s40f | 0.896 | 83% | 1.70 | 0.855 | −0.56 | +0.034 | <0.001 | [+0.021, +0.048] | 19% |
+
+Verdicts: Q2 PARTIAL ("at the bar": CI lower end below 0.0449); Q3 NOT CONFIRMED (effect not distinguishable from zero on new speakers; its development value of +0.030 shrank by about two thirds). Missed predictions are in the result document. The two sessions measured s40f at +0.048 and +0.034 on the same clips, which is the session noise.
+
+### 5.19 Human listening (notebooks 10, 11, 14, 16)
+
+`claude/hquiet-confirm-listening-pooled-2026-10-19.md` (two listeners, the author and one who did not build the system; 8 clips from the new speakers).
+
+| condition | noisiness (1 clean - 5 degraded) | clone similarity (1 different - 5 same) |
+|---|---:|---:|
+| original / real same speaker | 1.19 | 3.69 |
+| real different speaker | | 1.19 |
+| watermark only / unprotected clone | 1.25 | 2.56 |
+| Q3 | 1.56 | 2.38 |
+| Q2 | 2.12 | 1.88 |
+| s40f | 2.19 | 2.06 |
+
+Human-clean bar (pooled ≤ 2.0 and not significantly noisier than watermark-only): **Q3 met; Q2 and s40f not met** (p 0.016). Audible-protection bar (unprotected minus protected ≥ 0.5, p < 0.05): **not met by any arm**; the test cannot detect an effect of the size measured (the machine effect of Q2 scales to about 0.25 points). Earlier tests: the protected audio of the original setting was picked out 10/10 (§5.8). The listeners agree only moderately (Spearman 0.44 noisiness, 0.57 similarity).
+
+### 5.20 Transfer to other cloners (notebooks 12, 17, 18; same 60 clips)
+
+`claude/htransfer-quiet-maskgct-result-2026-10-19.md`, `claude/htransfer-quiet-xtts-result-2026-10-19.md`, `claude/htransfer-quiet-fishspeech-result-2026-10-20.md`; pre-registrations alongside. Held-out drop against A0 (paired), gate in the last column.
+
+| arm | F5-TTS | MaskGCT | XTTS-v2 | FishSpeech v1.5 | traced in clone, F5 / MaskGCT / XTTS / Fish |
+|---|---:|---:|---:|---:|---|
+| Q3 | +0.012 | +0.026 (p < 0.001) | −0.005 | +0.008 | 97% / 95% / 22% / 40% |
+| Q2 | +0.033 | +0.022 (p 0.002) | +0.013 | +0.030 | 85% / 82% / 12% / 25% |
+| s40f | +0.034 | +0.024 (p 0.001) | +0.023 | +0.030 | 83% / 82% / 13% / 28% |
+| gate | pass | pass (ECAPA 0.303, thin) | **fail** (0.205, WER 31.9%) | **fail** (0.207, WER 6.0%) | |
+
+- MaskGCT: valid transfer test; every arm is PARTIAL (significant, below the 0.0449 bar). Q3 keeps the watermark almost intact (clone ACC 0.954) while still lowering the held-out similarity by 0.026.
+- XTTS-v2 and FishSpeech fail the cloner-works gate (weak attackers by ECAPA), and both strip most of the watermark even without protection (traced 25% and 45% unprotected). Their rows are descriptive only and the word "transfer" is not used for them.
+- FishSpeech was added late, on the author's request: the "no new cloners" rule was lifted for this one model, with a time-box and a stop rule (pre-registered before the run); no further cloner will be added. Integration: FishSpeech v1.5 ran as a local server in its own environment and was called over HTTP. CosyVoice stays excluded (§6).
+- Across four cloners Q2 and s40f lower held-out similarity by 0.02-0.03 (a consistent descriptive pattern); Q3 by less. None reaches the bar.
+
+### 5.21 The claim, narrowed (2026-10-20)
+
+What can be claimed: (1) the watermark makes clones of strong cloners (F5-TTS, MaskGCT) traceable (82-97% of clones traced with the chosen settings); (2) the shaped white-box anti-cloning noise lowers the held-out clone similarity by +0.03 to +0.05 on speakers not used to choose it, a small, statistically solid effect at PESQ ≥ 1.70 on a verifier in no loss, 18-27% of the unprotected F5 gap; (3) the quiet setting Q3 sounds clean to two listeners but has no detectable effect on F5-TTS in the latest session; the settings with a larger effect are rated noisier. What is not claimed: "Both"; inaudibility; that the clone sounds like another person (not shown by listeners); protection against cloners not tested or that fail the gate; the borrowed bar as a principled threshold. The five choices that need the supervisor's decision are in the claim document.
 
 ---
 
@@ -575,7 +670,11 @@ sweeps show a steep trade-off. A measured limit with the evidence above is a val
 - **ECAPA is both in the loss and the scorer (H-ENSEMBLE, §5.11).** The 72% → 34% figure is measured with the verifier that was optimised against. The independent
   verifier (WavLM-SV) moved 0.8354 → 0.8276 (p = 0.101). Do not quote 34% as a protection result without this caveat.
 - **Listening observations are informal.** One listener (the author), a few clips; the H-ENSEMBLE listening note and the earlier blind test are indicative only.
-- **Notebook 06 (white-box) has never been run.** The differentiable F5 sampler is checked only by compile and name checks locally; its gates (sampler parity, odeint method, memory and time of about 35 s per clip) may fail.
+- **Notebooks 06-18 have been run (status 2026-10-20).** The white-box code is validated by sampler parity and gradient gates (§5.13). Earlier notebook-06 doubts no longer apply; the remaining code risk is session-to-session noise (about ±0.015 on a held-out drop) and cloner sampling noise (≈ 0.03 ECAPA SIM on n = 20).
+- **Several results use verifiers that are in the loss.** ECAPA, WavLM-SV and x-vector are in the white-box loss, so their numbers (including every ECAPA ASR of the F5-trained arms) are not evidence of protection; only the Resemblyzer drop is, and it is a relative measure (§5.15).
+- **Skipped PGD steps.** Non-finite gradients can skip steps and leave a clip effectively unprotected (e.g. Q3 clip 6 lost 38 of 40 steps in notebook 15); skips are reported and a sensitivity row excludes clips with more than 10.
+- **Two cloners fail the gate in the final transfer set** (XTTS-v2, FishSpeech); CosyVoice failed it earlier. Their rows are descriptive.
+- **A stale-session trap.** A result JSON pulled from git does not mean the clone WAVs exist in a fresh Kaggle session; notebooks now re-clone or assert the number of pairs.
 - **CosyVoice 2 is excluded (tried twice, cause unresolved).** With 3 s prompts and with
   longer, whole-utterance prompts (L10, L25) its unprotected clones fail the cloner-works gate in the
   same way: SIM 0.13 (need > 0.30), WER about 150% (need < 20%), output length fixed near 7.2 s,
@@ -636,7 +735,9 @@ sweeps show a steep trade-off. A measured limit with the evidence above is a val
 - No MP3/Opus robustness arm beyond the 10-condition battery above.
 - **Single primary training corpus.** Main development uses LibriSpeech; VCTK is used as an independent evaluation set for Route 2.
 - **Route 2 vs. original epsilon sweep is not a formal paired comparison** because the original non-baseline sweep used n=20 while Route 2 used n=100.
-- **Possible negative outcome.** If H-WHITEBOX (§5.13) fails, the thesis reports a measured limit of combining the two defences rather than a solution.
+- **Outcome (status 2026-10-20).** The white-box programme produced a small, significant effect but did not reach the 25% bar at the quality bars, and the settings with the larger effect are audible. The thesis reports this as a measured limit of combining the two defences (§5.21), not as a solution.
+- **Human evidence is thin.** Two listeners (one the author), 8 clips; the clone-similarity test is underpowered for the effect size measured.
+- **Bars are ours.** The effect bar (0.0449), the SI-SNR bar (absolute vs relative to watermark-only) and the human-clean bar are the project's choices and need the supervisor's sign-off.
 - **Future attack scope.** Fine-tuning attacks and additional compression codecs remain outside the current thesis evaluation.
 
 ---
@@ -659,7 +760,10 @@ src/
     robustness_attacks.py                 post-processing battery
     f5_whitebox_pgd.py                    differentiable F5-TTS attacker for the noise optimisation (H-WHITEBOX, not yet run)
     gen_whitebox_audio.py                 generator for the white-box arms (same output layout as composability_gen_protected_audio.py)
-notebooks/ 04 (evaluation, DATASET="ens" supported)  05 (H-ENSEMBLE)  06 (H-WHITEBOX: gates, selection, confirmation, listening pack)
+notebooks/ 04 (evaluation, DATASET="ens" supported)  05 (H-ENSEMBLE)  06 (H-WHITEBOX)  07 (H-MULTIVERIFIER)  08-09 (H-BUDGET, sweep)  10 (shaped white-box)
+           11 (clone listening)  12 (transfer, earlier arms)  13 (H-STEPS)  14 (H-CONFIRM)  15 (H-QUIET, H-BAND)  16 (H-QUIET-CONFIRM)
+           17 (transfer of the final arms: MaskGCT, XTTS-v2)  18 (transfer: FishSpeech v1.5, served from its own environment)
+patches/   ... apply_xtts_backend_patch.py, apply_fishspeech_backend_patch.py (add --cloner xtts / fishspeech to cloner_watermark_eval.py)
 scripts/   setup_env.sh and small helpers
 results/   one JSON per run (flat; aggregate_results.py reads it non-recursively)
 checkpoints/  LoRA checkpoints (final per run; see §4)
@@ -806,229 +910,3 @@ speech itself is not intelligible.
 Update 2026-10-09: two further protocols (L10, L25 prompts) failed the cloner-works gate in the
 same way (SIM 0.13, WER about 150%, output fixed near 7.2 s), so the 3 s crop was not the cause.
 See §5.7 and §6.
-
----
-### Two complementary defenses
-
-```text
-Protected speech
-      │
-      ├── Watermark  →  trace / attribute the source
-      │
-      └── Perturbation →  disrupt cloning and reduce usable speaker information
-                               │
-                               ↓
-                         Zero-shot TTS
-                               │
-                    ┌──────────┴──────────┐
-                    ↓                     ↓
-              lower speaker SIM       watermark survives
-                    ↓                     ↓
-             harder impersonation      traceability
-```
-
-| Objective | Main metric | Desired direction |
-|---|---|---:|
-| Destroy speaker identity | ECAPA-TDNN SIM | ↓ |
-| Reduce clone usability | WER / ASR | WER ↑ / ASR ↓ |
-| Preserve traceability | Watermark ACC | ↑ |
-| Preserve protected-source quality | PESQ / STOI / SI-SNR | ↑ |
-
----
-
-### Notes
-
-This project have:
-- **Reproduction:** same published setup where feasible.
-- **Independent evaluation:** controlled experiments using this project's datasets, samples, or additional TTS architectures.
-- **Our contribution:** comparisons made under the same conditions between our baseline and our proposed modification.
-
-> The work below is a five-stage progression.
-
-# Research contributions
-
-| Contribution | Evidence |
-|---|---|
-| **1. Architecture-dependent watermark survival** | VoiceMark attribution varies strongly across five zero-shot TTS systems; CARRIER-PROBE supports the same trend in the watermark-bearing latent. |
-| **2. Clone-aware watermark adaptation** | Jointly training VoiceMark `msg_processor` + detector with a differentiable YourTTS clone improves attribution across multiple unseen cloners. |
-| **3. Transferable anti-cloning perturbation** | Waveform PGD trained with YourTTS transfers to unseen XTTS-v2, F5-TTS and MaskGCT under tested conditions. |
-| **4. Dual-defense composability** | Route 2 watermark + PGD simultaneously reduces speaker similarity while retaining meaningful watermark detection on multiple architectures. |
-| **5. Trade-off characterization** | Epsilon sweep and robustness attacks quantify protection, attribution, intelligibility, and quality interactions. |
-
-**LoRA is an implementation choice, not the claimed novelty.** The contribution is the **clone-aware adaptation strategy**.
-
----
-
----
-# Research progression
-
-## Stage 1 — Watermark 
-
----
-
-## Stage 2 — Anti-cloning protection
-
-### Mechanism
-The main anti-cloning is **waveform-domain PGD**. 
-```text
-watermarked waveform + bounded δ → protected waveform → zero-shot TTS → clone
-```
-The perturbation is optimized through a differentiable **YourTTS surrogate**; the other TTS systems are black-box evaluation targets.
-
----
-
-## Stage 3 — Epsilon sweep
-
-The surrogate's own architecture keeps working throughout; it's specifically the transfer to F5-TTS that's in question.
-
-| ε     | ourTTS WM ACC ↑ | After DEMUCS | 
-|---:   |---:    |---:    |
-| 0.002 | 0.94   | 0.91 | 
-| 0.08  | 0.99   | 0.62 | 
-
-### Finding
-Two later attempts to fix this by reformulating the PGD objective (H-SPEC, H-DIRECT) came back null/adverse and are closed.
-
-### Reformulation attempts
-
-| Attempt | Result |
-|---|---|
-| H-SPEC: SafeSpeech-style KL/L1 terms through surrogate clone | **Null / adverse** |
-| H-DIRECT: KL/L1 directly on perturbed input mel | **Null / adverse** |
-| Simple RVQ layer reweighting | **Null** |
-
-These closed the simple **loss-reformulation / inference-time carrier-eweighting** paths.
-
----
-
-## Stage 4 — Clone-aware watermark adaptation 
-
-### 1) Detector-only baseline (control)
-
-> Held-out XTTS, n=100, 20 epochs, λ_clone = 1.0:
-
-|                                                      | WM ACC ↑ | SIM ↓ |
-| ---------------------------------------------------- | ------ | ------ |
-| Untrained (zero LoRA training)                       | 0.5537 | 0.4900 |
-| Detector-only trained                                | 0.6031 | 0.4908 |
-
-Training only the detector's LoRA adapters (msg_processor frozen) alone gives a real, if modest, attribution gain @ 20 epochs
-Paired significance (same 100 utterances, matched ordering): ACC p = 0.0031 (t), p = 0.0050 (Wilcoxon)
-
-### 2) Joint encoder + detector training
-
-> Same setup, but msg_processor's LoRA adapters are unfrozen too (`--train_msg_processor`), 20 epochs, λ_clone = 1.0:
-
-| Condition         | WM ACC ↑   | SIM ↓  | PESQ ↑ | STOI ↑ | SI-SNR ↑ |
-|-------------------|-----------:|-------:|------:|------:|--------:|
-| Detector-only     | 0.6031     | 0.4908 | —     | —     | —       |
-| + `msg_processor` | **0.6913** | 0.3939 | 1.963 | 0.888 | 3.10 dB |
-
-PESQ is lower than this project's own untouched-embedder checkpoints. The gain and the cost are the same phenomenon: touching msg_processor's LoRA changes what the watermarked audio sounds like, which is exactly what both the attribution improvement and the quality/SIM cost trace back to.
-
-### Chasing the quality/SIM cost: three independent nulls
-
-Three separate levers were tried against the PESQ/SIM cost, each testing a different hypothesis for what was driving it:
-
-**Conclusion:** the observed quality cost appears associated with adapting `msg_processor` itself rather than training duration, clone-loss weight, or LoRA capacity among the tested settings.
-
-
-### Rank-2 efficiency
-
-> **Bonus finding from the rank sweep:** `--msgproc_lora_r 2` — trained from LoRA zero-init (no Stage-1 warm start, since a rank-2 adapter can't reuse rank-8 weights)
-
-| Metric | Rank 8 | Rank 2 |
-|---|---:|---:|
-| XTTS ACC, n=100 | 0.69–0.71 | **0.7288** |
-| Trainable parameters | 295K | **221K** |
-| Relative parameter count | 100% | **~75%** |
-| ACC vs rank-8 | — | not significant, p = 0.205 |
-| SIM vs rank-8 | — | not significant, p = 0.438 |
-
-Rank 2 is the preferred checkpoint for final evaluation because it is smaller and statistically equivalent to rank 8 in tested comparisons.
-
-
-### 3) Generalization: 
-> **Cross-Dataset and Cross-Cloner architecture**
-
-n=100, rank= 2
-| Evaluation| Detector-only | Joint Route 2 | Change |
-|-----------|-------:|----------------:|------------:|
-| VCTK(Dataset) | 0.6169 | 0.6913 / 0.7006 | +0.0837 |
-| CosyVoice | 0.7669 | 0.8801          | +0.1132 |
-| F5-TTS    | 0.9300 | 0.9881          | +0.0581 |
-| MaskGCT   | 0.9138 | 0.9594 / 0.9481 | +0.0456 |
-
-The Route 2 gain therefore transfers beyond the YourTTS training loop to multiple zero-shot TTS architectures.
-
->Detail
-
-**VCTK (fully speaker-disjoint from the LibriSpeech training data), cloned through XTTS-v2 as the held-out cloner¹, unprotected:**
-
-| Checkpoint                         | ACC ↑  | SIM ↓ | 
-| ----------------------------------- | ------ | ------ |
-| detector-only                      | 0.6169 | 0.5317 |
-| + msg\_processor (rank 8, epoch 9) | 0.6913 | 0.4475 |
-| + msg\_processor (rank 2)          | 0.7006 | 0.4457 |
-
-*¹ Inferred: the rank-8 row's ACC (0.6913) is an exact match to the "Held-out XTTS, n=100" result in the Joint encoder + detector training section above. Not independently confirmed in the underlying run logs — verify before stating this explicitly if asked.*
-
-a) **Cross-cloner (XTTS):**
-| Checkpoint        | ↑ ACC on XTTS clone |
-|-------------------|---------------------|
-| Rank 8 (epoch 9)  |	                — |	         
-| Rank 2	        | 0.7288              |	               
-
-b) **Cross-cloner (F5-TTS), the msg_processor checkpoints only:**
-
-| Checkpoint          |  ↑ ACC on F5-TTS clone |
-| ------------------- | -------------------- |
-| Rank 8 (epoch 9)    | 0.9875               |
-| Rank 2              | 0.9881               |
-| VoiceMark published | **0.979**            |
-
-c) **Cross-cloner (MaskGCT):**
-
-| Checkpoint            | ↑ ACC on MaskGCT clone |
-|---------------------------------------|--------|
-| pretrained VoiceMark (zero-init LoRA) | 0.9138 |
-| rank 2 (Route 2)                      | 0.9594 |
-| VoiceMark published                   | 0.957  |
-
-> Both checkpoints land at or slightly above VoiceMark's own published number, and lands with F5-TTS at the high-bandwidth end of the conditioning ladder. 
-
-d) **Cross-cloner (CosyVoice)**
-> n=98/100 — 2 utterances skipped when CosyVoice's own text normalizer crashed on an unusual whisper transcript, the rank-2 checkpoint:
-
-| Checkpoint          | ↑ ACC on CosyVoice clone |
-|---------------------------------------|--------|
-| pretrained VoiceMark (zero-init LoRA) | 0.7669 |
-| Rank 2 (Route 2)                      | 0.8801 |
-| VoiceMark published                   | 0.964  |
-
-> Still below VoiceMark's own published 0.964, landing in the "gradient, not two clusters" middle of the conditioning-bandwidth ladder rather than at the high-bandwidth end with F5-TTS.
-
-**CosyVoice cross-cloner validation is not treated as reliable:** 
-
-(see the Composability section below for why: the underlying clone audio shows signs of not being genuine cloned speech for a large fraction of samples, so this ACC number is reported for completeness but should not be read as validated watermark survival through real CosyVoice cloning).
-
----
-
-# Final dual-defense evidence
-
-The current strongest evidence is that watermark attribution and anti-cloning protection can operate together rather than one automatically destroying the other.
-
-| TTS | WM ACC before → after PGD | Speaker/clone result | Interpretation |
-|---|---:|---:|---|
-| XTTS-v2 | 0.7244 → **0.6631** | SIM 0.3996 → **0.3032** | Both mechanisms survive; ACC cost is significant |
-| F5-TTS | 0.9844 → **0.9450** | ASR 87% → **72%** | Both mechanisms survive; protection transfers |
-| MaskGCT | 0.9481 → **0.8794** | ASR 71% → **51%** | Both mechanisms survive; protection transfers |
-| CosyVoice | Excluded | Unreliable clone control | Protocol limitation, not a defense finding |
-
-### Final interpretation
-
-> **The proposed dual-defense system can make zero-shot voice cloning harder while retaining watermark-based traceability across multiple heterogeneous TTS architectures.**
-
-The evidence also shows a real trade-off: stronger perturbations and some combined-attack conditions can reduce watermark attribution. The system should therefore be evaluated using **all four dimensions together**: speaker identity, clone usability, watermark attribution, and protected-source quality.
-
----
