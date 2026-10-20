@@ -530,7 +530,54 @@ def clone_xtts(model, speaker_audio_16k, gen_text, tmp_dir, tag, ref_text, args)
 _DONE_IDX = []          # indices of the utterances that completed (see _dump)
 
 
+# --------------------------------------------------------------------------------
+# backend: FishSpeech v1.5  (language model over codec tokens of the reference; served by tools/api_server.py in its own environment)
+# --------------------------------------------------------------------------------
+
+def load_fishspeech(device, args):
+    import time
+    import requests
+    url = args.fish_url.rstrip("/")
+    last = None
+    for _ in range(3):
+        for method in ("get", "post"):
+            try:
+                r = getattr(requests, method)(url + "/v1/health", timeout=15)
+                if r.status_code == 200:
+                    print(f"[fishspeech] server answers at {url} ({method.upper()} /v1/health: {r.text[:80]!r})")
+                    return {"url": url}
+                last = f"HTTP {r.status_code}"
+            except Exception as e:
+                last = f"{type(e).__name__}: {e}"
+        time.sleep(5)
+    raise SystemExit(f"FishSpeech server not reachable at {url} ({last}). Start tools/api_server.py first (see notebook 18, section 4).")
+
+
+def clone_fishspeech(model, speaker_audio_16k, gen_text, tmp_dir, tag, ref_text, args):
+    import io
+    import requests
+    import ormsgpack
+    import soundfile as sf
+    ref_path = write_ref_wav(speaker_audio_16k, tmp_dir, tag)
+    if not ref_text:
+        raise SystemExit("FishSpeech needs the prompt transcript; pass --auto_transcribe.")
+    with open(ref_path, "rb") as fh:
+        ref_bytes = fh.read()
+    payload = {"text": gen_text, "references": [{"audio": ref_bytes, "text": ref_text}], "format": "wav"}
+    r = requests.post(model["url"] + "/v1/tts", data=ormsgpack.packb(payload),
+                      headers={"content-type": "application/msgpack"}, timeout=600)
+    if r.status_code != 200:
+        raise RuntimeError(f"FishSpeech server answered HTTP {r.status_code}: {r.text[:300]}")
+    wav, sr = sf.read(io.BytesIO(r.content), dtype="float32")
+    if wav.ndim > 1:
+        wav = wav.mean(axis=1)
+    if len(wav) < sr // 2:
+        raise RuntimeError(f"FishSpeech returned {len(wav) / sr:.2f} s of audio")
+    return to_16k_tensor(wav, sr, speaker_audio_16k.device)
+
+
 BACKENDS = {
+    "fishspeech": (load_fishspeech, clone_fishspeech, "LM over codec tokens of the reference", None),
     "f5tts":     (load_f5tts,     clone_f5tts,     "mel infilling",                 0.979),
     "cosyvoice": (load_cosyvoice, clone_cosyvoice, "flow matching on prompt mel",   0.964),
     "maskgct":   (load_maskgct,   clone_maskgct,   "masked RVQ acoustic infilling", 0.957),
@@ -596,6 +643,7 @@ def main():
     p.add_argument("--cosyvoice_root", type=str, default=None)
     p.add_argument("--cosyvoice_model_dir", type=str, default=None)
     p.add_argument("--amphion_root", type=str, default=None)
+    p.add_argument("--fish_url", type=str, default="http://127.0.0.1:8080", help="FishSpeech only: address of tools/api_server.py")
 
     p.add_argument("--tmp_dir", type=str, default="./tmp_cloner")
     p.add_argument("--data_root", type=str, default="./data/librispeech")
@@ -618,7 +666,7 @@ def main():
     device = "cuda" if torch.cuda.is_available() else "cpu"
     load_fn, clone_fn, mechanism, published = BACKENDS[args.cloner]
 
-    if args.cloner in ("cosyvoice", "maskgct") and not (args.auto_transcribe or args.ref_text):
+    if args.cloner in ("cosyvoice", "maskgct", "fishspeech") and not (args.auto_transcribe or args.ref_text):
         raise SystemExit(
             f"--cloner {args.cloner} needs the prompt transcript. Pass --auto_transcribe "
             f"(recommended: same faster-whisper path F5-TTS uses internally) or --ref_text.")
