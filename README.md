@@ -7,11 +7,17 @@ adversarial perturbation, and asks whether one system can do both jobs at once: 
 clone of a protected recording unconvincing, and still let the source be traced if a clone
 partly works.
 
-*Updated : the white-box test was run (§5.13, null on the first screen), then
-a chain of pre-registered follow-ups that did find a small, reproducible effect on a verifier outside the loss
-(§5.14-5.18), human listening tests (§5.19), transfer to MaskGCT, XTTS-v2 and FishSpeech (§5.20), and the
-narrowed claim (§5.21). The claim "Both" (clean to humans AND clone no longer like the speaker) is **not made**.
-Sections 5.1-5.12 are unchanged except where marked "(status 2026-10-20)".*
+*Final update 2026-10-23. The experimental programme is closed. Since 2026-10-20: band-limited noise (H-BAND-PGD),
+a masking-shaped noise (H-MASK), a speaker-level re-analysis (H-CLUSTER), a test on other sentences (H-TEXT),
+two attempts to remove that sentence dependence (H-TEXTPGD, H-REFTEXT), an audit of the pipeline (H-AUDIT), and an
+external replication on a second dataset (VCTK) for F5-TTS and MaskGCT (H-EXTERNAL). The effect replicates; the
+negative results are reported as limits and future work (§5.22-5.29). The claim "Both" (clean to humans AND clone no
+longer like the speaker) is **not made**. Sections 5.1-5.12 are unchanged except where marked "(status 2026-10-23)".*
+
+> **Scope of the final claim.** F5-TTS is the white-box target and MaskGCT the valid transfer test; both pass the
+> cloner-works gate. XTTS-v2 and FishSpeech fail the gate and are descriptive only. Speaker similarity is judged on a
+> verifier (Resemblyzer) that was in no loss. Operating point: the shaped white-box perturbation "Q2" on top of a
+> clone-aware watermark. All effect sizes are relative to a flat-noise control and are small; no perceptual claim is made.
 
 ---
 
@@ -34,11 +40,11 @@ Read this first if you are new to the project. Every later section uses these te
 | **Cloner-works gate** | A cloner is only meaningful if, on unprotected audio, SIM > 0.30 and WER < 20%. CosyVoice fails it and is excluded. XTTS-v2 fails it on ASR (46% unprotected) and is reported as a weak cloner. |
 | **Audio quality** | PESQ / STOI / SI-SNR of the protected clip against the original. Bars: 1.70 / 0.85 / 0. |
 | **Surrogate** | The small stand-in model (YourTTS speaker encoder) the noise is optimised against, because the strong cloners are too heavy to optimise through. |
-| **Route 2** | Retraining the watermark with a cloning-like step in the training loop (rank-2 LoRA). |
+| **Clone-aware training ("Route 2" in the notebooks)** | Retraining the watermark with a differentiable cloning step in the training loop (LoRA on the message processor). Rank 2 in notebooks 16-18, rank 8 in notebooks 19-27b (see §4). |
 | **Held-out verifier** | Resemblyzer GE2E: a speaker-verification model that is in no loss and is used only for scoring. ECAPA, WavLM-SV and x-vector were put in the noise optimisation, so their numbers are not evidence of protection. |
 | **dHELD** | Drop in clone-to-speaker Resemblyzer similarity against the flat-noise control A0, paired per clip (one-sided Wilcoxon). The bar is 0.0449 = 25% of the F5 gap 0.1795 (borrowed; the supervisor decides). Run-to-run noise is about ±0.015. Resemblyzer values around 0.6 do **not** mean "same person". |
-| **Arms** | A0 = flat 0.002 noise from the YourTTS surrogate (control). White-box arms use F5-TTS's sampling loop and three verifiers in the loss, noise shaped to the speech envelope, peak 0.015, 40 PGD steps: s40f (alpha 1, floor 0.03), Q2 (alpha 1, floor 0.003), Q3 (alpha 2, floor 0.003, quietest). |
-| **Gate (status 2026-10-20)** | Passed: F5-TTS, MaskGCT. Failed: CosyVoice (twice), XTTS-v2 (ECAPA 0.205, WER 31.9%), FishSpeech v1.5 (ECAPA 0.207, WER 6.0%). Rows of failed cloners are descriptive only. |
+| **Arms** | A0 = flat 0.002 noise from the YourTTS surrogate (control). White-box arms use F5-TTS's sampling loop and three verifiers in the loss, noise shaped to the speech envelope, peak 0.015, 40 PGD steps: s40f (alpha 1, floor 0.03), Q2 (alpha 1, floor 0.003), Q3 (alpha 2, floor 0.003, quietest). Later variants: Q2T (noise optimised over several sentences), Q2R (optimised with the cloner's own transcript of the prompt). |
+| **Gate (status 2026-10-23)** | Passed: F5-TTS, MaskGCT (also on VCTK: ECAPA 0.342, WER 8.8%). Failed: CosyVoice (twice), XTTS-v2 (ECAPA 0.205, WER 31.9%), FishSpeech v1.5 (ECAPA 0.207, WER 6.0%). Rows of failed cloners are descriptive only. |
 
 ---
 
@@ -128,12 +134,13 @@ codec. This is the central tension the project measures.
 | Is the protected audio inaudible? | No. A blind test picked out protected audio 10/10 (loudness matched) and watermark-only audio 8/10. Shaping the noise to sit under speech did not improve protection. | §5.8 |
 | Which success criteria are met? | Audio-quality scores and loudness are met at ε = 0.002. The blind listening test, clones passing ≤ 50% (F5-TTS, MaskGCT) and attacker-wins ≤ 10% (MaskGCT, XTTS-v2) are not met. | §5.9 |
 | Can a second verifier in the noise optimisation break the trade-off? (H-ENSEMBLE, 2026-10-14) | Partly, and only for the verifier in the loss. Clones passing fell 72% → 34% on ECAPA (in the loss); an independent verifier moved 0.835 → 0.828 (p = 0.10). | §5.11 |
-| Why does the trade-off keep returning? (status 2026-10-20) | Not only the surrogate. Reformulating the loss did not help; the budget alone transfers but at PESQ 1.10; a white-box loss helps at equal budget; the noise is verifier-specific. | §5.12-5.16 |
-| Did the white-box test (F5-TTS in the loss) work? | Screen: no (ECAPA in the loss −0.195, independent WavLM-SV −0.004). Follow-ups with more verifiers, shaping and 40 steps: held-out drop +0.033 to +0.048 on 12 new speakers at PESQ ≥ 1.70, 18-27% of the gap, below the 25% bar in the latest session. | §5.13-5.18 |
-| Does it transfer to other cloners? | MaskGCT (gate passed): partial, +0.022 to +0.026, significant, below the bar. XTTS-v2 and FishSpeech fail the gate: descriptive only (+0.013 to +0.030 for Q2/s40f). No arm reaches the bar on any cloner. | §5.20 |
+| Why does the trade-off keep returning? (status 2026-10-23) | Not only the surrogate. Reformulating the loss did not help; the budget alone transfers but at PESQ 1.10; a white-box loss helps at equal budget; the noise is verifier-specific. A masking-shaped or band-limited noise trades effect for quality along the same line. | §5.12-5.16, §5.22 |
+| Did the white-box test (F5-TTS in the loss) work? | Screen: no (ECAPA in the loss −0.195, independent WavLM-SV −0.004). Follow-ups with more verifiers, shaping and 40 steps: held-out drop +0.033 on 12 new speakers at PESQ 1.72 (18% of the gap; 73% of the 0.0449 bar). Positive in 11 of 12 speakers. | §5.13-5.18, §5.23 |
+| Does it transfer to other cloners? | MaskGCT (gate passed): +0.022, significant, below the bar. XTTS-v2 and FishSpeech fail the gate: descriptive only. | §5.20 |
+| Does it hold on other sentences? | Partly: +0.030 and +0.034 on two unseen sentences (60-70% of the +0.050 on the optimised one). Two attempts to remove the dependence gave no gain. | §5.24-5.26 |
+| Does it replicate on a second dataset? | Yes. VCTK, 12 new speakers: F5-TTS +0.075 (44% of the VCTK gap), MaskGCT +0.050; quality just under the bars (PESQ 1.64, STOI 0.848). | §5.28-5.29 |
 | Do humans hear it? | Q3 sounds clean (noisiness 1.56 vs 1.25 for watermark-only); Q2 and s40f are rated noisier (≈2.1-2.2). No arm was shown to make the clone audibly less like the speaker (test underpowered). | §5.19 |
-| What is claimed? | A measured trade-off, not "Both": traceable clones on strong cloners plus a small, significant, held-out reduction in clone similarity; the quiet setting is clean but weak, the stronger settings are audible. | §5.21 |
-
+| What is claimed? | A measured trade-off, not "Both": traceable clones on strong cloners plus a small, significant, held-out reduction in clone similarity that replicates on a second dataset; the quiet setting is clean but weak, the stronger settings are audible. | §5.30 |
 ---
 
 ## 4. Setup used in the experiments
@@ -143,7 +150,7 @@ codec. This is the central tension the project measures.
   retained reference mel). All zero-shot, text-conditioned. CosyVoice 2 did not produce usable
   clones under any prompt length tried (§6), so it is excluded from the composability results (§5.7).
 - **Data:** LibriSpeech held-out speakers, 100 clips (20 speakers × 5 clips), speaker-disjoint
-  from training. VCTK (speaker-disjoint) used as a second dataset.
+  from training. VCTK (speaker-disjoint) is the second dataset; in H-EXTERNAL (§5.28) 12 VCTK speakers, 60 clips, were used as a replication set.
 - **Payload:** 16 bits, random per clip (`seed = 123 + index`).
 - **Checkpoints:** Route 2 starts from `checkpoints/stage1_scaleup_aug/` (the original Stage-1
   checkpoint was lost, see §6). The matched "untrained" control is epoch 9. Caveat: the XTTS-v2 / LibriSpeech control (0.5537) used epoch 9, but the YourTTS / LibriSpeech (0.5269) and XTTS-v2 / VCTK (0.5344) controls used epoch 29. Epoch-9 reruns are in notebook 01 §4.
@@ -156,6 +163,8 @@ codec. This is the central tension the project measures.
 | Route 2, rank 8 (20 epochs) | `checkpoints/route2_scaleupaug_train_msgproc/route2_final.pt` |
 | Route 2, rank 8 (epoch 9) | `checkpoints/route2_scaleupaug_train_msgproc/route2_epoch9.pt` |
 | Route 2, rank 2 | `checkpoints/route2_scaleupaug_msgproc_r2/route2_final.pt` |
+
+**Rank note (status 2026-10-23).** §5.4-5.7 and notebooks 16-18 used the rank-2 checkpoint (`route2_scaleupaug_msgproc_r2`); notebooks 19, 20-27b use the rank-8 checkpoint (`route2_scaleupaug_train_msgproc`, `--msgproc_lora_r 8`). Detector-side PESQ cost: detector-only 2.387, rank 8 2.171, rank 2 2.109. Numbers from the two checkpoints are not mixed in one table.
 
 ---
 
@@ -486,18 +495,18 @@ is measured with the same verifier used in the optimisation, so the scorecard ab
 to "met" until an independent verifier and listeners agree. (Status 2026-10-20: the independent verifier and listeners were
 tested later; see §5.14-5.19. "Both" is not met.)
 
-### 5.10 Stage 5 — status (2026-10-20)
+### 5.10 Stage 5 — status (2026-10-23)
 
-Experiments end on 28 October 2026 (hard stop; no new cloning model after the single FishSpeech extension, §5.20).
-Open items: supervisor sign-off on the five choices listed in the claim document (effect bar, SI-SNR bar, operating
-point, wording of the target, listening evidence), one more naive listener on the noisiness test, an optional
-robustness check of the quiet setting Q3 (MP3 / resampling / purification), and writing. The claim, evidence and limits are in
-the supervisor document "Dual Defense: claim, evidence and limits" (a Claude Doc in the project) and in §5.21.
+The experimental programme is closed. Q2 stays the operating point. The effect replicates on a second dataset for F5-TTS and
+MaskGCT (§5.28-5.29). The perturbation-side attempts to remove the sentence dependence (§5.25-5.26) and to improve the
+trade-off with masking or band limits (§5.22) did not beat Q2. Remaining work is writing. Open decisions for the supervisor:
+the effect bar (0.0449, borrowed from the F5 gap), the SI-SNR bar, the operating point, whether the measured trade-off is
+the main contribution, and the thin human evidence (two listeners). The claim, evidence and limits are in §5.30.
 
 Supervisor's reading (2026-10): clone-aware training is an improvement, but attack success on F5-TTS (70% at ε = 0.002)
-and MaskGCT (60%, §5.7) is still high, so the most valuable remaining work is a way to lessen cloning itself.
-Status 2026-10-20: the perturbation-side attempts (§5.13-5.18) lowered held-out clone similarity by a small, significant
-amount but not to the 25% bar at acceptable quality.
+and MaskGCT (60%, §5.7) is still high, so the most valuable remaining work was a way to lessen cloning itself. The
+perturbation-side programme (§5.13-5.29) lowered held-out clone similarity by a small, significant, replicated amount at
+the quality bars, not to the 25% bar on LibriSpeech and above it on VCTK.
 
 ### 5.11 H-ENSEMBLE — a second verifier in the noise optimisation (2026-10-14)
 
@@ -659,9 +668,64 @@ Human-clean bar (pooled ≤ 2.0 and not significantly noisier than watermark-onl
 - FishSpeech was added late, on the author's request: the "no new cloners" rule was lifted for this one model, with a time-box and a stop rule (pre-registered before the run); no further cloner will be added. Integration: FishSpeech v1.5 ran as a local server in its own environment and was called over HTTP. CosyVoice stays excluded (§6).
 - Across four cloners Q2 and s40f lower held-out similarity by 0.02-0.03 (a consistent descriptive pattern); Q3 by less. None reaches the bar.
 
-### 5.21 The claim, narrowed (2026-10-20)
+### 5.21 The claim, narrowed (2026-10-20; superseded by §5.30)
 
-What can be claimed: (1) the watermark makes clones of strong cloners (F5-TTS, MaskGCT) traceable (82-97% of clones traced with the chosen settings); (2) the shaped white-box anti-cloning noise lowers the held-out clone similarity by +0.03 to +0.05 on speakers not used to choose it, a small, statistically solid effect at PESQ ≥ 1.70 on a verifier in no loss, 18-27% of the unprotected F5 gap; (3) the quiet setting Q3 sounds clean to two listeners but has no detectable effect on F5-TTS in the latest session; the settings with a larger effect are rated noisier. What is not claimed: "Both"; inaudibility; that the clone sounds like another person (not shown by listeners); protection against cloners not tested or that fail the gate; the borrowed bar as a principled threshold. The five choices that need the supervisor's decision are in the claim document.
+Kept for the record: on 2026-10-20 the claim was (1) traceable clones on strong cloners, (2) a +0.03 to +0.05 held-out reduction at PESQ ≥ 1.70, (3) a clean but weak quiet setting. §5.22-5.30 add the later tests and the final wording.
+
+### 5.22 H-BAND-PGD and H-MASK — can the noise be made quieter at the same effect? (notebooks 19-21)
+
+`claude/hbandpgd-result-2026-10-21.md`, `claude/hbandpgd-confirm-result-2026-10-21.md`, `claude/hmask-result-2026-10-22.md`. Clips 40-99, 12 unseen speakers, F5-TTS, one session.
+
+| arm | held-out drop vs A0 | PESQ | traced | reading |
+|---|---:|---:|---:|---|
+| Q2 | +0.0437 | 1.710 | 78% | operating point |
+| ME (masking shape, equal PESQ) | +0.0422 | 1.727 | 85% | NOT SHOWN (gain −0.0016 [−0.015, +0.013]) |
+| MH (masking shape, quieter) | +0.0258 | 1.910 | 97% | FAILS (keeps 59% of Q2) |
+| BP15 (band-limited, H-BAND-PGD) | ≈ 59% of Q2 | ≈ +0.21 vs Q2 | | does not beat Q2 |
+
+Two different routes to PESQ ≈ +0.2 retain about the same share (59%) of Q2's effect. This is two points, not a curve, and not a test; it is what a method-independent PESQ-versus-effect trade-off would look like. Where the noise sits does not by itself decide the effect; the loudness does. No perceptual wording ("cleaner", "less audible") is used for any arm.
+
+### 5.23 H-CLUSTER — is Q2's effect carried by a few speakers? (notebook 22)
+
+`claude/hcluster-result-2026-10-23.md`. Speaker-level bootstrap of the H-MASK scores. Q2: +0.0437, speaker-level 95% interval [+0.0234, +0.0603] (16% wider than the clip-level one), positive in 11 of 12 speakers, leave-one-speaker-out range +0.040 to +0.052, exact sign-flip p = 0.002, effective sample size about 39 clips. No verdict of §5.22 changed. Limit: the clip-to-speaker mapping is assumed from the dataset layout.
+
+### 5.24 H-TEXT — does the effect hold on other sentences? (notebook 23)
+
+`claude/htext-result-2026-10-23.md`. Same protected audio, F5-TTS asked to say three sentences. Held-out drop of Q2 against A0: +0.0500 on the optimised sentence, +0.0297 on a short sentence, +0.0344 on a long one (speaker-level interval lower ends +0.013 and +0.017). Retention 0.59 and 0.69 of the optimised effect, intervals wide ([0.35, 0.78], [0.42, 0.97]). Registered verdict PARTIAL: the effect does not vanish, but about 60-70% of it is what an attacker using another sentence meets.
+
+### 5.25 H-TEXTPGD — optimise over several sentences (notebook 24)
+
+`claude/htextpgd-result-2026-10-23.md`. Q2T samples a sentence at every PGD step. Gain over Q2: +0.0045. Registered verdict NO GAIN. Future work.
+
+### 5.26 H-AUDIT and H-REFTEXT — is the sentence dependence a pipeline defect? (notebooks 25-26)
+
+`claude/haudit-result-2026-10-23.md`, `claude/haudit-addendum-f5-asr-2026-10-23.md`, `claude/hreftext-result-2026-10-23.md`. The audit found a defect in prompt handling: the transcript the PGD used is not the transcript F5-TTS's own recogniser produces from the protected prompt (agreement 0.35 even on clean audio). Length and cut checks are minor (length trips by 0.1 ms, cut 0.26%); the watermark path passes; the quantisation check is INCONCLUSIVE (loss +0.0077 [−0.0079, +0.0233]). Q2R re-optimises with F5's own transcript: gain over Q2 +0.0110 [+0.0027, +0.0191] pooled over the two new sentences, below the +0.015 line; on the optimised sentence −0.0088; traced fell 0.83 → 0.75. Q2 was reused, not regenerated, so part of the gain may be run-to-run variation. Registered verdict NO GAIN.
+
+### 5.27 Quality regulariser (design only)
+
+`claude/design-quality-regulariser-2026-10-23.md`. A training-time quality term for the perturbation is designed and parked; the script `train_route2_clone_aware.py` exists. Future work.
+
+### 5.28 H-EXTERNAL — replication on VCTK, F5-TTS (notebook 27)
+
+`claude/hexternal-result-2026-10-23.md`. 12 VCTK speakers, 60 clips, rank-8 checkpoint, three cloning sessions (S0-S2).
+
+| measure | value |
+|---|---|
+| held-out drop, pooled S1+S2 | **+0.0749 [+0.0677, +0.0822]** (S0 +0.0724, S1 +0.0689, S2 +0.0809) |
+| VCTK unprotected-clone gap | 0.1711 [0.1552, 0.1861]; effect = 44% of the gap (LibriSpeech Q2: 17-19%); 25% of the VCTK gap = 0.0428 |
+| quality of Q2 | PESQ 1.636, STOI 0.848, SI-SNR +3.36 dB (A0: 1.699 / 0.851): **just under the PESQ and STOI bars** |
+| traced | A0 96%, Q2 83% |
+| spread over clips | worst −0.081 (clip 50), median +0.075 (clip 20), best +0.178 (clip 24); clips 30 and 55 had more than 10 skipped PGD steps |
+
+Verdict REPLICATES. The larger effect comes with slightly lower quality than on LibriSpeech; the quality bars are not met on this dataset.
+
+### 5.29 H-EXTERNAL — transfer to MaskGCT on VCTK (notebook 27b)
+
+`claude/hexternal-maskgct-result-2026-10-23.md`. Gate PASS (ECAPA 0.342, WER 8.8%). Q2 held-out drop +0.050 [+0.035, +0.065], p < 0.001: TRANSFERS (at the bar, interval lower end below it; one session; clip-level interval). 69% of the F5-TTS effect (+0.072 in S0). Traced 90% (A0 88%, watermark-only 95%); clone word-error rate 11.0% → 16.2%.
+
+### 5.30 The final claim (2026-10-23)
+
+What can be claimed: (1) clone-aware training makes the watermark survive cloning on the cloners tested, ACC 0.99 on F5-TTS and 0.96 on MaskGCT, with 82-97% of clones traced under the chosen settings; (2) the shaped white-box perturbation Q2 lowers the held-out clone similarity by +0.033 (F5-TTS) and +0.022 (MaskGCT) on LibriSpeech and by +0.075 and +0.050 on VCTK, at PESQ 1.72 on LibriSpeech and 1.64 on VCTK, on a verifier in no loss, positive in 11 of 12 speakers; (3) the quiet setting Q3 sounds clean to two listeners but has no detectable effect on new speakers; the settings with a larger effect are rated noisier; (4) no setting reaches clean audio, a large similarity drop and a fully surviving watermark together. What is not claimed: "Both"; inaudibility; that the clone sounds like another person; protection against cloners not tested or failing the gate (XTTS-v2, FishSpeech, CosyVoice); sentence-independent protection (60-70% on unseen sentences); the borrowed 0.0449 bar as a principled threshold; superiority over SafeSpeech, E2E-VGuard or CloneShield (not run under matched conditions). The decisions for the supervisor are listed in §5.10.
 
 ---
 
@@ -669,8 +733,14 @@ What can be claimed: (1) the watermark makes clones of strong cloners (F5-TTS, M
 
 - **ECAPA is both in the loss and the scorer (H-ENSEMBLE, §5.11).** The 72% → 34% figure is measured with the verifier that was optimised against. The independent
   verifier (WavLM-SV) moved 0.8354 → 0.8276 (p = 0.101). Do not quote 34% as a protection result without this caveat.
+- **Rank-2 versus rank-8 checkpoints (§4).** Notebooks 16-18 and §5.4-5.7 use rank 2; notebooks 19-27b use rank 8. Do not put numbers from both in one comparison.
+- **The F5-TTS gap is dataset-specific.** 25% of the LibriSpeech gap is 0.0449; 25% of the VCTK gap is 0.0428. The bar is borrowed; "at the bar" never means "reaches the bar".
+- **VCTK quality is under the bars** (PESQ 1.636, STOI 0.848) even though the effect is larger (§5.28).
+- **Pipeline audit (§5.26).** The PGD transcript differs from F5-TTS's own recogniser output; the fix gave no gain. Q2 was reused, not regenerated, in that comparison.
+- **Quantisation robustness is INCONCLUSIVE** (§5.26).
+- **MaskGCT on VCTK** is one session with a clip-level interval; 12 speakers; one dataset per claim.
 - **Listening observations are informal.** One listener (the author), a few clips; the H-ENSEMBLE listening note and the earlier blind test are indicative only.
-- **Notebooks 06-18 have been run (status 2026-10-20).** The white-box code is validated by sampler parity and gradient gates (§5.13). Earlier notebook-06 doubts no longer apply; the remaining code risk is session-to-session noise (about ±0.015 on a held-out drop) and cloner sampling noise (≈ 0.03 ECAPA SIM on n = 20).
+- **Notebooks 06-27b have been run (status 2026-10-23).** The white-box code is validated by sampler parity and gradient gates (§5.13). Earlier notebook-06 doubts no longer apply; the remaining code risk is session-to-session noise (about ±0.015 on a held-out drop) and cloner sampling noise (≈ 0.03 ECAPA SIM on n = 20).
 - **Several results use verifiers that are in the loss.** ECAPA, WavLM-SV and x-vector are in the white-box loss, so their numbers (including every ECAPA ASR of the F5-trained arms) are not evidence of protection; only the Resemblyzer drop is, and it is a relative measure (§5.15).
 - **Skipped PGD steps.** Non-finite gradients can skip steps and leave a clip effectively unprotected (e.g. Q3 clip 6 lost 38 of 40 steps in notebook 15); skips are reported and a sensitivity row excludes clips with more than 10.
 - **Two cloners fail the gate in the final transfer set** (XTTS-v2, FishSpeech); CosyVoice failed it earlier. Their rows are descriptive.
@@ -735,7 +805,7 @@ What can be claimed: (1) the watermark makes clones of strong cloners (F5-TTS, M
 - No MP3/Opus robustness arm beyond the 10-condition battery above.
 - **Single primary training corpus.** Main development uses LibriSpeech; VCTK is used as an independent evaluation set for Route 2.
 - **Route 2 vs. original epsilon sweep is not a formal paired comparison** because the original non-baseline sweep used n=20 while Route 2 used n=100.
-- **Outcome (status 2026-10-20).** The white-box programme produced a small, significant effect but did not reach the 25% bar at the quality bars, and the settings with the larger effect are audible. The thesis reports this as a measured limit of combining the two defences (§5.21), not as a solution.
+- **Outcome (status 2026-10-23).** The white-box programme produced a small, significant, replicated effect; it is at the bar on LibriSpeech and above it on VCTK (at slightly lower quality), and the settings with the larger effect are audible. The thesis reports this as a measured trade-off of combining the two defences (§5.30), not as a solution.
 - **Human evidence is thin.** Two listeners (one the author), 8 clips; the clone-similarity test is underpowered for the effect size measured.
 - **Bars are ours.** The effect bar (0.0449), the SI-SNR bar (absolute vs relative to watermark-only) and the human-clean bar are the project's choices and need the supervisor's sign-off.
 - **Future attack scope.** Fine-tuning attacks and additional compression codecs remain outside the current thesis evaluation.
@@ -758,11 +828,13 @@ src/
     carrier_probe.py                      latent-level survival check
     ecapa_sim_eval.py quality_metrics.py  SIM and PESQ/STOI/SI-SNR
     robustness_attacks.py                 post-processing battery
-    f5_whitebox_pgd.py                    differentiable F5-TTS attacker for the noise optimisation (H-WHITEBOX, not yet run)
+    f5_whitebox_pgd.py                    differentiable F5-TTS attacker for the noise optimisation (H-WHITEBOX and later)
     gen_whitebox_audio.py                 generator for the white-box arms (same output layout as composability_gen_protected_audio.py)
 notebooks/ 04 (evaluation, DATASET="ens" supported)  05 (H-ENSEMBLE)  06 (H-WHITEBOX)  07 (H-MULTIVERIFIER)  08-09 (H-BUDGET, sweep)  10 (shaped white-box)
            11 (clone listening)  12 (transfer, earlier arms)  13 (H-STEPS)  14 (H-CONFIRM)  15 (H-QUIET, H-BAND)  16 (H-QUIET-CONFIRM)
            17 (transfer of the final arms: MaskGCT, XTTS-v2)  18 (transfer: FishSpeech v1.5, served from its own environment)
+           19-20 (H-BAND-PGD, confirm)  21 (H-MASK)  22 (H-CLUSTER)  23 (H-TEXT)  24 (H-TEXTPGD)  25 (H-AUDIT)
+           26 (H-REFTEXT)  27 (H-EXTERNAL: VCTK, F5-TTS)  27b (H-EXTERNAL: MaskGCT on VCTK)
 patches/   ... apply_xtts_backend_patch.py, apply_fishspeech_backend_patch.py (add --cloner xtts / fishspeech to cloner_watermark_eval.py)
 scripts/   setup_env.sh and small helpers
 results/   one JSON per run (flat; aggregate_results.py reads it non-recursively)
@@ -790,7 +862,7 @@ python src/eval/xtts_transfer_eval.py --dataset vctk --epsilon 0 \
 Result files for §5.4 (YourTTS ones regenerated 2026-10-08, push pending): `results_yourtts_{untrained_scaleupaug,detector_only,route2_msgproc}_n100.json`,
 `results_vctk_xtts_{untrained_scaleupaug,detector_only,route2_msgproc}_n100.json`,
 `results_xtts_route2_scaleupaug_*_n100.json`. Full experimental record, including negative
-results and withdrawn claims: `docs/experimental_writeup.md`.
+results and withdrawn claims: `docs/experimental_writeup.md`. Pre-registrations and result notes for every test after notebook 5 are in the thesis project (`claude/pre-registration-*.md`, `claude/*-result-*.md`); example audio and mel spectrograms for notebooks 26, 27 and 27b are in each notebook's `final_examples` folder.
 
 ---
 
