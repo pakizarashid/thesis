@@ -539,3 +539,21 @@ ROUTE 2: clone-aware detector training
   [e19 s280] loss=1.7711 Ldec_clean=0.0003 Ldec_clone=1.7708
   [e19 s300] loss=1.4661 Ldec_clean=0.0003 Ldec_clone=1.4658
   [e19 s320] loss=1.7994 Ldec_clean=0.0000 Ldec_clone=1.7994
+  [e19 s340] loss=1.6425 Ldec_clean=0.0001 Ldec_clone=1.6423
+  [e19 s360] loss=1.3626 Ldec_clean=0.0003 Ldec_clone=1.3624
+  [e19 s380] loss=2.0557 Ldec_clean=0.0002 Ldec_clone=2.0555
+  [e19 s400] loss=1.8940 Ldec_clean=0.0002 Ldec_clone=1.8937
+  [e19 s420] loss=1.6550 Ldec_clean=0.0002 Ldec_clone=1.6548
+  [e19 s440] loss=2.4166 Ldec_clean=0.0046 Ldec_clone=2.4120
+
+[epoch 19] clean_acc=1.0000  clone_acc=0.6687  (pre-training was 0.9906 / 0.4688)
+
+
+======================================================================
+DONE. Best epoch 8: clone_acc=0.6844 (pre-training 0.4688), clean_acc=1.0000
+These are YourTTS numbers -- the cloner that was IN the training loop, so they are optimistic by construction. The real result is the held-out XTTS eval:
+  python src/eval/xtts_transfer_eval.py --checkpoint checkpoints/route2_vmaug_R0/route2_final.pt \
+    --n_speakers 60 --n_eval_speakers 20 --eval_utterances_per_speaker 5 \
+    --output results/results_xtts_route2_n100.json
+Beat 0.5687 there by more than the ~0.02 noise floor and it is a real improvement.
+======================================================================

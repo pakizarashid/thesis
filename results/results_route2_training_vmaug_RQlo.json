@@ -1,0 +1,82 @@
+{
+  "label": "route2_clone_aware",
+  "checkpoint_init": "checkpoints/stage1_vmaug/stage1_epoch29.pt",
+  "trained_msg_processor": true,
+  "lambda_clean": 1.0,
+  "lambda_clone": 1.0,
+  "train_args": {
+    "checkpoint": "checkpoints/stage1_vmaug/stage1_epoch29.pt",
+    "checkpoint_dir": "checkpoints/route2_vmaug_RQlo",
+    "output": "results/results_route2_training_vmaug_RQlo.json",
+    "diagnostic": false,
+    "epochs": 20,
+    "lr": 5e-05,
+    "batch_size": 2,
+    "lambda_clean": 1.0,
+    "lambda_clone": 1.0,
+    "clone_warmup_epochs": 2,
+    "train_msg_processor": true,
+    "surrogate_text": "This is a test sentence for voice cloning.",
+    "clone_text": "sampled",
+    "text_min_words": 6,
+    "text_max_words": 14,
+    "seed": 0,
+    "eval_batches": 10,
+    "data_root": "/tmp/data/librispeech",
+    "n_speakers": 60,
+    "utterances_per_speaker": 15,
+    "n_eval_speakers": 20,
+    "eval_utterances_per_speaker": 5,
+    "crop_seconds": 3.0,
+    "lora_r": 8,
+    "lora_alpha": 16,
+    "msgproc_lora_r": null,
+    "lambda_mel": 0.5,
+    "lambda_cos": 0.5,
+    "lambda_adv": 1.0,
+    "lambda_aug": 0.0,
+    "lambda_vad": 0.0,
+    "aug_mode": "one",
+    "aug_list": "mask,shuffle,replace,encodec,perturb",
+    "aug_p_identity": 0.2,
+    "aug_p_stack": 0.5
+  },
+  "clone_warmup_epochs": 2,
+  "pre_training": {
+    "clean_acc": 0.990625,
+    "clone_acc": 0.496875
+  },
+  "xtts_baseline_to_beat": 0.5687,
+  "history": [
+    {
+      "epoch": 0,
+      "clone_term_active": false,
+      "mean_loss": 0.6940751777092615,
+      "mean_ldec_clean": 0.03164603696204722,
+      "mean_ldec_clone": null,
+      "eval_clean_acc": 1.0,
+      "eval_clone_acc": 0.509375,
+      "mean_extra_terms": {
+        "lmel": 0.9313743588659499,
+        "lcos": 0.35170248879326715,
+        "ladv": 0.01987057336088684,
+        "lfm": 0.0010201439762022345
+      }
+    },
+    {
+      "epoch": 1,
+      "clone_term_active": false,
+      "mean_loss": 0.6951571182409922,
+      "mean_ldec_clean": 0.024887592234899784,
+      "mean_ldec_clone": null,
+      "eval_clean_acc": 1.0,
+      "eval_clone_acc": 0.515625,
+      "mean_extra_terms": {
+        "lmel": 0.9442572878466712,
+        "lcos": 0.3544887818230523,
+        "ladv": 0.01987056573232015,
+        "lfm": 0.0010259255034098815
+      }
+    }
+  ]
+}
