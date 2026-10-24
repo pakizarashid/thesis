@@ -1,0 +1,82 @@
+{
+  "label": "route2_clone_aware",
+  "checkpoint_init": "checkpoints/stage1_vmaug/stage1_epoch29.pt",
+  "trained_msg_processor": true,
+  "lambda_clean": 1.0,
+  "lambda_clone": 1.0,
+  "train_args": {
+    "checkpoint": "checkpoints/stage1_vmaug/stage1_epoch29.pt",
+    "checkpoint_dir": "checkpoints/route2_vmaug_R0",
+    "output": "results/results_route2_training_vmaug_R0.json",
+    "diagnostic": false,
+    "epochs": 20,
+    "lr": 5e-05,
+    "batch_size": 2,
+    "lambda_clean": 1.0,
+    "lambda_clone": 1.0,
+    "clone_warmup_epochs": 2,
+    "train_msg_processor": true,
+    "surrogate_text": "This is a test sentence for voice cloning.",
+    "clone_text": "sampled",
+    "text_min_words": 6,
+    "text_max_words": 14,
+    "seed": 0,
+    "eval_batches": 10,
+    "data_root": "/tmp/data/librispeech",
+    "n_speakers": 60,
+    "utterances_per_speaker": 15,
+    "n_eval_speakers": 20,
+    "eval_utterances_per_speaker": 5,
+    "crop_seconds": 3.0,
+    "lora_r": 8,
+    "lora_alpha": 16,
+    "msgproc_lora_r": null,
+    "lambda_mel": 0.0,
+    "lambda_cos": 0.0,
+    "lambda_adv": 0.0,
+    "lambda_aug": 0.0,
+    "lambda_vad": 0.0,
+    "aug_mode": "one",
+    "aug_list": "mask,shuffle,replace,encodec,perturb",
+    "aug_p_identity": 0.2,
+    "aug_p_stack": 0.5
+  },
+  "clone_warmup_epochs": 2,
+  "pre_training": {
+    "clean_acc": 0.990625,
+    "clone_acc": 0.46875
+  },
+  "xtts_baseline_to_beat": 0.5687,
+  "history": [
+    {
+      "epoch": 0,
+      "clone_term_active": false,
+      "mean_loss": 0.017347888976780974,
+      "mean_ldec_clean": 0.017347888976780974,
+      "mean_ldec_clone": null,
+      "eval_clean_acc": 1.0,
+      "eval_clone_acc": 0.478125,
+      "mean_extra_terms": {}
+    },
+    {
+      "epoch": 1,
+      "clone_term_active": false,
+      "mean_loss": 0.004430888976486231,
+      "mean_ldec_clean": 0.004430888976486231,
+      "mean_ldec_clone": null,
+      "eval_clean_acc": 1.0,
+      "eval_clone_acc": 0.528125,
+      "mean_extra_terms": {}
+    },
+    {
+      "epoch": 2,
+      "clone_term_active": true,
+      "mean_loss": 2.481665201716953,
+      "mean_ldec_clean": 0.015872345019807756,
+      "mean_ldec_clone": 2.465792859395345,
+      "eval_clean_acc": 1.0,
+      "eval_clone_acc": 0.54375,
+      "mean_extra_terms": {}
+    }
+  ]
+}
