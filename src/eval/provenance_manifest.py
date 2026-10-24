@@ -69,6 +69,32 @@ def librispeech_ids(args):
     return out
 
 
+def hf_space_check(space, files):
+    """Compares local external/voicemark/* hashes with the LFS sha256 the Space reports.
+    A match means the evaluated checkpoint is byte-identical to the authors' released file."""
+    out = {"space": space}
+    try:
+        from huggingface_hub import HfApi
+        info = HfApi().space_info(space, files_metadata=True)
+        remote = {s.rfilename: (s.lfs.sha256 if getattr(s, "lfs", None) else None) for s in info.siblings}
+        out["space_revision"] = info.sha
+    except Exception as e:
+        out["error"] = f"{type(e).__name__}: {e}"
+        return out
+    rows = []
+    for f in files:
+        if not f["path"].startswith("external/voicemark/"):
+            continue
+        rel = f["path"][len("external/voicemark/"):]
+        r = remote.get(rel)
+        rows.append({"file": rel, "local_sha256": f["sha256"], "space_lfs_sha256": r,
+                     "match": (r == f["sha256"]) if r else None})
+    out["files"] = rows
+    out["all_lfs_files_match"] = all(r["match"] for r in rows if r["match"] is not None) and any(
+        r["match"] is not None for r in rows)
+    return out
+
+
 def vctk_ids(args):
     from vctk import VCTKSubset
     ds = VCTKSubset(root=args.vctk_root, n_speakers=args.vctk_n_speakers,
@@ -93,6 +119,9 @@ def main():
     p.add_argument("--vctk_n_speakers", type=int, default=10)
     p.add_argument("--vctk_utterances_per_speaker", type=int, default=10)
     p.add_argument("--crop_seconds", type=float, default=3.0)
+    p.add_argument("--check_hf_space", default=None,
+                   help="e.g. haiyunli/VoiceMark: compare the SHA-256 of local files under "
+                        "external/voicemark with the LFS hashes the authors' Space publishes.")
     args = p.parse_args()
 
     from importlib.metadata import version, PackageNotFoundError
@@ -123,6 +152,8 @@ def main():
         "settings": json.loads(args.settings_json),
         "crop_seconds": args.crop_seconds,
     }
+    if args.check_hf_space:
+        manifest["hf_space_check"] = hf_space_check(args.check_hf_space, files)
     if args.data_root:
         manifest["librispeech_clip_ids"] = librispeech_ids(args)
     if args.vctk_root and os.path.isdir(args.vctk_root):

@@ -169,7 +169,8 @@ def load_dataset(args, crop):
                                  utterances_per_speaker=args.utterances_per_speaker,
                                  n_eval_speakers=args.n_eval_speakers,
                                  eval_utterances_per_speaker=args.eval_utterances_per_speaker,
-                                 sample_rate=SR, crop_seconds=crop, split="eval")
+                                 sample_rate=SR, crop_seconds=crop, split="eval",
+                                 subset=args.libri_subset)
     from vctk import VCTKSubset
     return VCTKSubset(root=args.vctk_root, n_speakers=args.n_speakers,
                       utterances_per_speaker=args.utterances_per_speaker,
@@ -347,6 +348,9 @@ def main():
     p.add_argument("--dump_every", type=int, default=5)
     p.add_argument("--dataset", choices=("librispeech", "vctk"), default="librispeech")
     p.add_argument("--data_root", default="./data/librispeech")
+    p.add_argument("--libri_subset", default="train-clean-100",
+                   help="LibriSpeech part. 'test-clean' is the set VoiceMark evaluated on; use "
+                        "--n_speakers 0 --n_eval_speakers 40 with it (all 40 test speakers).")
     p.add_argument("--vctk_root", default="/kaggle/input/datasets/pratt3000/vctk-corpus/VCTK-Corpus/VCTK-Corpus")
     p.add_argument("--n_speakers", type=int, default=60)
     p.add_argument("--utterances_per_speaker", type=int, default=15)

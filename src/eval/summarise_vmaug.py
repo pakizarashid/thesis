@@ -26,8 +26,10 @@ import re
 
 import numpy as np
 
-TAGS = ["pretrained", "stage1old_e29", "stage1vmaug_e29", "route2old_r8", "R0", "R0s1", "R0f",
-        "RQlo", "RQ", "RQhi", "RQA"]
+TAGS = ["pretrained", "stage1old_e29", "stage1legacy_e29", "stage1vmaug_e29", "stage1vmaugs1_e29",
+        "route2old_r8", "R0", "R0s1", "R0f", "RQlo", "RQ", "RQhi", "RQA"]
+DATASETS = ("libri", "ltc", "vctk")   # ours (train-clean-100 held-out), LibriSpeech test-clean, VCTK
+PAPER_ACC = {"cosyvoice": 0.964, "f5tts": 0.979, "maskgct": 0.957}   # VoiceMark Table 1 (watermark ACC after cloning)
 ARM_TAG = {a: f"route2vmaug_{a}" for a in ("R0", "R0s1", "R0f", "RQlo", "RQ", "RQhi", "RQA")}
 CLONERS = ["yourtts", "xtts", "f5tts", "maskgct", "cosyvoice"]
 REGISTERED = ["RQ", "RQA"]          # Holm over these two for the PESQ test
@@ -42,7 +44,7 @@ def tag_of(t):
 def load_clone_results(rdir):
     out = {}
     for f in glob.glob(os.path.join(rdir, "ce_*.json")):
-        m = re.match(r"ce_(libri|vctk)_([a-z0-9]+)_(.+)_(p3|pdur)\.json$", os.path.basename(f))
+        m = re.match(r"ce_(libri|ltc|vctk)_([a-z0-9]+)_(.+)_(p3|pdur)\.json$", os.path.basename(f))
         if not m:
             continue
         try:
@@ -101,7 +103,7 @@ def main():
     print(f"found {len(ce)} clone result files")
 
     # ---------------------------------------------------------------- survival tables
-    for ds in ("libri", "vctk"):
+    for ds in DATASETS:
         for cl in CLONERS:
             if not any(k[0] == ds and k[1] == cl for k in ce):
                 continue
@@ -120,8 +122,65 @@ def main():
                       f"(n={u.get('n_ok', 0)}) | {fmt(f.get('acc_mean'))}  {fmt(f.get('traced_rate'), 2)}")
             summary["clone_tables"][f"{ds}/{cl}"] = tab
 
+    # ---------------------------------------------------------------- Experiment A
+    # Pretrained VoiceMark, one factor changed at a time from the baseline
+    # (our clips, 3 s prompt, fixed sentence); see docs/preregistration_voicemark_audit_2026-10-24.md
+    grid = [("baseline: ours, 3 s, fixed", "libri", "p3", "3|fixed"),
+            ("text -> unseen", "libri", "p3", "3|unseen"),
+            ("prompt -> 6 s", "libri", "pdur", "6|fixed"),
+            ("prompt -> full utterance", "libri", "pdur", "full|fixed"),
+            ("test set -> LibriSpeech test-clean", "ltc", "p3", "3|fixed"),
+            ("test set -> VCTK", "vctk", "p3", "3|fixed"),
+            ("paper-like: test-clean, full, unseen", "ltc", "pdur", "full|unseen")]
+    summary["experiment_A"] = {}
+    for cl in CLONERS:
+        rows = [(name, get(ce, ds, cl, "pretrained", proto, key)) for name, ds, proto, key in grid]
+        if not any(r for _, r in rows):
+            continue
+        base = rows[0][1]
+        print(f"\n=== Experiment A: pretrained VoiceMark through {cl} (paper ACC: {PAPER_ACC.get(cl, '-')}) ===")
+        print(f"{'condition':38s} {'ACC':>6s} {'d vs base':>9s} {'traced':>7s} {'FAR':>6s} {'SIM':>6s} {'WER':>6s} {'n':>4s}")
+        out = {}
+        for name, r in rows:
+            if not r:
+                print(f"{name:38s}  not run yet"); continue
+            d = (r["acc_mean"] - base["acc_mean"]) if base and name != rows[0][0] else None
+            print(f"{name:38s} {fmt(r.get('acc_mean')):>6s} {fmt(d):>9s} {fmt(r.get('traced_rate'), 2):>7s} "
+                  f"{fmt(r.get('far_rate'), 2):>6s} {fmt(r.get('sim_ecapa_mean')):>6s} {fmt(r.get('wer_mean'), 2):>6s} "
+                  f"{r.get('n_ok', 0):>4d}")
+            out[name] = {"acc": r.get("acc_mean"), "d_vs_baseline": d, "traced": r.get("traced_rate"),
+                         "far": r.get("far_rate"), "acc_ci_speaker": r.get("acc_ci_speaker"), "n": r.get("n_ok")}
+        summary["experiment_A"][cl] = out
+
+    # ---------------------------------------------------------------- Experiment B
+    # Stage 1 trained three ways on the same data, epochs and clips: legacy (old code path),
+    # corrected, corrected repeat (training noise); plus pretrained and the old unrecorded checkpoint.
+    summary["experiment_B"] = {}
+    for cl in CLONERS:
+        rows = {t: get(ce, "libri", cl, t, "p3", "3|unseen") for t in
+                ("pretrained", "stage1old_e29", "stage1legacy_e29", "stage1vmaug_e29", "stage1vmaugs1_e29")}
+        if not rows.get("stage1legacy_e29") or not rows.get("stage1vmaug_e29"):
+            continue
+        fixed, rep_, leg = rows["stage1vmaug_e29"], rows.get("stage1vmaugs1_e29"), rows["stage1legacy_e29"]
+        noise = abs(fixed["acc_mean"] - rep_["acc_mean"]) if rep_ else None
+        tol = max(0.02, noise) if noise is not None else 0.02
+        pd = paired_clone_diff(ce, "libri", cl, "stage1legacy_e29", "stage1vmaug_e29")
+        diff = fixed["acc_mean"] - leg["acc_mean"]
+        if pd and pd.get("wilcoxon_p", 1) < 0.05 and abs(diff) > tol:
+            word = "improves" if diff > 0 else "worsens"
+        else:
+            word = "no detectable difference"
+        print(f"\n=== Experiment B: Stage 1 training paths through {cl} (3 s, unseen text) ===")
+        for t, r in rows.items():
+            print(f"{t:20s} " + (f"ACC {fmt(r['acc_mean'])}  traced {fmt(r['traced_rate'], 2)}  FAR {fmt(r['far_rate'], 2)}"
+                                 if r else "not run yet"))
+        print(f"corrected - legacy: {diff:+.3f} (tolerance {tol:.3f}, training noise {fmt(noise)}, "
+              f"paired {pd}) -> {word}")
+        summary["experiment_B"][cl] = {"diff_corrected_minus_legacy": diff, "tolerance": tol,
+                                       "training_noise": noise, "paired": pd, "reading": word}
+
     # ---------------------------------------------------------------- prompt length
-    for ds in ("libri", "vctk"):
+    for ds in DATASETS:
         for cl in CLONERS:
             rows = {}
             for t in TAGS:

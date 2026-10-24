@@ -94,6 +94,16 @@ def run_eval(backbone, eval_loader, device, augmenter=None) -> float:
 
 def train(args):
     device = "cuda" if torch.cuda.is_available() else "cpu"
+    loader_gen = None
+    if args.seed is not None:
+        # 2026-10-24: makes data order, messages and augmentation draws repeatable
+        # (GPU kernels are still not bit-deterministic). None = old unseeded behaviour.
+        import random as _rnd
+        import numpy as _np
+        torch.manual_seed(args.seed)
+        _rnd.seed(args.seed)
+        _np.random.seed(args.seed)
+        loader_gen = torch.Generator().manual_seed(args.seed)
     print(f"[train] Using device: {device}")
 
     print("[train] Loading backbone + adapters + discriminator...")
@@ -124,7 +134,7 @@ def train(args):
     )
     train_loader = DataLoader(
         train_ds, batch_size=args.batch_size, shuffle=True,
-        collate_fn=collate_librispeech, drop_last=True,
+        collate_fn=collate_librispeech, drop_last=True, generator=loader_gen,
     )
     eval_loader = DataLoader(
         eval_ds, batch_size=args.batch_size, shuffle=False,
@@ -303,6 +313,8 @@ def build_arg_parser():
     p.add_argument("--use_augmentation", action="store_true",
                     help="Train the detector on VoiceMark-style augmented audio "
                          "(src/data/augment_voicemark.py). See --aug_* options.")
+    p.add_argument("--seed", type=int, default=None,
+                    help="Seed for data order, messages and augmentation draws. None = old behaviour.")
     p.add_argument("--legacy_augmentation", action="store_true",
                     help="Reproduce the pre-2026-10-24 behaviour (augmented audio discarded, "
                          "only VAD labels changed). For reproducing old checkpoints only.")

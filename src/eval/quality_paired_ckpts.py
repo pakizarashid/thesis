@@ -145,6 +145,7 @@ def main():
     p.add_argument("--vctk_root", type=str,
                    default="/kaggle/input/datasets/pratt3000/vctk-corpus/VCTK-Corpus/VCTK-Corpus")
     p.add_argument("--data_root", default="./data/librispeech")
+    p.add_argument("--libri_subset", default="train-clean-100")
     p.add_argument("--n_speakers", type=int, default=60)
     p.add_argument("--utterances_per_speaker", type=int, default=15)
     p.add_argument("--n_eval_speakers", type=int, default=20)
@@ -162,7 +163,8 @@ def main():
                                utterances_per_speaker=args.utterances_per_speaker,
                                n_eval_speakers=args.n_eval_speakers,
                                eval_utterances_per_speaker=args.eval_utterances_per_speaker,
-                               sample_rate=16000, crop_seconds=args.crop_seconds, split="eval")
+                               sample_rate=16000, crop_seconds=args.crop_seconds, split="eval",
+                               subset=args.libri_subset)
     else:
         from vctk import VCTKSubset  # same constructor as xtts_transfer_eval.py uses
         ds = VCTKSubset(root=args.vctk_root, n_speakers=args.n_speakers,

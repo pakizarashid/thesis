@@ -58,6 +58,7 @@ class LibriSpeechSubset(Dataset):
         seed: int = 42,
         split: str = "train",
         index_cache_path: str = None,
+        subset: str = "train-clean-100",
     ):
         """
         split='train' and split='eval' draw from DISJOINT speaker pools (not
@@ -74,12 +75,17 @@ class LibriSpeechSubset(Dataset):
         self.seed = seed
 
         os.makedirs(root, exist_ok=True)
-        self.index_cache_path = index_cache_path or os.path.join(root, "subset_index.json")
+        # 2026-10-24: subset selects the LibriSpeech part (e.g. "test-clean", the set VoiceMark
+        # evaluated on). The default keeps the original cache file name, so every existing
+        # train-clean-100 index stays valid; other subsets get their own index file.
+        self.subset = subset
+        self.index_cache_path = index_cache_path or os.path.join(
+            root, "subset_index.json" if subset == "train-clean-100" else f"subset_index_{subset}.json")
 
         print(f"[LibriSpeechSubset] Loading/downloading train-clean-100 into {root} "
               f"(this is a ~6.3GB download on first run, cached after)...")
         self._full_dataset = torchaudio.datasets.LIBRISPEECH(
-            root=root, url="train-clean-100", download=True
+            root=root, url=subset, download=True
         )
 
         index = self._build_or_load_index(
@@ -91,7 +97,7 @@ class LibriSpeechSubset(Dataset):
         # directly here rather than reaching into torchaudio's internal
         # dataset attributes (whose name varies across versions: _path in some,
         # _archive in others, as seen in your traceback).
-        self._data_root = os.path.join(self.root, "LibriSpeech", "train-clean-100")
+        self._data_root = os.path.join(self.root, "LibriSpeech", subset)
         print(f"[LibriSpeechSubset] Using {len(self._subset_indices)} utterances "
               f"({split} split, speaker-disjoint from the other split).")
 
