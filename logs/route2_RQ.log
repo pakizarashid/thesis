@@ -1,0 +1,58 @@
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 900 utterances (train split, speaker-disjoint from the other split).
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+[main] clone text: sampled per step from 60 training transcripts (6-14 words); pool saved to checkpoints/route2_vmaug_RQ/clone_text_pool.json
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[build] Loaded LoRA weights from checkpoints/stage1_vmaug/stage1_epoch29.pt (epoch 29, train-time avg_acc=0.9508333333333333)
+[build] Trainable: ['detector', 'msg_processor'] LoRA only -- 64 tensors, 294,912 params
+[build] e.g. msg_processor.transformer_decoder.layers.0.self_attn.in_proj_lora.A
+/usr/local/lib/python3.13/dist-packages/torchaudio/functional/functional.py:581: UserWarning: At least one mel filterbank has all zero values. The value for `n_mels` (16) may be set too high. Or, the value for `n_freqs` (33) may be set too low.
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/torchaudio/functional/functional.py:581: UserWarning: At least one mel filterbank has all zero values. The value for `n_mels` (32) may be set too high. Or, the value for `n_freqs` (65) may be set too low.
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/torchaudio/functional/functional.py:581: UserWarning: At least one mel filterbank has all zero values. The value for `n_mels` (64) may be set too high. Or, the value for `n_freqs` (129) may be set too low.
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+[VoiceMarkDiscriminator] Loaded all 90 discriminator weight tensors cleanly (filters=32).
+[main] Loading YourTTS surrogate (the in-loop cloner; frozen)...
+
+======================================================================
+ROUTE 2: clone-aware detector training
+  trainable      : detector + msg_processor (LoRA)
+  in-loop cloner : YourTTS (differentiable=True)
+  held-out eval  : XTTS, baseline to beat = 0.5587-0.5687 (noise floor ~0.02)
+  loss           : 1.0 * Ldec(clean) + 1.0 * Ldec(clone) + mel 2.0 + cos 2.0 + adv 1.0 + aug 0.0 + vad 0.0
+  clone term on  : from epoch 2
+======================================================================
+
+[epoch -1  PRE-TRAINING] clean_acc=0.9906  clone_acc=0.4969
+  [e0 s0] loss=3.2848 Ldec_clean=0.5007  (clone term off -- warmup) lmel=1.0302 lcos=0.3516 ladv=0.0199 lfm=0.0007
+  [e0 s20] loss=2.2782 Ldec_clean=0.0019  (clone term off -- warmup) lmel=0.7832 lcos=0.3446 ladv=0.0199 lfm=0.0010
+  [e0 s40] loss=2.9921 Ldec_clean=0.5562  (clone term off -- warmup) lmel=0.8821 lcos=0.3254 ladv=0.0199 lfm=0.0011
+  [e0 s60] loss=2.6399 Ldec_clean=0.0414  (clone term off -- warmup) lmel=0.9435 lcos=0.3452 ladv=0.0199 lfm=0.0013
+  [e0 s80] loss=2.3185 Ldec_clean=0.0008  (clone term off -- warmup) lmel=0.8278 lcos=0.3206 ladv=0.0199 lfm=0.0010
+  [e0 s100] loss=2.2648 Ldec_clean=0.0133  (clone term off -- warmup) lmel=0.7789 lcos=0.3366 ladv=0.0199 lfm=0.0005
+  [e0 s120] loss=3.8524 Ldec_clean=0.0222  (clone term off -- warmup) lmel=1.5478 lcos=0.3570 ladv=0.0199 lfm=0.0007
+  [e0 s140] loss=2.5786 Ldec_clean=0.0274  (clone term off -- warmup) lmel=0.9123 lcos=0.3528 ladv=0.0199 lfm=0.0011
+  [e0 s160] loss=2.4432 Ldec_clean=0.0021  (clone term off -- warmup) lmel=0.8708 lcos=0.3393 ladv=0.0199 lfm=0.0010
+  [e0 s180] loss=2.9046 Ldec_clean=0.0048  (clone term off -- warmup) lmel=1.1076 lcos=0.3317 ladv=0.0199 lfm=0.0012
+  [e0 s200] loss=2.0074 Ldec_clean=0.0405  (clone term off -- warmup) lmel=0.6253 lcos=0.3479 ladv=0.0199 lfm=0.0006
+  [e0 s220] loss=2.4583 Ldec_clean=0.0012  (clone term off -- warmup) lmel=0.8564 lcos=0.3617 ladv=0.0199 lfm=0.0012
+  [e0 s240] loss=2.2881 Ldec_clean=0.0015  (clone term off -- warmup) lmel=0.7912 lcos=0.3416 ladv=0.0199 lfm=0.0011
+  [e0 s260] loss=2.3269 Ldec_clean=0.0607  (clone term off -- warmup) lmel=0.7778 lcos=0.3450 ladv=0.0199 lfm=0.0008
+  [e0 s280] loss=3.2358 Ldec_clean=0.0051  (clone term off -- warmup) lmel=1.2524 lcos=0.3525 ladv=0.0199 lfm=0.0011
+  [e0 s300] loss=2.0273 Ldec_clean=0.0024  (clone term off -- warmup) lmel=0.6604 lcos=0.3419 ladv=0.0199 lfm=0.0006
+  [e0 s320] loss=2.0507 Ldec_clean=0.0004  (clone term off -- warmup) lmel=0.6729 lcos=0.3420 ladv=0.0199 lfm=0.0007
+  [e0 s340] loss=2.7463 Ldec_clean=0.0254  (clone term off -- warmup) lmel=1.0330 lcos=0.3166 ladv=0.0199 lfm=0.0016
+  [e0 s360] loss=2.5096 Ldec_clean=0.0863  (clone term off -- warmup) lmel=0.8540 lcos=0.3472 ladv=0.0199 lfm=0.0011
