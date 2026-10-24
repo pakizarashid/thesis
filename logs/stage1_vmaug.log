@@ -1,0 +1,138 @@
+[train] Using device: cuda
+[train] Loading backbone + adapters + discriminator...
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+[VoiceMarkDiscriminator] Loaded all 90 discriminator weight tensors cleanly (filters=32).
+[train] Loading datasets (speaker-disjoint train/eval split)...
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 900 utterances (train split, speaker-disjoint from the other split).
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+/usr/local/lib/python3.13/dist-packages/torchaudio/functional/functional.py:581: UserWarning: At least one mel filterbank has all zero values. The value for `n_mels` (16) may be set too high. Or, the value for `n_freqs` (33) may be set too low.
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/torchaudio/functional/functional.py:581: UserWarning: At least one mel filterbank has all zero values. The value for `n_mels` (32) may be set too high. Or, the value for `n_freqs` (65) may be set too low.
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/torchaudio/functional/functional.py:581: UserWarning: At least one mel filterbank has all zero values. The value for `n_mels` (64) may be set too high. Or, the value for `n_freqs` (129) may be set too low.
+  warnings.warn(
+[train] Running PRE-TRAINING baseline eval (LoRA at zero-init -- should reflect pretrained VoiceMark's own detection ability on unseen speakers)...
+=== Baseline held-out ACC (before any Stage 1 fine-tuning): 0.9881 ===
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+[train] VoiceMark-faithful augmentation: mode=one list=mask,shuffle,replace,encodec,perturb p_identity=0.2
+=== Baseline held-out ACC on AUGMENTED audio: 0.9431 ===
+[epoch 0 step 10] total=9.2170 acc=0.9109 | lvad=0.6199 lcos=0.3621 lmel=1.2120 ladv=0.0199 lfm=0.0011 ldec=1.5221
+[epoch 0 step 20] total=4.8932 acc=0.9500 | lvad=0.6109 lcos=0.3661 lmel=1.2305 ladv=0.0199 lfm=0.0011 ldec=0.5702
+[epoch 0 step 30] total=4.4331 acc=0.9359 | lvad=0.7732 lcos=0.3661 lmel=1.3141 ladv=0.0199 lfm=0.0012 ldec=0.4626
+[epoch 0 step 40] total=3.3276 acc=0.9328 | lvad=0.5768 lcos=0.3635 lmel=1.2470 ladv=0.0199 lfm=0.0011 ldec=0.6902
+[epoch 0 step 50] total=3.7555 acc=0.9359 | lvad=0.7247 lcos=0.3653 lmel=1.2897 ladv=0.0199 lfm=0.0012 ldec=1.1046
+[epoch 0 step 60] total=4.4989 acc=0.9219 | lvad=0.6597 lcos=0.3616 lmel=1.2338 ladv=0.0199 lfm=0.0011 ldec=0.6377
+[epoch 0 step 70] total=3.5469 acc=0.9500 | lvad=0.6618 lcos=0.3642 lmel=1.2231 ladv=0.0199 lfm=0.0012 ldec=0.5219
+[epoch 0 step 80] total=3.9057 acc=0.9359 | lvad=0.7228 lcos=0.3655 lmel=1.2017 ladv=0.0199 lfm=0.0012 ldec=0.8640
+[epoch 0 step 90] total=4.4652 acc=0.9469 | lvad=0.5730 lcos=0.3630 lmel=1.1140 ladv=0.0199 lfm=0.0010 ldec=0.5108
+[epoch 0 step 100] total=4.2951 acc=0.9313 | lvad=0.6105 lcos=0.3603 lmel=1.1923 ladv=0.0199 lfm=0.0012 ldec=0.7646
+[epoch 0 step 110] total=3.9923 acc=0.9594 | lvad=0.5743 lcos=0.3698 lmel=1.1877 ladv=0.0199 lfm=0.0010 ldec=0.3657
+[epoch 0 step 120] total=5.2118 acc=0.9187 | lvad=0.7305 lcos=0.3614 lmel=1.1773 ladv=0.0199 lfm=0.0012 ldec=1.1669
+[epoch 0 step 130] total=5.5107 acc=0.9625 | lvad=0.5293 lcos=0.3613 lmel=1.1645 ladv=0.0199 lfm=0.0011 ldec=0.2609
+[epoch 0 step 140] total=3.2101 acc=0.9547 | lvad=0.5353 lcos=0.3617 lmel=1.0966 ladv=0.0199 lfm=0.0011 ldec=0.3900
+[epoch 0 step 150] total=3.5051 acc=0.9563 | lvad=0.5373 lcos=0.3614 lmel=1.2046 ladv=0.0199 lfm=0.0012 ldec=0.2585
+[epoch 0 step 160] total=3.2338 acc=0.9234 | lvad=0.6613 lcos=0.3562 lmel=1.0604 ladv=0.0199 lfm=0.0011 ldec=0.4804
+[epoch 0 step 170] total=2.9057 acc=0.9406 | lvad=0.4881 lcos=0.3546 lmel=1.0632 ladv=0.0199 lfm=0.0010 ldec=0.8097
+[epoch 0 step 180] total=3.6723 acc=0.9203 | lvad=0.5628 lcos=0.3557 lmel=1.0981 ladv=0.0199 lfm=0.0010 ldec=0.7117
+[epoch 0 step 190] total=3.5498 acc=0.9156 | lvad=0.5293 lcos=0.3601 lmel=0.9899 ladv=0.0199 lfm=0.0009 ldec=0.5952
+[epoch 0 step 200] total=3.9379 acc=0.9578 | lvad=0.5480 lcos=0.3567 lmel=1.0373 ladv=0.0199 lfm=0.0010 ldec=0.3025
+[epoch 0 step 210] total=2.8834 acc=0.9016 | lvad=0.5410 lcos=0.3565 lmel=1.0245 ladv=0.0199 lfm=0.0011 ldec=0.6432
+[epoch 0 step 220] total=4.8363 acc=0.9563 | lvad=0.6264 lcos=0.3548 lmel=1.1339 ladv=0.0199 lfm=0.0010 ldec=0.3230
+=== Epoch 0 complete. Train-batch avg ACC: 0.9375 | Held-out eval ACC: 0.9869 (baseline was 0.9881) ===
+    held-out ACC on augmented audio: 0.9425 (baseline 0.9431) | train augmentation counts: {'encodec': 124, 'identity': 190, 'mask': 148, 'perturb': 150, 'replace': 155, 'shuffle': 133}
+[epoch 1 step 230] total=3.4764 acc=0.9250 | lvad=0.5140 lcos=0.3570 lmel=1.1186 ladv=0.0199 lfm=0.0012 ldec=0.4947
+[epoch 1 step 240] total=4.2379 acc=0.9203 | lvad=0.5521 lcos=0.3546 lmel=1.1003 ladv=0.0199 lfm=0.0012 ldec=0.5351
+[epoch 1 step 250] total=3.9214 acc=0.9516 | lvad=0.5419 lcos=0.3537 lmel=1.0412 ladv=0.0199 lfm=0.0011 ldec=0.4007
+[epoch 1 step 260] total=3.7566 acc=0.9234 | lvad=0.5611 lcos=0.3519 lmel=0.9930 ladv=0.0199 lfm=0.0010 ldec=0.6941
+[epoch 1 step 270] total=4.2191 acc=0.9234 | lvad=0.5135 lcos=0.3571 lmel=1.1271 ladv=0.0199 lfm=0.0012 ldec=0.6282
+[epoch 1 step 280] total=3.8935 acc=0.9375 | lvad=0.5654 lcos=0.3527 lmel=1.0692 ladv=0.0199 lfm=0.0010 ldec=0.4353
+[epoch 1 step 290] total=3.4282 acc=0.9641 | lvad=0.5320 lcos=0.3510 lmel=1.0024 ladv=0.0199 lfm=0.0011 ldec=0.2720
+[epoch 1 step 300] total=3.2939 acc=0.9313 | lvad=0.5091 lcos=0.3518 lmel=1.0262 ladv=0.0199 lfm=0.0009 ldec=0.4145
+[epoch 1 step 310] total=3.7062 acc=0.9531 | lvad=0.5373 lcos=0.3534 lmel=0.9872 ladv=0.0199 lfm=0.0011 ldec=0.4010
+[epoch 1 step 320] total=3.1574 acc=0.9484 | lvad=0.5632 lcos=0.3540 lmel=0.9870 ladv=0.0199 lfm=0.0010 ldec=0.3400
+[epoch 1 step 330] total=3.5961 acc=0.9437 | lvad=0.5245 lcos=0.3527 lmel=1.0066 ladv=0.0199 lfm=0.0010 ldec=0.5189
+[epoch 1 step 340] total=5.0129 acc=0.9234 | lvad=0.5843 lcos=0.3489 lmel=0.9693 ladv=0.0199 lfm=0.0010 ldec=0.5144
+[epoch 1 step 350] total=4.0425 acc=0.9234 | lvad=0.5692 lcos=0.3547 lmel=0.9666 ladv=0.0199 lfm=0.0010 ldec=0.7395
+[epoch 1 step 360] total=4.2129 acc=0.9047 | lvad=0.5442 lcos=0.3536 lmel=1.0067 ladv=0.0199 lfm=0.0009 ldec=0.6694
+[epoch 1 step 370] total=3.9049 acc=0.9078 | lvad=0.5191 lcos=0.3489 lmel=1.0811 ladv=0.0199 lfm=0.0011 ldec=0.6180
+[epoch 1 step 380] total=3.6336 acc=0.9141 | lvad=0.4975 lcos=0.3479 lmel=0.8675 ladv=0.0199 lfm=0.0009 ldec=0.5730
+[epoch 1 step 390] total=3.5639 acc=0.9000 | lvad=0.5418 lcos=0.3510 lmel=0.9619 ladv=0.0199 lfm=0.0011 ldec=0.7882
+[epoch 1 step 400] total=3.5771 acc=0.9563 | lvad=0.5554 lcos=0.3465 lmel=0.9678 ladv=0.0199 lfm=0.0010 ldec=0.2856
+[epoch 1 step 410] total=3.9053 acc=0.9219 | lvad=0.5370 lcos=0.3505 lmel=1.0075 ladv=0.0199 lfm=0.0012 ldec=0.4497
+[epoch 1 step 420] total=3.4094 acc=0.9406 | lvad=0.5076 lcos=0.3464 lmel=1.0661 ladv=0.0199 lfm=0.0011 ldec=0.3228
+[epoch 1 step 430] total=2.9400 acc=0.9297 | lvad=0.5281 lcos=0.3507 lmel=0.9461 ladv=0.0199 lfm=0.0011 ldec=0.4356
+[epoch 1 step 440] total=3.3397 acc=0.8969 | lvad=0.5496 lcos=0.3461 lmel=0.9578 ladv=0.0199 lfm=0.0011 ldec=0.7736
+[epoch 1 step 450] total=3.4435 acc=0.9219 | lvad=0.5892 lcos=0.3468 lmel=1.0120 ladv=0.0199 lfm=0.0009 ldec=0.5907
+=== Epoch 1 complete. Train-batch avg ACC: 0.9289 | Held-out eval ACC: 0.9831 (baseline was 0.9881) ===
+    held-out ACC on augmented audio: 0.9137 (baseline 0.9431) | train augmentation counts: {'encodec': 131, 'identity': 191, 'mask': 129, 'perturb': 142, 'replace': 167, 'shuffle': 140}
+[epoch 2 step 460] total=3.1861 acc=0.9000 | lvad=0.5299 lcos=0.3494 lmel=1.0448 ladv=0.0199 lfm=0.0011 ldec=0.7447
+[epoch 2 step 470] total=3.4801 acc=0.9422 | lvad=0.5413 lcos=0.3489 lmel=1.0525 ladv=0.0199 lfm=0.0011 ldec=0.4782
+[epoch 2 step 480] total=3.4825 acc=0.9531 | lvad=0.4916 lcos=0.3508 lmel=0.9103 ladv=0.0199 lfm=0.0009 ldec=0.2691
+[epoch 2 step 490] total=3.2230 acc=0.9469 | lvad=0.5097 lcos=0.3535 lmel=1.0433 ladv=0.0199 lfm=0.0011 ldec=0.3781
+[epoch 2 step 500] total=3.4723 acc=0.9391 | lvad=0.5215 lcos=0.3491 lmel=0.9735 ladv=0.0199 lfm=0.0011 ldec=0.3810
+[epoch 2 step 510] total=4.2353 acc=0.9219 | lvad=0.5072 lcos=0.3500 lmel=1.0093 ladv=0.0199 lfm=0.0011 ldec=0.6295
+[epoch 2 step 520] total=3.6555 acc=0.9391 | lvad=0.4969 lcos=0.3475 lmel=0.9640 ladv=0.0199 lfm=0.0011 ldec=0.5136
+[epoch 2 step 530] total=3.8046 acc=0.9313 | lvad=0.4965 lcos=0.3567 lmel=0.9652 ladv=0.0199 lfm=0.0010 ldec=0.4471
+[epoch 2 step 540] total=3.9031 acc=0.9578 | lvad=0.5540 lcos=0.3532 lmel=1.0097 ladv=0.0199 lfm=0.0009 ldec=0.4760
+[epoch 2 step 550] total=4.1062 acc=0.8844 | lvad=0.5236 lcos=0.3496 lmel=1.0047 ladv=0.0199 lfm=0.0011 ldec=0.5217
+[epoch 2 step 560] total=4.0830 acc=0.9016 | lvad=0.5548 lcos=0.3539 lmel=1.0952 ladv=0.0199 lfm=0.0011 ldec=0.5678
+[epoch 2 step 570] total=3.5280 acc=0.9016 | lvad=0.5176 lcos=0.3501 lmel=0.9558 ladv=0.0199 lfm=0.0010 ldec=0.5596
+[epoch 2 step 580] total=3.9563 acc=0.9000 | lvad=0.5331 lcos=0.3561 lmel=1.0610 ladv=0.0199 lfm=0.0011 ldec=0.7148
+[epoch 2 step 590] total=4.0482 acc=0.9000 | lvad=0.5294 lcos=0.3484 lmel=0.9980 ladv=0.0199 lfm=0.0011 ldec=0.5512
+[epoch 2 step 600] total=3.3289 acc=0.9172 | lvad=0.4906 lcos=0.3511 lmel=0.9967 ladv=0.0199 lfm=0.0010 ldec=0.5048
+[epoch 2 step 610] total=4.8296 acc=0.9250 | lvad=0.5192 lcos=0.3489 lmel=0.9777 ladv=0.0199 lfm=0.0011 ldec=0.5635
+[epoch 2 step 620] total=3.3832 acc=0.9250 | lvad=0.5855 lcos=0.3481 lmel=0.9822 ladv=0.0199 lfm=0.0010 ldec=0.5429
+[epoch 2 step 630] total=4.1293 acc=0.8797 | lvad=0.5780 lcos=0.3527 lmel=1.0117 ladv=0.0199 lfm=0.0010 ldec=0.8086
+[epoch 2 step 640] total=3.1548 acc=0.9437 | lvad=0.4836 lcos=0.3497 lmel=0.9733 ladv=0.0199 lfm=0.0010 ldec=0.3315
+[epoch 2 step 650] total=2.9757 acc=0.8938 | lvad=0.4743 lcos=0.3496 lmel=1.0080 ladv=0.0199 lfm=0.0011 ldec=0.7526
+[epoch 2 step 660] total=4.1349 acc=0.9281 | lvad=0.5010 lcos=0.3558 lmel=1.0472 ladv=0.0199 lfm=0.0011 ldec=0.5974
+[epoch 2 step 670] total=3.4011 acc=0.9172 | lvad=0.5596 lcos=0.3512 lmel=0.9364 ladv=0.0199 lfm=0.0009 ldec=0.5652
+=== Epoch 2 complete. Train-batch avg ACC: 0.9207 | Held-out eval ACC: 0.9856 (baseline was 0.9881) ===
+    held-out ACC on augmented audio: 0.9150 (baseline 0.9431) | train augmentation counts: {'encodec': 149, 'identity': 171, 'mask': 146, 'perturb': 158, 'replace': 132, 'shuffle': 144}
+[epoch 3 step 680] total=3.7801 acc=0.9000 | lvad=0.5231 lcos=0.3490 lmel=0.9616 ladv=0.0199 lfm=0.0011 ldec=0.5422
+[epoch 3 step 690] total=3.5967 acc=0.9172 | lvad=0.4916 lcos=0.3562 lmel=1.0139 ladv=0.0199 lfm=0.0011 ldec=0.5291
+[epoch 3 step 700] total=3.7542 acc=0.9000 | lvad=0.4881 lcos=0.3555 lmel=0.9714 ladv=0.0199 lfm=0.0010 ldec=0.6605
+[epoch 3 step 710] total=2.8673 acc=0.9656 | lvad=0.5798 lcos=0.3471 lmel=0.9959 ladv=0.0199 lfm=0.0011 ldec=0.2142
+[epoch 3 step 720] total=2.9775 acc=0.9281 | lvad=0.4909 lcos=0.3528 lmel=0.9779 ladv=0.0199 lfm=0.0010 ldec=0.4155
+[epoch 3 step 730] total=4.8134 acc=0.9125 | lvad=0.5368 lcos=0.3550 lmel=1.0462 ladv=0.0199 lfm=0.0011 ldec=0.5200
+[epoch 3 step 740] total=4.1358 acc=0.9500 | lvad=0.5147 lcos=0.3548 lmel=1.0904 ladv=0.0199 lfm=0.0010 ldec=0.3393
+[epoch 3 step 750] total=5.5288 acc=0.9563 | lvad=0.4912 lcos=0.3488 lmel=0.9894 ladv=0.0199 lfm=0.0011 ldec=0.3257
+[epoch 3 step 760] total=3.2304 acc=0.8891 | lvad=0.5033 lcos=0.3478 lmel=0.9553 ladv=0.0199 lfm=0.0011 ldec=0.7088
+[epoch 3 step 770] total=4.2342 acc=0.9141 | lvad=0.5150 lcos=0.3471 lmel=0.9068 ladv=0.0199 lfm=0.0010 ldec=0.4884
+[epoch 3 step 780] total=3.5280 acc=0.8750 | lvad=0.5154 lcos=0.3513 lmel=0.9498 ladv=0.0199 lfm=0.0011 ldec=0.9050
+[epoch 3 step 790] total=3.5624 acc=0.9375 | lvad=0.5010 lcos=0.3453 lmel=0.9376 ladv=0.0199 lfm=0.0010 ldec=0.4250
+[epoch 3 step 800] total=3.1332 acc=0.9344 | lvad=0.4857 lcos=0.3530 lmel=0.9619 ladv=0.0199 lfm=0.0010 ldec=0.4025
+[epoch 3 step 810] total=3.8657 acc=0.9062 | lvad=0.5066 lcos=0.3501 lmel=0.9563 ladv=0.0199 lfm=0.0010 ldec=0.5438
+[epoch 3 step 820] total=3.1251 acc=0.8891 | lvad=0.5088 lcos=0.3490 lmel=0.9028 ladv=0.0199 lfm=0.0009 ldec=0.6454
+[epoch 3 step 830] total=3.7274 acc=0.9391 | lvad=0.5122 lcos=0.3537 lmel=0.9934 ladv=0.0199 lfm=0.0011 ldec=0.4566
+[epoch 3 step 840] total=3.8699 acc=0.9094 | lvad=0.4897 lcos=0.3484 lmel=0.9585 ladv=0.0199 lfm=0.0010 ldec=0.6936
+[epoch 3 step 850] total=3.3452 acc=0.8938 | lvad=0.5010 lcos=0.3514 lmel=1.0693 ladv=0.0199 lfm=0.0012 ldec=0.8589
+[epoch 3 step 860] total=4.1353 acc=0.9516 | lvad=0.5108 lcos=0.3496 lmel=1.0611 ladv=0.0199 lfm=0.0011 ldec=0.3230
+[epoch 3 step 870] total=4.4242 acc=0.9344 | lvad=0.5125 lcos=0.3489 lmel=0.9511 ladv=0.0199 lfm=0.0011 ldec=0.4221
+[epoch 3 step 880] total=3.2700 acc=0.9203 | lvad=0.5057 lcos=0.3505 lmel=0.9199 ladv=0.0199 lfm=0.0010 ldec=0.4504
+[epoch 3 step 890] total=3.5498 acc=0.9516 | lvad=0.4437 lcos=0.3492 lmel=0.9321 ladv=0.0199 lfm=0.0009 ldec=0.3218
+[epoch 3 step 900] total=3.7012 acc=0.9437 | lvad=0.5315 lcos=0.3479 lmel=0.9605 ladv=0.0199 lfm=0.0010 ldec=0.5026
+=== Epoch 3 complete. Train-batch avg ACC: 0.9231 | Held-out eval ACC: 0.9906 (baseline was 0.9881) ===
+    held-out ACC on augmented audio: 0.9181 (baseline 0.9431) | train augmentation counts: {'encodec': 156, 'identity': 169, 'mask': 150, 'perturb': 135, 'replace': 146, 'shuffle': 144}
+[epoch 4 step 910] total=3.3628 acc=0.9406 | lvad=0.4976 lcos=0.3489 lmel=0.9626 ladv=0.0199 lfm=0.0010 ldec=0.4817
+[epoch 4 step 920] total=3.4064 acc=0.8953 | lvad=0.4906 lcos=0.3469 lmel=0.9483 ladv=0.0199 lfm=0.0010 ldec=0.6195
+[epoch 4 step 930] total=4.1155 acc=0.9359 | lvad=0.5226 lcos=0.3574 lmel=0.9707 ladv=0.0199 lfm=0.0010 ldec=0.4460
+[epoch 4 step 940] total=4.2885 acc=0.9406 | lvad=0.5307 lcos=0.3524 lmel=1.0129 ladv=0.0199 lfm=0.0010 ldec=0.4464
+[epoch 4 step 950] total=3.0521 acc=0.9172 | lvad=0.4929 lcos=0.3516 lmel=0.9312 ladv=0.0199 lfm=0.0010 ldec=0.4571
+[epoch 4 step 960] total=3.6953 acc=0.9469 | lvad=0.5330 lcos=0.3544 lmel=1.0260 ladv=0.0199 lfm=0.0010 ldec=0.4211
+[epoch 4 step 970] total=3.3349 acc=0.9391 | lvad=0.5046 lcos=0.3536 lmel=0.9501 ladv=0.0199 lfm=0.0011 ldec=0.4126
+[epoch 4 step 980] total=4.8514 acc=0.9516 | lvad=0.4889 lcos=0.3478 lmel=1.1226 ladv=0.0199 lfm=0.0012 ldec=0.3512

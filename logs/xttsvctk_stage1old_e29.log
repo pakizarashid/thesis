@@ -1,0 +1,126 @@
+[VCTKSubset] Building speaker index (one-time directory scan)...
+[VCTKSubset] Saved subset index to ./data/vctk_index/subset_index.json (10 train speakers, 20 eval speakers, confirmed disjoint)
+[VCTKSubset] Using 100 utterances (eval split, 20 speakers, speaker-disjoint from the other split). Reading directly from mounted Kaggle input -- zero working-disk cost.
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[build_backbone] Loaded LoRA weights from checkpoints/stage1_scaleup_aug/stage1_epoch29.pt (epoch 29, train-time avg_acc=0.9854, include_ffn=False)
+[build_backbone] Froze all 294,912 previously-trainable backbone params (base weights were already frozen). Backbone has 0 trainable params for this script -- PGD only ever optimizes the per-utterance `delta` tensor below.
+[main] Loading YourTTS surrogate (frozen, for PGD + SIM embedding only)...
+[load_xtts] Loading tts_models/multilingual/multi-dataset/xtts_v2 (first run downloads weights -- can take a few minutes)...
+  0%|          | 0.00/1.87G [00:00<?, ?iB/s]  0%|          | 1.02k/1.87G [00:00<255:45:42, 2.03kiB/s]  0%|          | 7.17M/1.87G [00:00<01:57, 15.8MiB/s]      1%|          | 14.1M/1.87G [00:00<01:04, 28.6MiB/s]  1%|          | 22.9M/1.87G [00:00<00:42, 43.7MiB/s]  2%|▏         | 34.4M/1.87G [00:00<00:29, 62.7MiB/s]  2%|▏         | 46.2M/1.87G [00:01<00:23, 77.9MiB/s]  3%|▎         | 57.9M/1.87G [00:01<00:20, 89.1MiB/s]  4%|▎         | 69.2M/1.87G [00:01<00:18, 95.6MiB/s]  4%|▍         | 79.8M/1.87G [00:01<00:19, 93.9MiB/s]  5%|▍         | 91.5M/1.87G [00:01<00:17, 100MiB/s]   5%|▌         | 102M/1.87G [00:01<00:17, 101MiB/s]   6%|▌         | 114M/1.87G [00:01<00:16, 105MiB/s]  7%|▋         | 126M/1.87G [00:01<00:15, 110MiB/s]  7%|▋         | 137M/1.87G [00:01<00:15, 109MiB/s]  8%|▊         | 148M/1.87G [00:01<00:15, 108MiB/s]  9%|▊         | 159M/1.87G [00:02<00:16, 107MiB/s]  9%|▉         | 170M/1.87G [00:02<00:16, 105MiB/s] 10%|▉         | 180M/1.87G [00:02<00:16, 105MiB/s] 10%|█         | 191M/1.87G [00:02<00:16, 101MiB/s] 11%|█         | 201M/1.87G [00:02<00:16, 100MiB/s] 11%|█▏        | 211M/1.87G [00:02<00:16, 101MiB/s] 12%|█▏        | 222M/1.87G [00:02<00:15, 104MiB/s] 12%|█▏        | 233M/1.87G [00:02<00:15, 103MiB/s] 13%|█▎        | 243M/1.87G [00:02<00:15, 103MiB/s] 14%|█▎        | 253M/1.87G [00:02<00:15, 103MiB/s] 14%|█▍        | 265M/1.87G [00:03<00:15, 106MiB/s] 15%|█▍        | 276M/1.87G [00:03<00:14, 108MiB/s] 15%|█▌        | 288M/1.87G [00:03<00:14, 110MiB/s] 16%|█▌        | 299M/1.87G [00:03<00:14, 112MiB/s] 17%|█▋        | 311M/1.87G [00:03<00:13, 113MiB/s] 17%|█▋        | 322M/1.87G [00:03<00:13, 114MiB/s] 18%|█▊        | 334M/1.87G [00:03<00:13, 115MiB/s] 19%|█▊        | 346M/1.87G [00:03<00:13, 116MiB/s] 19%|█▉        | 357M/1.87G [00:03<00:13, 116MiB/s] 20%|█▉        | 369M/1.87G [00:03<00:13, 115MiB/s] 20%|██        | 381M/1.87G [00:04<00:12, 115MiB/s] 21%|██        | 392M/1.87G [00:04<00:12, 115MiB/s] 22%|██▏       | 404M/1.87G [00:04<00:12, 116MiB/s] 22%|██▏       | 415M/1.87G [00:04<00:12, 116MiB/s] 23%|██▎       | 427M/1.87G [00:04<00:12, 116MiB/s] 23%|██▎       | 439M/1.87G [00:04<00:12, 116MiB/s] 24%|██▍       | 450M/1.87G [00:04<00:12, 116MiB/s] 25%|██▍       | 462M/1.87G [00:04<00:12, 116MiB/s] 25%|██▌       | 474M/1.87G [00:04<00:12, 115MiB/s] 26%|██▌       | 485M/1.87G [00:04<00:12, 115MiB/s] 27%|██▋       | 497M/1.87G [00:05<00:11, 115MiB/s] 27%|██▋       | 508M/1.87G [00:05<00:11, 115MiB/s] 28%|██▊       | 520M/1.87G [00:05<00:11, 115MiB/s] 28%|██▊       | 532M/1.87G [00:05<00:11, 115MiB/s] 29%|██▉       | 543M/1.87G [00:05<00:11, 116MiB/s] 30%|██▉       | 555M/1.87G [00:05<00:11, 116MiB/s] 30%|███       | 567M/1.87G [00:05<00:11, 116MiB/s] 31%|███       | 578M/1.87G [00:05<00:11, 116MiB/s] 32%|███▏      | 590M/1.87G [00:05<00:11, 116MiB/s] 32%|███▏      | 602M/1.87G [00:05<00:11, 114MiB/s] 33%|███▎      | 613M/1.87G [00:06<00:10, 115MiB/s] 33%|███▎      | 625M/1.87G [00:06<00:10, 115MiB/s] 34%|███▍      | 637M/1.87G [00:06<00:10, 116MiB/s] 35%|███▍      | 648M/1.87G [00:06<00:10, 117MiB/s] 35%|███▌      | 660M/1.87G [00:06<00:10, 117MiB/s] 36%|███▌      | 672M/1.87G [00:06<00:10, 117MiB/s] 37%|███▋      | 684M/1.87G [00:06<00:10, 117MiB/s] 37%|███▋      | 695M/1.87G [00:06<00:10, 117MiB/s] 38%|███▊      | 707M/1.87G [00:06<00:09, 116MiB/s] 38%|███▊      | 719M/1.87G [00:07<00:11, 103MiB/s] 39%|███▉      | 729M/1.87G [00:07<00:11, 99.8MiB/s] 40%|███▉      | 741M/1.87G [00:07<00:10, 104MiB/s]  40%|████      | 752M/1.87G [00:07<00:10, 107MiB/s] 41%|████      | 764M/1.87G [00:07<00:10, 110MiB/s] 42%|████▏     | 776M/1.87G [00:07<00:09, 112MiB/s] 42%|████▏     | 788M/1.87G [00:07<00:09, 114MiB/s] 43%|████▎     | 799M/1.87G [00:07<00:09, 115MiB/s] 43%|████▎     | 811M/1.87G [00:07<00:10, 103MiB/s] 44%|████▍     | 823M/1.87G [00:07<00:09, 108MiB/s] 45%|████▍     | 835M/1.87G [00:08<00:09, 112MiB/s] 45%|████▌     | 847M/1.87G [00:08<00:09, 113MiB/s] 46%|████▌     | 859M/1.87G [00:08<00:08, 115MiB/s] 47%|████▋     | 871M/1.87G [00:08<00:08, 116MiB/s] 47%|████▋     | 882M/1.87G [00:08<00:08, 116MiB/s] 48%|████▊     | 894M/1.87G [00:08<00:08, 117MiB/s] 48%|████▊     | 906M/1.87G [00:08<00:08, 117MiB/s] 49%|████▉     | 918M/1.87G [00:08<00:08, 118MiB/s] 50%|████▉     | 930M/1.87G [00:08<00:08, 117MiB/s] 50%|█████     | 942M/1.87G [00:08<00:07, 118MiB/s] 51%|█████     | 953M/1.87G [00:09<00:07, 118MiB/s] 52%|█████▏    | 965M/1.87G [00:09<00:07, 118MiB/s] 52%|█████▏    | 977M/1.87G [00:09<00:07, 119MiB/s] 53%|█████▎    | 989M/1.87G [00:09<00:07, 115MiB/s] 54%|█████▎    | 1.00G/1.87G [00:09<00:07, 116MiB/s] 54%|█████▍    | 1.01G/1.87G [00:09<00:07, 117MiB/s] 55%|█████▍    | 1.02G/1.87G [00:09<00:07, 114MiB/s] 55%|█████▌    | 1.04G/1.87G [00:09<00:08, 103MiB/s] 56%|█████▌    | 1.05G/1.87G [00:09<00:07, 107MiB/s] 57%|█████▋    | 1.06G/1.87G [00:10<00:07, 111MiB/s] 57%|█████▋    | 1.07G/1.87G [00:10<00:07, 112MiB/s] 58%|█████▊    | 1.08G/1.87G [00:10<00:06, 113MiB/s] 59%|█████▊    | 1.09G/1.87G [00:10<00:06, 114MiB/s] 59%|█████▉    | 1.11G/1.87G [00:10<00:06, 116MiB/s] 60%|█████▉    | 1.12G/1.87G [00:10<00:06, 116MiB/s] 60%|██████    | 1.13G/1.87G [00:10<00:06, 117MiB/s] 61%|██████    | 1.14G/1.87G [00:10<00:06, 117MiB/s] 62%|██████▏   | 1.15G/1.87G [00:10<00:06, 114MiB/s] 62%|██████▏   | 1.16G/1.87G [00:11<00:07, 98.3MiB/s] 63%|██████▎   | 1.18G/1.87G [00:11<00:06, 104MiB/s]  64%|██████▎   | 1.19G/1.87G [00:11<00:06, 106MiB/s] 64%|██████▍   | 1.20G/1.87G [00:11<00:06, 109MiB/s] 65%|██████▍   | 1.21G/1.87G [00:11<00:05, 111MiB/s] 65%|██████▌   | 1.22G/1.87G [00:11<00:05, 113MiB/s] 66%|██████▌   | 1.23G/1.87G [00:11<00:05, 115MiB/s] 67%|██████▋   | 1.25G/1.87G [00:11<00:05, 117MiB/s] 67%|██████▋   | 1.26G/1.87G [00:11<00:05, 118MiB/s] 68%|██████▊   | 1.27G/1.87G [00:11<00:05, 118MiB/s] 69%|██████▊   | 1.28G/1.87G [00:12<00:04, 118MiB/s] 69%|██████▉   | 1.29G/1.87G [00:12<00:05, 114MiB/s] 70%|██████▉   | 1.31G/1.87G [00:12<00:04, 113MiB/s] 71%|███████   | 1.32G/1.87G [00:12<00:04, 112MiB/s] 71%|███████   | 1.33G/1.87G [00:12<00:04, 110MiB/s] 72%|███████▏  | 1.34G/1.87G [00:12<00:04, 111MiB/s] 72%|███████▏  | 1.35G/1.87G [00:12<00:04, 112MiB/s] 73%|███████▎  | 1.36G/1.87G [00:12<00:04, 115MiB/s] 74%|███████▎  | 1.38G/1.87G [00:12<00:04, 116MiB/s] 74%|███████▍  | 1.39G/1.87G [00:12<00:04, 116MiB/s] 75%|███████▍  | 1.40G/1.87G [00:13<00:04, 117MiB/s] 76%|███████▌  | 1.41G/1.87G [00:13<00:04, 111MiB/s] 76%|███████▌  | 1.42G/1.87G [00:13<00:03, 113MiB/s] 77%|███████▋  | 1.43G/1.87G [00:13<00:03, 114MiB/s] 77%|███████▋  | 1.45G/1.87G [00:13<00:03, 112MiB/s] 78%|███████▊  | 1.46G/1.87G [00:13<00:03, 115MiB/s] 79%|███████▊  | 1.47G/1.87G [00:13<00:03, 116MiB/s] 79%|███████▉  | 1.48G/1.87G [00:13<00:03, 118MiB/s] 80%|███████▉  | 1.49G/1.87G [00:13<00:03, 118MiB/s] 81%|████████  | 1.51G/1.87G [00:13<00:03, 119MiB/s] 81%|████████  | 1.52G/1.87G [00:14<00:02, 119MiB/s] 82%|████████▏ | 1.53G/1.87G [00:14<00:02, 118MiB/s] 83%|████████▎ | 1.54G/1.87G [00:14<00:02, 117MiB/s] 83%|████████▎ | 1.55G/1.87G [00:14<00:02, 117MiB/s] 84%|████████▍ | 1.56G/1.87G [00:14<00:02, 117MiB/s] 84%|████████▍ | 1.58G/1.87G [00:14<00:02, 119MiB/s] 85%|████████▌ | 1.59G/1.87G [00:14<00:02, 120MiB/s] 86%|████████▌ | 1.60G/1.87G [00:14<00:02, 120MiB/s] 86%|████████▋ | 1.61G/1.87G [00:14<00:02, 119MiB/s] 87%|████████▋ | 1.62G/1.87G [00:14<00:02, 119MiB/s] 88%|████████▊ | 1.64G/1.87G [00:15<00:01, 118MiB/s] 88%|████████▊ | 1.65G/1.87G [00:15<00:01, 117MiB/s] 89%|████████▉ | 1.66G/1.87G [00:15<00:01, 117MiB/s] 90%|████████▉ | 1.67G/1.87G [00:15<00:01, 117MiB/s] 90%|█████████ | 1.68G/1.87G [00:15<00:01, 115MiB/s] 91%|█████████ | 1.70G/1.87G [00:15<00:01, 116MiB/s] 91%|█████████▏| 1.71G/1.87G [00:15<00:01, 117MiB/s] 92%|█████████▏| 1.72G/1.87G [00:15<00:01, 118MiB/s] 93%|█████████▎| 1.73G/1.87G [00:15<00:01, 119MiB/s] 93%|█████████▎| 1.74G/1.87G [00:16<00:01, 103MiB/s] 94%|█████████▍| 1.75G/1.87G [00:16<00:01, 87.8MiB/s] 95%|█████████▍| 1.77G/1.87G [00:16<00:01, 95.2MiB/s] 95%|█████████▌| 1.78G/1.87G [00:16<00:00, 101MiB/s]  96%|█████████▌| 1.79G/1.87G [00:16<00:00, 106MiB/s] 96%|█████████▋| 1.80G/1.87G [00:16<00:00, 110MiB/s] 97%|█████████▋| 1.81G/1.87G [00:16<00:00, 113MiB/s] 98%|█████████▊| 1.83G/1.87G [00:16<00:00, 115MiB/s] 98%|█████████▊| 1.84G/1.87G [00:16<00:00, 103MiB/s] 99%|█████████▉| 1.85G/1.87G [00:17<00:00, 98.0MiB/s]100%|█████████▉| 1.86G/1.87G [00:17<00:00, 103MiB/s] 100%|██████████| 1.87G/1.87G [00:17<00:00, 108MiB/s]
+0.00iB [00:00, ?iB/s]4.37kiB [00:00, 10.4MiB/s]
+0.00iB [00:00, ?iB/s]361kiB [00:00, 90.0MiB/s]
+  0%|          | 0.00/32.0 [00:00<?, ?iB/s]100%|██████████| 32.0/32.0 [00:00<00:00, 130kiB/s]
+  0%|          | 0.00/7.75M [00:00<?, ?iB/s]  0%|          | 1.02k/7.75M [00:00<28:59, 4.46kiB/s] 77%|███████▋  | 6.00M/7.75M [00:00<00:00, 23.0MiB/s]100%|██████████| 7.75M/7.75M [00:00<00:00, 22.3MiB/s]
+[0] xtts_clone(unprotected): acc=0.5000 sim=0.4205
+[1] xtts_clone(unprotected): acc=0.6250 sim=0.6167
+[2] xtts_clone(unprotected): acc=0.6250 sim=0.5811
+[3] xtts_clone(unprotected): acc=0.7500 sim=0.6809
+[4] xtts_clone(unprotected): acc=0.5000 sim=0.6272
+[5] xtts_clone(unprotected): acc=0.5000 sim=0.5773
+[6] xtts_clone(unprotected): acc=0.6875 sim=0.4321
+[7] xtts_clone(unprotected): acc=0.4375 sim=0.5507
+[8] xtts_clone(unprotected): acc=0.5625 sim=0.6003
+[9] xtts_clone(unprotected): acc=0.5000 sim=0.4831
+[10] xtts_clone(unprotected): acc=0.3125 sim=0.5651
+[11] xtts_clone(unprotected): acc=0.5000 sim=0.5580
+[12] xtts_clone(unprotected): acc=0.9375 sim=0.6727
+[13] xtts_clone(unprotected): acc=0.4375 sim=0.5687
+[14] xtts_clone(unprotected): acc=0.6250 sim=0.6764
+[15] xtts_clone(unprotected): acc=0.6250 sim=0.4376
+[16] xtts_clone(unprotected): acc=0.6875 sim=0.6008
+[17] xtts_clone(unprotected): acc=0.5000 sim=0.5268
+[18] xtts_clone(unprotected): acc=0.6250 sim=0.6040
+[19] xtts_clone(unprotected): acc=0.5625 sim=0.4742
+[20] xtts_clone(unprotected): acc=0.6875 sim=0.5978
+[21] xtts_clone(unprotected): acc=0.3750 sim=0.5525
+[22] xtts_clone(unprotected): acc=0.5625 sim=0.5526
+[23] xtts_clone(unprotected): acc=0.3125 sim=0.5443
+[24] xtts_clone(unprotected): acc=0.7500 sim=0.5259
+[25] xtts_clone(unprotected): acc=0.5000 sim=0.4900
+[26] xtts_clone(unprotected): acc=0.6875 sim=0.4920
+[27] xtts_clone(unprotected): acc=0.5000 sim=0.6581
+[28] xtts_clone(unprotected): acc=0.5625 sim=0.5801
+[29] xtts_clone(unprotected): acc=0.3125 sim=0.5551
+[30] xtts_clone(unprotected): acc=0.6250 sim=0.4691
+[31] xtts_clone(unprotected): acc=0.3125 sim=0.6307
+[32] xtts_clone(unprotected): acc=0.5000 sim=0.5248
+[33] xtts_clone(unprotected): acc=0.6250 sim=0.5707
+[34] xtts_clone(unprotected): acc=0.3750 sim=0.6385
+[35] xtts_clone(unprotected): acc=0.4375 sim=0.5374
+[36] xtts_clone(unprotected): acc=0.4375 sim=0.5570
+[37] xtts_clone(unprotected): acc=0.4375 sim=0.6068
+[38] xtts_clone(unprotected): acc=0.6250 sim=0.5424
+[39] xtts_clone(unprotected): acc=0.6250 sim=0.6869
+[40] xtts_clone(unprotected): acc=0.6250 sim=0.6192
+[41] xtts_clone(unprotected): acc=0.3125 sim=0.5825
+[42] xtts_clone(unprotected): acc=0.4375 sim=0.6004
+[43] xtts_clone(unprotected): acc=0.5625 sim=0.6546
+[44] xtts_clone(unprotected): acc=0.5000 sim=0.6608
+[45] xtts_clone(unprotected): acc=0.6875 sim=0.5115
+[46] xtts_clone(unprotected): acc=0.5000 sim=0.5418
+[47] xtts_clone(unprotected): acc=0.5000 sim=0.5871
+[48] xtts_clone(unprotected): acc=0.5625 sim=0.5801
+[49] xtts_clone(unprotected): acc=0.8750 sim=0.4690
+[50] xtts_clone(unprotected): acc=0.5625 sim=0.6174
+[51] xtts_clone(unprotected): acc=0.3750 sim=0.5556
+[52] xtts_clone(unprotected): acc=0.5000 sim=0.7131
+[53] xtts_clone(unprotected): acc=0.6250 sim=0.5557
+[54] xtts_clone(unprotected): acc=0.6875 sim=0.5592
+[55] xtts_clone(unprotected): acc=0.5625 sim=0.5654
+[56] xtts_clone(unprotected): acc=0.6250 sim=0.5339
+[57] xtts_clone(unprotected): acc=0.4375 sim=0.4975
+[58] xtts_clone(unprotected): acc=0.5625 sim=0.5359
+[59] xtts_clone(unprotected): acc=0.4375 sim=0.6040
+[60] xtts_clone(unprotected): acc=0.5000 sim=0.5722
+[61] xtts_clone(unprotected): acc=0.5625 sim=0.5882
+[62] xtts_clone(unprotected): acc=0.5000 sim=0.5224
+[63] xtts_clone(unprotected): acc=0.5000 sim=0.5330
+[64] xtts_clone(unprotected): acc=0.5000 sim=0.5624
+[65] xtts_clone(unprotected): acc=0.5000 sim=0.5572
+[66] xtts_clone(unprotected): acc=0.5000 sim=0.6079
+[67] xtts_clone(unprotected): acc=0.5625 sim=0.5481
+[68] xtts_clone(unprotected): acc=0.4375 sim=0.5537
+[69] xtts_clone(unprotected): acc=0.6875 sim=0.6084
+[70] xtts_clone(unprotected): acc=0.5000 sim=0.6374
+[71] xtts_clone(unprotected): acc=0.6875 sim=0.6284
+[72] xtts_clone(unprotected): acc=0.4375 sim=0.5262
+[73] xtts_clone(unprotected): acc=0.6250 sim=0.4180
+[74] xtts_clone(unprotected): acc=0.5000 sim=0.6251
+[75] xtts_clone(unprotected): acc=0.5625 sim=0.5998
+[76] xtts_clone(unprotected): acc=0.5000 sim=0.4990
+[77] xtts_clone(unprotected): acc=0.3750 sim=0.4912
+[78] xtts_clone(unprotected): acc=0.6250 sim=0.5600
+[79] xtts_clone(unprotected): acc=0.6250 sim=0.5265
+[80] xtts_clone(unprotected): acc=0.3750 sim=0.6735
+[81] xtts_clone(unprotected): acc=0.6250 sim=0.5834
+[82] xtts_clone(unprotected): acc=0.6250 sim=0.6568
+[83] xtts_clone(unprotected): acc=0.6875 sim=0.6675
+[84] xtts_clone(unprotected): acc=0.5625 sim=0.5657
+[85] xtts_clone(unprotected): acc=0.4375 sim=0.4911
+[86] xtts_clone(unprotected): acc=0.6250 sim=0.6541
+[87] xtts_clone(unprotected): acc=0.7500 sim=0.5695
+[88] xtts_clone(unprotected): acc=0.5000 sim=0.6916
+[89] xtts_clone(unprotected): acc=0.3750 sim=0.6339
+[90] xtts_clone(unprotected): acc=0.5000 sim=0.5418
+[91] xtts_clone(unprotected): acc=0.6875 sim=0.5310
+[92] xtts_clone(unprotected): acc=0.4375 sim=0.5426
+[93] xtts_clone(unprotected): acc=0.4375 sim=0.5109
+[94] xtts_clone(unprotected): acc=0.6875 sim=0.5401
+[95] xtts_clone(unprotected): acc=0.6875 sim=0.4535
+[96] xtts_clone(unprotected): acc=0.5000 sim=0.6379
+[97] xtts_clone(unprotected): acc=0.4375 sim=0.6235
+[98] xtts_clone(unprotected): acc=0.3125 sim=0.5884
+[99] xtts_clone(unprotected): acc=0.5000 sim=0.6566
+
+============================================================
+Watermark ACC, XTTS clone of UNPROTECTED audio: 0.5413  <-- compare directly to the YourTTS number from watermark_survival_under_cloning.py
+SIM, XTTS clone of unprotected audio: 0.5709
+============================================================
+[main] Saved results to results/results_vctk_xtts_stage1old_e29_n100.json
