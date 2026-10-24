@@ -1,0 +1,120 @@
+[VCTKSubset] Loaded cached subset index from ./data/vctk_index/subset_index.json
+[VCTKSubset] Using 100 utterances (eval split, 20 speakers, speaker-disjoint from the other split). Reading directly from mounted Kaggle input -- zero working-disk cost.
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[build_backbone] Loaded LoRA weights from checkpoints/stage1_vmaug/stage1_epoch29.pt (epoch 29, train-time avg_acc=0.9508, include_ffn=False)
+[build_backbone] Froze all 294,912 previously-trainable backbone params (base weights were already frozen). Backbone has 0 trainable params for this script -- PGD only ever optimizes the per-utterance `delta` tensor below.
+[main] Loading YourTTS surrogate (frozen, for PGD + SIM embedding only)...
+[load_xtts] Loading tts_models/multilingual/multi-dataset/xtts_v2 (first run downloads weights -- can take a few minutes)...
+[0] xtts_clone(unprotected): acc=0.6875 sim=0.4165
+[1] xtts_clone(unprotected): acc=0.6875 sim=0.6603
+[2] xtts_clone(unprotected): acc=0.7500 sim=0.5199
+[3] xtts_clone(unprotected): acc=0.5625 sim=0.6651
+[4] xtts_clone(unprotected): acc=0.5000 sim=0.6375
+[5] xtts_clone(unprotected): acc=0.3750 sim=0.6015
+[6] xtts_clone(unprotected): acc=0.6875 sim=0.4175
+[7] xtts_clone(unprotected): acc=0.5625 sim=0.5385
+[8] xtts_clone(unprotected): acc=0.6250 sim=0.5935
+[9] xtts_clone(unprotected): acc=0.5625 sim=0.4855
+[10] xtts_clone(unprotected): acc=0.5625 sim=0.4874
+[11] xtts_clone(unprotected): acc=0.5625 sim=0.5652
+[12] xtts_clone(unprotected): acc=0.9375 sim=0.6559
+[13] xtts_clone(unprotected): acc=0.5625 sim=0.6266
+[14] xtts_clone(unprotected): acc=0.5625 sim=0.6349
+[15] xtts_clone(unprotected): acc=0.5000 sim=0.4493
+[16] xtts_clone(unprotected): acc=0.5000 sim=0.6339
+[17] xtts_clone(unprotected): acc=0.3750 sim=0.5365
+[18] xtts_clone(unprotected): acc=0.6875 sim=0.6375
+[19] xtts_clone(unprotected): acc=0.5000 sim=0.4514
+[20] xtts_clone(unprotected): acc=0.3750 sim=0.5485
+[21] xtts_clone(unprotected): acc=0.4375 sim=0.5991
+[22] xtts_clone(unprotected): acc=0.3125 sim=0.4545
+[23] xtts_clone(unprotected): acc=0.5000 sim=0.5028
+[24] xtts_clone(unprotected): acc=0.4375 sim=0.6082
+[25] xtts_clone(unprotected): acc=0.6250 sim=0.4806
+[26] xtts_clone(unprotected): acc=0.5000 sim=0.4981
+[27] xtts_clone(unprotected): acc=0.4375 sim=0.6845
+[28] xtts_clone(unprotected): acc=0.5000 sim=0.5642
+[29] xtts_clone(unprotected): acc=0.3125 sim=0.5022
+[30] xtts_clone(unprotected): acc=0.6250 sim=0.3980
+[31] xtts_clone(unprotected): acc=0.4375 sim=0.5790
+[32] xtts_clone(unprotected): acc=0.3125 sim=0.5352
+[33] xtts_clone(unprotected): acc=0.6875 sim=0.5425
+[34] xtts_clone(unprotected): acc=0.5625 sim=0.6144
+[35] xtts_clone(unprotected): acc=0.4375 sim=0.5558
+[36] xtts_clone(unprotected): acc=0.4375 sim=0.5406
+[37] xtts_clone(unprotected): acc=0.3750 sim=0.5680
+[38] xtts_clone(unprotected): acc=0.5625 sim=0.5682
+[39] xtts_clone(unprotected): acc=0.5625 sim=0.6495
+[40] xtts_clone(unprotected): acc=0.6875 sim=0.5929
+[41] xtts_clone(unprotected): acc=0.2500 sim=0.5293
+[42] xtts_clone(unprotected): acc=0.5000 sim=0.6276
+[43] xtts_clone(unprotected): acc=0.4375 sim=0.6059
+[44] xtts_clone(unprotected): acc=0.4375 sim=0.5904
+[45] xtts_clone(unprotected): acc=0.4375 sim=0.5097
+[46] xtts_clone(unprotected): acc=0.3750 sim=0.5479
+[47] xtts_clone(unprotected): acc=0.5625 sim=0.6037
+[48] xtts_clone(unprotected): acc=0.6875 sim=0.5984
+[49] xtts_clone(unprotected): acc=0.6250 sim=0.4451
+[50] xtts_clone(unprotected): acc=0.5625 sim=0.6094
+[51] xtts_clone(unprotected): acc=0.7500 sim=0.5183
+[52] xtts_clone(unprotected): acc=0.5000 sim=0.7046
+[53] xtts_clone(unprotected): acc=0.7500 sim=0.5251
+[54] xtts_clone(unprotected): acc=0.6875 sim=0.6034
+[55] xtts_clone(unprotected): acc=0.4375 sim=0.4523
+[56] xtts_clone(unprotected): acc=0.7500 sim=0.4906
+[57] xtts_clone(unprotected): acc=0.4375 sim=0.5058
+[58] xtts_clone(unprotected): acc=0.4375 sim=0.5511
+[59] xtts_clone(unprotected): acc=0.3750 sim=0.6322
+[60] xtts_clone(unprotected): acc=0.3750 sim=0.5342
+[61] xtts_clone(unprotected): acc=0.6250 sim=0.5855
+[62] xtts_clone(unprotected): acc=0.3750 sim=0.4777
+[63] xtts_clone(unprotected): acc=0.6250 sim=0.5542
+[64] xtts_clone(unprotected): acc=0.6875 sim=0.5437
+[65] xtts_clone(unprotected): acc=0.5625 sim=0.5483
+[66] xtts_clone(unprotected): acc=0.6250 sim=0.6380
+[67] xtts_clone(unprotected): acc=0.5625 sim=0.5627
+[68] xtts_clone(unprotected): acc=0.3125 sim=0.5438
+[69] xtts_clone(unprotected): acc=0.7500 sim=0.6361
+[70] xtts_clone(unprotected): acc=0.5000 sim=0.5937
+[71] xtts_clone(unprotected): acc=0.6875 sim=0.6033
+[72] xtts_clone(unprotected): acc=0.8125 sim=0.4725
+[73] xtts_clone(unprotected): acc=0.7500 sim=0.5019
+[74] xtts_clone(unprotected): acc=0.3125 sim=0.6085
+[75] xtts_clone(unprotected): acc=0.4375 sim=0.5090
+[76] xtts_clone(unprotected): acc=0.3750 sim=0.5723
+[77] xtts_clone(unprotected): acc=0.5625 sim=0.5091
+[78] xtts_clone(unprotected): acc=0.4375 sim=0.5129
+[79] xtts_clone(unprotected): acc=0.3750 sim=0.5115
+[80] xtts_clone(unprotected): acc=0.5000 sim=0.6457
+[81] xtts_clone(unprotected): acc=0.7500 sim=0.5369
+[82] xtts_clone(unprotected): acc=0.6250 sim=0.6599
+[83] xtts_clone(unprotected): acc=0.5625 sim=0.6412
+[84] xtts_clone(unprotected): acc=0.5000 sim=0.5975
+[85] xtts_clone(unprotected): acc=0.3750 sim=0.4992
+[86] xtts_clone(unprotected): acc=0.5000 sim=0.6215
+[87] xtts_clone(unprotected): acc=0.3750 sim=0.5674
+[88] xtts_clone(unprotected): acc=0.6875 sim=0.6715
+[89] xtts_clone(unprotected): acc=0.4375 sim=0.6150
+[90] xtts_clone(unprotected): acc=0.4375 sim=0.5282
+[91] xtts_clone(unprotected): acc=0.8125 sim=0.4983
+[92] xtts_clone(unprotected): acc=0.5000 sim=0.5030
+[93] xtts_clone(unprotected): acc=0.5000 sim=0.4936
+[94] xtts_clone(unprotected): acc=0.6250 sim=0.4935
+[95] xtts_clone(unprotected): acc=0.8125 sim=0.4735
+[96] xtts_clone(unprotected): acc=0.8125 sim=0.6212
+[97] xtts_clone(unprotected): acc=0.3750 sim=0.6171
+[98] xtts_clone(unprotected): acc=0.5625 sim=0.5624
+[99] xtts_clone(unprotected): acc=0.3750 sim=0.6358
+
+============================================================
+Watermark ACC, XTTS clone of UNPROTECTED audio: 0.5375  <-- compare directly to the YourTTS number from watermark_survival_under_cloning.py
+SIM, XTTS clone of unprotected audio: 0.5595
+============================================================
+[main] Saved results to results/results_vctk_xtts_stage1vmaug_e29_n100.json

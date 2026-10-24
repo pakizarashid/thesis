@@ -1,0 +1,71 @@
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+[main] dataset=librispeech epsilon=0.0 (0.0 = unprotected-only) lambda_wm=1.0
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[build_backbone] Loaded LoRA weights from checkpoints/stage1_vmaug/stage1_epoch29.pt (epoch 29, train-time avg_acc=0.9508, include_ffn=False)
+[build_backbone] Froze all 294,912 previously-trainable backbone params (base weights were already frozen). Backbone has 0 trainable params for this script -- PGD only ever optimizes the per-utterance `delta` tensor below.
+[main] Loading YourTTS surrogate (frozen)...
+[batch 0] acc_source=1.0000 acc_clone(unprotected)=0.2812 sim(unprotected)=0.5400
+[batch 1] acc_source=1.0000 acc_clone(unprotected)=0.6250 sim(unprotected)=0.4577
+[batch 2] acc_source=1.0000 acc_clone(unprotected)=0.6250 sim(unprotected)=0.5123
+[batch 3] acc_source=1.0000 acc_clone(unprotected)=0.6250 sim(unprotected)=0.4075
+[batch 4] acc_source=1.0000 acc_clone(unprotected)=0.5312 sim(unprotected)=0.4911
+[batch 5] acc_source=1.0000 acc_clone(unprotected)=0.4062 sim(unprotected)=0.4672
+[batch 6] acc_source=1.0000 acc_clone(unprotected)=0.4688 sim(unprotected)=0.5179
+[batch 7] acc_source=1.0000 acc_clone(unprotected)=0.5000 sim(unprotected)=0.5641
+[batch 8] acc_source=1.0000 acc_clone(unprotected)=0.4062 sim(unprotected)=0.4841
+[batch 9] acc_source=1.0000 acc_clone(unprotected)=0.4375 sim(unprotected)=0.4751
+[batch 10] acc_source=0.8125 acc_clone(unprotected)=0.5625 sim(unprotected)=0.5164
+[batch 11] acc_source=0.9688 acc_clone(unprotected)=0.5000 sim(unprotected)=0.4533
+[batch 12] acc_source=0.9375 acc_clone(unprotected)=0.4688 sim(unprotected)=0.3855
+[batch 13] acc_source=1.0000 acc_clone(unprotected)=0.5625 sim(unprotected)=0.5441
+[batch 14] acc_source=1.0000 acc_clone(unprotected)=0.5625 sim(unprotected)=0.5740
+[batch 15] acc_source=1.0000 acc_clone(unprotected)=0.3750 sim(unprotected)=0.5556
+[batch 16] acc_source=1.0000 acc_clone(unprotected)=0.7188 sim(unprotected)=0.5269
+[batch 17] acc_source=1.0000 acc_clone(unprotected)=0.6875 sim(unprotected)=0.4869
+[batch 18] acc_source=1.0000 acc_clone(unprotected)=0.4375 sim(unprotected)=0.4227
+[batch 19] acc_source=1.0000 acc_clone(unprotected)=0.2500 sim(unprotected)=0.4185
+[batch 20] acc_source=1.0000 acc_clone(unprotected)=0.5000 sim(unprotected)=0.5094
+[batch 21] acc_source=1.0000 acc_clone(unprotected)=0.4688 sim(unprotected)=0.4241
+[batch 22] acc_source=1.0000 acc_clone(unprotected)=0.5625 sim(unprotected)=0.4865
+[batch 23] acc_source=1.0000 acc_clone(unprotected)=0.4688 sim(unprotected)=0.5055
+[batch 24] acc_source=1.0000 acc_clone(unprotected)=0.4688 sim(unprotected)=0.4027
+[batch 25] acc_source=1.0000 acc_clone(unprotected)=0.5938 sim(unprotected)=0.4406
+[batch 26] acc_source=1.0000 acc_clone(unprotected)=0.5312 sim(unprotected)=0.3349
+[batch 27] acc_source=1.0000 acc_clone(unprotected)=0.4688 sim(unprotected)=0.4691
+[batch 28] acc_source=1.0000 acc_clone(unprotected)=0.5625 sim(unprotected)=0.4484
+[batch 29] acc_source=1.0000 acc_clone(unprotected)=0.5625 sim(unprotected)=0.5218
+[batch 30] acc_source=1.0000 acc_clone(unprotected)=0.5938 sim(unprotected)=0.5323
+[batch 31] acc_source=1.0000 acc_clone(unprotected)=0.5000 sim(unprotected)=0.4902
+[batch 32] acc_source=0.9688 acc_clone(unprotected)=0.5625 sim(unprotected)=0.5573
+[batch 33] acc_source=0.9375 acc_clone(unprotected)=0.6562 sim(unprotected)=0.4376
+[batch 34] acc_source=0.9375 acc_clone(unprotected)=0.6250 sim(unprotected)=0.5073
+[batch 35] acc_source=1.0000 acc_clone(unprotected)=0.3125 sim(unprotected)=0.4068
+[batch 36] acc_source=1.0000 acc_clone(unprotected)=0.5000 sim(unprotected)=0.4965
+[batch 37] acc_source=0.9688 acc_clone(unprotected)=0.6250 sim(unprotected)=0.4970
+[batch 38] acc_source=1.0000 acc_clone(unprotected)=0.5938 sim(unprotected)=0.4392
+[batch 39] acc_source=1.0000 acc_clone(unprotected)=0.5938 sim(unprotected)=0.5473
+[batch 40] acc_source=1.0000 acc_clone(unprotected)=0.5938 sim(unprotected)=0.4950
+[batch 41] acc_source=1.0000 acc_clone(unprotected)=0.4062 sim(unprotected)=0.4560
+[batch 42] acc_source=1.0000 acc_clone(unprotected)=0.5938 sim(unprotected)=0.4483
+[batch 43] acc_source=0.9375 acc_clone(unprotected)=0.5000 sim(unprotected)=0.4354
+[batch 44] acc_source=0.9375 acc_clone(unprotected)=0.5000 sim(unprotected)=0.4388
+[batch 45] acc_source=1.0000 acc_clone(unprotected)=0.2188 sim(unprotected)=0.4158
+[batch 46] acc_source=1.0000 acc_clone(unprotected)=0.6562 sim(unprotected)=0.5164
+[batch 47] acc_source=1.0000 acc_clone(unprotected)=0.5938 sim(unprotected)=0.4675
+[batch 48] acc_source=1.0000 acc_clone(unprotected)=0.6562 sim(unprotected)=0.4854
+[batch 49] acc_source=1.0000 acc_clone(unprotected)=0.5312 sim(unprotected)=0.3466
+
+============================================================
+Sanity check, ACC on pre-clone source audio: 0.9881
+ACC on real YourTTS clone of UNPROTECTED watermarked audio: 0.5206  <-- the VoiceMark-Table-1-equivalent number
+============================================================
+[main] Saved results to results/results_yourtts_stage1vmaug_e29_n100.json
