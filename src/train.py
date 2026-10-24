@@ -29,7 +29,8 @@ from backbone import VoiceMarkBackbone, VoiceMarkDiscriminator
 from adapters import apply_lora_adapters
 from voicemark_losses import VoiceMarkLosses
 from librispeech import LibriSpeechSubset, collate_librispeech
-from augment import apply_random_augmentation
+from augment import apply_random_augmentation  # legacy path only (--legacy_augmentation)
+from augment_voicemark import add_augmentation_args, build_augmenter, samples_to_frames
 
 
 def random_message(nbits: int, batch_size: int, device) -> torch.Tensor:
@@ -59,20 +60,34 @@ def compute_detection_accuracy(chunk_logits: torch.Tensor, message: torch.Tensor
     return correct_bits / total_bits
 
 
-def run_eval(backbone, eval_loader, device) -> float:
-    """Runs the detector on the held-out eval split, no gradient, no
-    augmentation (eval should measure clean-condition detection ability).
-    Returns average bitwise ACC across the eval set."""
+def run_eval(backbone, eval_loader, device, augmenter=None) -> float:
+    """Runs the detector on the held-out eval split, no gradient. Without an
+    augmenter this measures clean-condition detection ability; with one it
+    measures ACC on augmented audio (a cheap proxy for cloning robustness,
+    reported next to the clean number every epoch). Fixed seeds so epochs are
+    comparable. Returns average bitwise ACC across the eval set."""
+    import random as _random
     backbone.model.eval()
     accs = []
+    rng_state = (torch.get_rng_state(), _random.getstate(),
+                 torch.cuda.get_rng_state_all() if torch.cuda.is_available() else None)
+    torch.manual_seed(1234)  # also seeds CUDA
+    _random.seed(1234)
     with torch.no_grad():
         for batch in eval_loader:
             clean_audio = batch["waveform"].to(device)
             message = random_message(16, clean_audio.shape[0], device)
             out = backbone.forward_full(clean_audio, message)
-            detect_feat = backbone.model.st_model.forward_feature(out["recon_wm"])
+            det_input = out["recon_wm"]
+            if augmenter is not None:
+                det_input = augmenter(det_input, clean_audio)["audio"]
+            detect_feat = backbone.model.st_model.forward_feature(det_input)
             _, chunk_logits = backbone.model.detector(detect_feat)
             accs.append(compute_detection_accuracy(chunk_logits, message))
+    torch.set_rng_state(rng_state[0])
+    _random.setstate(rng_state[1])
+    if rng_state[2] is not None:
+        torch.cuda.set_rng_state_all(rng_state[2])
     backbone.model.train()
     return sum(accs) / len(accs)
 
@@ -137,27 +152,56 @@ def train(args):
     baseline_acc = run_eval(backbone, eval_loader, device)
     print(f"=== Baseline held-out ACC (before any Stage 1 fine-tuning): {baseline_acc:.4f} ===")
 
+    augmenter = None
+    if args.use_augmentation and not args.legacy_augmentation:
+        augmenter = build_augmenter(args, sample_rate=16000)
+        print(f"[train] VoiceMark-faithful augmentation: mode={args.aug_mode} "
+              f"list={args.aug_list} p_identity={args.aug_p_identity}")
+        aug_eval_acc0 = run_eval(backbone, eval_loader, device, augmenter=augmenter)
+        print(f"=== Baseline held-out ACC on AUGMENTED audio: {aug_eval_acc0:.4f} ===")
+    elif args.use_augmentation:
+        print("[train] WARNING: --legacy_augmentation reproduces the old behaviour in which the "
+              "detector never sees augmented audio. Use only to reproduce old checkpoints.")
+
     global_step = 0
     for epoch in range(args.epochs):
         backbone.model.train()
         epoch_losses = {}
         epoch_acc = []
+        aug_counts = {}
 
         for batch in train_loader:
             clean_audio = batch["waveform"].to(device)  # [B, 1, T]
             message = random_message(16, clean_audio.shape[0], device)
 
-            # --- Optional VC-simulated augmentation on the CLEAN audio used
-            # for the Lvad target (see augment.py docstring: augmentation_mask
-            # excludes corrupted frames from the VAD-positive label set) ---
+            out = backbone.forward_full(clean_audio, message)
             augmentation_mask = None
-            if args.use_augmentation:
+            vad_waveform = None
+            det_input = out["recon_wm"]
+
+            if args.use_augmentation and not args.legacy_augmentation:
+                # 2026-10-24 fix: the detector is trained on the AUGMENTED
+                # watermarked audio (VoiceMark Sec. 2.3: "it learns from
+                # augmented audio x~"). Lmel/Lcos/Ladv stay on the clean
+                # watermarked audio. VAD labels come from the clean audio after
+                # the same structural edits, with masked and replaced frames
+                # forced to 0 (Sec. 2.5).
+                aug = augmenter(out["recon_wm"], clean_audio)
+                det_input = aug["audio"]
+                vad_waveform = aug["vad_ref"]
+                for n in aug["names"]:
+                    aug_counts[n] = aug_counts.get(n, 0) + 1
+
+            detect_feat = backbone.model.st_model.forward_feature(det_input)
+            logits, chunk_logits = backbone.model.detector(detect_feat)
+
+            if args.use_augmentation and not args.legacy_augmentation:
+                augmentation_mask = samples_to_frames(aug["nowm_mask"], logits.shape[1])
+            elif args.use_augmentation and args.legacy_augmentation:
+                # Pre-2026-10-24 behaviour, kept ONLY to reproduce old
+                # checkpoints: the augmented waveform is discarded and only the
+                # VAD labels change, so the detector never sees augmented audio.
                 downsample_rate = backbone.model.st_model.downsample_rate
-                # augmentation_mask needs the detector's actual output time
-                # dimension, which depends on crop_seconds -- computed once
-                # per batch via a dummy pass is wasteful; instead estimate from
-                # known crop length (frames = T // downsample_rate, matching
-                # SpeechTokenizer's stride-based downsampling).
                 n_frames_est = clean_audio.shape[-1] // downsample_rate
                 masks = []
                 for i in range(clean_audio.shape[0]):
@@ -167,17 +211,13 @@ def train(args):
                     masks.append(frame_mask)
                 augmentation_mask = torch.stack(masks).to(device)
 
-            # --- Forward pass ---
-            out = backbone.forward_full(clean_audio, message)
-            detect_feat = backbone.model.st_model.forward_feature(out["recon_wm"])
-            logits, chunk_logits = backbone.model.detector(detect_feat)
-
             loss_dict = losses_fn(
                 recon_wm=out["recon_wm"], clean_audio=clean_audio,
                 acoustic=out["acoustic"], acoustic_wm=out["acoustic_wm"],
                 detection_logits=logits, chunk_logits=chunk_logits,
                 message=message, discriminator=discriminator,
                 augmentation_mask=augmentation_mask,
+                vad_waveform=vad_waveform,
             )
 
             optimizer.zero_grad()
@@ -212,6 +252,10 @@ def train(args):
         held_out_acc = run_eval(backbone, eval_loader, device)
         print(f"=== Epoch {epoch} complete. Train-batch avg ACC: {epoch_avg_acc:.4f} | "
               f"Held-out eval ACC: {held_out_acc:.4f} (baseline was {baseline_acc:.4f}) ===")
+        if augmenter is not None:
+            aug_acc = run_eval(backbone, eval_loader, device, augmenter=augmenter)
+            print(f"    held-out ACC on augmented audio: {aug_acc:.4f} (baseline {aug_eval_acc0:.4f}) "
+                  f"| train augmentation counts: {dict(sorted(aug_counts.items()))}")
 
         if (epoch + 1) % args.checkpoint_every == 0 or epoch == args.epochs - 1:
             ckpt_path = os.path.join(args.checkpoint_dir, f"stage1_epoch{epoch}.pt")
@@ -229,6 +273,10 @@ def train(args):
                 "lora_r": args.lora_r,
                 "lora_alpha": args.lora_alpha,
                 "avg_acc": epoch_avg_acc,
+                # 2026-10-24: store the full command line, so a checkpoint
+                # always records how it was trained (the stage1_scaleup_aug
+                # checkpoint could not be traced back to its augmentation).
+                "train_args": vars(args),
             }, ckpt_path)
             print(f"[train] Saved checkpoint to {ckpt_path}")
 
@@ -253,10 +301,11 @@ def build_arg_parser():
     p.add_argument("--lambda_adv", type=float, default=1.0)
     p.add_argument("--lambda_dec", type=float, default=1.0)
     p.add_argument("--use_augmentation", action="store_true",
-                    help="Apply VC-simulated augmentation during training. "
-                         "Recommend leaving OFF for the first Stage 1 sanity "
-                         "run (simpler, faster, easier to debug), then ON for "
-                         "the run you actually report.")
+                    help="Train the detector on VoiceMark-style augmented audio "
+                         "(src/data/augment_voicemark.py). See --aug_* options.")
+    p.add_argument("--legacy_augmentation", action="store_true",
+                    help="Reproduce the pre-2026-10-24 behaviour (augmented audio discarded, "
+                         "only VAD labels changed). For reproducing old checkpoints only.")
     p.add_argument("--no_discriminator", action="store_true",
                     help="Skip Ladv entirely (useful for a fast first smoke "
                          "test of the other four losses).")
@@ -269,6 +318,7 @@ def build_arg_parser():
     p.add_argument("--log_every", type=int, default=10)
     p.add_argument("--checkpoint_every", type=int, default=5)
     p.add_argument("--checkpoint_dir", type=str, default="./checkpoints")
+    add_augmentation_args(p)
     return p
 
 

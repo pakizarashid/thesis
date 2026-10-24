@@ -114,7 +114,9 @@ from backbone import VoiceMarkBackbone
 from adapters import apply_lora_adapters
 from surrogate_vc import load_yourtts_surrogate
 from librispeech import LibriSpeechSubset, collate_librispeech
-from voicemark_losses import compute_ldec
+from voicemark_losses import (compute_ldec, compute_lcos, compute_lvad,
+                              MultiScaleMelLoss, compute_ladv_generator)
+from augment_voicemark import add_augmentation_args, build_augmenter, samples_to_frames
 from disruption_pgd import random_message, detect_acc
 
 
@@ -213,6 +215,73 @@ def decode_logits(backbone, audio):
     return chunk_logits
 
 
+def decode_both(backbone, audio):
+    """Detector on a waveform -> (per-frame presence logits, chunk logits)."""
+    feat = backbone.model.st_model.forward_feature(audio)
+    return backbone.model.detector(feat)
+
+
+class ExtraLosses:
+    """
+    2026-10-24 additions, all OFF by default (every weight 0), so a run without
+    the new flags reproduces the old Route 2 objective exactly.
+
+    Quality terms (VoiceMark's own, on the watermarked audio vs the clean
+    original; only meaningful with --train_msg_processor, because only the
+    embedder changes the audio):
+        lambda_mel * Lmel(recon_wm, clean)   multi-scale mel, as in Stage 1
+        lambda_cos * Lcos(acoustic, acoustic_wm)
+        lambda_adv * (Ladv + Lfm)            frozen pretrained msstftd discriminator
+    Robustness terms (VoiceMark's VC-simulated augmentation, in addition to the
+    real YourTTS clone):
+        lambda_aug * Ldec(augment(recon_wm))
+        lambda_vad * Lvad on the same augmented audio
+    Paper weights for reference: mel 2, cos 2, adv 1, vad 1, dec 1.
+    """
+
+    def __init__(self, args, device):
+        self.args = args
+        self.mel = MultiScaleMelLoss(sample_rate=16000).to(device) if args.lambda_mel > 0 else None
+        self.disc = None
+        if args.lambda_adv > 0:
+            from backbone import VoiceMarkDiscriminator
+            self.disc = VoiceMarkDiscriminator(device=device)
+            for prm in self.disc.parameters():
+                prm.requires_grad_(False)
+            self.disc.eval()
+        self.augmenter = None
+        if args.lambda_aug > 0 or args.lambda_vad > 0:
+            self.augmenter = build_augmenter(args, sample_rate=16000)
+        self.active = any(getattr(args, k) > 0 for k in
+                          ("lambda_mel", "lambda_cos", "lambda_adv", "lambda_aug", "lambda_vad"))
+
+    def __call__(self, backbone, out, clean_audio, message):
+        a = self.args
+        terms, total = {}, 0.0
+        recon_wm = out["recon_wm"]
+        if a.lambda_mel > 0:
+            terms["lmel"] = self.mel(recon_wm, clean_audio)
+            total = total + a.lambda_mel * terms["lmel"]
+        if a.lambda_cos > 0:
+            terms["lcos"] = compute_lcos(out["acoustic"], out["acoustic_wm"])
+            total = total + a.lambda_cos * terms["lcos"]
+        if a.lambda_adv > 0:
+            adv, fm = compute_ladv_generator(self.disc, recon_wm, clean_audio)
+            terms["ladv"], terms["lfm"] = adv, fm
+            total = total + a.lambda_adv * (adv + fm)
+        if self.augmenter is not None:
+            aug = self.augmenter(recon_wm, clean_audio)
+            presence_logits, chunk_logits = decode_both(backbone, aug["audio"])
+            if a.lambda_aug > 0:
+                terms["ldec_aug"] = compute_ldec(chunk_logits, message)
+                total = total + a.lambda_aug * terms["ldec_aug"]
+            if a.lambda_vad > 0:
+                mask = samples_to_frames(aug["nowm_mask"], presence_logits.shape[1])
+                terms["lvad"] = compute_lvad(presence_logits, aug["vad_ref"], 16000, mask)
+                total = total + a.lambda_vad * terms["lvad"]
+        return total, terms
+
+
 def make_clone(surrogate, audio, text, differentiable):
     """
     Generate a clone. When only the DETECTOR trains, no gradient needs to flow
@@ -290,6 +359,18 @@ def main():
                          "--train_msg_processor. Try e.g. 2 or 4 (full rank default is 8). "
                          "MUST be passed again, matching, to any eval script loading the "
                          "resulting checkpoint (e.g. xtts_transfer_eval.py --msgproc_lora_r).")
+    # 2026-10-24: VoiceMark quality losses and augmentation (see ExtraLosses).
+    p.add_argument("--lambda_mel", type=float, default=0.0,
+                   help="VoiceMark multi-scale mel loss on recon_wm vs clean (paper weight 2).")
+    p.add_argument("--lambda_cos", type=float, default=0.0,
+                   help="VoiceMark latent cosine loss (paper weight 2).")
+    p.add_argument("--lambda_adv", type=float, default=0.0,
+                   help="VoiceMark adversarial + feature-matching loss, frozen discriminator (paper weight 1).")
+    p.add_argument("--lambda_aug", type=float, default=0.0,
+                   help="Ldec on VoiceMark-augmented recon_wm (augment_voicemark.py).")
+    p.add_argument("--lambda_vad", type=float, default=0.0,
+                   help="Lvad on the same augmented audio (paper weight 1).")
+    add_augmentation_args(p)
     args = p.parse_args()
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -320,6 +401,12 @@ def main():
     backbone.model.to(device)
     optimizer = torch.optim.Adam(trainable, lr=args.lr)
 
+    extra = ExtraLosses(args, device)
+    quality_on = args.lambda_mel > 0 or args.lambda_cos > 0 or args.lambda_adv > 0
+    if quality_on and not args.train_msg_processor:
+        print("[main] WARNING: quality losses have no effect without --train_msg_processor "
+              "(the detector does not change the audio).")
+
     print("[main] Loading YourTTS surrogate (the in-loop cloner; frozen)...")
     surrogate = load_yourtts_surrogate(device=device)
 
@@ -347,8 +434,12 @@ def main():
         loss_clean = compute_ldec(decode_logits(backbone, recon_wm), message)
         loss_clone = compute_ldec(decode_logits(backbone, cloned), message)
         loss = args.lambda_clean * loss_clean + args.lambda_clone * loss_clone
+        extra_total, extra_terms = extra(backbone, out, clean_audio, message) if extra.active else (0.0, {})
+        loss = loss + extra_total
         print(f"\n--- 3. Loss ---")
         print(f"  Ldec(clean)={loss_clean.item():.4f}  Ldec(clone)={loss_clone.item():.4f}  total={loss.item():.4f}")
+        if extra_terms:
+            print("  extra terms: " + "  ".join(f"{k}={v.item():.4f}" for k, v in extra_terms.items()))
 
         optimizer.zero_grad()
         loss.backward()
@@ -376,7 +467,9 @@ def main():
     print(f"  trainable      : detector{' + msg_processor' if args.train_msg_processor else ''} (LoRA)")
     print(f"  in-loop cloner : YourTTS (differentiable={differentiable_clone})")
     print(f"  held-out eval  : XTTS, baseline to beat = 0.5587-0.5687 (noise floor ~0.02)")
-    print(f"  loss           : {args.lambda_clean} * Ldec(clean) + {args.lambda_clone} * Ldec(clone)")
+    print(f"  loss           : {args.lambda_clean} * Ldec(clean) + {args.lambda_clone} * Ldec(clone)"
+          + (f" + mel {args.lambda_mel} + cos {args.lambda_cos} + adv {args.lambda_adv}"
+             f" + aug {args.lambda_aug} + vad {args.lambda_vad}" if extra.active else ""))
     print(f"  clone term on  : from epoch {args.clone_warmup_epochs}")
     print(f"{'=' * 70}")
 
@@ -388,6 +481,7 @@ def main():
         backbone.model.train()
         clone_on = epoch >= args.clone_warmup_epochs
         sums = {"loss": 0.0, "clean": 0.0, "clone": 0.0, "n": 0}
+        extra_sums = {}
 
         for step, batch in enumerate(train_loader):
             clean_audio = batch["waveform"].to(device)
@@ -407,6 +501,13 @@ def main():
                 loss = loss + args.lambda_clone * loss_clone
                 loss_clone_val = loss_clone.item()
 
+            extra_terms = {}
+            if extra.active:
+                extra_total, extra_terms = extra(backbone, out, clean_audio, message)
+                loss = loss + extra_total
+                for k, v in extra_terms.items():
+                    extra_sums[k] = extra_sums.get(k, 0.0) + v.item()
+
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -424,6 +525,8 @@ def main():
                     msg += f" Ldec_clone={loss_clone_val:.4f}"
                 else:
                     msg += "  (clone term off -- warmup)"
+                if extra_terms:
+                    msg += " " + " ".join(f"{k}={v.item():.4f}" for k, v in extra_terms.items())
                 print(msg, flush=True)
 
         acc_clean, acc_clone = evaluate(backbone, surrogate, eval_loader, device,
@@ -437,6 +540,7 @@ def main():
             "mean_ldec_clone": (sums["clone"] / n) if clone_on else None,
             "eval_clean_acc": acc_clean,
             "eval_clone_acc": acc_clone,
+            "mean_extra_terms": {k: v / n for k, v in extra_sums.items()},
         }
         history.append(rec)
 
@@ -456,12 +560,14 @@ def main():
             "lora_r": args.lora_r, "lora_alpha": args.lora_alpha,
             "avg_acc": acc_clean, "eval_clone_acc": acc_clone,
             "trained_msg_processor": args.train_msg_processor,
+            "train_args": vars(args),
         }, ckpt_path)
         torch.save({
             "epoch": epoch, "lora_state_dict": lora_state,
             "lora_r": args.lora_r, "lora_alpha": args.lora_alpha,
             "avg_acc": acc_clean, "eval_clone_acc": acc_clone,
             "trained_msg_processor": args.train_msg_processor,
+            "train_args": vars(args),
         }, os.path.join(args.checkpoint_dir, "route2_final.pt"))
 
         if args.output:
@@ -471,6 +577,7 @@ def main():
                     "checkpoint_init": args.checkpoint,
                     "trained_msg_processor": args.train_msg_processor,
                     "lambda_clean": args.lambda_clean, "lambda_clone": args.lambda_clone,
+                    "train_args": vars(args),
                     "clone_warmup_epochs": args.clone_warmup_epochs,
                     "pre_training": {"clean_acc": acc_clean0, "clone_acc": acc_clone0},
                     "xtts_baseline_to_beat": 0.5687,

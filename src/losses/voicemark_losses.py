@@ -377,11 +377,18 @@ class VoiceMarkLosses(nn.Module):
         message: torch.Tensor,
         discriminator=None,
         augmentation_mask: torch.Tensor = None,
+        vad_waveform: torch.Tensor = None,
     ) -> dict:
+        # vad_waveform (2026-10-24): the clean audio after the same structural
+        # edits as the detector input (masking/shuffling/speed), from
+        # augment_voicemark.VoiceMarkAugmenter. When the detector sees augmented
+        # audio the VAD must be computed on audio aligned with it, not on the
+        # unedited clean_audio. None keeps the old behaviour exactly.
         l_cos = compute_lcos(acoustic, acoustic_wm)
         l_mel = self.mel_loss(recon_wm, clean_audio)
         l_dec = compute_ldec(chunk_logits, message, nchunk_size=self.nchunk_size)
-        l_vad = compute_lvad(detection_logits, clean_audio, self.sample_rate, augmentation_mask)
+        vad_src = clean_audio if vad_waveform is None else vad_waveform
+        l_vad = compute_lvad(detection_logits, vad_src, self.sample_rate, augmentation_mask)
 
         if discriminator is not None:
             l_adv, l_fm = compute_ladv_generator(discriminator, recon_wm, clean_audio)
