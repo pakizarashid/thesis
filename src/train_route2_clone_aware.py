@@ -101,7 +101,10 @@ Usage:
 import os
 import sys
 import json
+import random
+import re
 import argparse
+import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
@@ -282,6 +285,35 @@ class ExtraLosses:
         return total, terms
 
 
+def normalize_text(t):
+    """Same normalisation as src/eval/clone_eval_v2.py (keep the two identical)."""
+    t = " ".join(str(t).strip().split())
+    if not t:
+        return t
+    if t.isupper():
+        t = t.lower()
+    t = t[0].upper() + t[1:]
+    if t[-1] not in ".?!":
+        t += "."
+    return t
+
+
+def build_train_text_pool(train_ds, min_words, max_words):
+    """
+    2026-10-24 text protocol. Clone texts for training are transcripts of the
+    TRAINING utterances only (LibriSpeech train split of this subset), 6-20 words,
+    so no evaluation text (held-out speakers) can be seen in training.
+    """
+    pool = set()
+    for idx in train_ds._subset_indices:
+        fileid = train_ds._full_dataset._walker[idx]
+        spk, chap, utt = fileid.split("-")
+        t = normalize_text(train_ds._get_transcript(spk, chap, utt))
+        if min_words <= len(re.findall(r"[a-z0-9']+", t.lower())) <= max_words:
+            pool.add(t)
+    return sorted(pool)
+
+
 def make_clone(surrogate, audio, text, differentiable):
     """
     Generate a clone. When only the DETECTOR trains, no gradient needs to flow
@@ -340,7 +372,20 @@ def main():
                         "(fuller Dual Defense recipe). Requires backprop through the cloner: "
                         "slower and more memory.")
 
-    p.add_argument("--surrogate_text", type=str, default="This is a test sentence for voice cloning.")
+    p.add_argument("--surrogate_text", type=str, default="This is a test sentence for voice cloning.",
+                   help="Clone text when --clone_text fixed (the pre-2026-10-24 protocol), and the "
+                        "text of the in-loop monitoring eval in every mode.")
+    p.add_argument("--clone_text", choices=("fixed", "sampled"), default="fixed",
+                   help="'sampled' (2026-10-24): each training step clones with a different "
+                        "sentence drawn from the TRAINING transcripts, so the watermark cannot "
+                        "specialise to one sentence. 'fixed' reproduces the old runs.")
+    p.add_argument("--text_min_words", type=int, default=6)
+    p.add_argument("--text_max_words", type=int, default=14,
+                   help="14 keeps the differentiable YourTTS clone (backprop through it) within T4 memory.")
+    p.add_argument("--seed", type=int, default=None,
+                   help="Fixes data order, messages, clone-text order and augmentation draws. "
+                        "None reproduces the old (unseeded) behaviour. Seed 0 uses the same "
+                        "message seeds as the old runs.")
     p.add_argument("--eval_batches", type=int, default=10)
     p.add_argument("--data_root", type=str, default="./data/librispeech")
     p.add_argument("--n_speakers", type=int, default=60)
@@ -375,6 +420,11 @@ def main():
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     differentiable_clone = args.train_msg_processor
+    if args.seed is not None:
+        torch.manual_seed(args.seed)
+        random.seed(args.seed)
+        np.random.seed(args.seed)
+    msg_seed_offset = 0 if args.seed is None else args.seed * 1_000_000
 
     train_ds = LibriSpeechSubset(
         root=args.data_root, n_speakers=args.n_speakers,
@@ -390,8 +440,26 @@ def main():
         eval_utterances_per_speaker=args.eval_utterances_per_speaker,
         sample_rate=16000, crop_seconds=args.crop_seconds, split="eval",
     )
+    # own generator for the shuffle, so extra random draws by the quality/augmentation
+    # terms cannot change the data order between arms that share a seed
+    loader_gen = torch.Generator().manual_seed(args.seed) if args.seed is not None else None
     train_loader = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True,
-                              collate_fn=collate_librispeech, drop_last=True)
+                              collate_fn=collate_librispeech, drop_last=True, generator=loader_gen)
+
+    text_pool, text_rng = None, random.Random(0 if args.seed is None else args.seed)
+    if args.clone_text == "sampled":
+        text_pool = build_train_text_pool(train_ds, args.text_min_words, args.text_max_words)
+        os.makedirs(args.checkpoint_dir, exist_ok=True)
+        with open(os.path.join(args.checkpoint_dir, "clone_text_pool.json"), "w") as f:
+            json.dump(text_pool, f, indent=0)
+        print(f"[main] clone text: sampled per step from {len(text_pool)} training transcripts "
+              f"({args.text_min_words}-{args.text_max_words} words); pool saved to "
+              f"{args.checkpoint_dir}/clone_text_pool.json")
+    else:
+        print(f"[main] clone text: fixed sentence {args.surrogate_text!r}")
+
+    def step_text():
+        return text_rng.choice(text_pool) if text_pool else args.surrogate_text
     eval_loader = DataLoader(eval_ds, batch_size=args.batch_size, shuffle=False,
                              collate_fn=collate_librispeech)
 
@@ -422,8 +490,9 @@ def main():
         print(f"\n--- 1. Shapes ---")
         print(f"  clean_audio={tuple(clean_audio.shape)}  recon_wm={tuple(recon_wm.shape)}")
 
-        cloned = make_clone(surrogate, recon_wm, args.surrogate_text, differentiable_clone)
-        print(f"  clone={tuple(cloned.shape)}  (differentiable={differentiable_clone})")
+        diag_text = step_text()
+        cloned = make_clone(surrogate, recon_wm, diag_text, differentiable_clone)
+        print(f"  clone={tuple(cloned.shape)}  (differentiable={differentiable_clone})  text={diag_text!r}")
 
         acc_clean = detect_acc(backbone, recon_wm, message)
         acc_clone = detect_acc(backbone, cloned, message)
@@ -486,7 +555,7 @@ def main():
         for step, batch in enumerate(train_loader):
             clean_audio = batch["waveform"].to(device)
             message = random_message(16, clean_audio.shape[0], device,
-                                     seed=epoch * 10000 + step)
+                                     seed=msg_seed_offset + epoch * 10000 + step)
 
             out = backbone.forward_full(clean_audio, message)
             recon_wm = out["recon_wm"]
@@ -496,7 +565,7 @@ def main():
             loss_clone_val = float("nan")
 
             if clone_on:
-                cloned = make_clone(surrogate, recon_wm, args.surrogate_text, differentiable_clone)
+                cloned = make_clone(surrogate, recon_wm, step_text(), differentiable_clone)
                 loss_clone = compute_ldec(decode_logits(backbone, cloned), message)
                 loss = loss + args.lambda_clone * loss_clone
                 loss_clone_val = loss_clone.item()
