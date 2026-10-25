@@ -1,0 +1,60 @@
+[train] Using device: cuda
+[train] Loading backbone + adapters + discriminator...
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+[VoiceMarkDiscriminator] Loaded all 90 discriminator weight tensors cleanly (filters=32).
+[train] Loading datasets (speaker-disjoint train/eval split)...
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 900 utterances (train split, speaker-disjoint from the other split).
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+/usr/local/lib/python3.13/dist-packages/torchaudio/functional/functional.py:581: UserWarning: At least one mel filterbank has all zero values. The value for `n_mels` (16) may be set too high. Or, the value for `n_freqs` (33) may be set too low.
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/torchaudio/functional/functional.py:581: UserWarning: At least one mel filterbank has all zero values. The value for `n_mels` (32) may be set too high. Or, the value for `n_freqs` (65) may be set too low.
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/torchaudio/functional/functional.py:581: UserWarning: At least one mel filterbank has all zero values. The value for `n_mels` (64) may be set too high. Or, the value for `n_freqs` (129) may be set too low.
+  warnings.warn(
+[train] Running PRE-TRAINING baseline eval (LoRA at zero-init -- should reflect pretrained VoiceMark's own detection ability on unseen speakers)...
+=== Baseline held-out ACC (before any Stage 1 fine-tuning): 0.9881 ===
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+[train] VoiceMark-faithful augmentation: mode=one list=mask,shuffle,replace,encodec,perturb p_identity=0.2
+=== Baseline held-out ACC on AUGMENTED audio: 0.9431 ===
+[epoch 0 step 10] total=4.6297 acc=0.9547 | lvad=0.6396 lcos=0.3726 lmel=1.3130 ladv=0.0199 lfm=0.0011 ldec=0.4499
+[epoch 0 step 20] total=3.2460 acc=0.9328 | lvad=0.8045 lcos=0.3677 lmel=1.2302 ladv=0.0199 lfm=0.0011 ldec=0.9778
+[epoch 0 step 30] total=3.1813 acc=0.9656 | lvad=0.7368 lcos=0.3636 lmel=1.1883 ladv=0.0199 lfm=0.0012 ldec=0.2736
+[epoch 0 step 40] total=5.5840 acc=0.9453 | lvad=0.7326 lcos=0.3670 lmel=1.1871 ladv=0.0199 lfm=0.0011 ldec=0.7054
+[epoch 0 step 50] total=4.0776 acc=0.9375 | lvad=0.6761 lcos=0.3639 lmel=1.2148 ladv=0.0199 lfm=0.0011 ldec=0.8685
+[epoch 0 step 60] total=4.2477 acc=0.9578 | lvad=0.5594 lcos=0.3618 lmel=1.2210 ladv=0.0199 lfm=0.0011 ldec=0.3625
+[epoch 0 step 70] total=4.0216 acc=0.9375 | lvad=0.5767 lcos=0.3612 lmel=1.1817 ladv=0.0199 lfm=0.0011 ldec=0.5000
+[epoch 0 step 80] total=6.6885 acc=0.9656 | lvad=0.6290 lcos=0.3645 lmel=1.2076 ladv=0.0199 lfm=0.0011 ldec=0.4295
+[epoch 0 step 90] total=4.1218 acc=0.9281 | lvad=0.6908 lcos=0.3611 lmel=1.2420 ladv=0.0199 lfm=0.0012 ldec=0.5933
+[epoch 0 step 100] total=3.0011 acc=0.9531 | lvad=0.6131 lcos=0.3552 lmel=1.1278 ladv=0.0199 lfm=0.0011 ldec=0.3339
+[epoch 0 step 110] total=3.6636 acc=0.9609 | lvad=0.5690 lcos=0.3644 lmel=1.2337 ladv=0.0199 lfm=0.0011 ldec=0.4675
+[epoch 0 step 120] total=3.0245 acc=0.9297 | lvad=0.5708 lcos=0.3611 lmel=1.1491 ladv=0.0199 lfm=0.0011 ldec=0.7748
+[epoch 0 step 130] total=3.4287 acc=0.9313 | lvad=0.5609 lcos=0.3581 lmel=1.1491 ladv=0.0199 lfm=0.0012 ldec=0.8152
+[epoch 0 step 140] total=3.4391 acc=0.9609 | lvad=0.5541 lcos=0.3524 lmel=1.0733 ladv=0.0199 lfm=0.0009 ldec=0.2549
+[epoch 0 step 150] total=3.6960 acc=0.9641 | lvad=0.5894 lcos=0.3566 lmel=1.2324 ladv=0.0199 lfm=0.0013 ldec=0.2616
+[epoch 0 step 160] total=3.5902 acc=0.9391 | lvad=0.5471 lcos=0.3575 lmel=1.0803 ladv=0.0199 lfm=0.0011 ldec=0.3445
+[epoch 0 step 170] total=3.3784 acc=0.9531 | lvad=0.6689 lcos=0.3535 lmel=1.0410 ladv=0.0199 lfm=0.0010 ldec=0.3031
+[epoch 0 step 180] total=3.2060 acc=0.9688 | lvad=0.5744 lcos=0.3528 lmel=1.0491 ladv=0.0199 lfm=0.0009 ldec=0.3043
+[epoch 0 step 190] total=3.7513 acc=0.9547 | lvad=0.5480 lcos=0.3581 lmel=1.1103 ladv=0.0199 lfm=0.0011 ldec=0.3888
+[epoch 0 step 200] total=4.2374 acc=0.9313 | lvad=0.5139 lcos=0.3565 lmel=1.0692 ladv=0.0199 lfm=0.0011 ldec=0.4997
+[epoch 0 step 210] total=6.4508 acc=0.9297 | lvad=0.5644 lcos=0.3467 lmel=1.0882 ladv=0.0199 lfm=0.0013 ldec=0.6148
+[epoch 0 step 220] total=3.9300 acc=0.9203 | lvad=0.5313 lcos=0.3563 lmel=1.0917 ladv=0.0199 lfm=0.0011 ldec=0.6123
+=== Epoch 0 complete. Train-batch avg ACC: 0.9456 | Held-out eval ACC: 0.9844 (baseline was 0.9881) ===
+    held-out ACC on augmented audio: 0.9331 (baseline 0.9431) | train augmentation counts: {'encodec': 146, 'identity': 198, 'mask': 146, 'perturb': 141, 'replace': 134, 'shuffle': 135}
+[epoch 1 step 230] total=5.5915 acc=0.8906 | lvad=0.5881 lcos=0.3583 lmel=1.0649 ladv=0.0199 lfm=0.0010 ldec=1.0760
+[epoch 1 step 240] total=3.7400 acc=0.8734 | lvad=0.6243 lcos=0.3535 lmel=1.0243 ladv=0.0199 lfm=0.0011 ldec=0.8192
+[epoch 1 step 250] total=3.4460 acc=0.9469 | lvad=0.5233 lcos=0.3482 lmel=1.0236 ladv=0.0199 lfm=0.0011 ldec=0.3524
+[epoch 1 step 260] total=3.5920 acc=0.9375 | lvad=0.4999 lcos=0.3535 lmel=1.0985 ladv=0.0199 lfm=0.0010 ldec=0.4179
