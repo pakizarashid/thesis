@@ -497,7 +497,7 @@ def main():
                 sf.write(os.path.join(d, f"sample{i}_watermarked.wav"), recon_wm.reshape(-1).cpu().numpy(), SR)
                 sf.write(os.path.join(d, f"sample{i}_clone_{args.cloner}.wav"), cloned.reshape(-1).cpu().numpy(), SR)
         except Exception as e:
-            rec.update(status="failed", error=f"{type(e).__name__}: {str(e)[:300]}")
+            import traceback as _tb; rec.update(status="failed", error=f"{type(e).__name__}: {str(e)[:300]} | at: " + " <- ".join(f"{f.filename.split(chr(47))[-1]}:{f.lineno}" for f in _tb.extract_tb(e.__traceback__)[::-1][:4]))
         records.append(rec)
         line = (f"[{k + 1}/{len(todo)}] clip {i} prompt {spec} text {mode}: "
                 + (f"acc_src={acc_src:.3f} acc={rec['acc_clone']:.3f} traced={rec['traced']} far={rec['far_false']}"
