@@ -1,0 +1,400 @@
+[preflight] omegaconf 2.3.1 ok; numpy/torch ok
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+[plan] cloner=cosyvoice clips=100 prompts=['3'] texts=['fixed', 'unseen'] -> 200 clones to run
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[backbone] loaded checkpoints/route2_scaleupaug_train_msgproc/route2_final.pt (epoch 19)
+2026-10-25 17:43:20,656 INFO NumExpr defaulting to 4 threads.
+2026-10-25 17:43:21,479 DEBUG Skipping import of cpp extensions: Could not load this library: /usr/local/lib/python3.13/dist-packages/torchao/_C.abi3.so
+2026-10-25 17:43:24,128 DEBUG Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2026-10-25 17:43:24,295 DEBUG Creating converter from 7 to 5
+2026-10-25 17:43:24,295 DEBUG Creating converter from 5 to 7
+2026-10-25 17:43:24,295 DEBUG Creating converter from 7 to 5
+2026-10-25 17:43:24,295 DEBUG Creating converter from 5 to 7
+2026-10-25 17:43:24,637 DEBUG etils.epath found. Using etils.epath for file I/O.
+[cosyvoice] using CosyVoice2 from cosyvoice.cli.cosyvoice
+Sliding Window Attention is enabled but not implemented for `sdpa`; unexpected results may be encountered.
+/usr/local/lib/python3.13/dist-packages/diffusers/models/lora.py:391: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+2026-10-25 17:43:32,494 INFO input frame rate=25
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/usr/local/lib/python3.13/dist-packages/pyworld/__init__.py:13: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+[1;31m2026-10-25 17:43:34.991793229 [E:onnxruntime:Default, provider_bridge_ort.cc:2458 operator()] /onnxruntime_src/onnxruntime/core/session/provider_bridge_ort.cc:2043 onnxruntime::Provider& onnxruntime::ProviderLibrary::Get() [ONNXRuntimeError] : 1 : FAIL : Failed to load library /usr/local/lib/python3.13/dist-packages/onnxruntime/capi/libonnxruntime_providers_cuda.so with error: libcublasLt.so.13: cannot open shared object file: No such file or directory
+[m
+[0;93m2026-10-25 17:43:34.991847310 [W:onnxruntime:Default, onnxruntime_pybind_state.cc:1295 CreateExecutionProviderFactoryInstance] Failed to create CUDAExecutionProvider. Require cuDNN 9.* and CUDA 13.*. Please install all dependencies as mentioned in the GPU requirements page (https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html#requirements), make sure they're in the PATH, and that your GPU is supported.[m
+2026-10-25 17:43:36,256 INFO use wetext frontend
+[cosyvoice] loaded /kaggle/working/CosyVoice/pretrained_models/CosyVoice2-0.5B; sample_rate=24000
+2026-10-25 17:43:39,695 INFO Applied quirks (see `speechbrain.utils.quirks`): [disable_jit_profiling, allow_tf32]
+2026-10-25 17:43:39,695 INFO Excluded quirks specified by the `SB_DISABLE_QUIRKS` environment (comma-separated list): []
+2026-10-25 17:43:39,710 INFO Fetch hyperparams.yaml: Using symlink found at '/tmp/ecapa_model/hyperparams.yaml'
+2026-10-25 17:43:39,891 INFO Fetch embedding_model.ckpt: Using symlink found at '/tmp/ecapa_model/embedding_model.ckpt'
+2026-10-25 17:43:39,891 INFO Fetch mean_var_norm_emb.ckpt: Using symlink found at '/tmp/ecapa_model/mean_var_norm_emb.ckpt'
+2026-10-25 17:43:39,891 INFO Fetch classifier.ckpt: Using symlink found at '/tmp/ecapa_model/classifier.ckpt'
+2026-10-25 17:43:39,891 INFO Fetch label_encoder.txt: Using symlink found at '/tmp/ecapa_model/label_encoder.ckpt'
+2026-10-25 17:43:39,891 INFO Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+/usr/local/lib/python3.13/dist-packages/speechbrain/utils/checkpoints.py:202: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  state_dict = torch.load(path, map_location=device)
+/usr/local/lib/python3.13/dist-packages/speechbrain/processing/features.py:1550: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  stats = torch.load(path, map_location=self.device)
+2026-10-25 17:43:39,998 WARNING Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+2026-10-25 17:43:40,145 DEBUG Starting new HTTPS connection (1): huggingface.co:443
+2026-10-25 17:43:40,444 DEBUG https://huggingface.co:443 "GET /api/models/Systran/faster-whisper-base.en/revision/main HTTP/1.1" 200 None
+[transcribe] loading faster-whisper base.en (float16)
+2026-10-25 17:43:41,388 DEBUG https://huggingface.co:443 "GET /api/models/Systran/faster-whisper-base.en/revision/main HTTP/1.1" 200 None
+2026-10-25 17:43:41,568 INFO Processing audio with duration 00:03.000
+2026-10-25 17:43:41,576 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]/usr/local/lib/python3.13/dist-packages/torchaudio/__init__.py:86: UserWarning: The 'backend' parameter is not used by TorchCodec AudioDecoder.
+  return load_with_torchcodec(
+2026-10-25 17:43:42,723 INFO synthesis text This is a test sentence for voice cloning.
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:103: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with self.llm_context, torch.cuda.amp.autocast(self.fp16 is True and hasattr(self.llm, 'vllm') is False):
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:293: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast(self.fp16):
+2026-10-25 17:43:48,794 INFO yield speech len 7.2, rtf 0.8431997895240784
+100%|██████████| 1/1 [00:06<00:00,  6.93s/it]100%|██████████| 1/1 [00:06<00:00,  6.93s/it]
+2026-10-25 17:43:49,044 INFO Processing audio with duration 00:07.200
+2026-10-25 17:43:49,050 DEBUG Processing segment at 00:00.000
+2026-10-25 17:43:49,707 DEBUG Compression ratio threshold is not met with temperature 0.0 (13.058824 > 2.400000)
+2026-10-25 17:43:50,244 DEBUG Compression ratio threshold is not met with temperature 0.2 (17.578947 > 2.400000)
+2026-10-25 17:43:50,758 DEBUG Compression ratio threshold is not met with temperature 0.4 (8.785714 > 2.400000)
+2026-10-25 17:43:50,857 DEBUG Reset prompt. prompt_reset_on_temperature threshold is met 0.600000 > 0.500000
+[1/200] clip 0 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.335 wer=0.50
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:43:51,161 INFO synthesis text And where did it lead right to this room ronicky stepped from among the smooth silks.
+2026-10-25 17:43:56,710 INFO yield speech len 6.68, rtf 0.8306821306308587
+100%|██████████| 1/1 [00:05<00:00,  5.85s/it]100%|██████████| 1/1 [00:05<00:00,  5.85s/it]
+2026-10-25 17:43:56,904 INFO Processing audio with duration 00:06.680
+2026-10-25 17:43:56,917 DEBUG Processing segment at 00:00.000
+[2/200] clip 0 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.459 wer=0.12
+2026-10-25 17:43:57,308 INFO Processing audio with duration 00:03.000
+2026-10-25 17:43:57,320 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:43:57,751 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:43:59,998 INFO yield speech len 2.36, rtf 0.9521748049784515
+100%|██████████| 1/1 [00:02<00:00,  2.56s/it]100%|██████████| 1/1 [00:02<00:00,  2.56s/it]
+2026-10-25 17:44:00,115 INFO Processing audio with duration 00:02.360
+2026-10-25 17:44:00,127 DEBUG Processing segment at 00:00.000
+[3/200] clip 1 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.235 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:44:00,600 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-25 17:44:04,583 INFO yield speech len 4.8, rtf 0.8298243582248688
+100%|██████████| 1/1 [00:04<00:00,  4.28s/it]100%|██████████| 1/1 [00:04<00:00,  4.28s/it]
+2026-10-25 17:44:04,761 INFO Processing audio with duration 00:04.800
+2026-10-25 17:44:04,773 DEBUG Processing segment at 00:00.000
+[4/200] clip 1 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.303 wer=0.09
+2026-10-25 17:44:05,157 INFO Processing audio with duration 00:03.000
+2026-10-25 17:44:05,170 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:44:05,606 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:44:08,377 INFO yield speech len 3.16, rtf 0.8769365051124669
+100%|██████████| 1/1 [00:03<00:00,  3.06s/it]100%|██████████| 1/1 [00:03<00:00,  3.06s/it]
+2026-10-25 17:44:08,501 INFO Processing audio with duration 00:03.160
+2026-10-25 17:44:08,514 DEBUG Processing segment at 00:00.000
+[5/200] clip 2 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.560 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:44:08,952 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-25 17:44:13,186 INFO yield speech len 4.96, rtf 0.8535550005974308
+100%|██████████| 1/1 [00:04<00:00,  4.54s/it]100%|██████████| 1/1 [00:04<00:00,  4.54s/it]
+2026-10-25 17:44:13,341 INFO Processing audio with duration 00:04.960
+2026-10-25 17:44:13,353 DEBUG Processing segment at 00:00.000
+[6/200] clip 2 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.546 wer=0.00
+2026-10-25 17:44:13,697 INFO Processing audio with duration 00:03.000
+2026-10-25 17:44:13,709 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:44:14,183 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:44:16,215 INFO yield speech len 1.92, rtf 1.0585362712542217
+100%|██████████| 1/1 [00:02<00:00,  2.33s/it]100%|██████████| 1/1 [00:02<00:00,  2.33s/it]
+2026-10-25 17:44:16,321 INFO Processing audio with duration 00:01.920
+2026-10-25 17:44:16,333 DEBUG Processing segment at 00:00.000
+[7/200] clip 3 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.445 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:44:16,774 INFO synthesis text How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+2026-10-25 17:44:21,012 INFO yield speech len 5.16, rtf 0.8214524550031321
+100%|██████████| 1/1 [00:04<00:00,  4.54s/it]100%|██████████| 1/1 [00:04<00:00,  4.54s/it]
+2026-10-25 17:44:21,179 INFO Processing audio with duration 00:05.160
+2026-10-25 17:44:21,192 DEBUG Processing segment at 00:00.000
+[8/200] clip 3 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.456 wer=0.11
+2026-10-25 17:44:21,563 INFO Processing audio with duration 00:03.000
+2026-10-25 17:44:21,576 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:44:22,004 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:44:26,081 INFO yield speech len 4.88, rtf 0.8354289121315128
+100%|██████████| 1/1 [00:04<00:00,  4.36s/it]100%|██████████| 1/1 [00:04<00:00,  4.36s/it]
+2026-10-25 17:44:26,235 INFO Processing audio with duration 00:04.880
+2026-10-25 17:44:26,248 DEBUG Processing segment at 00:00.000
+[9/200] clip 4 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.254 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:44:26,711 INFO synthesis text It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+2026-10-25 17:44:32,688 INFO yield speech len 7.36, rtf 0.8121439296266306
+100%|██████████| 1/1 [00:06<00:00,  6.27s/it]100%|██████████| 1/1 [00:06<00:00,  6.27s/it]
+2026-10-25 17:44:32,888 INFO Processing audio with duration 00:07.360
+2026-10-25 17:44:32,903 DEBUG Processing segment at 00:00.000
+[10/200] clip 4 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.274 wer=0.00
+2026-10-25 17:44:33,312 INFO Processing audio with duration 00:03.000
+2026-10-25 17:44:33,317 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:44:33,766 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:44:36,120 INFO yield speech len 2.48, rtf 0.9490297686669135
+100%|██████████| 1/1 [00:02<00:00,  2.64s/it]100%|██████████| 1/1 [00:02<00:00,  2.64s/it]
+2026-10-25 17:44:36,234 INFO Processing audio with duration 00:02.480
+2026-10-25 17:44:36,247 DEBUG Processing segment at 00:00.000
+[11/200] clip 5 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.487 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:44:36,670 INFO synthesis text And always had an odd inquiring look.
+2026-10-25 17:44:39,310 INFO yield speech len 3.04, rtf 0.8681967070228175
+100%|██████████| 1/1 [00:02<00:00,  2.94s/it]100%|██████████| 1/1 [00:02<00:00,  2.94s/it]
+2026-10-25 17:44:39,432 INFO Processing audio with duration 00:03.040
+2026-10-25 17:44:39,444 DEBUG Processing segment at 00:00.000
+[12/200] clip 5 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.338 wer=0.14
+2026-10-25 17:44:39,767 INFO Processing audio with duration 00:03.000
+2026-10-25 17:44:39,780 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:44:40,231 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:44:42,960 INFO yield speech len 3.04, rtf 0.8974824296800714
+100%|██████████| 1/1 [00:03<00:00,  3.04s/it]100%|██████████| 1/1 [00:03<00:00,  3.04s/it]
+2026-10-25 17:44:43,071 INFO Processing audio with duration 00:03.040
+2026-10-25 17:44:43,085 DEBUG Processing segment at 00:00.000
+[13/200] clip 6 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.359 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:44:43,569 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-25 17:44:48,365 INFO yield speech len 5.84, rtf 0.8212467578992452
+100%|██████████| 1/1 [00:05<00:00,  5.12s/it]100%|██████████| 1/1 [00:05<00:00,  5.12s/it]
+2026-10-25 17:44:48,542 INFO Processing audio with duration 00:05.840
+2026-10-25 17:44:48,547 DEBUG Processing segment at 00:00.000
+[14/200] clip 6 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.513 wer=0.15
+2026-10-25 17:44:48,894 INFO Processing audio with duration 00:03.000
+2026-10-25 17:44:48,906 DEBUG Processing segment at 00:00.000
+2026-10-25 17:44:49,620 DEBUG Compression ratio threshold is not met with temperature 0.0 (6.816667 > 2.400000)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:44:50,126 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:44:52,695 INFO yield speech len 2.96, rtf 0.8678649728362625
+100%|██████████| 1/1 [00:02<00:00,  2.95s/it]100%|██████████| 1/1 [00:02<00:00,  2.95s/it]
+2026-10-25 17:44:52,819 INFO Processing audio with duration 00:02.960
+2026-10-25 17:44:52,830 DEBUG Processing segment at 00:00.000
+[15/200] clip 7 prompt 3 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.377 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:44:53,334 INFO synthesis text And the second to benjamin tipton.
+2026-10-25 17:44:55,968 INFO yield speech len 3.04, rtf 0.8665065232076142
+100%|██████████| 1/1 [00:02<00:00,  2.93s/it]100%|██████████| 1/1 [00:02<00:00,  2.93s/it]
+2026-10-25 17:44:56,080 INFO Processing audio with duration 00:03.040
+2026-10-25 17:44:56,093 DEBUG Processing segment at 00:00.000
+[16/200] clip 7 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.471 wer=0.17
+2026-10-25 17:44:56,469 INFO Processing audio with duration 00:03.000
+2026-10-25 17:44:56,473 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:44:56,920 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:44:59,512 INFO yield speech len 2.84, rtf 0.9126714417632198
+100%|██████████| 1/1 [00:02<00:00,  2.91s/it]100%|██████████| 1/1 [00:02<00:00,  2.91s/it]
+2026-10-25 17:44:59,629 INFO Processing audio with duration 00:02.840
+2026-10-25 17:44:59,633 DEBUG Processing segment at 00:00.000
+[17/200] clip 8 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.479 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:45:00,082 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-25 17:45:05,614 INFO yield speech len 6.72, rtf 0.8231411732378461
+100%|██████████| 1/1 [00:05<00:00,  5.84s/it]100%|██████████| 1/1 [00:05<00:00,  5.84s/it]
+2026-10-25 17:45:05,804 INFO Processing audio with duration 00:06.720
+2026-10-25 17:45:05,818 DEBUG Processing segment at 00:00.000
+[18/200] clip 8 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.578 wer=0.00
+2026-10-25 17:45:06,203 INFO Processing audio with duration 00:03.000
+2026-10-25 17:45:06,216 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:45:06,673 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:45:09,332 INFO yield speech len 2.96, rtf 0.8985110231347986
+100%|██████████| 1/1 [00:02<00:00,  2.98s/it]100%|██████████| 1/1 [00:02<00:00,  2.98s/it]
+2026-10-25 17:45:09,435 INFO Processing audio with duration 00:02.960
+2026-10-25 17:45:09,447 DEBUG Processing segment at 00:00.000
+[19/200] clip 9 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.453 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:45:09,868 INFO synthesis text And there they told me they had buried it.
+2026-10-25 17:45:12,382 INFO yield speech len 2.96, rtf 0.8490696952149674
+100%|██████████| 1/1 [00:02<00:00,  2.82s/it]100%|██████████| 1/1 [00:02<00:00,  2.82s/it]
+2026-10-25 17:45:12,485 INFO Processing audio with duration 00:02.960
+2026-10-25 17:45:12,497 DEBUG Processing segment at 00:00.000
+[20/200] clip 9 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.529 wer=0.00
+2026-10-25 17:45:12,889 INFO Processing audio with duration 00:03.000
+2026-10-25 17:45:12,903 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:45:13,484 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:45:15,519 INFO yield speech len 2.0, rtf 1.0178775787353516
+100%|██████████| 1/1 [00:02<00:00,  2.39s/it]100%|██████████| 1/1 [00:02<00:00,  2.39s/it]
+2026-10-25 17:45:15,626 INFO Processing audio with duration 00:02.000
+2026-10-25 17:45:15,640 DEBUG Processing segment at 00:00.000
+[21/200] clip 10 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.459 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:45:16,101 INFO synthesis text And there they told me they had buried it.
+2026-10-25 17:45:18,385 INFO yield speech len 2.4, rtf 0.9518830974896749
+100%|██████████| 1/1 [00:02<00:00,  2.59s/it]100%|██████████| 1/1 [00:02<00:00,  2.59s/it]
+2026-10-25 17:45:18,503 INFO Processing audio with duration 00:02.400
+2026-10-25 17:45:18,516 DEBUG Processing segment at 00:00.000
+[22/200] clip 10 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.444 wer=0.00
+2026-10-25 17:45:18,847 INFO Processing audio with duration 00:03.000
+2026-10-25 17:45:18,859 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:45:19,283 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:45:21,545 INFO yield speech len 2.32, rtf 0.9752042334655237
+100%|██████████| 1/1 [00:02<00:00,  2.56s/it]100%|██████████| 1/1 [00:02<00:00,  2.56s/it]
+2026-10-25 17:45:21,665 INFO Processing audio with duration 00:02.320
+2026-10-25 17:45:21,669 DEBUG Processing segment at 00:00.000
+[23/200] clip 11 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.346 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:45:22,114 INFO synthesis text Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+2026-10-25 17:45:29,861 INFO yield speech len 9.44, rtf 0.8206394264253519
+100%|██████████| 1/1 [00:08<00:00,  8.06s/it]100%|██████████| 1/1 [00:08<00:00,  8.06s/it]
+2026-10-25 17:45:30,120 INFO Processing audio with duration 00:09.440
+2026-10-25 17:45:30,133 DEBUG Processing segment at 00:00.000
+[24/200] clip 11 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.387 wer=0.00
+2026-10-25 17:45:30,549 INFO Processing audio with duration 00:03.000
+2026-10-25 17:45:30,561 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:45:30,988 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:45:33,698 INFO yield speech len 3.04, rtf 0.8912636261237294
+100%|██████████| 1/1 [00:03<00:00,  3.02s/it]100%|██████████| 1/1 [00:03<00:00,  3.02s/it]
+2026-10-25 17:45:33,815 INFO Processing audio with duration 00:03.040
+2026-10-25 17:45:33,820 DEBUG Processing segment at 00:00.000
+[25/200] clip 12 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.364 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:45:34,345 INFO synthesis text And where did it lead right to this room ronicky stepped from among the smooth silks.
+2026-10-25 17:45:39,041 INFO yield speech len 5.84, rtf 0.8040509811819416
+100%|██████████| 1/1 [00:04<00:00,  4.99s/it]100%|██████████| 1/1 [00:04<00:00,  4.99s/it]
+2026-10-25 17:45:39,207 INFO Processing audio with duration 00:05.840
+2026-10-25 17:45:39,221 DEBUG Processing segment at 00:00.000
+2026-10-25 17:45:39,420 DEBUG Processing segment at 00:05.820
+2026-10-25 17:45:39,498 DEBUG Log probability threshold is not met with temperature 0.0 (-1.446615 < -1.000000)
+2026-10-25 17:45:39,498 DEBUG No speech threshold is met (0.950684 > 0.600000)
+[26/200] clip 12 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.314 wer=0.00
+2026-10-25 17:45:39,719 INFO Processing audio with duration 00:03.000
+2026-10-25 17:45:39,732 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:45:40,236 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:45:42,630 INFO yield speech len 2.64, rtf 0.9068363543712731
+100%|██████████| 1/1 [00:02<00:00,  2.75s/it]100%|██████████| 1/1 [00:02<00:00,  2.75s/it]
+2026-10-25 17:45:42,754 INFO Processing audio with duration 00:02.640
+2026-10-25 17:45:42,766 DEBUG Processing segment at 00:00.000
+[27/200] clip 13 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.445 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:45:43,286 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-25 17:45:46,684 INFO yield speech len 3.92, rtf 0.8669105111336222
+100%|██████████| 1/1 [00:03<00:00,  3.79s/it]100%|██████████| 1/1 [00:03<00:00,  3.79s/it]
+2026-10-25 17:45:46,828 INFO Processing audio with duration 00:03.920
+2026-10-25 17:45:46,841 DEBUG Processing segment at 00:00.000
+[28/200] clip 13 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.483 wer=0.09
+2026-10-25 17:45:47,224 INFO Processing audio with duration 00:03.000
+2026-10-25 17:45:47,238 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:45:47,749 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:45:50,203 INFO yield speech len 2.72, rtf 0.9020736112314112
+100%|██████████| 1/1 [00:02<00:00,  2.82s/it]100%|██████████| 1/1 [00:02<00:00,  2.82s/it]
+2026-10-25 17:45:50,327 INFO Processing audio with duration 00:02.720
+2026-10-25 17:45:50,341 DEBUG Processing segment at 00:00.000
+[29/200] clip 14 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.279 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:45:50,803 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-25 17:45:54,553 INFO yield speech len 4.44, rtf 0.8446711140709954
+100%|██████████| 1/1 [00:04<00:00,  4.05s/it]100%|██████████| 1/1 [00:04<00:00,  4.06s/it]
+2026-10-25 17:45:54,726 INFO Processing audio with duration 00:04.440
+2026-10-25 17:45:54,732 DEBUG Processing segment at 00:00.000
+[30/200] clip 14 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.373 wer=0.00
+2026-10-25 17:45:55,121 INFO Processing audio with duration 00:02.540
+2026-10-25 17:45:55,132 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:45:55,533 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:45:57,965 INFO yield speech len 2.6, rtf 0.9354904981759878
+100%|██████████| 1/1 [00:02<00:00,  2.70s/it]100%|██████████| 1/1 [00:02<00:00,  2.70s/it]
+2026-10-25 17:45:58,076 INFO Processing audio with duration 00:02.600
+2026-10-25 17:45:58,091 DEBUG Processing segment at 00:00.000
+[31/200] clip 15 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.377 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:45:58,509 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-25 17:46:02,474 INFO yield speech len 5.0, rtf 0.7929362773895263
+100%|██████████| 1/1 [00:04<00:00,  4.23s/it]100%|██████████| 1/1 [00:04<00:00,  4.23s/it]
+2026-10-25 17:46:02,622 INFO Processing audio with duration 00:05.000
+2026-10-25 17:46:02,635 DEBUG Processing segment at 00:00.000
+[32/200] clip 15 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.282 wer=0.09
+2026-10-25 17:46:02,992 INFO Processing audio with duration 00:03.000
+2026-10-25 17:46:03,005 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:46:03,425 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:46:06,267 INFO yield speech len 3.32, rtf 0.8560571325830667
+100%|██████████| 1/1 [00:03<00:00,  3.13s/it]100%|██████████| 1/1 [00:03<00:00,  3.13s/it]
+2026-10-25 17:46:06,395 INFO Processing audio with duration 00:03.320
+2026-10-25 17:46:06,411 DEBUG Processing segment at 00:00.000
+[33/200] clip 16 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.432 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:46:06,982 INFO synthesis text And always had an odd inquiring look.
+2026-10-25 17:46:10,628 INFO yield speech len 4.24, rtf 0.8599546158088828
+100%|██████████| 1/1 [00:04<00:00,  4.04s/it]100%|██████████| 1/1 [00:04<00:00,  4.04s/it]
+2026-10-25 17:46:10,780 INFO Processing audio with duration 00:04.240
+2026-10-25 17:46:10,801 DEBUG Processing segment at 00:00.000
+[34/200] clip 16 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.478 wer=0.00
+2026-10-25 17:46:11,171 INFO Processing audio with duration 00:03.000
+2026-10-25 17:46:11,177 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:46:11,637 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:46:13,830 INFO yield speech len 2.48, rtf 0.8842518252711142
+100%|██████████| 1/1 [00:02<00:00,  2.49s/it]100%|██████████| 1/1 [00:02<00:00,  2.49s/it]
+2026-10-25 17:46:13,922 INFO Processing audio with duration 00:02.480
+2026-10-25 17:46:13,934 DEBUG Processing segment at 00:00.000
+[35/200] clip 17 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.541 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:46:14,447 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-25 17:46:17,341 INFO yield speech len 3.32, rtf 0.8717464395316251
+100%|██████████| 1/1 [00:03<00:00,  3.20s/it]100%|██████████| 1/1 [00:03<00:00,  3.20s/it]
+2026-10-25 17:46:17,456 INFO Processing audio with duration 00:03.320
+2026-10-25 17:46:17,469 DEBUG Processing segment at 00:00.000
+[36/200] clip 17 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.560 wer=0.15
+2026-10-25 17:46:17,849 INFO Processing audio with duration 00:03.000
+2026-10-25 17:46:17,866 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:46:18,333 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:46:20,981 INFO yield speech len 3.12, rtf 0.8489536169247749
+100%|██████████| 1/1 [00:02<00:00,  2.95s/it]100%|██████████| 1/1 [00:02<00:00,  2.95s/it]
+2026-10-25 17:46:21,106 INFO Processing audio with duration 00:03.120
+2026-10-25 17:46:21,111 DEBUG Processing segment at 00:00.000
+[37/200] clip 18 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.291 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:46:21,630 INFO synthesis text And the second to benjamin tipton.
+2026-10-25 17:46:24,390 INFO yield speech len 3.04, rtf 0.9078661077900937
+100%|██████████| 1/1 [00:03<00:00,  3.11s/it]100%|██████████| 1/1 [00:03<00:00,  3.11s/it]
+2026-10-25 17:46:24,508 INFO Processing audio with duration 00:03.040
+2026-10-25 17:46:24,522 DEBUG Processing segment at 00:00.000
+[38/200] clip 18 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.127 wer=0.00
+2026-10-25 17:46:24,941 INFO Processing audio with duration 00:03.000
+2026-10-25 17:46:24,956 DEBUG Processing segment at 00:00.000
+2026-10-25 17:46:25,419 DEBUG Compression ratio threshold is not met with temperature 0.0 (4.746667 > 2.400000)
+2026-10-25 17:46:25,836 DEBUG Compression ratio threshold is not met with temperature 0.2 (7.475610 > 2.400000)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:46:26,444 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:46:28,331 INFO yield speech len 1.92, rtf 0.9832198421160381
+100%|██████████| 1/1 [00:02<00:00,  2.21s/it]100%|██████████| 1/1 [00:02<00:00,  2.21s/it]
+2026-10-25 17:46:28,417 INFO Processing audio with duration 00:01.920
+2026-10-25 17:46:28,428 DEBUG Processing segment at 00:00.000
+[39/200] clip 19 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.284 wer=0.38
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:46:28,888 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-25 17:46:33,067 INFO yield speech len 4.96, rtf 0.8424601727916349
+100%|██████████| 1/1 [00:04<00:00,  4.51s/it]100%|██████████| 1/1 [00:04<00:00,  4.51s/it]
+2026-10-25 17:46:33,213 INFO Processing audio with duration 00:04.960
+2026-10-25 17:46:33,226 DEBUG Processing segment at 00:00.000
+[40/200] clip 19 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.334 wer=0.07
+2026-10-25 17:46:33,688 INFO Processing audio with duration 00:03.000
+2026-10-25 17:46:33,692 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:46:34,188 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:46:36,436 INFO yield speech len 2.44, rtf 0.9209828298599994
+100%|██████████| 1/1 [00:02<00:00,  2.60s/it]100%|██████████| 1/1 [00:02<00:00,  2.60s/it]
+2026-10-25 17:46:36,549 INFO Processing audio with duration 00:02.440
+2026-10-25 17:46:36,561 DEBUG Processing segment at 00:00.000
+[41/200] clip 20 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.396 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:46:37,029 INFO synthesis text How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+2026-10-25 17:46:42,083 INFO yield speech len 5.96, rtf 0.8479459173727356
+100%|██████████| 1/1 [00:05<00:00,  5.36s/it]100%|██████████| 1/1 [00:05<00:00,  5.36s/it]
+2026-10-25 17:46:42,266 INFO Processing audio with duration 00:05.960
+2026-10-25 17:46:42,280 DEBUG Processing segment at 00:00.000
+[42/200] clip 20 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.365 wer=0.17
+2026-10-25 17:46:42,690 INFO Processing audio with duration 00:03.000
+2026-10-25 17:46:42,704 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:46:43,151 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:46:45,623 INFO yield speech len 2.76, rtf 0.895491199216981
+100%|██████████| 1/1 [00:02<00:00,  2.76s/it]100%|██████████| 1/1 [00:02<00:00,  2.76s/it]
+2026-10-25 17:46:45,750 INFO Processing audio with duration 00:02.760
+2026-10-25 17:46:45,763 DEBUG Processing segment at 00:00.000
+[43/200] clip 21 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.303 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:46:46,232 INFO synthesis text Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+2026-10-25 17:46:53,227 INFO yield speech len 8.76, rtf 0.7985015982362234
+100%|██████████| 1/1 [00:07<00:00,  7.33s/it]100%|██████████| 1/1 [00:07<00:00,  7.33s/it]
+2026-10-25 17:46:53,448 INFO Processing audio with duration 00:08.760
+2026-10-25 17:46:53,463 DEBUG Processing segment at 00:00.000
+[44/200] clip 21 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.344 wer=0.06
+2026-10-25 17:46:53,878 INFO Processing audio with duration 00:03.000
+2026-10-25 17:46:53,891 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:46:54,368 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:46:57,722 INFO yield speech len 3.72, rtf 0.901796676779306
+100%|██████████| 1/1 [00:03<00:00,  3.69s/it]100%|██████████| 1/1 [00:03<00:00,  3.69s/it]
+2026-10-25 17:46:57,900 INFO Processing audio with duration 00:03.720
+2026-10-25 17:46:57,905 DEBUG Processing segment at 00:00.000
+[45/200] clip 22 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.385 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:46:58,461 INFO synthesis text Her residence on the piazzi barberini being considered an insecure abode.
+2026-10-25 17:47:03,444 INFO yield speech len 5.92, rtf 0.8417874171927169
+100%|██████████| 1/1 [00:05<00:00,  5.31s/it]100%|██████████| 1/1 [00:05<00:00,  5.31s/it]
+2026-10-25 17:47:03,615 INFO Processing audio with duration 00:05.920
+2026-10-25 17:47:03,628 DEBUG Processing segment at 00:00.000
+[46/200] clip 22 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.419 wer=0.18
+2026-10-25 17:47:04,004 INFO Processing audio with duration 00:03.000
+2026-10-25 17:47:04,016 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:47:04,471 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 17:47:06,871 INFO yield speech len 2.56, rtf 0.9376691654324532
+100%|██████████| 1/1 [00:02<00:00,  2.71s/it]100%|██████████| 1/1 [00:02<00:00,  2.71s/it]
+2026-10-25 17:47:06,994 INFO Processing audio with duration 00:02.560
+2026-10-25 17:47:07,005 DEBUG Processing segment at 00:00.000
+[47/200] clip 23 prompt 3 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.570 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 17:47:07,426 INFO synthesis text But civil you can speak and shall george merry you may lay to that.
