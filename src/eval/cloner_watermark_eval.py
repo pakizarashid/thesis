@@ -323,9 +323,27 @@ def clone_cosyvoice(model, speaker_audio_16k, gen_text, tmp_dir, tag, ref_text, 
         raise SystemExit("CosyVoice requires a prompt transcript; --auto_transcribe is off "
                          "and --ref_text is empty.")
 
+    # CosyVoice normalises the prompt transcript with wetext, whose English parser asserts on
+    # some long transcripts (seen on full-utterance prompts). Check it first: if it fails, retry
+    # with the transcript reduced to letters, digits and basic punctuation; if that still fails,
+    # skip CosyVoice's text frontend for this clone. Clones whose transcript passes are unchanged.
+    import re as _re
+    text_frontend = True
+    try:
+        model.frontend.text_normalize(ref_text, split=False)
+    except AssertionError:
+        cleaned = " ".join(_re.sub(r"[^A-Za-z0-9' ,.?!]", " ", ref_text).split())
+        try:
+            model.frontend.text_normalize(cleaned, split=False)
+            print(f"[cosyvoice] prompt transcript cleaned for the text normaliser ({tag})")
+        except AssertionError:
+            text_frontend = False
+            print(f"[cosyvoice] text normaliser fails on this prompt transcript; frontend skipped ({tag})")
+        ref_text = cleaned
+
     chunks = []
     try:
-        gen = model.inference_zero_shot(gen_text, ref_text, ref_path, stream=False)
+        gen = model.inference_zero_shot(gen_text, ref_text, ref_path, stream=False, text_frontend=text_frontend)
     except TypeError:
         gen = model.inference_zero_shot(gen_text, ref_text, ref_path)
     for out in gen:
