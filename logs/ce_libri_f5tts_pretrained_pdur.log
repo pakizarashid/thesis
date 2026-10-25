@@ -1,0 +1,2056 @@
+[preflight] omegaconf 2.3.1 ok; numpy/torch ok
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+[resume] 220 completed records kept from results/ce_libri_f5tts_pretrained_pdur.json
+[plan] cloner=f5tts clips=100 prompts=['6', 'full'] texts=['fixed', 'unseen'] -> 180 clones to run
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[backbone] LoRA at zero-init == PRETRAINED VOICEMARK (their released weights)
+[f5tts] loading (first run downloads weights)...
+Download Vocos from huggingface charactr/vocos-mel-24khz
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+vocab :  /usr/local/lib/python3.13/dist-packages/f5_tts/infer/examples/vocab.txt
+token :  custom
+model :  /root/.cache/huggingface/hub/models--SWivid--F5-TTS/snapshots/84e5a410d9cead4de2f847e7c9369a6440bdfaca/F5TTS_v1_Base/model_1250000.safetensors 
+
+INFO:speechbrain.utils.fetching:Fetch hyperparams.yaml: Using symlink found at '/tmp/ecapa_model/hyperparams.yaml'
+INFO:speechbrain.utils.fetching:Fetch embedding_model.ckpt: Using symlink found at '/tmp/ecapa_model/embedding_model.ckpt'
+INFO:speechbrain.utils.fetching:Fetch mean_var_norm_emb.ckpt: Using symlink found at '/tmp/ecapa_model/mean_var_norm_emb.ckpt'
+INFO:speechbrain.utils.fetching:Fetch classifier.ckpt: Using symlink found at '/tmp/ecapa_model/classifier.ckpt'
+INFO:speechbrain.utils.fetching:Fetch label_encoder.txt: Using symlink found at '/tmp/ecapa_model/label_encoder.ckpt'
+INFO:speechbrain.utils.parameter_transfer:Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+/usr/local/lib/python3.13/dist-packages/speechbrain/utils/checkpoints.py:202: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  state_dict = torch.load(path, map_location=device)
+/usr/local/lib/python3.13/dist-packages/speechbrain/processing/features.py:1550: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  stats = torch.load(path, map_location=self.device)
+WARNING:speechbrain.inference.interfaces:Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/587 [00:00<?, ?it/s]Loading weights:  37%|███▋      | 219/587 [00:00<00:00, 2189.70it/s]Loading weights:  80%|████████  | 471/587 [00:00<00:00, 2383.74it/s]Loading weights: 100%|██████████| 587/587 [00:00<00:00, 2863.23it/s]
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+[transformers] Passing `generation_config` together with generation-related arguments=({'begin_suppress_tokens', 'suppress_tokens'}) is deprecated and will be removed in future versions. Please pass either a `generation_config` object OR all generation parameters explicitly, but not both.
+[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer WhisperTokenizer. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
+
+ref_text   classes reinforced by the commercialism of our time the hard and the monotonous labor in our modern. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.55s/it]100%|██████████| 1/1 [00:02<00:00,  2.55s/it]
+[1/180] clip 55 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.593 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   classes reinforced by the commercialism of our time the hard and the monotonous labor in our modern. 
+gen_text 0 And where did it lead right to this room ronicky stepped from among the smooth silks.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.14s/it]100%|██████████| 1/1 [00:03<00:00,  3.14s/it]
+[2/180] clip 55 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.703 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   The wild chase for luxury in the higher classes, reinforced by the commercialism of our time, the hard and the monotonous labor in our modern mills and mines for the lower classes,. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.56s/it]100%|██████████| 1/1 [00:03<00:00,  3.56s/it]
+[3/180] clip 55 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.635 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   The wild chase for luxury in the higher classes, reinforced by the commercialism of our time, the hard and the monotonous labor in our modern mills and mines for the lower classes,. 
+gen_text 0 And where did it lead right to this room ronicky stepped from among the smooth silks.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.42s/it]100%|██████████| 1/1 [00:04<00:00,  4.42s/it]
+[4/180] clip 55 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.697 wer=0.06
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   and Calico. Make way, make way, Sierra Komayo-chan is marrying Mademoiselle Clutchfield. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.51s/it]100%|██████████| 1/1 [00:02<00:00,  2.51s/it]
+[5/180] clip 56 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.549 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   and Calico. Make way, make way, Sierra Komayo-chan is marrying Mademoiselle Clutchfield. 
+gen_text 0 But civil you can speak and shall george merry you may lay to that.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.01s/it]100%|██████████| 1/1 [00:03<00:00,  3.01s/it]
+[6/180] clip 56 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.576 wer=0.14
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   freshly decorated violet ebony and calico make way make way sieur courmeiljeune is marrying mademoiselle clutchpenny sumptuous and splendour. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.41s/it]100%|██████████| 1/1 [00:04<00:00,  4.41s/it]
+[7/180] clip 56 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.528 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   freshly decorated violet ebony and calico make way make way sieur courmeiljeune is marrying mademoiselle clutchpenny sumptuous and splendour. 
+gen_text 0 But civil you can speak and shall george merry you may lay to that.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:05<00:00,  5.12s/it]100%|██████████| 1/1 [00:05<00:00,  5.12s/it]
+[8/180] clip 56 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.662 wer=0.07
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   of life for any length of time but a continuation of the life for which adjustment has been learned with a. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.41s/it]100%|██████████| 1/1 [00:02<00:00,  2.41s/it]
+[9/180] clip 57 prompt 6 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.597 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   of life for any length of time but a continuation of the life for which adjustment has been learned with a. 
+gen_text 0 And always had an odd inquiring look.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.36s/it]100%|██████████| 1/1 [00:02<00:00,  2.36s/it]
+[10/180] clip 57 prompt 6 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.616 wer=0.00
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   They should not be complete rest or complete change of life for any length of time, but a continuation of the life for which adjustment has been learned. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.30s/it]100%|██████████| 1/1 [00:03<00:00,  3.30s/it]
+[11/180] clip 57 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.654 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   They should not be complete rest or complete change of life for any length of time, but a continuation of the life for which adjustment has been learned. 
+gen_text 0 And always had an odd inquiring look.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.29s/it]100%|██████████| 1/1 [00:03<00:00,  3.29s/it]
+[12/180] clip 57 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.612 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   either human or pleasant or painful, with the exception of earthquakes and catastrophes. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.53s/it]100%|██████████| 1/1 [00:02<00:00,  2.53s/it]
+[13/180] clip 58 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.771 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   either human or pleasant or painful, with the exception of earthquakes and catastrophes. 
+gen_text 0 Seventy four years ago to the day at this very spot in latitude.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.91s/it]100%|██████████| 1/1 [00:02<00:00,  2.91s/it]
+[14/180] clip 58 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.660 wer=0.15
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.63s/it]100%|██████████| 1/1 [00:03<00:00,  3.63s/it]
+[15/180] clip 58 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.715 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion. 
+gen_text 0 Seventy four years ago to the day at this very spot in latitude.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.33s/it]100%|██████████| 1/1 [00:04<00:00,  4.33s/it]
+[16/180] clip 58 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.659 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   away the graces as being too low in the neck alas beauty is concealed as. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.74s/it]100%|██████████| 1/1 [00:02<00:00,  2.74s/it]
+[17/180] clip 59 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.473 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   away the graces as being too low in the neck alas beauty is concealed as. 
+gen_text 0 You know they are very stylish people especially missus chester ross.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.34s/it]100%|██████████| 1/1 [00:03<00:00,  3.34s/it]
+[18/180] clip 59 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.581 wer=0.18
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   Your century is unfortunate. People would drive away the graces as being too low in the neck. Alas, beauty is concealed as though it were ugliness. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.39s/it]100%|██████████| 1/1 [00:04<00:00,  4.39s/it]
+[19/180] clip 59 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.552 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   Your century is unfortunate. People would drive away the graces as being too low in the neck. Alas, beauty is concealed as though it were ugliness. 
+gen_text 0 You know they are very stylish people especially missus chester ross.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:05<00:00,  5.04s/it]100%|██████████| 1/1 [00:05<00:00,  5.04s/it]
+[20/180] clip 59 prompt full text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.537 wer=0.09
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+[transformers] You seem to be using the pipelines sequentially on GPU. In order to maximize efficiency please use a dataset
+
+ref_text   but he had never expected to be called upon to record that his great hero, Rock the Resilient,. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.55s/it]100%|██████████| 1/1 [00:02<00:00,  2.55s/it]
+[21/180] clip 60 prompt 6 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.495 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   but he had never expected to be called upon to record that his great hero, Rock the Resilient,. 
+gen_text 0 And where did it lead right to this room ronicky stepped from among the smooth silks.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.34s/it]100%|██████████| 1/1 [00:03<00:00,  3.34s/it]
+[22/180] clip 60 prompt 6 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.558 wer=0.00
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   who knew all about the attack on rita and who wrote the account of it but he had never expected to be called upon to record that his great hero rock the brazilian. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.15s/it]100%|██████████| 1/1 [00:04<00:00,  4.15s/it]
+[23/180] clip 60 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.495 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   who knew all about the attack on rita and who wrote the account of it but he had never expected to be called upon to record that his great hero rock the brazilian. 
+gen_text 0 And where did it lead right to this room ronicky stepped from among the smooth silks.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.92s/it]100%|██████████| 1/1 [00:04<00:00,  4.92s/it]
+[24/180] clip 60 prompt full text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.502 wer=0.06
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   To this man, the pirate hoped to play a trick upon the governor. He promised the slave that if he would help. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.48s/it]100%|██████████| 1/1 [00:02<00:00,  2.48s/it]
+[25/180] clip 61 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.517 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   To this man, the pirate hoped to play a trick upon the governor. He promised the slave that if he would help. 
+gen_text 0 You know they are very stylish people especially missus chester ross.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.82s/it]100%|██████████| 1/1 [00:02<00:00,  2.82s/it]
+[26/180] clip 61 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.566 wer=0.09
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   who came in to bring him food and drink, and by the means of this man, the pirate hoped to play a trick upon the governor. He promised the slave that if he would help him, and he told him it would. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.70s/it]100%|██████████| 1/1 [00:03<00:00,  3.70s/it]
+[27/180] clip 61 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.582 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   who came in to bring him food and drink, and by the means of this man, the pirate hoped to play a trick upon the governor. He promised the slave that if he would help him, and he told him it would. 
+gen_text 0 You know they are very stylish people especially missus chester ross.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.23s/it]100%|██████████| 1/1 [00:04<00:00,  4.23s/it]
+[28/180] clip 61 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.591 wer=0.09
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   powerful vessel and he did not like French ships anyway. The town had once been taken and very. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.59s/it]100%|██████████| 1/1 [00:02<00:00,  2.59s/it]
+[29/180] clip 62 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.429 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   powerful vessel and he did not like French ships anyway. The town had once been taken and very. 
+gen_text 0 The experiment was repeated on other subjects in all cases with the same result.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.34s/it]100%|██████████| 1/1 [00:03<00:00,  3.34s/it]
+[30/180] clip 62 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.498 wer=0.00
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   he knew that the French ship which was lying outside the harbor was a powerful vessel and he did not like French ships anyway. The town had once been taken. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.47s/it]100%|██████████| 1/1 [00:03<00:00,  3.47s/it]
+[31/180] clip 62 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.516 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   he knew that the French ship which was lying outside the harbor was a powerful vessel and he did not like French ships anyway. The town had once been taken. 
+gen_text 0 The experiment was repeated on other subjects in all cases with the same result.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.24s/it]100%|██████████| 1/1 [00:04<00:00,  4.24s/it]
+[32/180] clip 62 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.529 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   many things. Not only could he murder and rob, but he knew how to turn an honest penny when there was no. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.54s/it]100%|██████████| 1/1 [00:02<00:00,  2.54s/it]
+[33/180] clip 63 prompt 6 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.524 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   many things. Not only could he murder and rob, but he knew how to turn an honest penny when there was no. 
+gen_text 0 How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.22s/it]100%|██████████| 1/1 [00:03<00:00,  3.22s/it]
+[34/180] clip 63 prompt 6 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.540 wer=0.00
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   that the captain allowed him to serve as one of the crew rock knew how to do a great many things not only could he murder and rob but he knew how to turn an honest penny. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.64s/it]100%|██████████| 1/1 [00:03<00:00,  3.64s/it]
+[35/180] clip 63 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.604 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   that the captain allowed him to serve as one of the crew rock knew how to do a great many things not only could he murder and rob but he knew how to turn an honest penny. 
+gen_text 0 How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.59s/it]100%|██████████| 1/1 [00:04<00:00,  4.59s/it]
+[36/180] clip 63 prompt full text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.547 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   there were any bears in that forest, would be the inclination of a man so situated. And to get. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.57s/it]100%|██████████| 1/1 [00:02<00:00,  2.57s/it]
+[37/180] clip 64 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.385 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   there were any bears in that forest, would be the inclination of a man so situated. And to get. 
+gen_text 0 It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.61s/it]100%|██████████| 1/1 [00:03<00:00,  3.61s/it]
+[38/180] clip 64 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.460 wer=0.00
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   to throw away the cub and walk off as though he had no idea there were any bears in that forest would be the inclination of a man so situated and to get rid of the great pirate. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.82s/it]100%|██████████| 1/1 [00:03<00:00,  3.82s/it]
+[39/180] clip 64 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.425 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   to throw away the cub and walk off as though he had no idea there were any bears in that forest would be the inclination of a man so situated and to get rid of the great pirate. 
+gen_text 0 It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:05<00:00,  5.01s/it]100%|██████████| 1/1 [00:05<00:00,  5.01s/it]
+[40/180] clip 64 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.456 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   Such was the chivalric port of Peter the Headstrong, and when he made a sudden halt. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.42s/it]100%|██████████| 1/1 [00:02<00:00,  2.42s/it]
+[41/180] clip 65 prompt 6 text fixed: acc_src=1.000 acc=0.750 traced=False far=True sim=0.532 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   Such was the chivalric port of Peter the Headstrong, and when he made a sudden halt. 
+gen_text 0 Seventy four years ago to the day at this very spot in latitude.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.74s/it]100%|██████████| 1/1 [00:02<00:00,  2.74s/it]
+[42/180] clip 65 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.471 wer=0.00
+Converting audio...
+Audio is over 12s, clipping short. (1)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   stuck with a gallant and fiery air over his left eye. Such was the chivalric port of Peter the Headstrong,. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.85s/it]100%|██████████| 1/1 [00:02<00:00,  2.85s/it]
+[43/180] clip 65 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.545 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   stuck with a gallant and fiery air over his left eye. Such was the chivalric port of Peter the Headstrong,. 
+gen_text 0 Seventy four years ago to the day at this very spot in latitude.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.33s/it]100%|██████████| 1/1 [00:03<00:00,  3.33s/it]
+[44/180] clip 65 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.529 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   of bread a day for sedentary and unoccupied women, and larger allowances,. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.70s/it]100%|██████████| 1/1 [00:02<00:00,  2.70s/it]
+[45/180] clip 66 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.629 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   of bread a day for sedentary and unoccupied women, and larger allowances,. 
+gen_text 0 And the second to benjamin tipton.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.54s/it]100%|██████████| 1/1 [00:02<00:00,  2.54s/it]
+[46/180] clip 66 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.659 wer=0.00
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   The voluntary ration allows one half pound of bread a day for sedentary and unoccupied women, and larger allowances, up to a little over a pound,. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.86s/it]100%|██████████| 1/1 [00:03<00:00,  3.86s/it]
+[47/180] clip 66 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.608 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   The voluntary ration allows one half pound of bread a day for sedentary and unoccupied women, and larger allowances, up to a little over a pound,. 
+gen_text 0 And the second to benjamin tipton.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.70s/it]100%|██████████| 1/1 [00:03<00:00,  3.70s/it]
+[48/180] clip 66 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.650 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   Swedish fortress, being lower down the river, all the Dutch vessels bound to Fort Casimir with. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.54s/it]100%|██████████| 1/1 [00:02<00:00,  2.54s/it]
+[49/180] clip 67 prompt 6 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.527 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   Swedish fortress, being lower down the river, all the Dutch vessels bound to Fort Casimir with. 
+gen_text 0 Her residence on the piazzi barberini being considered an insecure abode.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.16s/it]100%|██████████| 1/1 [00:03<00:00,  3.16s/it]
+[50/180] clip 67 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.535 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   But so it happened that the Swedish fortress, being lower down the river, all the Dutch vessels bound to Fort Casimir with supplies, had to pass it. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.55s/it]100%|██████████| 1/1 [00:03<00:00,  3.55s/it]
+[51/180] clip 67 prompt full text fixed: acc_src=1.000 acc=0.812 traced=True far=False sim=0.484 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   But so it happened that the Swedish fortress, being lower down the river, all the Dutch vessels bound to Fort Casimir with supplies, had to pass it. 
+gen_text 0 Her residence on the piazzi barberini being considered an insecure abode.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.23s/it]100%|██████████| 1/1 [00:04<00:00,  4.23s/it]
+[52/180] clip 67 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.568 wer=0.09
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   of as many of the travelers as possible. It seems expedient where a number of arrivals come in. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.64s/it]100%|██████████| 1/1 [00:02<00:00,  2.64s/it]
+[53/180] clip 68 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.648 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   of as many of the travelers as possible. It seems expedient where a number of arrivals come in. 
+gen_text 0 But civil you can speak and shall george merry you may lay to that.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.94s/it]100%|██████████| 1/1 [00:02<00:00,  2.94s/it]
+[54/180] clip 68 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.586 wer=0.07
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   in order to economize time and space with a view to giving an account of as many of the travelers as possible it seems expedient where a number of arrivals come in close proximity. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.24s/it]100%|██████████| 1/1 [00:04<00:00,  4.24s/it]
+[55/180] clip 68 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.726 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   in order to economize time and space with a view to giving an account of as many of the travelers as possible it seems expedient where a number of arrivals come in close proximity. 
+gen_text 0 But civil you can speak and shall george merry you may lay to that.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.69s/it]100%|██████████| 1/1 [00:04<00:00,  4.69s/it]
+[56/180] clip 68 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.660 wer=0.07
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   all may be used to make the delectable pastries and cakes which have long been the delight of the French people and their guests. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.53s/it]100%|██████████| 1/1 [00:02<00:00,  2.53s/it]
+[57/180] clip 69 prompt 6 text fixed: acc_src=1.000 acc=0.688 traced=False far=True sim=0.643 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   all may be used to make the delectable pastries and cakes which have long been the delight of the French people and their guests. 
+gen_text 0 And always had an odd inquiring look.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.36s/it]100%|██████████| 1/1 [00:02<00:00,  2.36s/it]
+[58/180] clip 69 prompt 6 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.565 wer=0.29
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   In France, no flour at all may be used to make the delectable pastries and cakes which have long been the delight of the French people and their guests. In Italy,. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.69s/it]100%|██████████| 1/1 [00:03<00:00,  3.69s/it]
+[59/180] clip 69 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.691 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   In France, no flour at all may be used to make the delectable pastries and cakes which have long been the delight of the French people and their guests. In Italy,. 
+gen_text 0 And always had an odd inquiring look.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.61s/it]100%|██████████| 1/1 [00:03<00:00,  3.61s/it]
+[60/180] clip 69 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.568 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   "'in which she was already engaged "'with Mrs. Crawley on nursery matters. "'Pray tell him,' said Mr. Crawley,. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.52s/it]100%|██████████| 1/1 [00:02<00:00,  2.52s/it]
+[61/180] clip 70 prompt 6 text fixed: acc_src=1.000 acc=0.688 traced=False far=True sim=0.439 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   "'in which she was already engaged "'with Mrs. Crawley on nursery matters. "'Pray tell him,' said Mr. Crawley,. 
+gen_text 0 And there they told me they had buried it.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.51s/it]100%|██████████| 1/1 [00:02<00:00,  2.51s/it]
+[62/180] clip 70 prompt 6 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.515 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   looking up for a moment from the anxious discussion in which she was already engaged with Mrs. Crawley on nursery matters. Pray tell him, said Mr. Crawley, that I shall be happy to see him. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.42s/it]100%|██████████| 1/1 [00:03<00:00,  3.42s/it]
+[63/180] clip 70 prompt full text fixed: acc_src=0.875 acc=0.812 traced=True far=False sim=0.530 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   looking up for a moment from the anxious discussion in which she was already engaged with Mrs. Crawley on nursery matters. Pray tell him, said Mr. Crawley, that I shall be happy to see him. 
+gen_text 0 And there they told me they had buried it.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.41s/it]100%|██████████| 1/1 [00:03<00:00,  3.41s/it]
+[64/180] clip 70 prompt full text unseen: acc_src=0.875 acc=0.812 traced=True far=False sim=0.525 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   You'll get on. Don't frighten yourselves. I shall take lodgings in Barchester. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.49s/it]100%|██████████| 1/1 [00:02<00:00,  2.49s/it]
+[65/180] clip 71 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.458 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   You'll get on. Don't frighten yourselves. I shall take lodgings in Barchester. 
+gen_text 0 Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.22s/it]100%|██████████| 1/1 [00:04<00:00,  4.23s/it]
+[66/180] clip 71 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.427 wer=0.00
+Converting audio...
+Audio is over 12s, clipping short. (1)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   "'The house will not be furnished, will it, Mark?' said his wife. "'I don't know how we shall get on.' "'Don't frighten yourselves. I shall take lodgings in Barchester.'. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.41s/it]100%|██████████| 1/1 [00:03<00:00,  3.41s/it]
+[67/180] clip 71 prompt full text fixed: acc_src=0.812 acc=1.000 traced=True far=False sim=0.473 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   "'The house will not be furnished, will it, Mark?' said his wife. "'I don't know how we shall get on.' "'Don't frighten yourselves. I shall take lodgings in Barchester.'. 
+gen_text 0 Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.81s/it]100%|██████████| 1/1 [00:04<00:00,  4.81s/it]
+[68/180] clip 71 prompt full text unseen: acc_src=0.812 acc=1.000 traced=True far=False sim=0.462 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   the pony was beaten. Mark Robards returned home the day after the scene at the Albert. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.68s/it]100%|██████████| 1/1 [00:02<00:00,  2.68s/it]
+[69/180] clip 72 prompt 6 text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.514 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   the pony was beaten. Mark Robards returned home the day after the scene at the Albert. 
+gen_text 0 And where did it lead right to this room ronicky stepped from among the smooth silks.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.63s/it]100%|██████████| 1/1 [00:03<00:00,  3.63s/it]
+[70/180] clip 72 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.533 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   Chapter 21 Why Puck the Pony Was Beaten Mark Robards returned home the day after the scene at the Albany, considerably relieved in spirit. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.84s/it]100%|██████████| 1/1 [00:03<00:00,  3.84s/it]
+[71/180] clip 72 prompt full text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.482 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   Chapter 21 Why Puck the Pony Was Beaten Mark Robards returned home the day after the scene at the Albany, considerably relieved in spirit. 
+gen_text 0 And where did it lead right to this room ronicky stepped from among the smooth silks.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.86s/it]100%|██████████| 1/1 [00:04<00:00,  4.86s/it]
+[72/180] clip 72 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.472 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   had done something towards bringing her back to the world, in which she had lived in the soft days of her childhood. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.41s/it]100%|██████████| 1/1 [00:02<00:00,  2.41s/it]
+[73/180] clip 73 prompt 6 text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.544 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   had done something towards bringing her back to the world, in which she had lived in the soft days of her childhood. 
+gen_text 0 You know they are very stylish people especially missus chester ross.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.67s/it]100%|██████████| 1/1 [00:02<00:00,  2.67s/it]
+[74/180] clip 73 prompt 6 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.452 wer=0.09
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   and the scanty comfort of their improved, though still wretched income, had done something towards bringing her back to the world in which she had lived in the soft days of her childhood. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.39s/it]100%|██████████| 1/1 [00:03<00:00,  3.39s/it]
+[75/180] clip 73 prompt full text fixed: acc_src=1.000 acc=0.625 traced=False far=True sim=0.557 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   and the scanty comfort of their improved, though still wretched income, had done something towards bringing her back to the world in which she had lived in the soft days of her childhood. 
+gen_text 0 You know they are very stylish people especially missus chester ross.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.63s/it]100%|██████████| 1/1 [00:03<00:00,  3.63s/it]
+[76/180] clip 73 prompt full text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.464 wer=0.09
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   two heroes were to be thought worthy of women's love. What would the men do? And what. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.71s/it]100%|██████████| 1/1 [00:02<00:00,  2.72s/it]
+[77/180] clip 74 prompt 6 text fixed: acc_src=0.812 acc=0.812 traced=True far=True sim=0.466 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   two heroes were to be thought worthy of women's love. What would the men do? And what. 
+gen_text 0 The experiment was repeated on other subjects in all cases with the same result.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.45s/it]100%|██████████| 1/1 [00:03<00:00,  3.45s/it]
+[78/180] clip 74 prompt 6 text unseen: acc_src=0.812 acc=0.812 traced=True far=True sim=0.470 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   But what would the world come to if none but absolute two heroes were to be thought worthy of women's love? What would the men do? And what, oh what, would become of the women?. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.69s/it]100%|██████████| 1/1 [00:03<00:00,  3.69s/it]
+[79/180] clip 74 prompt full text fixed: acc_src=0.812 acc=0.812 traced=True far=True sim=0.537 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   But what would the world come to if none but absolute two heroes were to be thought worthy of women's love? What would the men do? And what, oh what, would become of the women?. 
+gen_text 0 The experiment was repeated on other subjects in all cases with the same result.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.49s/it]100%|██████████| 1/1 [00:04<00:00,  4.49s/it]
+[80/180] clip 74 prompt full text unseen: acc_src=0.812 acc=1.000 traced=True far=False sim=0.549 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   "'Flat treason, Mark. "'I can no longer uphold you. "'Not if you do not. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.80s/it]100%|██████████| 1/1 [00:02<00:00,  2.80s/it]
+[81/180] clip 75 prompt 6 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.628 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   "'Flat treason, Mark. "'I can no longer uphold you. "'Not if you do not. 
+gen_text 0 How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.76s/it]100%|██████████| 1/1 [00:03<00:00,  3.76s/it]
+[82/180] clip 75 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.599 wer=0.00
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   "'Saints protect us,' exclaimed Brian. "'Why, this is flat treason, Mark. I can no longer uphold you.' "'Not if you'd. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.72s/it]100%|██████████| 1/1 [00:03<00:00,  3.72s/it]
+[83/180] clip 75 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.563 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   "'Saints protect us,' exclaimed Brian. "'Why, this is flat treason, Mark. I can no longer uphold you.' "'Not if you'd. 
+gen_text 0 How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.92s/it]100%|██████████| 1/1 [00:04<00:00,  4.92s/it]
+[84/180] clip 75 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.566 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   those memorials of past nobleness and greatness from which I had always hitherto drawn. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.78s/it]100%|██████████| 1/1 [00:02<00:00,  2.78s/it]
+[85/180] clip 76 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.615 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   those memorials of past nobleness and greatness from which I had always hitherto drawn. 
+gen_text 0 It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.73s/it]100%|██████████| 1/1 [00:03<00:00,  3.73s/it]
+[86/180] clip 76 prompt 6 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.660 wer=0.00
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   in vain i sought relief from my favorite books those memorials of past nobleness and greatness from which i had always hitherto drawn strength and animation. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.50s/it]100%|██████████| 1/1 [00:04<00:00,  4.50s/it]
+[87/180] clip 76 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.569 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   in vain i sought relief from my favorite books those memorials of past nobleness and greatness from which i had always hitherto drawn strength and animation. 
+gen_text 0 It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:05<00:00,  5.80s/it]100%|██████████| 1/1 [00:05<00:00,  5.80s/it]
+[88/180] clip 76 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.666 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   can accompany Keats through the glad and sad and mad and bad hours of his short. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.73s/it]100%|██████████| 1/1 [00:02<00:00,  2.73s/it]
+[89/180] clip 77 prompt 6 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.451 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   can accompany Keats through the glad and sad and mad and bad hours of his short. 
+gen_text 0 Seventy four years ago to the day at this very spot in latitude.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.26s/it]100%|██████████| 1/1 [00:03<00:00,  3.26s/it]
+[90/180] clip 77 prompt 6 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.421 wer=0.15
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   and in the result we can accompany keats through the glad and sad and mad and bad hours of his short and marvellous life. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.61s/it]100%|██████████| 1/1 [00:03<00:00,  3.61s/it]
+[91/180] clip 77 prompt full text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.409 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   and in the result we can accompany keats through the glad and sad and mad and bad hours of his short and marvellous life. 
+gen_text 0 Seventy four years ago to the day at this very spot in latitude.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.25s/it]100%|██████████| 1/1 [00:04<00:00,  4.25s/it]
+[92/180] clip 77 prompt full text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.462 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   sequences in nature, the real connections between things not dependent on our will and. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.82s/it]100%|██████████| 1/1 [00:02<00:00,  2.82s/it]
+[93/180] clip 78 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.615 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   sequences in nature, the real connections between things not dependent on our will and. 
+gen_text 0 And the second to benjamin tipton.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.58s/it]100%|██████████| 1/1 [00:02<00:00,  2.58s/it]
+[94/180] clip 78 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.556 wer=0.00
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   were it not that we owe to analysis our clearest knowledge of the permanent sequences in nature the real connections between things not dependent on our will and feelings. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.57s/it]100%|██████████| 1/1 [00:04<00:00,  4.57s/it]
+[95/180] clip 78 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.651 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   were it not that we owe to analysis our clearest knowledge of the permanent sequences in nature the real connections between things not dependent on our will and feelings. 
+gen_text 0 And the second to benjamin tipton.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.31s/it]100%|██████████| 1/1 [00:04<00:00,  4.31s/it]
+[96/180] clip 78 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.578 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   to myself. Suppose that all your objects in life were realized, that all the. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.73s/it]100%|██████████| 1/1 [00:02<00:00,  2.73s/it]
+[97/180] clip 79 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.492 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   to myself. Suppose that all your objects in life were realized, that all the. 
+gen_text 0 Her residence on the piazzi barberini being considered an insecure abode.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.39s/it]100%|██████████| 1/1 [00:03<00:00,  3.39s/it]
+[98/180] clip 79 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.539 wer=0.00
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   in this frame of mind it occurred to me to put the question directly to myself suppose that all your objects in life were realized. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.71s/it]100%|██████████| 1/1 [00:03<00:00,  3.71s/it]
+[99/180] clip 79 prompt full text fixed: acc_src=1.000 acc=0.562 traced=False far=True sim=0.584 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   in this frame of mind it occurred to me to put the question directly to myself suppose that all your objects in life were realized. 
+gen_text 0 Her residence on the piazzi barberini being considered an insecure abode.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.55s/it]100%|██████████| 1/1 [00:04<00:00,  4.55s/it]
+[100/180] clip 79 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.659 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   Right when you get to Liverpool! Goodbye! Goodbye! Little Lord. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.76s/it]100%|██████████| 1/1 [00:02<00:00,  2.76s/it]
+[101/180] clip 80 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.369 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   Right when you get to Liverpool! Goodbye! Goodbye! Little Lord. 
+gen_text 0 Seventy four years ago to the day at this very spot in latitude.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.35s/it]100%|██████████| 1/1 [00:03<00:00,  3.35s/it]
+[102/180] clip 80 prompt 6 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.326 wer=0.00
+Converting audio...
+Audio is over 12s, clipping short. (1)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   Everyone seemed to be saying, Don't forget us! Right when you get to Liverpool! Goodbye! Goodbye!. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.74s/it]100%|██████████| 1/1 [00:02<00:00,  2.74s/it]
+[103/180] clip 80 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.364 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   Everyone seemed to be saying, Don't forget us! Right when you get to Liverpool! Goodbye! Goodbye!. 
+gen_text 0 Seventy four years ago to the day at this very spot in latitude.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.36s/it]100%|██████████| 1/1 [00:03<00:00,  3.36s/it]
+[104/180] clip 80 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.424 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   was covered by a thick growth of green moss, and it flashed through his mind as he hung there that maybe it would. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.61s/it]100%|██████████| 1/1 [00:02<00:00,  2.61s/it]
+[105/180] clip 81 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.603 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   was covered by a thick growth of green moss, and it flashed through his mind as he hung there that maybe it would. 
+gen_text 0 You know they are very stylish people especially missus chester ross.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.90s/it]100%|██████████| 1/1 [00:02<00:00,  2.90s/it]
+[106/180] clip 81 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.598 wer=0.09
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   The top of the wall was pointed like a house roof, and immediately below him was covered by a thick growth of green moss, and it flashed through his mind as he hung there that maybe it would offer a very slippery. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.82s/it]100%|██████████| 1/1 [00:03<00:00,  3.82s/it]
+[107/180] clip 81 prompt full text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.656 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   The top of the wall was pointed like a house roof, and immediately below him was covered by a thick growth of green moss, and it flashed through his mind as he hung there that maybe it would offer a very slippery. 
+gen_text 0 You know they are very stylish people especially missus chester ross.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.47s/it]100%|██████████| 1/1 [00:04<00:00,  4.47s/it]
+[108/180] clip 81 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.610 wer=0.09
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   speaking a trifle huskily, as Dick had spoken. Nor don't you go and forget me, when you. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.62s/it]100%|██████████| 1/1 [00:02<00:00,  2.62s/it]
+[109/180] clip 82 prompt 6 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.619 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   speaking a trifle huskily, as Dick had spoken. Nor don't you go and forget me, when you. 
+gen_text 0 The experiment was repeated on other subjects in all cases with the same result.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.38s/it]100%|██████████| 1/1 [00:03<00:00,  3.38s/it]
+[110/180] clip 82 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.618 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   I shall forget you, he said, speaking a trifle huskily, as Dick had spoken. Or don't you go and forget me, when you get among the British aristocracy. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.69s/it]100%|██████████| 1/1 [00:03<00:00,  3.69s/it]
+[111/180] clip 82 prompt full text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.573 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   I shall forget you, he said, speaking a trifle huskily, as Dick had spoken. Or don't you go and forget me, when you get among the British aristocracy. 
+gen_text 0 The experiment was repeated on other subjects in all cases with the same result.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.54s/it]100%|██████████| 1/1 [00:04<00:00,  4.54s/it]
+[112/180] clip 82 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.685 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   and the second to Benjamin Tipton. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:01<00:00,  1.61s/it]100%|██████████| 1/1 [00:01<00:00,  1.61s/it]
+[113/180] clip 83 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.423 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   and the second to Benjamin Tipton. 
+gen_text 0 And there they told me they had buried it.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:01<00:00,  1.61s/it]100%|██████████| 1/1 [00:01<00:00,  1.61s/it]
+[114/180] clip 83 prompt 6 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.467 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   and the second to Benjamin Tipton. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:01<00:00,  1.59s/it]100%|██████████| 1/1 [00:01<00:00,  1.59s/it]
+[115/180] clip 83 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.300 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   and the second to Benjamin Tipton. 
+gen_text 0 And there they told me they had buried it.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:01<00:00,  1.55s/it]100%|██████████| 1/1 [00:01<00:00,  1.55s/it]
+[116/180] clip 83 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.355 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   feet distant from the garden wall there grew a pear tree some of the branches of which overhung into the garden. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.57s/it]100%|██████████| 1/1 [00:02<00:00,  2.57s/it]
+[117/180] clip 84 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.490 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   feet distant from the garden wall there grew a pear tree some of the branches of which overhung into the garden. 
+gen_text 0 Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.70s/it]100%|██████████| 1/1 [00:03<00:00,  3.70s/it]
+[118/180] clip 84 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.564 wer=0.00
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   now at the lower extremity of the court and about twelve or fifteen feet distant from the garden wall there grew a pear tree some of the branches of which overhung into the garden beyond. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.28s/it]100%|██████████| 1/1 [00:04<00:00,  4.28s/it]
+[119/180] clip 84 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.522 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   now at the lower extremity of the court and about twelve or fifteen feet distant from the garden wall there grew a pear tree some of the branches of which overhung into the garden beyond. 
+gen_text 0 Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:05<00:00,  5.93s/it]100%|██████████| 1/1 [00:05<00:00,  5.93s/it]
+[120/180] clip 84 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.617 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   behind the orchard were royal crimson and the wild cherry trees along the lane put on the lovely shade of dark red and. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.46s/it]100%|██████████| 1/1 [00:02<00:00,  2.47s/it]
+[121/180] clip 85 prompt 6 text fixed: acc_src=1.000 acc=0.812 traced=True far=False sim=0.270 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   behind the orchard were royal crimson and the wild cherry trees along the lane put on the lovely shade of dark red and. 
+gen_text 0 Her residence on the piazzi barberini being considered an insecure abode.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.83s/it]100%|██████████| 1/1 [00:02<00:00,  2.83s/it]
+[122/180] clip 85 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.477 wer=0.09
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   When the birches in the hollow turned as golden as sunshine, and the maples behind the orchard were royal crimson, and the wild cherry trees along the lane put on the loveliest shade of dark red and bronzy green, while the field. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.85s/it]100%|██████████| 1/1 [00:03<00:00,  3.85s/it]
+[123/180] clip 85 prompt full text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.261 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   When the birches in the hollow turned as golden as sunshine, and the maples behind the orchard were royal crimson, and the wild cherry trees along the lane put on the loveliest shade of dark red and bronzy green, while the field. 
+gen_text 0 Her residence on the piazzi barberini being considered an insecure abode.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.55s/it]100%|██████████| 1/1 [00:04<00:00,  4.55s/it]
+[124/180] clip 85 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.478 wer=0.09
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   You know, they are very stylish people, especially Miss Chester Ross. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:01<00:00,  1.80s/it]100%|██████████| 1/1 [00:01<00:00,  1.80s/it]
+[125/180] clip 86 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.204 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   You know, they are very stylish people, especially Miss Chester Ross. 
+gen_text 0 How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.52s/it]100%|██████████| 1/1 [00:02<00:00,  2.52s/it]
+[126/180] clip 86 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.380 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   You know, they are very stylish people, especially Miss Chester Ross. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:01<00:00,  1.78s/it]100%|██████████| 1/1 [00:01<00:00,  1.78s/it]
+[127/180] clip 86 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.235 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   You know, they are very stylish people, especially Miss Chester Ross. 
+gen_text 0 How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.49s/it]100%|██████████| 1/1 [00:02<00:00,  2.49s/it]
+[128/180] clip 86 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.389 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   "'and I forgot all about covering the pudding sauce. "'I thought of it now.'. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.77s/it]100%|██████████| 1/1 [00:02<00:00,  2.77s/it]
+[129/180] clip 87 prompt 6 text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.466 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   "'and I forgot all about covering the pudding sauce. "'I thought of it now.'. 
+gen_text 0 It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.85s/it]100%|██████████| 1/1 [00:03<00:00,  3.85s/it]
+[130/180] clip 87 prompt 6 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.523 wer=0.05
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   taking the veil to bury a broken heart in a cloistered seclusion. And I forgot all about covering the pudding sauce. I thought of it next morning and ran to the pantry. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.30s/it]100%|██████████| 1/1 [00:04<00:00,  4.30s/it]
+[131/180] clip 87 prompt full text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.415 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   taking the veil to bury a broken heart in a cloistered seclusion. And I forgot all about covering the pudding sauce. I thought of it next morning and ran to the pantry. 
+gen_text 0 It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:05<00:00,  5.39s/it]100%|██████████| 1/1 [00:05<00:00,  5.39s/it]
+[132/180] clip 87 prompt full text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.512 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   to ask Diana to tea. As a result, just after Marilla had driven off to Carmody, Diana came over. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.48s/it]100%|██████████| 1/1 [00:02<00:00,  2.48s/it]
+[133/180] clip 88 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.493 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   to ask Diana to tea. As a result, just after Marilla had driven off to Carmody, Diana came over. 
+gen_text 0 And where did it lead right to this room ronicky stepped from among the smooth silks.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.31s/it]100%|██████████| 1/1 [00:03<00:00,  3.31s/it]
+[134/180] clip 88 prompt 6 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.546 wer=0.00
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   Anne flew down to the hollow, past the dryad's bubble, and up the spruce path to Orchard Slope to ask Diana to tea. As a result, just after Marilla had driven off to Carmody, Diana came over, dressed. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.31s/it]100%|██████████| 1/1 [00:04<00:00,  4.31s/it]
+[135/180] clip 88 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.505 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   Anne flew down to the hollow, past the dryad's bubble, and up the spruce path to Orchard Slope to ask Diana to tea. As a result, just after Marilla had driven off to Carmody, Diana came over, dressed. 
+gen_text 0 And where did it lead right to this room ronicky stepped from among the smooth silks.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.98s/it]100%|██████████| 1/1 [00:04<00:00,  4.98s/it]
+[136/180] clip 88 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.583 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   malice prepense, and she was honestly anxious to preserve her little daughter from the contamination of further intimate. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.47s/it]100%|██████████| 1/1 [00:02<00:00,  2.47s/it]
+[137/180] clip 89 prompt 6 text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.380 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   malice prepense, and she was honestly anxious to preserve her little daughter from the contamination of further intimate. 
+gen_text 0 But civil you can speak and shall george merry you may lay to that.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.75s/it]100%|██████████| 1/1 [00:02<00:00,  2.75s/it]
+[138/180] clip 89 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.385 wer=0.21
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   To do her justice, she really believed Anne had made Diana drunk out of sheer malice prepense, and she was honestly anxious to preserve her little daughter from the contamination of further intimacy with such a child. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.92s/it]100%|██████████| 1/1 [00:03<00:00,  3.92s/it]
+[139/180] clip 89 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.370 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   To do her justice, she really believed Anne had made Diana drunk out of sheer malice prepense, and she was honestly anxious to preserve her little daughter from the contamination of further intimacy with such a child. 
+gen_text 0 But civil you can speak and shall george merry you may lay to that.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.54s/it]100%|██████████| 1/1 [00:04<00:00,  4.54s/it]
+[140/180] clip 89 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.501 wer=0.07
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   Such were, towards the beginning of the eighteenth century, the pastimes of the rich idlers of London. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:01<00:00,  1.89s/it]100%|██████████| 1/1 [00:01<00:00,  1.89s/it]
+[141/180] clip 90 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.353 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   Such were, towards the beginning of the eighteenth century, the pastimes of the rich idlers of London. 
+gen_text 0 And the second to benjamin tipton.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:01<00:00,  1.84s/it]100%|██████████| 1/1 [00:01<00:00,  1.84s/it]
+[142/180] clip 90 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.215 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   If his eyes were gouged out, he was paid for them. Such were, towards the beginning of the eighteenth century, the pastimes of the rich idlers of London. The idlers of Paris had theirs. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.70s/it]100%|██████████| 1/1 [00:03<00:00,  3.70s/it]
+[143/180] clip 90 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.303 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   If his eyes were gouged out, he was paid for them. Such were, towards the beginning of the eighteenth century, the pastimes of the rich idlers of London. The idlers of Paris had theirs. 
+gen_text 0 And the second to benjamin tipton.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.53s/it]100%|██████████| 1/1 [00:03<00:00,  3.53s/it]
+[144/180] clip 90 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.373 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   repent or destroy his ease of manner in society. When he was referee, Ralph Pimple. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.70s/it]100%|██████████| 1/1 [00:02<00:00,  2.70s/it]
+[145/180] clip 91 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.499 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   repent or destroy his ease of manner in society. When he was referee, Ralph Pimple. 
+gen_text 0 Her residence on the piazzi barberini being considered an insecure abode.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.33s/it]100%|██████████| 1/1 [00:03<00:00,  3.33s/it]
+[146/180] clip 91 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.598 wer=0.09
+Converting audio...
+Audio is over 12s, clipping short. (1)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   and forbade a man's being hit with down. All this science, however, did not render him a pedant, or would destroy his ease of matter and society. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.95s/it]100%|██████████| 1/1 [00:02<00:00,  2.95s/it]
+[147/180] clip 91 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.495 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   and forbade a man's being hit with down. All this science, however, did not render him a pedant, or would destroy his ease of matter and society. 
+gen_text 0 Her residence on the piazzi barberini being considered an insecure abode.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.39s/it]100%|██████████| 1/1 [00:03<00:00,  3.39s/it]
+[148/180] clip 91 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.599 wer=0.09
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   late was possible. That was the best part of the joke. Those manners have not altogether disappeared. In many. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.53s/it]100%|██████████| 1/1 [00:02<00:00,  2.53s/it]
+[149/180] clip 92 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.326 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   late was possible. That was the best part of the joke. Those manners have not altogether disappeared. In many. 
+gen_text 0 But civil you can speak and shall george merry you may lay to that.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.87s/it]100%|██████████| 1/1 [00:02<00:00,  2.87s/it]
+[150/180] clip 92 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.480 wer=0.07
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   It was the rich who acted thus toward the poor. For this reason no complaint was possible. That was the best part of the joke. Those manners have not altogether disappeared. In many places in England, and in England. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.88s/it]100%|██████████| 1/1 [00:03<00:00,  3.88s/it]
+[151/180] clip 92 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.482 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   It was the rich who acted thus toward the poor. For this reason no complaint was possible. That was the best part of the joke. Those manners have not altogether disappeared. In many places in England, and in England. 
+gen_text 0 But civil you can speak and shall george merry you may lay to that.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.48s/it]100%|██████████| 1/1 [00:04<00:00,  4.48s/it]
+[152/180] clip 92 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.558 wer=0.07
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   other. With English historians Elizabeth embodies grandeur, and good nature, as they will,. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.53s/it]100%|██████████| 1/1 [00:02<00:00,  2.53s/it]
+[153/180] clip 93 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.368 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   other. With English historians Elizabeth embodies grandeur, and good nature, as they will,. 
+gen_text 0 And always had an odd inquiring look.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.47s/it]100%|██████████| 1/1 [00:02<00:00,  2.47s/it]
+[154/180] clip 93 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.496 wer=0.00
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   Why? France excludes them. There is a reason at once. Perhaps there is no other. With English historians, Elizabeth embodies grandeur and good nature, as they will, be it so. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.34s/it]100%|██████████| 1/1 [00:04<00:00,  4.34s/it]
+[155/180] clip 93 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.486 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   Why? France excludes them. There is a reason at once. Perhaps there is no other. With English historians, Elizabeth embodies grandeur and good nature, as they will, be it so. 
+gen_text 0 And always had an odd inquiring look.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.23s/it]100%|██████████| 1/1 [00:04<00:00,  4.23s/it]
+[156/180] clip 93 prompt full text unseen: acc_src=1.000 acc=0.938 traced=True far=True sim=0.566 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   "'and Richelieu in his don. "'Gallantry found its convenience "'in a certain medley of ranks.'. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.50s/it]100%|██████████| 1/1 [00:02<00:00,  2.50s/it]
+[157/180] clip 94 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.442 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   "'and Richelieu in his don. "'Gallantry found its convenience "'in a certain medley of ranks.'. 
+gen_text 0 And there they told me they had buried it.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.52s/it]100%|██████████| 1/1 [00:02<00:00,  2.52s/it]
+[158/180] clip 94 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.426 wer=0.00
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   to whom it was said he had sold his sister, Miss Churchill. Bolingbroke was in his Meridian, and Richelieu in his Don. Gallantry found its convenience in a certain medley of ranks. Men were. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.27s/it]100%|██████████| 1/1 [00:04<00:00,  4.27s/it]
+[159/180] clip 94 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.456 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   to whom it was said he had sold his sister, Miss Churchill. Bolingbroke was in his Meridian, and Richelieu in his Don. Gallantry found its convenience in a certain medley of ranks. Men were. 
+gen_text 0 And there they told me they had buried it.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.32s/it]100%|██████████| 1/1 [00:04<00:00,  4.32s/it]
+[160/180] clip 94 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.530 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   But, civil, you can speak, and shall, George Mary, you may lay to that. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.23s/it]100%|██████████| 1/1 [00:02<00:00,  2.23s/it]
+[161/180] clip 95 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.373 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   But, civil, you can speak, and shall, George Mary, you may lay to that. 
+gen_text 0 Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.56s/it]100%|██████████| 1/1 [00:03<00:00,  3.56s/it]
+[162/180] clip 95 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.485 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   But, civil, you can speak, and shall, George Mary, you may lay to that. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.24s/it]100%|██████████| 1/1 [00:02<00:00,  2.24s/it]
+[163/180] clip 95 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.396 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   But, civil, you can speak, and shall, George Mary, you may lay to that. 
+gen_text 0 Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.56s/it]100%|██████████| 1/1 [00:03<00:00,  3.56s/it]
+[164/180] clip 95 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.342 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   we have heard no more. That formidable seafaring man with one leg has at last gone clean. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.73s/it]100%|██████████| 1/1 [00:02<00:00,  2.73s/it]
+[165/180] clip 96 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.446 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   we have heard no more. That formidable seafaring man with one leg has at last gone clean. 
+gen_text 0 Her residence on the piazzi barberini being considered an insecure abode.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.25s/it]100%|██████████| 1/1 [00:03<00:00,  3.25s/it]
+[166/180] clip 96 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.476 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   of silver we have heard no more that formidable seafaring man with one leg has at last gone clean out of my life. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.34s/it]100%|██████████| 1/1 [00:03<00:00,  3.34s/it]
+[167/180] clip 96 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.376 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   of silver we have heard no more that formidable seafaring man with one leg has at last gone clean out of my life. 
+gen_text 0 Her residence on the piazzi barberini being considered an insecure abode.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.84s/it]100%|██████████| 1/1 [00:03<00:00,  3.84s/it]
+[168/180] clip 96 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.482 wer=0.09
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   and to shine in the town made a most charming contrast to our dark and bloody sojourn on the island. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.67s/it]100%|██████████| 1/1 [00:02<00:00,  2.67s/it]
+[169/180] clip 97 prompt 6 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.527 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   and to shine in the town made a most charming contrast to our dark and bloody sojourn on the island. 
+gen_text 0 How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.37s/it]100%|██████████| 1/1 [00:03<00:00,  3.37s/it]
+[170/180] clip 97 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.688 wer=0.11
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   the taste of the tropical fruits and above all the lights that began to shine in the town made a most charming contrast to our dark and bloody sojourn on the island. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.30s/it]100%|██████████| 1/1 [00:04<00:00,  4.30s/it]
+[171/180] clip 97 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.464 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   the taste of the tropical fruits and above all the lights that began to shine in the town made a most charming contrast to our dark and bloody sojourn on the island. 
+gen_text 0 How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.99s/it]100%|██████████| 1/1 [00:04<00:00,  4.99s/it]
+[172/180] clip 97 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.631 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   rock of Treasure Island had sunk into the blue round of sea. We were. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.93s/it]100%|██████████| 1/1 [00:02<00:00,  2.93s/it]
+[173/180] clip 98 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.509 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   rock of Treasure Island had sunk into the blue round of sea. We were. 
+gen_text 0 It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.36s/it]100%|██████████| 1/1 [00:04<00:00,  4.37s/it]
+[174/180] clip 98 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.544 wer=0.00
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   and before noon to my inexpressible joy the highest rock of treasure island had sunk into the blue round of sea. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.56s/it]100%|██████████| 1/1 [00:03<00:00,  3.56s/it]
+[175/180] clip 98 prompt full text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.499 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   and before noon to my inexpressible joy the highest rock of treasure island had sunk into the blue round of sea. 
+gen_text 0 It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  4.89s/it]100%|██████████| 1/1 [00:04<00:00,  4.89s/it]
+[176/180] clip 98 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.597 wer=0.00
+Converting audio...
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   wriggling like an eel in his embarrassment. And, he added after a long pause,. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:02<00:00,  2.77s/it]100%|██████████| 1/1 [00:02<00:00,  2.77s/it]
+[177/180] clip 99 prompt 6 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.507 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   wriggling like an eel in his embarrassment. And, he added after a long pause,. 
+gen_text 0 And where did it lead right to this room ronicky stepped from among the smooth silks.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.68s/it]100%|██████████| 1/1 [00:03<00:00,  3.68s/it]
+[178/180] clip 99 prompt 6 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.602 wer=0.06
+Converting audio...
+Audio is over 12s, clipping short. (2)
+No reference text provided, transcribing reference audio...
+[transformers] Using `chunk_length_s` is very experimental with seq2seq models. The results will not necessarily be entirely accurate and will have caveats. More information: https://github.com/huggingface/transformers/pull/20104. Ignore this warning with pipeline(..., ignore_warning=True). To use Whisper for long-form transcription, use rather the model's `generate` method directly as the model relies on it's own chunking mechanism (cf. Whisper original paper, section 3.8. Long-form Transcription).
+
+ref_text   "'I'm Ben-Gonion,' replied the maroon, wriggling like an eel in his embarrassment. "'And,' he added after a long pause,. 
+gen_text 0 This is a test sentence for voice cloning.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:03<00:00,  3.75s/it]100%|██████████| 1/1 [00:03<00:00,  3.75s/it]
+[179/180] clip 99 prompt full text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.425 wer=0.00
+Converting audio...
+Using cached preprocessed reference audio...
+Using cached reference text...
+
+ref_text   "'I'm Ben-Gonion,' replied the maroon, wriggling like an eel in his embarrassment. "'And,' he added after a long pause,. 
+gen_text 0 And where did it lead right to this room ronicky stepped from among the smooth silks.
+
+
+Generating audio in 1 batches...
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:04<00:00,  5.00s/it]100%|██████████| 1/1 [00:04<00:00,  5.00s/it]
+[180/180] clip 99 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.554 wer=0.00
+
+=== summary (prompt|text) ===
+6|fixed {'n_ok': 100, 'n_failed': 0, 'acc_source_mean': 0.9925, 'acc_mean': 0.9513, 'traced_rate': 0.95, 'far_rate': 0.12, 'sim_ecapa_mean': 0.5073, 'wer_mean': 0.005, 'gate_pass': True}
+6|unseen {'n_ok': 100, 'n_failed': 0, 'acc_source_mean': 0.9925, 'acc_mean': 0.9606, 'traced_rate': 0.99, 'far_rate': 0.09, 'sim_ecapa_mean': 0.5329, 'wer_mean': 0.0425, 'gate_pass': True}
+full|fixed {'n_ok': 100, 'n_failed': 0, 'acc_source_mean': 0.9881, 'acc_mean': 0.9569, 'traced_rate': 0.97, 'far_rate': 0.11, 'sim_ecapa_mean': 0.5237, 'wer_mean': 0.0025, 'gate_pass': True}
+full|unseen {'n_ok': 100, 'n_failed': 0, 'acc_source_mean': 0.9881, 'acc_mean': 0.9706, 'traced_rate': 0.99, 'far_rate': 0.07, 'sim_ecapa_mean': 0.5575, 'wer_mean': 0.0337, 'gate_pass': True}
+saved results/ce_libri_f5tts_pretrained_pdur.json
