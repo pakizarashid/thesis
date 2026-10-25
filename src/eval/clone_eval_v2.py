@@ -397,8 +397,14 @@ def main():
         full = trim_padding(it["waveform"].reshape(-1))
         items.append({"index": i, "utterance_id": utterance_id(ds, i, it), "speaker": str(it["speaker_id"]),
                       "transcript": it.get("transcript", ""), "full": full})
-    unseen, unseen_src = build_unseen_texts([(it["speaker"], it["transcript"]) for it in items],
-                                            args.unseen_min_words, args.unseen_max_words)
+    # unseen texts are chosen over the WHOLE clip set, so a short run (--diagnostic, small
+    # --n_utterances) gives each clip exactly the text the full run gives it
+    meta = [(it["speaker"], it["transcript"]) for it in items]
+    for j in range(len(items), len(ds)):
+        it2 = ds[j]
+        meta.append((str(it2["speaker_id"]), it2.get("transcript", "")))
+    unseen, unseen_src = build_unseen_texts(meta, args.unseen_min_words, args.unseen_max_words)
+    unseen, unseen_src = unseen[:len(items)], unseen_src[:len(items)]
     overlap = None
     if args.train_text_pool:
         train_pool = {normalize_text(t) for t in json.load(open(args.train_text_pool))}
