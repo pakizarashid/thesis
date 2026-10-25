@@ -1,0 +1,897 @@
+[preflight] omegaconf 2.3.1 ok; numpy/torch ok
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index_test-clean.json
+[LibriSpeechSubset] Using 200 utterances (eval split, speaker-disjoint from the other split).
+[plan] cloner=cosyvoice clips=200 prompts=['6', 'full'] texts=['fixed', 'unseen'] -> 800 clones to run
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[backbone] LoRA at zero-init == PRETRAINED VOICEMARK (their released weights)
+2026-10-25 14:51:02,846 INFO NumExpr defaulting to 4 threads.
+2026-10-25 14:51:03,770 DEBUG Skipping import of cpp extensions: Could not load this library: /usr/local/lib/python3.13/dist-packages/torchao/_C.abi3.so
+2026-10-25 14:51:06,696 DEBUG Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2026-10-25 14:51:06,870 DEBUG Creating converter from 7 to 5
+2026-10-25 14:51:06,870 DEBUG Creating converter from 5 to 7
+2026-10-25 14:51:06,870 DEBUG Creating converter from 7 to 5
+2026-10-25 14:51:06,870 DEBUG Creating converter from 5 to 7
+2026-10-25 14:51:07,217 DEBUG etils.epath found. Using etils.epath for file I/O.
+[cosyvoice] using CosyVoice2 from cosyvoice.cli.cosyvoice
+Sliding Window Attention is enabled but not implemented for `sdpa`; unexpected results may be encountered.
+/usr/local/lib/python3.13/dist-packages/diffusers/models/lora.py:391: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+2026-10-25 14:51:15,816 INFO input frame rate=25
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/usr/local/lib/python3.13/dist-packages/pyworld/__init__.py:13: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+[1;31m2026-10-25 14:51:18.700549353 [E:onnxruntime:Default, provider_bridge_ort.cc:2458 operator()] /onnxruntime_src/onnxruntime/core/session/provider_bridge_ort.cc:2043 onnxruntime::Provider& onnxruntime::ProviderLibrary::Get() [ONNXRuntimeError] : 1 : FAIL : Failed to load library /usr/local/lib/python3.13/dist-packages/onnxruntime/capi/libonnxruntime_providers_cuda.so with error: libcublasLt.so.13: cannot open shared object file: No such file or directory
+[m
+[0;93m2026-10-25 14:51:18.700591784 [W:onnxruntime:Default, onnxruntime_pybind_state.cc:1295 CreateExecutionProviderFactoryInstance] Failed to create CUDAExecutionProvider. Require cuDNN 9.* and CUDA 13.*. Please install all dependencies as mentioned in the GPU requirements page (https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html#requirements), make sure they're in the PATH, and that your GPU is supported.[m
+2026-10-25 14:51:19,919 INFO use wetext frontend
+[cosyvoice] loaded /kaggle/working/CosyVoice/pretrained_models/CosyVoice2-0.5B; sample_rate=24000
+2026-10-25 14:51:23,371 INFO Applied quirks (see `speechbrain.utils.quirks`): [disable_jit_profiling, allow_tf32]
+2026-10-25 14:51:23,372 INFO Excluded quirks specified by the `SB_DISABLE_QUIRKS` environment (comma-separated list): []
+2026-10-25 14:51:23,387 INFO Fetch hyperparams.yaml: Using symlink found at '/tmp/ecapa_model/hyperparams.yaml'
+2026-10-25 14:51:23,566 INFO Fetch embedding_model.ckpt: Using symlink found at '/tmp/ecapa_model/embedding_model.ckpt'
+2026-10-25 14:51:23,566 INFO Fetch mean_var_norm_emb.ckpt: Using symlink found at '/tmp/ecapa_model/mean_var_norm_emb.ckpt'
+2026-10-25 14:51:23,566 INFO Fetch classifier.ckpt: Using symlink found at '/tmp/ecapa_model/classifier.ckpt'
+2026-10-25 14:51:23,566 INFO Fetch label_encoder.txt: Using symlink found at '/tmp/ecapa_model/label_encoder.ckpt'
+2026-10-25 14:51:23,566 INFO Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+/usr/local/lib/python3.13/dist-packages/speechbrain/utils/checkpoints.py:202: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  state_dict = torch.load(path, map_location=device)
+/usr/local/lib/python3.13/dist-packages/speechbrain/processing/features.py:1550: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  stats = torch.load(path, map_location=self.device)
+2026-10-25 14:51:23,674 WARNING Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+2026-10-25 14:51:23,828 DEBUG Starting new HTTPS connection (1): huggingface.co:443
+2026-10-25 14:51:24,072 DEBUG https://huggingface.co:443 "GET /api/models/Systran/faster-whisper-base.en/revision/main HTTP/1.1" 200 None
+[transcribe] loading faster-whisper base.en (float16)
+2026-10-25 14:51:25,199 DEBUG https://huggingface.co:443 "GET /api/models/Systran/faster-whisper-base.en/revision/main HTTP/1.1" 200 None
+2026-10-25 14:51:25,408 INFO Processing audio with duration 00:06.000
+2026-10-25 14:51:25,427 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:51:25,826 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text are exactly governing regulated than those available for his dynamo and lamp.  Edison Reelach, this may lead to bad performance
+/usr/local/lib/python3.13/dist-packages/torchaudio/__init__.py:86: UserWarning: The 'backend' parameter is not used by TorchCodec AudioDecoder.
+  return load_with_torchcodec(
+2026-10-25 14:51:26,969 INFO synthesis text This is a test sentence for voice cloning.
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:103: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with self.llm_context, torch.cuda.amp.autocast(self.fp16 is True and hasattr(self.llm, 'vllm') is False):
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:293: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast(self.fp16):
+2026-10-25 14:51:30,164 INFO yield speech len 2.88, rtf 1.1091644565264385
+100%|██████████| 1/1 [00:04<00:00,  4.35s/it]100%|██████████| 1/1 [00:04<00:00,  4.35s/it]
+2026-10-25 14:51:30,329 INFO Processing audio with duration 00:02.880
+2026-10-25 14:51:30,346 DEBUG Processing segment at 00:00.000
+[1/800] clip 0 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.483 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:51:31,465 INFO synthesis text There was something individual about the great farm a most unusual trimness and care for detail.
+2026-10-25 14:51:36,941 INFO yield speech len 6.12, rtf 0.8946955983155693
+100%|██████████| 1/1 [00:06<00:00,  6.40s/it]100%|██████████| 1/1 [00:06<00:00,  6.40s/it]
+2026-10-25 14:51:37,147 INFO Processing audio with duration 00:06.120
+2026-10-25 14:51:37,163 DEBUG Processing segment at 00:00.000
+2026-10-25 14:51:37,332 DEBUG Processing segment at 00:05.960
+2026-10-25 14:51:37,420 DEBUG Log probability threshold is not met with temperature 0.0 (-1.439732 < -1.000000)
+2026-10-25 14:51:37,420 DEBUG No speech threshold is met (0.977051 > 0.600000)
+[2/800] clip 0 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.525 wer=0.00
+2026-10-25 14:51:38,267 INFO Processing audio with duration 00:13.853
+2026-10-25 14:51:38,284 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c0_full_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:51:38,626 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text unless he could secure an engine of smoother running, and more exactly governed and regulated than those available for his dynamo and lamp. Edison realized that he would find it almost impossible to give a steady light., this may lead to bad performance
+2026-10-25 14:51:40,210 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:51:44,740 INFO yield speech len 2.92, rtf 1.5513837337493896
+100%|██████████| 1/1 [00:06<00:00,  6.13s/it]100%|██████████| 1/1 [00:06<00:00,  6.13s/it]
+2026-10-25 14:51:44,911 INFO Processing audio with duration 00:02.920
+2026-10-25 14:51:44,923 DEBUG Processing segment at 00:00.000
+[3/800] clip 0 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.518 wer=0.00
+[cosyvoice] prompt transcript cleaned for the text normaliser (c0_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:51:45,133 WARNING synthesis text There was something individual about the great farm a most unusual trimness and care for detail. too short than prompt text unless he could secure an engine of smoother running, and more exactly governed and regulated than those available for his dynamo and lamp. Edison realized that he would find it almost impossible to give a steady light., this may lead to bad performance
+2026-10-25 14:51:46,741 INFO synthesis text There was something individual about the great farm a most unusual trimness and care for detail.
+2026-10-25 14:51:54,010 INFO yield speech len 6.08, rtf 1.1954942816182186
+100%|██████████| 1/1 [00:08<00:00,  8.90s/it]100%|██████████| 1/1 [00:08<00:00,  8.90s/it]
+2026-10-25 14:51:54,231 INFO Processing audio with duration 00:06.080
+2026-10-25 14:51:54,237 DEBUG Processing segment at 00:00.000
+[4/800] clip 0 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.612 wer=0.06
+2026-10-25 14:51:54,664 INFO Processing audio with duration 00:03.750
+2026-10-25 14:51:54,678 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:51:55,558 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:51:58,175 INFO yield speech len 2.8, rtf 0.9345825229372298
+100%|██████████| 1/1 [00:03<00:00,  3.35s/it]100%|██████████| 1/1 [00:03<00:00,  3.35s/it]
+2026-10-25 14:51:58,303 INFO Processing audio with duration 00:02.800
+2026-10-25 14:51:58,314 DEBUG Processing segment at 00:00.000
+[5/800] clip 1 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.412 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:51:59,177 INFO synthesis text He still held on to it with both hands as he rushed into his mother's cottage.
+2026-10-25 14:52:03,296 INFO yield speech len 4.76, rtf 0.8653886678839933
+100%|██████████| 1/1 [00:04<00:00,  4.82s/it]100%|██████████| 1/1 [00:04<00:00,  4.82s/it]
+2026-10-25 14:52:03,483 INFO Processing audio with duration 00:04.760
+2026-10-25 14:52:03,496 DEBUG Processing segment at 00:00.000
+[6/800] clip 1 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.532 wer=0.00
+2026-10-25 14:52:04,566 INFO Processing audio with duration 00:03.750
+2026-10-25 14:52:04,578 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:52:05,391 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:52:07,766 INFO yield speech len 2.68, rtf 0.8862341517832741
+100%|██████████| 1/1 [00:03<00:00,  3.02s/it]100%|██████████| 1/1 [00:03<00:00,  3.02s/it]
+2026-10-25 14:52:07,915 INFO Processing audio with duration 00:02.680
+2026-10-25 14:52:07,919 DEBUG Processing segment at 00:00.000
+[7/800] clip 1 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.536 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:52:08,712 INFO synthesis text He still held on to it with both hands as he rushed into his mother's cottage.
+2026-10-25 14:52:12,985 INFO yield speech len 5.04, rtf 0.8478517570192852
+100%|██████████| 1/1 [00:04<00:00,  4.92s/it]100%|██████████| 1/1 [00:04<00:00,  4.92s/it]
+2026-10-25 14:52:13,170 INFO Processing audio with duration 00:05.040
+2026-10-25 14:52:13,183 DEBUG Processing segment at 00:00.000
+[8/800] clip 1 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.497 wer=0.12
+2026-10-25 14:52:14,344 INFO Processing audio with duration 00:06.000
+2026-10-25 14:52:14,350 DEBUG Processing segment at 00:00.000
+2026-10-25 14:52:14,483 DEBUG Processing segment at 00:05.640
+2026-10-25 14:52:14,546 DEBUG Log probability threshold is not met with temperature 0.0 (-1.432031 < -1.000000)
+2026-10-25 14:52:14,546 DEBUG No speech threshold is met (0.866211 > 0.600000)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:52:14,569 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text paper before the American Institute of Electrical Engineers on the six years of practically, this may lead to bad performance
+2026-10-25 14:52:15,423 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:52:18,367 INFO yield speech len 2.88, rtf 1.0222982201311324
+100%|██████████| 1/1 [00:03<00:00,  3.81s/it]100%|██████████| 1/1 [00:03<00:00,  3.81s/it]
+2026-10-25 14:52:18,513 INFO Processing audio with duration 00:02.880
+2026-10-25 14:52:18,518 DEBUG Processing segment at 00:00.000
+[9/800] clip 2 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.581 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:52:19,504 INFO synthesis text A bed quilt made of patches of different kinds and colors of cloth all neatly sewed together.
+2026-10-25 14:52:26,014 INFO yield speech len 7.04, rtf 0.9246856312860142
+100%|██████████| 1/1 [00:07<00:00,  7.37s/it]100%|██████████| 1/1 [00:07<00:00,  7.37s/it]
+2026-10-25 14:52:26,258 INFO Processing audio with duration 00:07.040
+2026-10-25 14:52:26,272 DEBUG Processing segment at 00:00.000
+[10/800] clip 2 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.594 wer=0.06
+2026-10-25 14:52:27,501 INFO Processing audio with duration 00:17.605
+2026-10-25 14:52:27,519 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c2_full_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:52:27,881 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text In december eighteen eighty eight Mister WJ Jenks read an interesting paper before the American Institute of Electrical Engineers on the six years of practical experience had up to that time with the meter, then more generally in use than any other., this may lead to bad performance
+2026-10-25 14:52:29,794 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:52:35,039 INFO yield speech len 2.92, rtf 1.7963207747838268
+100%|██████████| 1/1 [00:07<00:00,  7.18s/it]100%|██████████| 1/1 [00:07<00:00,  7.18s/it]
+2026-10-25 14:52:35,190 INFO Processing audio with duration 00:02.920
+2026-10-25 14:52:35,203 DEBUG Processing segment at 00:00.000
+[11/800] clip 2 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.578 wer=0.00
+[cosyvoice] prompt transcript cleaned for the text normaliser (c2_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:52:35,421 WARNING synthesis text A bed quilt made of patches of different kinds and colors of cloth all neatly sewed together. too short than prompt text In december eighteen eighty eight Mister WJ Jenks read an interesting paper before the American Institute of Electrical Engineers on the six years of practical experience had up to that time with the meter, then more generally in use than any other., this may lead to bad performance
+2026-10-25 14:52:37,473 INFO synthesis text A bed quilt made of patches of different kinds and colors of cloth all neatly sewed together.
+2026-10-25 14:52:46,049 INFO yield speech len 6.84, rtf 1.253877257743077
+100%|██████████| 1/1 [00:10<00:00, 10.65s/it]100%|██████████| 1/1 [00:10<00:00, 10.65s/it]
+2026-10-25 14:52:46,293 INFO Processing audio with duration 00:06.840
+2026-10-25 14:52:46,309 DEBUG Processing segment at 00:00.000
+[12/800] clip 2 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.684 wer=0.00
+2026-10-25 14:52:46,905 INFO Processing audio with duration 00:06.000
+2026-10-25 14:52:46,920 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c3_6_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:52:47,136 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text head pole line construction, and were installed by the construction company that had been organized by Edison., this may lead to bad performance
+2026-10-25 14:52:48,074 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:52:52,278 INFO yield speech len 4.36, rtf 0.9641558205315826
+100%|██████████| 1/1 [00:05<00:00,  5.16s/it]100%|██████████| 1/1 [00:05<00:00,  5.16s/it]
+2026-10-25 14:52:52,469 INFO Processing audio with duration 00:04.360
+2026-10-25 14:52:52,475 DEBUG Processing segment at 00:00.000
+[13/800] clip 3 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.544 wer=0.00
+[cosyvoice] prompt transcript cleaned for the text normaliser (c3_6_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:52:52,637 WARNING synthesis text Burn fire burn flicker flicker flame. too short than prompt text head pole line construction, and were installed by the construction company that had been organized by Edison., this may lead to bad performance
+2026-10-25 14:52:53,492 INFO synthesis text Burn fire burn flicker flicker flame.
+2026-10-25 14:52:57,086 INFO yield speech len 3.64, rtf 0.987519995196835
+100%|██████████| 1/1 [00:04<00:00,  4.46s/it]100%|██████████| 1/1 [00:04<00:00,  4.46s/it]
+2026-10-25 14:52:57,276 INFO Processing audio with duration 00:03.640
+2026-10-25 14:52:57,288 DEBUG Processing segment at 00:00.000
+[14/800] clip 3 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.547 wer=0.17
+2026-10-25 14:52:58,074 INFO Processing audio with duration 00:10.660
+2026-10-25 14:52:58,093 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c3_full_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:52:58,355 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text The street conductors were of the overhead pole line construction, and were installed by the construction company that had been organized by Edison to build and equip central stations., this may lead to bad performance
+2026-10-25 14:52:59,620 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:53:04,001 INFO yield speech len 3.72, rtf 1.1777109997246855
+100%|██████████| 1/1 [00:05<00:00,  5.66s/it]100%|██████████| 1/1 [00:05<00:00,  5.66s/it]
+2026-10-25 14:53:04,176 INFO Processing audio with duration 00:03.720
+2026-10-25 14:53:04,195 DEBUG Processing segment at 00:00.000
+[15/800] clip 3 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.636 wer=0.00
+[cosyvoice] prompt transcript cleaned for the text normaliser (c3_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:53:04,374 WARNING synthesis text Burn fire burn flicker flicker flame. too short than prompt text The street conductors were of the overhead pole line construction, and were installed by the construction company that had been organized by Edison to build and equip central stations., this may lead to bad performance
+2026-10-25 14:53:05,634 INFO synthesis text Burn fire burn flicker flicker flame.
+2026-10-25 14:53:09,815 INFO yield speech len 3.76, rtf 1.1120124066129644
+100%|██████████| 1/1 [00:05<00:00,  5.45s/it]100%|██████████| 1/1 [00:05<00:00,  5.45s/it]
+2026-10-25 14:53:09,958 INFO Processing audio with duration 00:03.760
+2026-10-25 14:53:09,969 DEBUG Processing segment at 00:00.000
+[16/800] clip 3 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.576 wer=0.00
+2026-10-25 14:53:10,424 INFO Processing audio with duration 00:04.898
+2026-10-25 14:53:10,438 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:53:11,439 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:53:14,952 INFO yield speech len 3.72, rtf 0.9443905404818955
+100%|██████████| 1/1 [00:04<00:00,  4.34s/it]100%|██████████| 1/1 [00:04<00:00,  4.34s/it]
+2026-10-25 14:53:15,086 INFO Processing audio with duration 00:03.720
+2026-10-25 14:53:15,098 DEBUG Processing segment at 00:00.000
+[17/800] clip 4 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.582 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:53:15,969 INFO synthesis text In the stern i curved the tail up almost as high as the head.
+2026-10-25 14:53:20,485 INFO yield speech len 4.96, rtf 0.9104001425927685
+100%|██████████| 1/1 [00:05<00:00,  5.21s/it]100%|██████████| 1/1 [00:05<00:00,  5.21s/it]
+2026-10-25 14:53:20,662 INFO Processing audio with duration 00:04.960
+2026-10-25 14:53:20,678 DEBUG Processing segment at 00:00.000
+[18/800] clip 4 prompt 6 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.632 wer=0.00
+2026-10-25 14:53:21,181 INFO Processing audio with duration 00:04.898
+2026-10-25 14:53:21,186 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:53:22,113 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:53:25,017 INFO yield speech len 3.12, rtf 0.9310111785546327
+100%|██████████| 1/1 [00:03<00:00,  3.69s/it]100%|██████████| 1/1 [00:03<00:00,  3.69s/it]
+2026-10-25 14:53:25,157 INFO Processing audio with duration 00:03.120
+2026-10-25 14:53:25,170 DEBUG Processing segment at 00:00.000
+[19/800] clip 4 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.644 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:53:26,158 INFO synthesis text In the stern i curved the tail up almost as high as the head.
+2026-10-25 14:53:30,198 INFO yield speech len 4.56, rtf 0.8860093459748386
+100%|██████████| 1/1 [00:04<00:00,  4.85s/it]100%|██████████| 1/1 [00:04<00:00,  4.85s/it]
+2026-10-25 14:53:30,383 INFO Processing audio with duration 00:04.560
+2026-10-25 14:53:30,397 DEBUG Processing segment at 00:00.000
+2026-10-25 14:53:30,571 DEBUG Processing segment at 00:04.440
+2026-10-25 14:53:31,351 DEBUG Compression ratio threshold is not met with temperature 0.0 (14.254902 > 2.400000)
+2026-10-25 14:53:31,390 DEBUG Log probability threshold is not met with temperature 0.2 (-1.963654 < -1.000000)
+2026-10-25 14:53:31,390 DEBUG No speech threshold is met (0.962891 > 0.600000)
+[20/800] clip 4 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.604 wer=0.07
+2026-10-25 14:53:31,792 INFO Processing audio with duration 00:06.000
+2026-10-25 14:53:31,806 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c5_6_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:53:32,031 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text whether addressed to her mind or heart, little pearl might or might not be within its reach in accordance with her., this may lead to bad performance
+2026-10-25 14:53:32,620 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:53:36,388 INFO yield speech len 4.04, rtf 0.9325894388822046
+100%|██████████| 1/1 [00:04<00:00,  4.38s/it]100%|██████████| 1/1 [00:04<00:00,  4.38s/it]
+2026-10-25 14:53:36,543 INFO Processing audio with duration 00:04.040
+2026-10-25 14:53:36,555 DEBUG Processing segment at 00:00.000
+[21/800] clip 5 prompt 6 text fixed: acc_src=1.000 acc=0.812 traced=True far=False sim=0.544 wer=0.25
+[cosyvoice] prompt transcript cleaned for the text normaliser (c5_6_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:53:37,325 INFO synthesis text Paul answers the man who is named jesus christ and the son of god gave himself for our sins.
+2026-10-25 14:53:44,496 INFO yield speech len 8.08, rtf 0.8874967841818782
+100%|██████████| 1/1 [00:07<00:00,  7.78s/it]100%|██████████| 1/1 [00:07<00:00,  7.78s/it]
+2026-10-25 14:53:44,713 INFO Processing audio with duration 00:08.080
+2026-10-25 14:53:44,727 DEBUG Processing segment at 00:00.000
+[22/800] clip 5 prompt 6 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.619 wer=0.11
+2026-10-25 14:53:45,559 INFO Processing audio with duration 00:10.190
+2026-10-25 14:53:45,574 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c5_full_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:53:45,876 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text As to any other kind of discipline, whether addressed to her mind or heart, little pearl might or might not be within its reach in accordance with the caprice that rolled the moment., this may lead to bad performance
+2026-10-25 14:53:46,859 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:53:50,740 INFO yield speech len 2.92, rtf 1.3289069476192945
+100%|██████████| 1/1 [00:04<00:00,  4.88s/it]100%|██████████| 1/1 [00:04<00:00,  4.88s/it]
+2026-10-25 14:53:50,854 INFO Processing audio with duration 00:02.920
+2026-10-25 14:53:50,867 DEBUG Processing segment at 00:00.000
+[23/800] clip 5 prompt full text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.523 wer=0.00
+[cosyvoice] prompt transcript cleaned for the text normaliser (c5_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:53:52,101 INFO synthesis text Paul answers the man who is named jesus christ and the son of god gave himself for our sins.
+2026-10-25 14:53:58,837 INFO yield speech len 6.24, rtf 1.0795105344209914
+100%|██████████| 1/1 [00:07<00:00,  7.74s/it]100%|██████████| 1/1 [00:07<00:00,  7.74s/it]
+2026-10-25 14:53:59,024 INFO Processing audio with duration 00:06.240
+2026-10-25 14:53:59,038 DEBUG Processing segment at 00:00.000
+[24/800] clip 5 prompt full text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.579 wer=0.00
+2026-10-25 14:53:59,638 INFO Processing audio with duration 00:06.000
+2026-10-25 14:53:59,651 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:53:59,832 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text Nevertheless, the loving mother of this one child ran little risk of airing on the side of a-, this may lead to bad performance
+2026-10-25 14:54:00,424 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:54:03,726 INFO yield speech len 3.28, rtf 1.006832646160591
+100%|██████████| 1/1 [00:03<00:00,  3.91s/it]100%|██████████| 1/1 [00:03<00:00,  3.91s/it]
+2026-10-25 14:54:03,862 INFO Processing audio with duration 00:03.280
+2026-10-25 14:54:03,877 DEBUG Processing segment at 00:00.000
+[25/800] clip 6 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.472 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:54:04,883 INFO synthesis text It is enough said george gamewell sharply and he turned upon the crowd.
+2026-10-25 14:54:10,279 INFO yield speech len 6.16, rtf 0.8760334996434
+100%|██████████| 1/1 [00:06<00:00,  6.01s/it]100%|██████████| 1/1 [00:06<00:00,  6.01s/it]
+2026-10-25 14:54:10,458 INFO Processing audio with duration 00:06.160
+2026-10-25 14:54:10,472 DEBUG Processing segment at 00:00.000
+[26/800] clip 6 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.439 wer=0.08
+2026-10-25 14:54:11,233 INFO Processing audio with duration 00:08.795
+2026-10-25 14:54:11,249 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c6_full_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:54:11,502 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text Hester Pryn, nevertheless, the loving mother of this one child, ran little risk of airing on the side of undue severity., this may lead to bad performance
+2026-10-25 14:54:12,324 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:54:15,749 INFO yield speech len 3.24, rtf 1.057085946754173
+100%|██████████| 1/1 [00:04<00:00,  4.27s/it]100%|██████████| 1/1 [00:04<00:00,  4.27s/it]
+2026-10-25 14:54:15,891 INFO Processing audio with duration 00:03.240
+2026-10-25 14:54:15,912 DEBUG Processing segment at 00:00.000
+[27/800] clip 6 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.447 wer=0.00
+[cosyvoice] prompt transcript cleaned for the text normaliser (c6_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:54:16,921 INFO synthesis text It is enough said george gamewell sharply and he turned upon the crowd.
+2026-10-25 14:54:22,113 INFO yield speech len 5.32, rtf 0.9759966592143352
+100%|██████████| 1/1 [00:06<00:00,  6.05s/it]100%|██████████| 1/1 [00:06<00:00,  6.05s/it]
+2026-10-25 14:54:22,281 INFO Processing audio with duration 00:05.320
+2026-10-25 14:54:22,294 DEBUG Processing segment at 00:00.000
+[28/800] clip 6 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.546 wer=0.08
+2026-10-25 14:54:22,898 INFO Processing audio with duration 00:06.000
+2026-10-25 14:54:22,919 DEBUG Processing segment at 00:00.000
+2026-10-25 14:54:23,093 DEBUG Processing segment at 00:04.680
+[cosyvoice] prompt transcript cleaned for the text normaliser (c7_6_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:54:23,203 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text watched the growth and the beauty that became every day more brilliant, and the intelligence that threw its quivering., this may lead to bad performance
+2026-10-25 14:54:23,778 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:54:26,562 INFO yield speech len 2.8, rtf 0.9942467723573958
+100%|██████████| 1/1 [00:03<00:00,  3.38s/it]100%|██████████| 1/1 [00:03<00:00,  3.38s/it]
+2026-10-25 14:54:26,680 INFO Processing audio with duration 00:02.800
+2026-10-25 14:54:26,685 DEBUG Processing segment at 00:00.000
+[29/800] clip 7 prompt 6 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.592 wer=0.00
+[cosyvoice] prompt transcript cleaned for the text normaliser (c7_6_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:54:27,421 INFO synthesis text Never mind now interposed the captain we will talk of that by and by.
+2026-10-25 14:54:31,741 INFO yield speech len 4.72, rtf 0.9152137627035885
+100%|██████████| 1/1 [00:04<00:00,  4.91s/it]100%|██████████| 1/1 [00:04<00:00,  4.91s/it]
+2026-10-25 14:54:31,893 INFO Processing audio with duration 00:04.720
+2026-10-25 14:54:31,906 DEBUG Processing segment at 00:00.000
+[30/800] clip 7 prompt 6 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.690 wer=0.21
+2026-10-25 14:54:33,104 INFO Processing audio with duration 00:12.435
+2026-10-25 14:54:33,120 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c7_full_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:54:33,431 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text How strange it seemed to the sad woman as she watched the growth and the beauty that became every day more brilliant and the intelligence that threw its quivering sunshine over the tiny features of this child., this may lead to bad performance
+2026-10-25 14:54:34,610 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:54:38,939 INFO yield speech len 3.08, rtf 1.4055132865905762
+100%|██████████| 1/1 [00:05<00:00,  5.53s/it]100%|██████████| 1/1 [00:05<00:00,  5.53s/it]
+2026-10-25 14:54:39,087 INFO Processing audio with duration 00:03.080
+2026-10-25 14:54:39,100 DEBUG Processing segment at 00:00.000
+[31/800] clip 7 prompt full text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.609 wer=0.00
+[cosyvoice] prompt transcript cleaned for the text normaliser (c7_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:54:39,307 WARNING synthesis text Never mind now interposed the captain we will talk of that by and by. too short than prompt text How strange it seemed to the sad woman as she watched the growth and the beauty that became every day more brilliant and the intelligence that threw its quivering sunshine over the tiny features of this child., this may lead to bad performance
+2026-10-25 14:54:40,482 INFO synthesis text Never mind now interposed the captain we will talk of that by and by.
+2026-10-25 14:54:46,419 INFO yield speech len 4.96, rtf 1.1969377436945516
+100%|██████████| 1/1 [00:07<00:00,  7.13s/it]100%|██████████| 1/1 [00:07<00:00,  7.13s/it]
+2026-10-25 14:54:46,566 INFO Processing audio with duration 00:04.960
+2026-10-25 14:54:46,571 DEBUG Processing segment at 00:00.000
+[32/800] clip 7 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.595 wer=0.07
+2026-10-25 14:54:46,983 INFO Processing audio with duration 00:03.645
+2026-10-25 14:54:46,988 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:54:47,510 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:54:50,645 INFO yield speech len 3.4, rtf 0.9219027266782873
+100%|██████████| 1/1 [00:03<00:00,  3.52s/it]100%|██████████| 1/1 [00:03<00:00,  3.52s/it]
+2026-10-25 14:54:50,784 INFO Processing audio with duration 00:03.400
+2026-10-25 14:54:50,797 DEBUG Processing segment at 00:00.000
+[33/800] clip 8 prompt 6 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.653 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:54:51,409 INFO synthesis text But now nothing could hold me back.
+2026-10-25 14:54:54,308 INFO yield speech len 2.96, rtf 0.9793832495405868
+100%|██████████| 1/1 [00:03<00:00,  3.35s/it]100%|██████████| 1/1 [00:03<00:00,  3.35s/it]
+2026-10-25 14:54:54,431 INFO Processing audio with duration 00:02.960
+2026-10-25 14:54:54,443 DEBUG Processing segment at 00:00.000
+[34/800] clip 8 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.649 wer=0.00
+2026-10-25 14:54:54,808 INFO Processing audio with duration 00:03.645
+2026-10-25 14:54:54,823 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:54:55,473 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:54:58,489 INFO yield speech len 3.24, rtf 0.9307119581434461
+100%|██████████| 1/1 [00:03<00:00,  3.51s/it]100%|██████████| 1/1 [00:03<00:00,  3.51s/it]
+2026-10-25 14:54:58,601 INFO Processing audio with duration 00:03.240
+2026-10-25 14:54:58,613 DEBUG Processing segment at 00:00.000
+[35/800] clip 8 prompt full text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.620 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:54:59,305 INFO synthesis text But now nothing could hold me back.
+2026-10-25 14:55:01,767 INFO yield speech len 2.6, rtf 0.9468528857597938
+100%|██████████| 1/1 [00:02<00:00,  2.85s/it]100%|██████████| 1/1 [00:02<00:00,  2.85s/it]
+2026-10-25 14:55:01,873 INFO Processing audio with duration 00:02.600
+2026-10-25 14:55:01,888 DEBUG Processing segment at 00:00.000
+[36/800] clip 8 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.604 wer=0.00
+2026-10-25 14:55:02,409 INFO Processing audio with duration 00:06.000
+2026-10-25 14:55:02,423 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c9_6_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:55:02,661 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text perfectly by recalling what she herself had been during that momentous period, while Pearl was imbibing..., this may lead to bad performance
+2026-10-25 14:55:03,270 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:55:06,372 INFO yield speech len 3.04, rtf 1.0204003045433445
+100%|██████████| 1/1 [00:03<00:00,  3.73s/it]100%|██████████| 1/1 [00:03<00:00,  3.73s/it]
+2026-10-25 14:55:06,515 INFO Processing audio with duration 00:03.040
+2026-10-25 14:55:06,530 DEBUG Processing segment at 00:00.000
+[37/800] clip 9 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.607 wer=0.00
+[cosyvoice] prompt transcript cleaned for the text normaliser (c9_6_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:55:07,375 INFO synthesis text When the king comes to paris everybody calls out vive le roi.
+2026-10-25 14:55:11,810 INFO yield speech len 4.76, rtf 0.9317912474399855
+100%|██████████| 1/1 [00:05<00:00,  5.10s/it]100%|██████████| 1/1 [00:05<00:00,  5.10s/it]
+2026-10-25 14:55:11,959 INFO Processing audio with duration 00:04.760
+2026-10-25 14:55:11,972 DEBUG Processing segment at 00:00.000
+[38/800] clip 9 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.697 wer=0.25
+2026-10-25 14:55:13,121 INFO Processing audio with duration 00:16.645
+2026-10-25 14:55:13,139 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c9_full_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:55:13,507 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text Hester could only account for the child's character, and even then most vaguely and imperfectly, by recalling what she herself had been during that momentous period, while Pearl was imbibing her soul from the spiritual world, and her bodily frame from its material of earth., this may lead to bad performance
+2026-10-25 14:55:15,070 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:55:20,086 INFO yield speech len 2.96, rtf 1.6946010492943429
+100%|██████████| 1/1 [00:06<00:00,  6.60s/it]100%|██████████| 1/1 [00:06<00:00,  6.60s/it]
+2026-10-25 14:55:20,210 INFO Processing audio with duration 00:02.960
+2026-10-25 14:55:20,224 DEBUG Processing segment at 00:00.000
+[39/800] clip 9 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.650 wer=0.00
+[cosyvoice] prompt transcript cleaned for the text normaliser (c9_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:55:20,444 WARNING synthesis text When the king comes to paris everybody calls out vive le roi. too short than prompt text Hester could only account for the child's character, and even then most vaguely and imperfectly, by recalling what she herself had been during that momentous period, while Pearl was imbibing her soul from the spiritual world, and her bodily frame from its material of earth., this may lead to bad performance
+2026-10-25 14:55:22,261 INFO synthesis text When the king comes to paris everybody calls out vive le roi.
+2026-10-25 14:55:27,926 INFO yield speech len 3.56, rtf 1.591442207272133
+100%|██████████| 1/1 [00:07<00:00,  7.50s/it]100%|██████████| 1/1 [00:07<00:00,  7.50s/it]
+2026-10-25 14:55:28,072 INFO Processing audio with duration 00:03.560
+2026-10-25 14:55:28,085 DEBUG Processing segment at 00:00.000
+[40/800] clip 9 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.737 wer=0.25
+2026-10-25 14:55:28,789 INFO Processing audio with duration 00:06.000
+2026-10-25 14:55:28,804 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:55:29,006 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text I wish she weren't so restless and didn't get so worked up over things,\" she said sadly., this may lead to bad performance
+2026-10-25 14:55:29,584 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:55:32,812 INFO yield speech len 3.04, rtf 1.0615944862365723
+100%|██████████| 1/1 [00:03<00:00,  3.83s/it]100%|██████████| 1/1 [00:03<00:00,  3.83s/it]
+2026-10-25 14:55:32,932 INFO Processing audio with duration 00:03.040
+2026-10-25 14:55:32,944 DEBUG Processing segment at 00:00.000
+[41/800] clip 10 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.499 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:55:33,165 WARNING synthesis text Stuff it into you his belly counselled him. too short than prompt text I wish she weren't so restless and didn't get so worked up over things,\" she said sadly., this may lead to bad performance
+2026-10-25 14:55:33,823 INFO synthesis text Stuff it into you his belly counselled him.
+2026-10-25 14:55:37,159 INFO yield speech len 3.32, rtf 1.0047565741711353
+100%|██████████| 1/1 [00:04<00:00,  4.01s/it]100%|██████████| 1/1 [00:04<00:00,  4.01s/it]
+2026-10-25 14:55:37,287 INFO Processing audio with duration 00:03.320
+2026-10-25 14:55:37,302 DEBUG Processing segment at 00:00.000
+[42/800] clip 10 prompt 6 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.508 wer=0.12
+2026-10-25 14:55:37,882 INFO Processing audio with duration 00:06.350
+2026-10-25 14:55:37,902 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:55:38,136 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text I wish it weren't so restless, and didn't get so worked up over things,\" she said sadly., this may lead to bad performance
+2026-10-25 14:55:38,774 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:55:41,763 INFO yield speech len 2.76, rtf 1.0827086110045945
+100%|██████████| 1/1 [00:03<00:00,  3.65s/it]100%|██████████| 1/1 [00:03<00:00,  3.65s/it]
+2026-10-25 14:55:41,891 INFO Processing audio with duration 00:02.760
+2026-10-25 14:55:41,903 DEBUG Processing segment at 00:00.000
+[43/800] clip 10 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.433 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:55:42,052 WARNING synthesis text Stuff it into you his belly counselled him. too short than prompt text I wish it weren't so restless, and didn't get so worked up over things,\" she said sadly., this may lead to bad performance
+2026-10-25 14:55:42,676 INFO synthesis text Stuff it into you his belly counselled him.
+2026-10-25 14:55:45,598 INFO yield speech len 2.72, rtf 1.0740160942077637
+100%|██████████| 1/1 [00:03<00:00,  3.55s/it]100%|██████████| 1/1 [00:03<00:00,  3.55s/it]
+2026-10-25 14:55:45,762 INFO Processing audio with duration 00:02.720
+2026-10-25 14:55:45,779 DEBUG Processing segment at 00:00.000
+[44/800] clip 10 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.544 wer=0.12
+2026-10-25 14:55:46,299 INFO Processing audio with duration 00:06.000
+2026-10-25 14:55:46,315 DEBUG Processing segment at 00:00.000
+2026-10-25 14:55:46,521 DEBUG Processing segment at 00:05.280
+2026-10-25 14:55:46,577 DEBUG Log probability threshold is not met with temperature 0.0 (-1.412760 < -1.000000)
+2026-10-25 14:55:46,577 DEBUG No speech threshold is met (0.930664 > 0.600000)
+[cosyvoice] prompt transcript cleaned for the text normaliser (c11_6_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:55:46,610 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text so delighted with his success that he had to burst out into a series of short, happy bits of laughter., this may lead to bad performance
+2026-10-25 14:55:47,202 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:55:49,973 INFO yield speech len 2.8, rtf 0.989738702774048
+100%|██████████| 1/1 [00:03<00:00,  3.38s/it]100%|██████████| 1/1 [00:03<00:00,  3.38s/it]
+2026-10-25 14:55:50,093 INFO Processing audio with duration 00:02.800
+2026-10-25 14:55:50,106 DEBUG Processing segment at 00:00.000
+2026-10-25 14:55:50,261 DEBUG Processing segment at 00:02.680
+2026-10-25 14:55:50,343 DEBUG Log probability threshold is not met with temperature 0.0 (-1.422585 < -1.000000)
+2026-10-25 14:55:50,343 DEBUG No speech threshold is met (0.959473 > 0.600000)
+[45/800] clip 11 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.568 wer=0.00
+[cosyvoice] prompt transcript cleaned for the text normaliser (c11_6_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:55:50,556 WARNING synthesis text Will the hurons hear his groans. too short than prompt text so delighted with his success that he had to burst out into a series of short, happy bits of laughter., this may lead to bad performance
+2026-10-25 14:55:51,202 INFO synthesis text Will the hurons hear his groans.
+2026-10-25 14:55:53,180 INFO yield speech len 1.56, rtf 1.2675210451468444
+100%|██████████| 1/1 [00:02<00:00,  2.63s/it]100%|██████████| 1/1 [00:02<00:00,  2.63s/it]
+2026-10-25 14:55:53,278 INFO Processing audio with duration 00:01.560
+2026-10-25 14:55:53,291 DEBUG Processing segment at 00:00.000
+[46/800] clip 11 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.516 wer=0.83
+2026-10-25 14:55:54,027 INFO Processing audio with duration 00:09.665
+2026-10-25 14:55:54,045 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c11_full_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:55:54,309 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text And the old gentleman was so delighted with his success that he had to burst out into a series of short, happy bits of laughter that occupied quite a space of time., this may lead to bad performance
+2026-10-25 14:55:55,232 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:55:59,840 INFO yield speech len 4.12, rtf 1.1185136813561893
+100%|██████████| 1/1 [00:05<00:00,  5.56s/it]100%|██████████| 1/1 [00:05<00:00,  5.56s/it]
+2026-10-25 14:56:00,002 INFO Processing audio with duration 00:04.120
+2026-10-25 14:56:00,007 DEBUG Processing segment at 00:00.000
+[47/800] clip 11 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.586 wer=0.00
+[cosyvoice] prompt transcript cleaned for the text normaliser (c11_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:56:00,166 WARNING synthesis text Will the hurons hear his groans. too short than prompt text And the old gentleman was so delighted with his success that he had to burst out into a series of short, happy bits of laughter that occupied quite a space of time., this may lead to bad performance
+2026-10-25 14:56:01,121 INFO synthesis text Will the hurons hear his groans.
+2026-10-25 14:56:04,767 INFO yield speech len 3.08, rtf 1.1836534196680242
+100%|██████████| 1/1 [00:04<00:00,  4.61s/it]100%|██████████| 1/1 [00:04<00:00,  4.61s/it]
+2026-10-25 14:56:04,874 INFO Processing audio with duration 00:03.080
+2026-10-25 14:56:04,887 DEBUG Processing segment at 00:00.000
+2026-10-25 14:56:05,046 DEBUG Processing segment at 00:02.880
+2026-10-25 14:56:05,724 DEBUG Compression ratio threshold is not met with temperature 0.0 (6.866667 > 2.400000)
+2026-10-25 14:56:05,760 DEBUG Log probability threshold is not met with temperature 0.2 (-1.875781 < -1.000000)
+2026-10-25 14:56:05,760 DEBUG No speech threshold is met (0.922852 > 0.600000)
+[48/800] clip 11 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.520 wer=0.17
+2026-10-25 14:56:06,002 INFO Processing audio with duration 00:02.875
+2026-10-25 14:56:06,014 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:56:06,526 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:56:09,046 INFO yield speech len 2.76, rtf 0.9130333644756373
+100%|██████████| 1/1 [00:02<00:00,  2.89s/it]100%|██████████| 1/1 [00:02<00:00,  2.89s/it]
+2026-10-25 14:56:09,155 INFO Processing audio with duration 00:02.760
+2026-10-25 14:56:09,167 DEBUG Processing segment at 00:00.000
+[49/800] clip 12 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.525 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:56:09,646 INFO synthesis text I think i should be doing you a service to turn you out of such a place.
+2026-10-25 14:56:13,028 INFO yield speech len 3.68, rtf 0.9192163529603378
+100%|██████████| 1/1 [00:03<00:00,  3.71s/it]100%|██████████| 1/1 [00:03<00:00,  3.71s/it]
+2026-10-25 14:56:13,157 INFO Processing audio with duration 00:03.680
+2026-10-25 14:56:13,171 DEBUG Processing segment at 00:00.000
+[50/800] clip 12 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.468 wer=0.00
+2026-10-25 14:56:13,684 INFO Processing audio with duration 00:02.875
+2026-10-25 14:56:13,696 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:56:14,176 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:56:16,385 INFO yield speech len 2.24, rtf 0.9860072817121233
+100%|██████████| 1/1 [00:02<00:00,  2.53s/it]100%|██████████| 1/1 [00:02<00:00,  2.53s/it]
+2026-10-25 14:56:16,492 INFO Processing audio with duration 00:02.240
+2026-10-25 14:56:16,503 DEBUG Processing segment at 00:00.000
+[51/800] clip 12 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.407 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:56:16,981 INFO synthesis text I think i should be doing you a service to turn you out of such a place.
+2026-10-25 14:56:19,978 INFO yield speech len 3.48, rtf 0.8612293621589397
+100%|██████████| 1/1 [00:03<00:00,  3.33s/it]100%|██████████| 1/1 [00:03<00:00,  3.33s/it]
+2026-10-25 14:56:20,099 INFO Processing audio with duration 00:03.480
+2026-10-25 14:56:20,103 DEBUG Processing segment at 00:00.000
+[52/800] clip 12 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.464 wer=0.06
+2026-10-25 14:56:20,630 INFO Processing audio with duration 00:06.000
+2026-10-25 14:56:20,646 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:56:20,877 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text There was something individual about the Great Farm, a most unusual trimness and care for detail., this may lead to bad performance
+2026-10-25 14:56:21,493 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:56:24,872 INFO yield speech len 3.36, rtf 1.0058740774790447
+100%|██████████| 1/1 [00:04<00:00,  4.02s/it]100%|██████████| 1/1 [00:04<00:00,  4.02s/it]
+2026-10-25 14:56:25,015 INFO Processing audio with duration 00:03.360
+2026-10-25 14:56:25,028 DEBUG Processing segment at 00:00.000
+[53/800] clip 13 prompt 6 text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.548 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:56:25,769 INFO synthesis text But in this vignette copied from turner you have the two principles brought out perfectly.
+2026-10-25 14:56:31,579 INFO yield speech len 6.6, rtf 0.8803245515534373
+100%|██████████| 1/1 [00:06<00:00,  6.41s/it]100%|██████████| 1/1 [00:06<00:00,  6.41s/it]
+2026-10-25 14:56:31,762 INFO Processing audio with duration 00:06.600
+2026-10-25 14:56:31,792 DEBUG Processing segment at 00:00.000
+[54/800] clip 13 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.647 wer=0.07
+2026-10-25 14:56:32,412 INFO Processing audio with duration 00:06.550
+2026-10-25 14:56:32,419 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:56:32,663 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text There was something individual about the great farm, a most unusual trimness and care for detail., this may lead to bad performance
+2026-10-25 14:56:33,375 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:56:36,932 INFO yield speech len 3.48, rtf 1.0222208225864104
+100%|██████████| 1/1 [00:04<00:00,  4.28s/it]100%|██████████| 1/1 [00:04<00:00,  4.28s/it]
+2026-10-25 14:56:37,048 INFO Processing audio with duration 00:03.480
+2026-10-25 14:56:37,063 DEBUG Processing segment at 00:00.000
+[55/800] clip 13 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.531 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:56:38,043 INFO synthesis text But in this vignette copied from turner you have the two principles brought out perfectly.
+2026-10-25 14:56:43,412 INFO yield speech len 6.12, rtf 0.8771983626621221
+100%|██████████| 1/1 [00:06<00:00,  6.03s/it]100%|██████████| 1/1 [00:06<00:00,  6.03s/it]
+2026-10-25 14:56:43,584 INFO Processing audio with duration 00:06.120
+2026-10-25 14:56:43,590 DEBUG Processing segment at 00:00.000
+[56/800] clip 13 prompt full text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.620 wer=0.13
+2026-10-25 14:56:44,052 INFO Processing audio with duration 00:04.090
+2026-10-25 14:56:44,066 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]min value is  tensor(-1.0404)
+max value is  tensor(1.0186)
+2026-10-25 14:56:44,667 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:56:47,584 INFO yield speech len 3.08, rtf 0.946895797531326
+100%|██████████| 1/1 [00:03<00:00,  3.39s/it]100%|██████████| 1/1 [00:03<00:00,  3.39s/it]
+2026-10-25 14:56:47,698 INFO Processing audio with duration 00:03.080
+2026-10-25 14:56:47,702 DEBUG Processing segment at 00:00.000
+[57/800] clip 14 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.483 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]min value is  tensor(-1.0404)
+max value is  tensor(1.0186)
+2026-10-25 14:56:48,277 INFO synthesis text But it is surmised that you will find difficulties in the way of your entering at once upon your government.
+2026-10-25 14:56:54,334 INFO yield speech len 6.92, rtf 0.8753225982533714
+100%|██████████| 1/1 [00:06<00:00,  6.50s/it]100%|██████████| 1/1 [00:06<00:00,  6.50s/it]
+2026-10-25 14:56:54,524 INFO Processing audio with duration 00:06.920
+2026-10-25 14:56:54,541 DEBUG Processing segment at 00:00.000
+[58/800] clip 14 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.586 wer=0.00
+2026-10-25 14:56:55,003 INFO Processing audio with duration 00:04.090
+2026-10-25 14:56:55,017 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]min value is  tensor(-1.0404)
+max value is  tensor(1.0186)
+2026-10-25 14:56:55,638 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:56:59,206 INFO yield speech len 3.8, rtf 0.9389492712522808
+100%|██████████| 1/1 [00:04<00:00,  4.02s/it]100%|██████████| 1/1 [00:04<00:00,  4.02s/it]
+2026-10-25 14:56:59,348 INFO Processing audio with duration 00:03.800
+2026-10-25 14:56:59,358 DEBUG Processing segment at 00:00.000
+[59/800] clip 14 prompt full text fixed: acc_src=1.000 acc=0.812 traced=True far=False sim=0.557 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]min value is  tensor(-1.0404)
+max value is  tensor(1.0186)
+2026-10-25 14:56:59,931 INFO synthesis text But it is surmised that you will find difficulties in the way of your entering at once upon your government.
+2026-10-25 14:57:05,643 INFO yield speech len 6.44, rtf 0.8869657975546321
+100%|██████████| 1/1 [00:06<00:00,  6.15s/it]100%|██████████| 1/1 [00:06<00:00,  6.15s/it]
+2026-10-25 14:57:05,824 INFO Processing audio with duration 00:06.440
+2026-10-25 14:57:05,840 DEBUG Processing segment at 00:00.000
+[60/800] clip 14 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.551 wer=0.00
+2026-10-25 14:57:06,563 INFO Processing audio with duration 00:06.000
+2026-10-25 14:57:06,579 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:57:06,851 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text was to be declared as non-existent, and the British flag was to be exalted,  and the British government, this may lead to bad performance
+2026-10-25 14:57:07,536 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:57:10,375 INFO yield speech len 2.76, rtf 1.0286513446033865
+100%|██████████| 1/1 [00:03<00:00,  3.54s/it]100%|██████████| 1/1 [00:03<00:00,  3.54s/it]
+2026-10-25 14:57:10,503 INFO Processing audio with duration 00:02.760
+2026-10-25 14:57:10,516 DEBUG Processing segment at 00:00.000
+[61/800] clip 15 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.347 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:57:10,709 WARNING synthesis text All the furniture belonged to other times. too short than prompt text was to be declared as non-existent, and the British flag was to be exalted,  and the British government, this may lead to bad performance
+2026-10-25 14:57:11,361 INFO synthesis text All the furniture belonged to other times.
+2026-10-25 14:57:14,048 INFO yield speech len 2.6, rtf 1.0334348678588867
+100%|██████████| 1/1 [00:03<00:00,  3.36s/it]100%|██████████| 1/1 [00:03<00:00,  3.36s/it]
+2026-10-25 14:57:14,155 INFO Processing audio with duration 00:02.600
+2026-10-25 14:57:14,159 DEBUG Processing segment at 00:00.000
+[62/800] clip 15 prompt 6 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.350 wer=0.14
+2026-10-25 14:57:15,030 INFO Processing audio with duration 00:11.285
+2026-10-25 14:57:15,047 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c15_full_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:57:15,318 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text Then, the Republic of Britain Ula was to be declared as non existent, and the British flag was to be exalted, and a British governor installed in the executive chambers., this may lead to bad performance
+2026-10-25 14:57:16,362 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:57:20,946 INFO yield speech len 3.68, rtf 1.2456275198770606
+100%|██████████| 1/1 [00:05<00:00,  5.65s/it]100%|██████████| 1/1 [00:05<00:00,  5.65s/it]
+2026-10-25 14:57:21,090 INFO Processing audio with duration 00:03.680
+2026-10-25 14:57:21,103 DEBUG Processing segment at 00:00.000
+[63/800] clip 15 prompt full text fixed: acc_src=0.875 acc=1.000 traced=True far=False sim=0.399 wer=0.00
+[cosyvoice] prompt transcript cleaned for the text normaliser (c15_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:57:21,307 WARNING synthesis text All the furniture belonged to other times. too short than prompt text Then, the Republic of Britain Ula was to be declared as non existent, and the British flag was to be exalted, and a British governor installed in the executive chambers., this may lead to bad performance
+2026-10-25 14:57:22,418 INFO synthesis text All the furniture belonged to other times.
+2026-10-25 14:57:26,331 INFO yield speech len 3.0, rtf 1.304266134897868
+100%|██████████| 1/1 [00:05<00:00,  5.04s/it]100%|██████████| 1/1 [00:05<00:00,  5.04s/it]
+2026-10-25 14:57:26,464 INFO Processing audio with duration 00:03.000
+2026-10-25 14:57:26,476 DEBUG Processing segment at 00:00.000
+[64/800] clip 15 prompt full text unseen: acc_src=0.875 acc=1.000 traced=True far=False sim=0.508 wer=0.14
+2026-10-25 14:57:26,998 INFO Processing audio with duration 00:05.535
+2026-10-25 14:57:27,012 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:57:27,218 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text But it is surmised that you will find difficulties in the way of your entering at once upon your governor., this may lead to bad performance
+2026-10-25 14:57:27,778 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:57:31,841 INFO yield speech len 4.32, rtf 0.9405581487549676
+100%|██████████| 1/1 [00:04<00:00,  4.64s/it]100%|██████████| 1/1 [00:04<00:00,  4.64s/it]
+2026-10-25 14:57:32,003 INFO Processing audio with duration 00:04.320
+2026-10-25 14:57:32,018 DEBUG Processing segment at 00:00.000
+[65/800] clip 16 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.484 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:57:32,930 INFO synthesis text Then turning to jane she asked in a somewhat altered tone has she been a good girl jane.
+2026-10-25 14:57:38,324 INFO yield speech len 6.2, rtf 0.869984665224629
+100%|██████████| 1/1 [00:05<00:00,  5.97s/it]100%|██████████| 1/1 [00:05<00:00,  5.97s/it]
+2026-10-25 14:57:38,492 INFO Processing audio with duration 00:06.200
+2026-10-25 14:57:38,505 DEBUG Processing segment at 00:00.000
+[66/800] clip 16 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.516 wer=0.00
+2026-10-25 14:57:39,054 INFO Processing audio with duration 00:05.535
+2026-10-25 14:57:39,067 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:57:39,276 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text But it is surmised that you will find difficulties in the way of your entering at once upon your governor., this may lead to bad performance
+2026-10-25 14:57:39,834 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:57:44,049 INFO yield speech len 4.6, rtf 0.9164757832236913
+100%|██████████| 1/1 [00:04<00:00,  4.79s/it]100%|██████████| 1/1 [00:04<00:00,  4.79s/it]
+2026-10-25 14:57:44,205 INFO Processing audio with duration 00:04.600
+2026-10-25 14:57:44,219 DEBUG Processing segment at 00:00.000
+[67/800] clip 16 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.511 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:57:45,012 INFO synthesis text Then turning to jane she asked in a somewhat altered tone has she been a good girl jane.
+2026-10-25 14:57:50,141 INFO yield speech len 5.64, rtf 0.9093165397644043
+100%|██████████| 1/1 [00:05<00:00,  5.74s/it]100%|██████████| 1/1 [00:05<00:00,  5.74s/it]
+2026-10-25 14:57:50,305 INFO Processing audio with duration 00:05.640
+2026-10-25 14:57:50,319 DEBUG Processing segment at 00:00.000
+[68/800] clip 16 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.491 wer=0.00
+2026-10-25 14:57:50,886 INFO Processing audio with duration 00:06.000
+2026-10-25 14:57:50,901 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c17_6_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:57:51,191 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text three or four leading men of the community with their wives, who were for the most part the fathers and mothers of the young..., this may lead to bad performance
+2026-10-25 14:57:51,778 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:57:54,651 INFO yield speech len 2.72, rtf 1.0564910138354582
+100%|██████████| 1/1 [00:03<00:00,  3.48s/it]100%|██████████| 1/1 [00:03<00:00,  3.48s/it]
+2026-10-25 14:57:54,773 INFO Processing audio with duration 00:02.720
+2026-10-25 14:57:54,793 DEBUG Processing segment at 00:00.000
+[69/800] clip 17 prompt 6 text fixed: acc_src=0.812 acc=1.000 traced=True far=False sim=0.465 wer=0.12
+[cosyvoice] prompt transcript cleaned for the text normaliser (c17_6_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:57:55,574 INFO synthesis text You gave me double five i want double nine hallo is that you horatio hamlet speaking.
+2026-10-25 14:58:00,349 INFO yield speech len 5.24, rtf 0.9113215763150281
+100%|██████████| 1/1 [00:05<00:00,  5.35s/it]100%|██████████| 1/1 [00:05<00:00,  5.35s/it]
+2026-10-25 14:58:00,506 INFO Processing audio with duration 00:05.240
+2026-10-25 14:58:00,523 DEBUG Processing segment at 00:00.000
+[70/800] clip 17 prompt 6 text unseen: acc_src=0.812 acc=1.000 traced=True far=False sim=0.595 wer=0.12
+2026-10-25 14:58:01,399 INFO Processing audio with duration 00:08.105
+2026-10-25 14:58:01,414 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:58:01,641 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text Then there were three or four leading men of the community with their wives, who were for the most part the fathers and mothers of the young ladies., this may lead to bad performance
+2026-10-25 14:58:02,414 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:58:05,984 INFO yield speech len 3.32, rtf 1.0754390653357448
+100%|██████████| 1/1 [00:04<00:00,  4.37s/it]100%|██████████| 1/1 [00:04<00:00,  4.37s/it]
+2026-10-25 14:58:06,109 INFO Processing audio with duration 00:03.320
+2026-10-25 14:58:06,127 DEBUG Processing segment at 00:00.000
+[71/800] clip 17 prompt full text fixed: acc_src=0.812 acc=1.000 traced=True far=False sim=0.477 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:58:07,083 INFO synthesis text You gave me double five i want double nine hallo is that you horatio hamlet speaking.
+2026-10-25 14:58:13,658 INFO yield speech len 6.76, rtf 0.9725490618034228
+100%|██████████| 1/1 [00:07<00:00,  7.35s/it]100%|██████████| 1/1 [00:07<00:00,  7.35s/it]
+2026-10-25 14:58:13,839 INFO Processing audio with duration 00:06.760
+2026-10-25 14:58:13,853 DEBUG Processing segment at 00:00.000
+[72/800] clip 17 prompt full text unseen: acc_src=0.812 acc=1.000 traced=True far=False sim=0.578 wer=0.06
+2026-10-25 14:58:14,380 INFO Processing audio with duration 00:06.000
+2026-10-25 14:58:14,393 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c18_6_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:58:14,609 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text us to meet Captain Adalax here at this time tomorrow. We will stretch a point and delay the departure of the John Brightford., this may lead to bad performance
+2026-10-25 14:58:15,182 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:58:18,037 INFO yield speech len 2.76, rtf 1.0343079117761143
+100%|██████████| 1/1 [00:03<00:00,  3.45s/it]100%|██████████| 1/1 [00:03<00:00,  3.45s/it]
+2026-10-25 14:58:18,151 INFO Processing audio with duration 00:02.760
+2026-10-25 14:58:18,163 DEBUG Processing segment at 00:00.000
+[73/800] clip 18 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.336 wer=0.00
+[cosyvoice] prompt transcript cleaned for the text normaliser (c18_6_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:58:18,344 WARNING synthesis text The democratic committee figured out a way to do this. too short than prompt text us to meet Captain Adalax here at this time tomorrow. We will stretch a point and delay the departure of the John Brightford., this may lead to bad performance
+2026-10-25 14:58:18,914 INFO synthesis text The democratic committee figured out a way to do this.
+2026-10-25 14:58:22,496 INFO yield speech len 3.68, rtf 0.9733845358309539
+100%|██████████| 1/1 [00:04<00:00,  4.17s/it]100%|██████████| 1/1 [00:04<00:00,  4.17s/it]
+2026-10-25 14:58:22,617 INFO Processing audio with duration 00:03.680
+2026-10-25 14:58:22,632 DEBUG Processing segment at 00:00.000
+[74/800] clip 18 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.352 wer=0.00
+2026-10-25 14:58:23,365 INFO Processing audio with duration 00:08.915
+2026-10-25 14:58:23,378 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c18_full_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:58:23,663 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text If you will give us your promise to meet Captain Attalax here at this time tomorrow, we will stretch a point and delay the departure of the John Bright for twenty four hours., this may lead to bad performance
+2026-10-25 14:58:24,556 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:58:28,282 INFO yield speech len 3.6, rtf 1.034998231463962
+100%|██████████| 1/1 [00:04<00:00,  4.64s/it]100%|██████████| 1/1 [00:04<00:00,  4.64s/it]
+2026-10-25 14:58:28,426 INFO Processing audio with duration 00:03.600
+2026-10-25 14:58:28,439 DEBUG Processing segment at 00:00.000
+[75/800] clip 18 prompt full text fixed: acc_src=1.000 acc=0.750 traced=False far=True sim=0.280 wer=0.00
+[cosyvoice] prompt transcript cleaned for the text normaliser (c18_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:58:28,793 WARNING synthesis text The democratic committee figured out a way to do this. too short than prompt text If you will give us your promise to meet Captain Attalax here at this time tomorrow, we will stretch a point and delay the departure of the John Bright for twenty four hours., this may lead to bad performance
+2026-10-25 14:58:29,658 INFO synthesis text The democratic committee figured out a way to do this.
+2026-10-25 14:58:33,454 INFO yield speech len 3.32, rtf 1.1434436562549637
+100%|██████████| 1/1 [00:04<00:00,  4.67s/it]100%|██████████| 1/1 [00:04<00:00,  4.67s/it]
+2026-10-25 14:58:33,565 INFO Processing audio with duration 00:03.320
+2026-10-25 14:58:33,578 DEBUG Processing segment at 00:00.000
+[76/800] clip 18 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.341 wer=0.00
+2026-10-25 14:58:34,123 INFO Processing audio with duration 00:06.000
+2026-10-25 14:58:34,137 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c19_6_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:58:34,376 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text Soundbrite is armed with a weapon of great power, against which it is impossible that the people of Britain you love should prevent., this may lead to bad performance
+2026-10-25 14:58:34,953 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:58:37,517 INFO yield speech len 2.36, rtf 1.0865152892419847
+100%|██████████| 1/1 [00:03<00:00,  3.16s/it]100%|██████████| 1/1 [00:03<00:00,  3.16s/it]
+2026-10-25 14:58:37,647 INFO Processing audio with duration 00:02.360
+2026-10-25 14:58:37,659 DEBUG Processing segment at 00:00.000
+[77/800] clip 19 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.431 wer=0.12
+[cosyvoice] prompt transcript cleaned for the text normaliser (c19_6_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:58:38,405 INFO synthesis text The strange woman and her passionate sentence that rang out so sharply had frightened them both.
+2026-10-25 14:58:43,846 INFO yield speech len 5.88, rtf 0.9253608531692401
+100%|██████████| 1/1 [00:06<00:00,  6.03s/it]100%|██████████| 1/1 [00:06<00:00,  6.03s/it]
+2026-10-25 14:58:44,031 INFO Processing audio with duration 00:05.880
+2026-10-25 14:58:44,044 DEBUG Processing segment at 00:00.000
+[78/800] clip 19 prompt 6 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.572 wer=0.06
+2026-10-25 14:58:44,677 INFO Processing audio with duration 00:07.075
+2026-10-25 14:58:44,692 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:58:44,903 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text The John Breick is armed with a weapon of great power, against which it is impossible that the people of Britain Yula should prevail., this may lead to bad performance
+2026-10-25 14:58:45,584 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:58:49,370 INFO yield speech len 3.64, rtf 1.0400854624234712
+100%|██████████| 1/1 [00:04<00:00,  4.49s/it]100%|██████████| 1/1 [00:04<00:00,  4.49s/it]
+2026-10-25 14:58:49,501 INFO Processing audio with duration 00:03.640
+2026-10-25 14:58:49,505 DEBUG Processing segment at 00:00.000
+[79/800] clip 19 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.460 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:58:50,359 INFO synthesis text The strange woman and her passionate sentence that rang out so sharply had frightened them both.
+2026-10-25 14:58:56,157 INFO yield speech len 5.84, rtf 0.9928675955289031
+100%|██████████| 1/1 [00:06<00:00,  6.50s/it]100%|██████████| 1/1 [00:06<00:00,  6.50s/it]
+2026-10-25 14:58:56,325 INFO Processing audio with duration 00:05.840
+2026-10-25 14:58:56,338 DEBUG Processing segment at 00:00.000
+[80/800] clip 19 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.489 wer=0.06
+2026-10-25 14:58:56,848 INFO Processing audio with duration 00:02.340
+2026-10-25 14:58:56,861 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:58:57,282 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:58:59,935 INFO yield speech len 2.72, rtf 0.9753910934223847
+100%|██████████| 1/1 [00:02<00:00,  2.94s/it]100%|██████████| 1/1 [00:02<00:00,  2.94s/it]
+2026-10-25 14:59:00,041 INFO Processing audio with duration 00:02.720
+2026-10-25 14:59:00,054 DEBUG Processing segment at 00:00.000
+[81/800] clip 20 prompt 6 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.469 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:59:00,501 INFO synthesis text They regained their apartment apparently without disturbing the household of gamewell.
+2026-10-25 14:59:04,939 INFO yield speech len 5.08, rtf 0.8735915807288462
+100%|██████████| 1/1 [00:04<00:00,  4.72s/it]100%|██████████| 1/1 [00:04<00:00,  4.72s/it]
+2026-10-25 14:59:05,086 INFO Processing audio with duration 00:05.080
+2026-10-25 14:59:05,091 DEBUG Processing segment at 00:00.000
+[82/800] clip 20 prompt 6 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.471 wer=0.18
+2026-10-25 14:59:05,427 INFO Processing audio with duration 00:02.340
+2026-10-25 14:59:05,432 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:59:05,853 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:59:08,314 INFO yield speech len 2.72, rtf 0.9049766203936408
+100%|██████████| 1/1 [00:02<00:00,  2.75s/it]100%|██████████| 1/1 [00:02<00:00,  2.75s/it]
+2026-10-25 14:59:08,411 INFO Processing audio with duration 00:02.720
+2026-10-25 14:59:08,414 DEBUG Processing segment at 00:00.000
+[83/800] clip 20 prompt full text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.486 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:59:08,818 INFO synthesis text They regained their apartment apparently without disturbing the household of gamewell.
+2026-10-25 14:59:13,701 INFO yield speech len 5.64, rtf 0.8657619462791064
+100%|██████████| 1/1 [00:05<00:00,  5.15s/it]100%|██████████| 1/1 [00:05<00:00,  5.15s/it]
+2026-10-25 14:59:13,844 INFO Processing audio with duration 00:05.640
+2026-10-25 14:59:13,857 DEBUG Processing segment at 00:00.000
+[84/800] clip 20 prompt full text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.529 wer=0.18
+2026-10-25 14:59:14,372 INFO Processing audio with duration 00:06.000
+2026-10-25 14:59:14,385 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c21_6_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:59:14,617 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text tones and manner, which was new to Rachel, and comforting, and she returned the greeting as kind as a..., this may lead to bad performance
+2026-10-25 14:59:15,210 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:59:18,991 INFO yield speech len 3.92, rtf 0.9644105726358843
+100%|██████████| 1/1 [00:04<00:00,  4.39s/it]100%|██████████| 1/1 [00:04<00:00,  4.39s/it]
+2026-10-25 14:59:19,145 INFO Processing audio with duration 00:03.920
+2026-10-25 14:59:19,159 DEBUG Processing segment at 00:00.000
+[85/800] clip 21 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.493 wer=0.12
+[cosyvoice] prompt transcript cleaned for the text normaliser (c21_6_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:59:20,126 INFO synthesis text No cathedral not even burgos itself could vie with the church at montmartre.
+2026-10-25 14:59:26,714 INFO yield speech len 7.32, rtf 0.8999831038094609
+100%|██████████| 1/1 [00:07<00:00,  7.19s/it]100%|██████████| 1/1 [00:07<00:00,  7.19s/it]
+2026-10-25 14:59:26,906 INFO Processing audio with duration 00:07.320
+2026-10-25 14:59:26,911 DEBUG Processing segment at 00:00.000
+[86/800] clip 21 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.497 wer=0.38
+2026-10-25 14:59:27,782 INFO Processing audio with duration 00:11.990
+2026-10-25 14:59:27,798 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:59:28,114 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text There was something of sweetness and fondness in her tones and manner, which was new to Rachel,  and comforting, and she returned the grating as kindly, and felt more like her for herself., this may lead to bad performance
+2026-10-25 14:59:29,333 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:59:33,641 INFO yield speech len 3.28, rtf 1.3133794796176075
+100%|██████████| 1/1 [00:05<00:00,  5.55s/it]100%|██████████| 1/1 [00:05<00:00,  5.55s/it]
+2026-10-25 14:59:33,766 INFO Processing audio with duration 00:03.280
+2026-10-25 14:59:33,779 DEBUG Processing segment at 00:00.000
+[87/800] clip 21 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.549 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:59:33,975 WARNING synthesis text No cathedral not even burgos itself could vie with the church at montmartre. too short than prompt text There was something of sweetness and fondness in her tones and manner, which was new to Rachel,  and comforting, and she returned the grating as kindly, and felt more like her for herself., this may lead to bad performance
+2026-10-25 14:59:35,206 INFO synthesis text No cathedral not even burgos itself could vie with the church at montmartre.
+2026-10-25 14:59:41,764 INFO yield speech len 5.92, rtf 1.107776044188319
+100%|██████████| 1/1 [00:07<00:00,  7.80s/it]100%|██████████| 1/1 [00:07<00:00,  7.80s/it]
+2026-10-25 14:59:41,938 INFO Processing audio with duration 00:05.920
+2026-10-25 14:59:41,944 DEBUG Processing segment at 00:00.000
+[88/800] clip 21 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.526 wer=0.08
+2026-10-25 14:59:42,307 INFO Processing audio with duration 00:02.745
+2026-10-25 14:59:42,311 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:59:42,785 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:59:45,215 INFO yield speech len 2.68, rtf 0.906702564723456
+100%|██████████| 1/1 [00:02<00:00,  2.75s/it]100%|██████████| 1/1 [00:02<00:00,  2.75s/it]
+2026-10-25 14:59:45,318 INFO Processing audio with duration 00:02.680
+2026-10-25 14:59:45,330 DEBUG Processing segment at 00:00.000
+[89/800] clip 22 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.437 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:59:45,803 INFO synthesis text The poor little things cried cynthia think of them having been turned to the wall all these years.
+2026-10-25 14:59:51,624 INFO yield speech len 7.04, rtf 0.8268170058727264
+100%|██████████| 1/1 [00:06<00:00,  6.13s/it]100%|██████████| 1/1 [00:06<00:00,  6.13s/it]
+2026-10-25 14:59:51,797 INFO Processing audio with duration 00:07.040
+2026-10-25 14:59:51,811 DEBUG Processing segment at 00:00.000
+[90/800] clip 22 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.515 wer=0.06
+2026-10-25 14:59:52,367 INFO Processing audio with duration 00:02.745
+2026-10-25 14:59:52,379 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:59:52,825 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 14:59:55,698 INFO yield speech len 3.12, rtf 0.9210200645984747
+100%|██████████| 1/1 [00:03<00:00,  3.20s/it]100%|██████████| 1/1 [00:03<00:00,  3.20s/it]
+2026-10-25 14:59:55,805 INFO Processing audio with duration 00:03.120
+2026-10-25 14:59:55,819 DEBUG Processing segment at 00:00.000
+[91/800] clip 22 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.396 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 14:59:56,366 INFO synthesis text The poor little things cried cynthia think of them having been turned to the wall all these years.
+2026-10-25 15:00:02,180 INFO yield speech len 6.92, rtf 0.8402267287921354
+100%|██████████| 1/1 [00:06<00:00,  6.19s/it]100%|██████████| 1/1 [00:06<00:00,  6.19s/it]
+2026-10-25 15:00:02,353 INFO Processing audio with duration 00:06.920
+2026-10-25 15:00:02,359 DEBUG Processing segment at 00:00.000
+[92/800] clip 22 prompt full text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.473 wer=0.00
+2026-10-25 15:00:02,967 INFO Processing audio with duration 00:05.620
+2026-10-25 15:00:02,982 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 15:00:03,846 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 15:00:07,663 INFO yield speech len 4.16, rtf 0.917658324425037
+100%|██████████| 1/1 [00:04<00:00,  4.51s/it]100%|██████████| 1/1 [00:04<00:00,  4.51s/it]
+2026-10-25 15:00:07,819 INFO Processing audio with duration 00:04.160
+2026-10-25 15:00:07,829 DEBUG Processing segment at 00:00.000
+[93/800] clip 23 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.428 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 15:00:07,970 WARNING synthesis text O life of this our spring. too short than prompt text The somber old trees, like gigantic herspoons, black and awful., this may lead to bad performance
+2026-10-25 15:00:08,537 INFO synthesis text O life of this our spring.
+2026-10-25 15:00:11,741 INFO yield speech len 3.16, rtf 1.0139171081253244
+100%|██████████| 1/1 [00:03<00:00,  3.78s/it]100%|██████████| 1/1 [00:03<00:00,  3.78s/it]
+2026-10-25 15:00:11,860 INFO Processing audio with duration 00:03.160
+2026-10-25 15:00:11,873 DEBUG Processing segment at 00:00.000
+[94/800] clip 23 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.371 wer=0.33
+2026-10-25 15:00:12,396 INFO Processing audio with duration 00:05.620
+2026-10-25 15:00:12,408 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 15:00:13,161 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 15:00:16,182 INFO yield speech len 2.96, rtf 1.0205041717838597
+100%|██████████| 1/1 [00:03<00:00,  3.60s/it]100%|██████████| 1/1 [00:03<00:00,  3.60s/it]
+2026-10-25 15:00:16,293 INFO Processing audio with duration 00:02.960
+2026-10-25 15:00:16,306 DEBUG Processing segment at 00:00.000
+[95/800] clip 23 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.408 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 15:00:16,600 WARNING synthesis text O life of this our spring. too short than prompt text The somber old trees, like gigantic herspoons, black and awful., this may lead to bad performance
+2026-10-25 15:00:17,218 INFO synthesis text O life of this our spring.
+2026-10-25 15:00:19,682 INFO yield speech len 2.36, rtf 1.0440063678612144
+100%|██████████| 1/1 [00:03<00:00,  3.09s/it]100%|██████████| 1/1 [00:03<00:00,  3.09s/it]
+2026-10-25 15:00:19,769 INFO Processing audio with duration 00:02.360
+2026-10-25 15:00:19,781 DEBUG Processing segment at 00:00.000
+[96/800] clip 23 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.383 wer=0.50
+2026-10-25 15:00:20,194 INFO Processing audio with duration 00:04.215
+2026-10-25 15:00:20,199 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 15:00:20,826 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 15:00:24,131 INFO yield speech len 3.64, rtf 0.9081771740546593
+100%|██████████| 1/1 [00:03<00:00,  3.78s/it]100%|██████████| 1/1 [00:03<00:00,  3.78s/it]
+2026-10-25 15:00:24,258 INFO Processing audio with duration 00:03.640
+2026-10-25 15:00:24,271 DEBUG Processing segment at 00:00.000
+[97/800] clip 24 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.368 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 15:00:24,988 INFO synthesis text Hose man's excuse for wetting the walk.
+2026-10-25 15:00:27,934 INFO yield speech len 3.16, rtf 0.9323215937312644
+100%|██████████| 1/1 [00:03<00:00,  3.47s/it]100%|██████████| 1/1 [00:03<00:00,  3.47s/it]
+2026-10-25 15:00:28,034 INFO Processing audio with duration 00:03.160
+2026-10-25 15:00:28,047 DEBUG Processing segment at 00:00.000
+[98/800] clip 24 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.353 wer=0.29
+2026-10-25 15:00:28,495 INFO Processing audio with duration 00:04.215
+2026-10-25 15:00:28,508 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 15:00:29,140 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 15:00:31,816 INFO yield speech len 2.56, rtf 1.0453279130160809
+100%|██████████| 1/1 [00:03<00:00,  3.13s/it]100%|██████████| 1/1 [00:03<00:00,  3.13s/it]
+2026-10-25 15:00:31,939 INFO Processing audio with duration 00:02.560
+2026-10-25 15:00:31,951 DEBUG Processing segment at 00:00.000
+[99/800] clip 24 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.380 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 15:00:32,547 INFO synthesis text Hose man's excuse for wetting the walk.
+2026-10-25 15:00:35,481 INFO yield speech len 3.16, rtf 0.9283997590028786
+100%|██████████| 1/1 [00:03<00:00,  3.38s/it]100%|██████████| 1/1 [00:03<00:00,  3.38s/it]
+2026-10-25 15:00:35,581 INFO Processing audio with duration 00:03.160
+2026-10-25 15:00:35,591 DEBUG Processing segment at 00:00.000
+[100/800] clip 24 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.358 wer=0.29
+2026-10-25 15:00:36,340 INFO Processing audio with duration 00:06.000
+2026-10-25 15:00:36,356 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c25_6_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 15:00:36,572 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text was sent by his grandfather with a message to a relation. He passed along the street in which there was a great, this may lead to bad performance
+2026-10-25 15:00:37,142 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 15:00:40,553 INFO yield speech len 3.56, rtf 0.9582407688826657
+100%|██████████| 1/1 [00:04<00:00,  4.00s/it]100%|██████████| 1/1 [00:04<00:00,  4.00s/it]
+2026-10-25 15:00:40,684 INFO Processing audio with duration 00:03.560
+2026-10-25 15:00:40,697 DEBUG Processing segment at 00:00.000
+[101/800] clip 25 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.577 wer=0.25
+[cosyvoice] prompt transcript cleaned for the text normaliser (c25_6_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 15:00:41,468 INFO synthesis text The chaos in which his ardour extinguished itself was a cold indifferent knowledge of himself.
+2026-10-25 15:00:47,088 INFO yield speech len 6.12, rtf 0.9183057382995007
+100%|██████████| 1/1 [00:06<00:00,  6.24s/it]100%|██████████| 1/1 [00:06<00:00,  6.24s/it]
+2026-10-25 15:00:47,247 INFO Processing audio with duration 00:06.120
+2026-10-25 15:00:47,260 DEBUG Processing segment at 00:00.000
+[102/800] clip 25 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.668 wer=0.20
+2026-10-25 15:00:47,989 INFO Processing audio with duration 00:08.845
+2026-10-25 15:00:48,007 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c25_full_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 15:00:48,283 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text One day when the boy was sent by his grandfather with a message to a relation, he passed along a street in which there was a great concourse of horsemen., this may lead to bad performance
+2026-10-25 15:00:49,135 INFO synthesis text This is a test sentence for voice cloning.
