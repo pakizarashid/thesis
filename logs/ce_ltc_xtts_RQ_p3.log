@@ -1,0 +1,75 @@
+[preflight] omegaconf 2.3.1 ok; numpy/torch ok
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index_test-clean.json
+[LibriSpeechSubset] Using 200 utterances (eval split, speaker-disjoint from the other split).
+[plan] cloner=xtts clips=200 prompts=['3'] texts=['fixed', 'unseen'] -> 400 clones to run
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[backbone] loaded checkpoints/route2_vmaug_RQ/route2_epoch19.pt (epoch 19)
+[xtts] loading tts_models/multilingual/multi-dataset/xtts_v2 (first run downloads weights)...
+INFO:speechbrain.utils.fetching:Fetch hyperparams.yaml: Using symlink found at '/tmp/ecapa_model/hyperparams.yaml'
+INFO:speechbrain.utils.fetching:Fetch embedding_model.ckpt: Using symlink found at '/tmp/ecapa_model/embedding_model.ckpt'
+INFO:speechbrain.utils.fetching:Fetch mean_var_norm_emb.ckpt: Using symlink found at '/tmp/ecapa_model/mean_var_norm_emb.ckpt'
+INFO:speechbrain.utils.fetching:Fetch classifier.ckpt: Using symlink found at '/tmp/ecapa_model/classifier.ckpt'
+INFO:speechbrain.utils.fetching:Fetch label_encoder.txt: Using symlink found at '/tmp/ecapa_model/label_encoder.ckpt'
+INFO:speechbrain.utils.parameter_transfer:Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+/usr/local/lib/python3.13/dist-packages/speechbrain/utils/checkpoints.py:202: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  state_dict = torch.load(path, map_location=device)
+/usr/local/lib/python3.13/dist-packages/speechbrain/processing/features.py:1550: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  stats = torch.load(path, map_location=self.device)
+WARNING:speechbrain.inference.interfaces:Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+[1/400] clip 0 prompt 3 text fixed: acc_src=1.000 acc=0.438 traced=False far=True sim=0.364 wer=0.00
+[2/400] clip 0 prompt 3 text unseen: acc_src=1.000 acc=0.438 traced=False far=True sim=0.382 wer=0.00
+[3/400] clip 1 prompt 3 text fixed: acc_src=0.750 acc=0.625 traced=False far=True sim=0.449 wer=0.00
+[4/400] clip 1 prompt 3 text unseen: acc_src=0.750 acc=0.688 traced=False far=True sim=0.570 wer=0.12
+[5/400] clip 2 prompt 3 text fixed: acc_src=1.000 acc=0.438 traced=False far=True sim=0.426 wer=0.00
+[6/400] clip 2 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.327 wer=0.00
+[7/400] clip 3 prompt 3 text fixed: acc_src=1.000 acc=0.375 traced=False far=True sim=0.557 wer=0.00
+[8/400] clip 3 prompt 3 text unseen: acc_src=1.000 acc=0.375 traced=False far=True sim=0.418 wer=0.17
+[9/400] clip 4 prompt 3 text fixed: acc_src=1.000 acc=0.375 traced=False far=True sim=0.570 wer=0.00
+[10/400] clip 4 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.530 wer=0.14
+[11/400] clip 5 prompt 3 text fixed: acc_src=1.000 acc=0.312 traced=False far=True sim=0.513 wer=0.00
+[12/400] clip 5 prompt 3 text unseen: acc_src=1.000 acc=0.438 traced=False far=True sim=0.589 wer=0.00
+[13/400] clip 6 prompt 3 text fixed: acc_src=1.000 acc=0.375 traced=False far=True sim=0.312 wer=0.00
+[14/400] clip 6 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.365 wer=0.15
+[15/400] clip 7 prompt 3 text fixed: acc_src=1.000 acc=0.250 traced=False far=True sim=0.455 wer=0.00
+[16/400] clip 7 prompt 3 text unseen: acc_src=1.000 acc=0.438 traced=False far=True sim=0.375 wer=0.07
+[17/400] clip 8 prompt 3 text fixed: acc_src=1.000 acc=0.562 traced=False far=True sim=0.467 wer=0.00
+[18/400] clip 8 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.490 wer=0.00
+[19/400] clip 9 prompt 3 text fixed: acc_src=1.000 acc=0.750 traced=False far=True sim=0.457 wer=0.00
+[20/400] clip 9 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.553 wer=0.25
+[21/400] clip 10 prompt 3 text fixed: acc_src=1.000 acc=0.562 traced=False far=True sim=0.583 wer=0.12
+[22/400] clip 10 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.576 wer=0.12
+[23/400] clip 11 prompt 3 text fixed: acc_src=1.000 acc=0.688 traced=False far=True sim=0.349 wer=0.00
+[24/400] clip 11 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.316 wer=0.17
+[25/400] clip 12 prompt 3 text fixed: acc_src=1.000 acc=0.562 traced=False far=True sim=0.342 wer=0.00
+[26/400] clip 12 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.369 wer=0.00
+[27/400] clip 13 prompt 3 text fixed: acc_src=1.000 acc=0.375 traced=False far=True sim=0.422 wer=0.00
+[28/400] clip 13 prompt 3 text unseen: acc_src=1.000 acc=0.312 traced=False far=True sim=0.599 wer=0.00
+[29/400] clip 14 prompt 3 text fixed: acc_src=1.000 acc=0.625 traced=False far=True sim=0.414 wer=0.00
+[30/400] clip 14 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.472 wer=0.00
+[31/400] clip 15 prompt 3 text fixed: acc_src=1.000 acc=0.812 traced=True far=False sim=0.197 wer=0.88
+[32/400] clip 15 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.240 wer=0.14
+[33/400] clip 16 prompt 3 text fixed: acc_src=1.000 acc=0.625 traced=False far=True sim=0.426 wer=0.00
+[34/400] clip 16 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.353 wer=0.00
+[35/400] clip 17 prompt 3 text fixed: acc_src=1.000 acc=0.750 traced=False far=True sim=0.267 wer=0.00
+[36/400] clip 17 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.374 wer=0.06
+[37/400] clip 18 prompt 3 text fixed: acc_src=1.000 acc=0.688 traced=False far=True sim=0.293 wer=0.12
+[38/400] clip 18 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.331 wer=0.00
+[39/400] clip 19 prompt 3 text fixed: acc_src=1.000 acc=0.688 traced=False far=True sim=0.373 wer=0.00
+[40/400] clip 19 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.357 wer=0.00
+[41/400] clip 20 prompt 3 text fixed: acc_src=1.000 acc=0.500 traced=False far=True sim=0.468 wer=0.00
+[42/400] clip 20 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.581 wer=0.27
+[43/400] clip 21 prompt 3 text fixed: acc_src=1.000 acc=0.500 traced=False far=True sim=0.336 wer=0.00
+[44/400] clip 21 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.399 wer=0.15
+[45/400] clip 22 prompt 3 text fixed: acc_src=1.000 acc=0.812 traced=True far=False sim=0.306 wer=0.50
+[46/400] clip 22 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.373 wer=0.00
+[47/400] clip 23 prompt 3 text fixed: acc_src=1.000 acc=0.688 traced=False far=True sim=0.413 wer=0.00
+[48/400] clip 23 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.321 wer=0.17
+[49/400] clip 24 prompt 3 text fixed: acc_src=1.000 acc=0.438 traced=False far=True sim=0.377 wer=0.00
