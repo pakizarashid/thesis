@@ -2,7 +2,8 @@
 [LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
 [LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
 [LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
-[plan] cloner=maskgct clips=100 prompts=['3'] texts=['fixed', 'unseen'] -> 200 clones to run
+[resume] 90 completed records kept from results/ce_libri_maskgct_stage1legacy_e29_p3.json
+[plan] cloner=maskgct clips=100 prompts=['3'] texts=['fixed', 'unseen'] -> 110 clones to run
 /usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
   WeightNorm.apply(module, name, dim)
 /kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
@@ -34,4 +35,40 @@ INFO:speechbrain.utils.parameter_transfer:Loading pretrained files for: embeddin
   stats = torch.load(path, map_location=self.device)
 WARNING:speechbrain.inference.interfaces:Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
 [transcribe] loading faster-whisper base.en (float16)
-predict semantic shape torch.Size([1, 270])
+predict semantic shape torch.Size([1, 132])
+[1/110] clip 45 prompt 3 text fixed: acc_src=1.000 acc=0.688 traced=False far=True sim=0.269 wer=0.00
+predict semantic shape torch.Size([1, 190])
+[2/110] clip 45 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.129 wer=0.09
+predict semantic shape torch.Size([1, 192])
+[3/110] clip 46 prompt 3 text fixed: acc_src=1.000 acc=0.688 traced=False far=True sim=0.308 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 380])
+[4/110] clip 46 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.423 wer=0.07
+predict semantic shape torch.Size([1, 138])
+[5/110] clip 47 prompt 3 text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.349 wer=0.00
+predict semantic shape torch.Size([1, 215])
+[6/110] clip 47 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.367 wer=0.15
+predict semantic shape torch.Size([1, 200])
+[7/110] clip 48 prompt 3 text fixed: acc_src=0.875 acc=0.875 traced=True far=False sim=0.452 wer=0.00
+predict semantic shape torch.Size([1, 300])
+[8/110] clip 48 prompt 3 text unseen: acc_src=0.875 acc=0.750 traced=False far=True sim=0.421 wer=0.21
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 110])
+[9/110] clip 49 prompt 3 text fixed: acc_src=0.750 acc=0.750 traced=False far=True sim=0.136 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 312])
+[10/110] clip 49 prompt 3 text unseen: acc_src=0.750 acc=0.750 traced=False far=True sim=0.286 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 142])
+[11/110] clip 50 prompt 3 text fixed: acc_src=1.000 acc=0.750 traced=False far=True sim=0.491 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 280])
+[12/110] clip 50 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.519 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 145])
+[13/110] clip 51 prompt 3 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.405 wer=0.25
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 283])
