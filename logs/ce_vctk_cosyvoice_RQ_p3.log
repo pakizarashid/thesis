@@ -1,0 +1,1504 @@
+[preflight] omegaconf 2.3.1 ok; numpy/torch ok
+[VCTKSubset] Loaded cached subset index from ./data/vctk_index/subset_index.json
+[VCTKSubset] Using 100 utterances (eval split, 20 speakers, speaker-disjoint from the other split). Reading directly from mounted Kaggle input -- zero working-disk cost.
+[plan] cloner=cosyvoice clips=100 prompts=['3'] texts=['fixed', 'unseen'] -> 200 clones to run
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[backbone] loaded checkpoints/route2_vmaug_RQ/route2_epoch19.pt (epoch 19)
+2026-10-25 19:48:24,591 INFO NumExpr defaulting to 4 threads.
+2026-10-25 19:48:25,472 DEBUG Skipping import of cpp extensions: Could not load this library: /usr/local/lib/python3.13/dist-packages/torchao/_C.abi3.so
+2026-10-25 19:48:28,186 DEBUG Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2026-10-25 19:48:28,357 DEBUG Creating converter from 7 to 5
+2026-10-25 19:48:28,358 DEBUG Creating converter from 5 to 7
+2026-10-25 19:48:28,358 DEBUG Creating converter from 7 to 5
+2026-10-25 19:48:28,358 DEBUG Creating converter from 5 to 7
+2026-10-25 19:48:28,684 DEBUG etils.epath found. Using etils.epath for file I/O.
+[cosyvoice] using CosyVoice2 from cosyvoice.cli.cosyvoice
+Sliding Window Attention is enabled but not implemented for `sdpa`; unexpected results may be encountered.
+/usr/local/lib/python3.13/dist-packages/diffusers/models/lora.py:391: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+2026-10-25 19:48:36,846 INFO input frame rate=25
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/usr/local/lib/python3.13/dist-packages/pyworld/__init__.py:13: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+[1;31m2026-10-25 19:48:39.526607951 [E:onnxruntime:Default, provider_bridge_ort.cc:2458 operator()] /onnxruntime_src/onnxruntime/core/session/provider_bridge_ort.cc:2043 onnxruntime::Provider& onnxruntime::ProviderLibrary::Get() [ONNXRuntimeError] : 1 : FAIL : Failed to load library /usr/local/lib/python3.13/dist-packages/onnxruntime/capi/libonnxruntime_providers_cuda.so with error: libcublasLt.so.13: cannot open shared object file: No such file or directory
+[m
+[0;93m2026-10-25 19:48:39.526655536 [W:onnxruntime:Default, onnxruntime_pybind_state.cc:1295 CreateExecutionProviderFactoryInstance] Failed to create CUDAExecutionProvider. Require cuDNN 9.* and CUDA 13.*. Please install all dependencies as mentioned in the GPU requirements page (https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html#requirements), make sure they're in the PATH, and that your GPU is supported.[m
+2026-10-25 19:48:40,667 INFO use wetext frontend
+[cosyvoice] loaded /kaggle/working/CosyVoice/pretrained_models/CosyVoice2-0.5B; sample_rate=24000
+2026-10-25 19:48:44,110 INFO Applied quirks (see `speechbrain.utils.quirks`): [disable_jit_profiling, allow_tf32]
+2026-10-25 19:48:44,110 INFO Excluded quirks specified by the `SB_DISABLE_QUIRKS` environment (comma-separated list): []
+2026-10-25 19:48:44,125 INFO Fetch hyperparams.yaml: Using symlink found at '/tmp/ecapa_model/hyperparams.yaml'
+2026-10-25 19:48:44,313 INFO Fetch embedding_model.ckpt: Using symlink found at '/tmp/ecapa_model/embedding_model.ckpt'
+2026-10-25 19:48:44,313 INFO Fetch mean_var_norm_emb.ckpt: Using symlink found at '/tmp/ecapa_model/mean_var_norm_emb.ckpt'
+2026-10-25 19:48:44,313 INFO Fetch classifier.ckpt: Using symlink found at '/tmp/ecapa_model/classifier.ckpt'
+2026-10-25 19:48:44,313 INFO Fetch label_encoder.txt: Using symlink found at '/tmp/ecapa_model/label_encoder.ckpt'
+2026-10-25 19:48:44,313 INFO Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+/usr/local/lib/python3.13/dist-packages/speechbrain/utils/checkpoints.py:202: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  state_dict = torch.load(path, map_location=device)
+/usr/local/lib/python3.13/dist-packages/speechbrain/processing/features.py:1550: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  stats = torch.load(path, map_location=self.device)
+2026-10-25 19:48:44,430 WARNING Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+2026-10-25 19:48:44,580 DEBUG Starting new HTTPS connection (1): huggingface.co:443
+2026-10-25 19:48:44,922 DEBUG https://huggingface.co:443 "GET /api/models/Systran/faster-whisper-base.en/revision/main HTTP/1.1" 200 None
+[transcribe] loading faster-whisper base.en (float16)
+2026-10-25 19:48:45,839 DEBUG https://huggingface.co:443 "GET /api/models/Systran/faster-whisper-base.en/revision/main HTTP/1.1" 200 None
+2026-10-25 19:48:46,018 INFO Processing audio with duration 00:02.390
+2026-10-25 19:48:46,032 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]/usr/local/lib/python3.13/dist-packages/torchaudio/__init__.py:86: UserWarning: The 'backend' parameter is not used by TorchCodec AudioDecoder.
+  return load_with_torchcodec(
+2026-10-25 19:48:47,039 INFO synthesis text This is a test sentence for voice cloning.
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:103: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with self.llm_context, torch.cuda.amp.autocast(self.fp16 is True and hasattr(self.llm, 'vllm') is False):
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:293: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast(self.fp16):
+2026-10-25 19:48:51,805 INFO yield speech len 5.4, rtf 0.8826405030709725
+100%|██████████| 1/1 [00:05<00:00,  5.46s/it]100%|██████████| 1/1 [00:05<00:00,  5.46s/it]
+2026-10-25 19:48:52,006 INFO Processing audio with duration 00:05.400
+2026-10-25 19:48:52,021 DEBUG Processing segment at 00:00.000
+[1/200] clip 0 prompt 3 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.383 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:48:52,767 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station.
+2026-10-25 19:48:59,498 INFO yield speech len 7.96, rtf 0.8456156181929698
+100%|██████████| 1/1 [00:07<00:00,  7.31s/it]100%|██████████| 1/1 [00:07<00:00,  7.31s/it]
+2026-10-25 19:48:59,729 INFO Processing audio with duration 00:07.960
+2026-10-25 19:48:59,744 DEBUG Processing segment at 00:00.000
+[2/200] clip 0 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.403 wer=0.00
+2026-10-25 19:49:00,124 INFO Processing audio with duration 00:03.000
+2026-10-25 19:49:00,135 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:49:00,846 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:49:03,288 INFO yield speech len 2.64, rtf 0.9249055024349327
+100%|██████████| 1/1 [00:03<00:00,  3.02s/it]100%|██████████| 1/1 [00:03<00:00,  3.02s/it]
+2026-10-25 19:49:03,496 INFO Processing audio with duration 00:02.640
+2026-10-25 19:49:03,508 DEBUG Processing segment at 00:00.000
+[3/200] clip 1 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.505 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:49:04,185 INFO synthesis text We also need a small plastic snake and a big toy frog for the kids. ).
+2026-10-25 19:49:08,418 INFO yield speech len 5.0, rtf 0.8465421199798584
+100%|██████████| 1/1 [00:04<00:00,  4.75s/it]100%|██████████| 1/1 [00:04<00:00,  4.75s/it]
+2026-10-25 19:49:08,604 INFO Processing audio with duration 00:05.000
+2026-10-25 19:49:08,617 DEBUG Processing segment at 00:00.000
+[4/200] clip 1 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.537 wer=0.00
+2026-10-25 19:49:08,956 INFO Processing audio with duration 00:03.000
+2026-10-25 19:49:08,968 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:49:09,542 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:49:12,203 INFO yield speech len 2.88, rtf 0.9239614009857178
+100%|██████████| 1/1 [00:03<00:00,  3.07s/it]100%|██████████| 1/1 [00:03<00:00,  3.07s/it]
+2026-10-25 19:49:12,360 INFO Processing audio with duration 00:02.880
+2026-10-25 19:49:12,372 DEBUG Processing segment at 00:00.000
+[5/200] clip 2 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.617 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:49:13,063 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:49:18,914 INFO yield speech len 6.96, rtf 0.8406785370289594
+100%|██████████| 1/1 [00:06<00:00,  6.41s/it]100%|██████████| 1/1 [00:06<00:00,  6.41s/it]
+2026-10-25 19:49:19,132 INFO Processing audio with duration 00:06.960
+2026-10-25 19:49:19,146 DEBUG Processing segment at 00:00.000
+[6/200] clip 2 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.676 wer=0.00
+2026-10-25 19:49:19,545 INFO Processing audio with duration 00:03.000
+2026-10-25 19:49:19,557 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:49:20,231 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:49:22,911 INFO yield speech len 2.92, rtf 0.9178952811515495
+100%|██████████| 1/1 [00:03<00:00,  3.19s/it]100%|██████████| 1/1 [00:03<00:00,  3.19s/it]
+2026-10-25 19:49:23,077 INFO Processing audio with duration 00:02.920
+2026-10-25 19:49:23,082 DEBUG Processing segment at 00:00.000
+[7/200] clip 3 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.652 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:49:23,737 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:49:29,734 INFO yield speech len 7.12, rtf 0.8422909492857
+100%|██████████| 1/1 [00:06<00:00,  6.49s/it]100%|██████████| 1/1 [00:06<00:00,  6.49s/it]
+2026-10-25 19:49:29,925 INFO Processing audio with duration 00:07.120
+2026-10-25 19:49:29,940 DEBUG Processing segment at 00:00.000
+[8/200] clip 3 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.645 wer=0.00
+2026-10-25 19:49:30,337 INFO Processing audio with duration 00:03.000
+2026-10-25 19:49:30,350 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:49:30,995 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:49:33,950 INFO yield speech len 3.4, rtf 0.8690956760855282
+100%|██████████| 1/1 [00:03<00:00,  3.46s/it]100%|██████████| 1/1 [00:03<00:00,  3.46s/it]
+2026-10-25 19:49:34,126 INFO Processing audio with duration 00:03.400
+2026-10-25 19:49:34,140 DEBUG Processing segment at 00:00.000
+[9/200] clip 4 prompt 3 text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.648 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:49:34,788 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station.
+2026-10-25 19:49:39,588 INFO yield speech len 5.8, rtf 0.8275842666625977
+100%|██████████| 1/1 [00:05<00:00,  5.28s/it]100%|██████████| 1/1 [00:05<00:00,  5.28s/it]
+2026-10-25 19:49:39,785 INFO Processing audio with duration 00:05.800
+2026-10-25 19:49:39,798 DEBUG Processing segment at 00:00.000
+[10/200] clip 4 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.666 wer=0.00
+2026-10-25 19:49:40,167 INFO Processing audio with duration 00:02.520
+2026-10-25 19:49:40,180 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:49:40,868 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:49:43,318 INFO yield speech len 2.64, rtf 0.9279191493988037
+100%|██████████| 1/1 [00:03<00:00,  3.00s/it]100%|██████████| 1/1 [00:03<00:00,  3.00s/it]
+2026-10-25 19:49:43,446 INFO Processing audio with duration 00:02.640
+2026-10-25 19:49:43,457 DEBUG Processing segment at 00:00.000
+[11/200] clip 5 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.471 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:49:44,116 INFO synthesis text Ask her to bring these things with her from the store. ).
+2026-10-25 19:49:47,011 INFO yield speech len 3.2, rtf 0.9045819938182831
+100%|██████████| 1/1 [00:03<00:00,  3.42s/it]100%|██████████| 1/1 [00:03<00:00,  3.42s/it]
+2026-10-25 19:49:47,159 INFO Processing audio with duration 00:03.200
+2026-10-25 19:49:47,171 DEBUG Processing segment at 00:00.000
+[12/200] clip 5 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.424 wer=0.00
+2026-10-25 19:49:47,548 INFO Processing audio with duration 00:03.000
+2026-10-25 19:49:47,562 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:49:48,289 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:49:50,899 INFO yield speech len 3.0, rtf 0.8699015776316324
+100%|██████████| 1/1 [00:03<00:00,  3.20s/it]100%|██████████| 1/1 [00:03<00:00,  3.20s/it]
+2026-10-25 19:49:51,046 INFO Processing audio with duration 00:03.000
+2026-10-25 19:49:51,050 DEBUG Processing segment at 00:00.000
+[13/200] clip 6 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.495 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:49:51,822 INFO synthesis text We also need a small plastic snake and a big toy frog for the kids.
+2026-10-25 19:49:57,685 INFO yield speech len 7.08, rtf 0.8279948584777487
+100%|██████████| 1/1 [00:06<00:00,  6.51s/it]100%|██████████| 1/1 [00:06<00:00,  6.51s/it]
+2026-10-25 19:49:57,904 INFO Processing audio with duration 00:07.080
+2026-10-25 19:49:57,918 DEBUG Processing segment at 00:00.000
+[14/200] clip 6 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.464 wer=0.00
+2026-10-25 19:49:58,312 INFO Processing audio with duration 00:03.000
+2026-10-25 19:49:58,325 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:49:59,084 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:50:01,794 INFO yield speech len 2.84, rtf 0.9541119488192277
+100%|██████████| 1/1 [00:03<00:00,  3.30s/it]100%|██████████| 1/1 [00:03<00:00,  3.30s/it]
+2026-10-25 19:50:01,951 INFO Processing audio with duration 00:02.840
+2026-10-25 19:50:01,967 DEBUG Processing segment at 00:00.000
+[15/200] clip 7 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.536 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:50:02,740 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:50:09,691 INFO yield speech len 8.36, rtf 0.831495802938653
+100%|██████████| 1/1 [00:07<00:00,  7.46s/it]100%|██████████| 1/1 [00:07<00:00,  7.46s/it]
+2026-10-25 19:50:09,906 INFO Processing audio with duration 00:08.360
+2026-10-25 19:50:09,920 DEBUG Processing segment at 00:00.000
+2026-10-25 19:50:10,080 DEBUG Processing segment at 00:07.540
+[16/200] clip 7 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.696 wer=0.10
+2026-10-25 19:50:10,368 INFO Processing audio with duration 00:03.000
+2026-10-25 19:50:10,372 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:50:11,082 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:50:13,344 INFO yield speech len 2.44, rtf 0.9270320173169746
+100%|██████████| 1/1 [00:02<00:00,  2.83s/it]100%|██████████| 1/1 [00:02<00:00,  2.83s/it]
+2026-10-25 19:50:13,490 INFO Processing audio with duration 00:02.440
+2026-10-25 19:50:13,503 DEBUG Processing segment at 00:00.000
+[17/200] clip 8 prompt 3 text fixed: acc_src=1.000 acc=0.812 traced=True far=False sim=0.573 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:50:14,234 INFO synthesis text When the sunlight strikes raindrops in the air, they act as a prism and form a rainbow.
+2026-10-25 19:50:18,914 INFO yield speech len 5.36, rtf 0.8730776274382178
+100%|██████████| 1/1 [00:05<00:00,  5.26s/it]100%|██████████| 1/1 [00:05<00:00,  5.26s/it]
+2026-10-25 19:50:19,144 INFO Processing audio with duration 00:05.360
+2026-10-25 19:50:19,158 DEBUG Processing segment at 00:00.000
+[18/200] clip 8 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.659 wer=0.00
+2026-10-25 19:50:19,573 INFO Processing audio with duration 00:03.000
+2026-10-25 19:50:19,578 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:50:20,306 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:50:22,822 INFO yield speech len 2.92, rtf 0.8618015949040243
+100%|██████████| 1/1 [00:03<00:00,  3.08s/it]100%|██████████| 1/1 [00:03<00:00,  3.08s/it]
+2026-10-25 19:50:22,961 INFO Processing audio with duration 00:02.920
+2026-10-25 19:50:22,973 DEBUG Processing segment at 00:00.000
+[19/200] clip 9 prompt 3 text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.571 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:50:23,687 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:50:29,773 INFO yield speech len 7.24, rtf 0.8406495850389175
+100%|██████████| 1/1 [00:06<00:00,  6.64s/it]100%|██████████| 1/1 [00:06<00:00,  6.64s/it]
+2026-10-25 19:50:29,994 INFO Processing audio with duration 00:07.240
+2026-10-25 19:50:30,011 DEBUG Processing segment at 00:00.000
+[20/200] clip 9 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.595 wer=0.10
+2026-10-25 19:50:30,459 INFO Processing audio with duration 00:02.220
+2026-10-25 19:50:30,472 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:50:31,042 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:50:33,661 INFO yield speech len 2.96, rtf 0.8850653429289121
+100%|██████████| 1/1 [00:03<00:00,  3.08s/it]100%|██████████| 1/1 [00:03<00:00,  3.08s/it]
+2026-10-25 19:50:33,817 INFO Processing audio with duration 00:02.960
+2026-10-25 19:50:33,828 DEBUG Processing segment at 00:00.000
+[21/200] clip 10 prompt 3 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.351 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:50:34,521 INFO synthesis text Ask her to bring these things with her from the store. ).
+2026-10-25 19:50:37,481 INFO yield speech len 3.28, rtf 0.9025000217484266
+100%|██████████| 1/1 [00:03<00:00,  3.53s/it]100%|██████████| 1/1 [00:03<00:00,  3.53s/it]
+2026-10-25 19:50:37,609 INFO Processing audio with duration 00:03.280
+2026-10-25 19:50:37,614 DEBUG Processing segment at 00:00.000
+[22/200] clip 10 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.337 wer=0.00
+2026-10-25 19:50:37,983 INFO Processing audio with duration 00:02.946
+2026-10-25 19:50:37,988 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:50:38,550 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:50:42,089 INFO yield speech len 4.04, rtf 0.8759348699361971
+100%|██████████| 1/1 [00:03<00:00,  3.97s/it]100%|██████████| 1/1 [00:03<00:00,  3.97s/it]
+2026-10-25 19:50:42,263 INFO Processing audio with duration 00:04.040
+2026-10-25 19:50:42,276 DEBUG Processing segment at 00:00.000
+[23/200] clip 11 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.617 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:50:43,008 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station.
+2026-10-25 19:50:49,789 INFO yield speech len 7.88, rtf 0.8604386433732086
+100%|██████████| 1/1 [00:07<00:00,  7.37s/it]100%|██████████| 1/1 [00:07<00:00,  7.37s/it]
+2026-10-25 19:50:50,027 INFO Processing audio with duration 00:07.880
+2026-10-25 19:50:50,034 DEBUG Processing segment at 00:00.000
+[24/200] clip 11 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.554 wer=0.05
+2026-10-25 19:50:50,398 INFO Processing audio with duration 00:03.000
+2026-10-25 19:50:50,412 DEBUG Processing segment at 00:00.000
+2026-10-25 19:50:51,092 DEBUG Compression ratio threshold is not met with temperature 0.0 (6.800000 > 2.400000)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:50:51,200 WARNING synthesis text This is a test sentence for voice cloning. too short than prompt text of fresh nopies, five thick slabs of blue cheese and maybe a s asterisk asterisk asterisk., this may lead to bad performance
+2026-10-25 19:50:51,495 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:50:57,197 INFO yield speech len 6.76, rtf 0.8436016077120629
+100%|██████████| 1/1 [00:06<00:00,  6.01s/it]100%|██████████| 1/1 [00:06<00:00,  6.01s/it]
+2026-10-25 19:50:57,385 INFO Processing audio with duration 00:06.760
+2026-10-25 19:50:57,399 DEBUG Processing segment at 00:00.000
+[25/200] clip 12 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.646 wer=0.75
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:50:58,057 INFO synthesis text We also need a small plastic snake and a big toy frog for the kids. ).
+2026-10-25 19:51:03,976 INFO yield speech len 7.0, rtf 0.8455896718161446
+100%|██████████| 1/1 [00:06<00:00,  6.28s/it]100%|██████████| 1/1 [00:06<00:00,  6.28s/it]
+2026-10-25 19:51:04,165 INFO Processing audio with duration 00:07.000
+2026-10-25 19:51:04,170 DEBUG Processing segment at 00:00.000
+2026-10-25 19:51:04,786 DEBUG Compression ratio threshold is not met with temperature 0.0 (13.153846 > 2.400000)
+2026-10-25 19:51:05,211 DEBUG Compression ratio threshold is not met with temperature 0.2 (29.666667 > 2.400000)
+2026-10-25 19:51:05,689 DEBUG Compression ratio threshold is not met with temperature 0.4 (17.153846 > 2.400000)
+2026-10-25 19:51:05,835 DEBUG Reset prompt. prompt_reset_on_temperature threshold is met 0.600000 > 0.500000
+[26/200] clip 12 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.605 wer=1.40
+2026-10-25 19:51:06,059 INFO Processing audio with duration 00:03.000
+2026-10-25 19:51:06,071 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:51:06,535 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:51:09,272 INFO yield speech len 3.16, rtf 0.8661356907856614
+100%|██████████| 1/1 [00:03<00:00,  3.03s/it]100%|██████████| 1/1 [00:03<00:00,  3.03s/it]
+2026-10-25 19:51:09,399 INFO Processing audio with duration 00:03.160
+2026-10-25 19:51:09,411 DEBUG Processing segment at 00:00.000
+[27/200] clip 13 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.654 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:51:09,962 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:51:15,299 INFO yield speech len 6.32, rtf 0.8445918937272663
+100%|██████████| 1/1 [00:05<00:00,  5.73s/it]100%|██████████| 1/1 [00:05<00:00,  5.73s/it]
+2026-10-25 19:51:15,473 INFO Processing audio with duration 00:06.320
+2026-10-25 19:51:15,485 DEBUG Processing segment at 00:00.000
+[28/200] clip 13 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.666 wer=0.25
+2026-10-25 19:51:15,845 INFO Processing audio with duration 00:03.000
+2026-10-25 19:51:15,858 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:51:16,352 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:51:18,543 INFO yield speech len 2.36, rtf 0.9284559953010689
+100%|██████████| 1/1 [00:02<00:00,  2.49s/it]100%|██████████| 1/1 [00:02<00:00,  2.49s/it]
+2026-10-25 19:51:18,654 INFO Processing audio with duration 00:02.360
+2026-10-25 19:51:18,665 DEBUG Processing segment at 00:00.000
+[29/200] clip 14 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.747 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:51:19,104 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:51:24,117 INFO yield speech len 5.92, rtf 0.8468712503845627
+100%|██████████| 1/1 [00:05<00:00,  5.31s/it]100%|██████████| 1/1 [00:05<00:00,  5.31s/it]
+2026-10-25 19:51:24,283 INFO Processing audio with duration 00:05.920
+2026-10-25 19:51:24,300 DEBUG Processing segment at 00:00.000
+[30/200] clip 14 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.724 wer=0.20
+2026-10-25 19:51:24,790 INFO Processing audio with duration 00:02.135
+2026-10-25 19:51:24,801 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:51:25,173 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:51:28,179 INFO yield speech len 3.48, rtf 0.8639887146566106
+100%|██████████| 1/1 [00:03<00:00,  3.24s/it]100%|██████████| 1/1 [00:03<00:00,  3.24s/it]
+2026-10-25 19:51:28,309 INFO Processing audio with duration 00:03.480
+2026-10-25 19:51:28,321 DEBUG Processing segment at 00:00.000
+[31/200] clip 15 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.373 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:51:28,707 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station.
+2026-10-25 19:51:35,308 INFO yield speech len 8.16, rtf 0.8089206382340076
+100%|██████████| 1/1 [00:06<00:00,  6.83s/it]100%|██████████| 1/1 [00:06<00:00,  6.83s/it]
+2026-10-25 19:51:35,510 INFO Processing audio with duration 00:08.160
+2026-10-25 19:51:35,525 DEBUG Processing segment at 00:00.000
+[32/200] clip 15 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.486 wer=0.00
+2026-10-25 19:51:35,878 INFO Processing audio with duration 00:03.000
+2026-10-25 19:51:35,890 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:51:36,312 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:51:39,853 INFO yield speech len 4.0, rtf 0.8851134777069092
+100%|██████████| 1/1 [00:03<00:00,  3.83s/it]100%|██████████| 1/1 [00:03<00:00,  3.84s/it]
+2026-10-25 19:51:39,999 INFO Processing audio with duration 00:04.000
+2026-10-25 19:51:40,014 DEBUG Processing segment at 00:00.000
+[33/200] clip 16 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.669 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:51:40,504 INFO synthesis text Ask her to bring these things with her from the store. ).
+2026-10-25 19:51:43,252 INFO yield speech len 3.16, rtf 0.869609132597718
+100%|██████████| 1/1 [00:03<00:00,  3.07s/it]100%|██████████| 1/1 [00:03<00:00,  3.07s/it]
+2026-10-25 19:51:43,356 INFO Processing audio with duration 00:03.160
+2026-10-25 19:51:43,368 DEBUG Processing segment at 00:00.000
+[34/200] clip 16 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.749 wer=0.00
+2026-10-25 19:51:43,700 INFO Processing audio with duration 00:03.000
+2026-10-25 19:51:43,712 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:51:44,156 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:51:46,573 INFO yield speech len 2.56, rtf 0.9438955225050449
+100%|██████████| 1/1 [00:02<00:00,  2.73s/it]100%|██████████| 1/1 [00:02<00:00,  2.73s/it]
+2026-10-25 19:51:46,690 INFO Processing audio with duration 00:02.560
+2026-10-25 19:51:46,703 DEBUG Processing segment at 00:00.000
+[35/200] clip 17 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.589 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:51:47,195 INFO synthesis text We also need a small plastic snake and a big toy frog for the kids.
+2026-10-25 19:51:50,869 INFO yield speech len 4.32, rtf 0.8504719645888716
+100%|██████████| 1/1 [00:03<00:00,  3.98s/it]100%|██████████| 1/1 [00:03<00:00,  3.98s/it]
+2026-10-25 19:51:51,012 INFO Processing audio with duration 00:04.320
+2026-10-25 19:51:51,025 DEBUG Processing segment at 00:00.000
+[36/200] clip 17 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.715 wer=0.00
+2026-10-25 19:51:51,375 INFO Processing audio with duration 00:03.000
+2026-10-25 19:51:51,378 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:51:51,905 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:51:55,059 INFO yield speech len 3.48, rtf 0.9062656725960216
+100%|██████████| 1/1 [00:03<00:00,  3.54s/it]100%|██████████| 1/1 [00:03<00:00,  3.54s/it]
+2026-10-25 19:51:55,176 INFO Processing audio with duration 00:03.480
+2026-10-25 19:51:55,188 DEBUG Processing segment at 00:00.000
+[37/200] clip 18 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.684 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:51:55,736 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:52:01,179 INFO yield speech len 6.48, rtf 0.8400021879761307
+100%|██████████| 1/1 [00:05<00:00,  5.82s/it]100%|██████████| 1/1 [00:05<00:00,  5.82s/it]
+2026-10-25 19:52:01,363 INFO Processing audio with duration 00:06.480
+2026-10-25 19:52:01,378 DEBUG Processing segment at 00:00.000
+[38/200] clip 18 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.580 wer=0.10
+2026-10-25 19:52:01,786 INFO Processing audio with duration 00:03.000
+2026-10-25 19:52:01,797 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:52:02,262 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:52:05,106 INFO yield speech len 3.24, rtf 0.8777717013417938
+100%|██████████| 1/1 [00:03<00:00,  3.15s/it]100%|██████████| 1/1 [00:03<00:00,  3.15s/it]
+2026-10-25 19:52:05,238 INFO Processing audio with duration 00:03.240
+2026-10-25 19:52:05,249 DEBUG Processing segment at 00:00.000
+[39/200] clip 19 prompt 3 text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.476 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:52:05,727 INFO synthesis text When the sunlight strikes raindrops in the air, they act as a prism and form a rainbow.
+2026-10-25 19:52:10,956 INFO yield speech len 6.44, rtf 0.8119608304515388
+100%|██████████| 1/1 [00:05<00:00,  5.58s/it]100%|██████████| 1/1 [00:05<00:00,  5.58s/it]
+2026-10-25 19:52:11,136 INFO Processing audio with duration 00:06.440
+2026-10-25 19:52:11,153 DEBUG Processing segment at 00:00.000
+[40/200] clip 19 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.583 wer=0.06
+2026-10-25 19:52:11,615 INFO Processing audio with duration 00:02.265
+2026-10-25 19:52:11,627 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:52:12,093 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:52:15,351 INFO yield speech len 3.8, rtf 0.8573652568616366
+100%|██████████| 1/1 [00:03<00:00,  3.59s/it]100%|██████████| 1/1 [00:03<00:00,  3.59s/it]
+2026-10-25 19:52:15,501 INFO Processing audio with duration 00:03.800
+2026-10-25 19:52:15,518 DEBUG Processing segment at 00:00.000
+[41/200] clip 20 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.513 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:52:15,918 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:52:23,051 INFO yield speech len 8.76, rtf 0.8142481655835017
+100%|██████████| 1/1 [00:07<00:00,  7.40s/it]100%|██████████| 1/1 [00:07<00:00,  7.40s/it]
+2026-10-25 19:52:23,265 INFO Processing audio with duration 00:08.760
+2026-10-25 19:52:23,280 DEBUG Processing segment at 00:00.000
+[42/200] clip 20 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.377 wer=0.15
+2026-10-25 19:52:23,647 INFO Processing audio with duration 00:03.000
+2026-10-25 19:52:23,658 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:52:24,089 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:52:26,891 INFO yield speech len 3.04, rtf 0.9215609807717172
+100%|██████████| 1/1 [00:03<00:00,  3.10s/it]100%|██████████| 1/1 [00:03<00:00,  3.10s/it]
+2026-10-25 19:52:27,017 INFO Processing audio with duration 00:03.040
+2026-10-25 19:52:27,029 DEBUG Processing segment at 00:00.000
+[43/200] clip 21 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.549 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:52:27,464 INFO synthesis text Ask her to bring these things with her from the store. ).
+2026-10-25 19:52:29,961 INFO yield speech len 2.64, rtf 0.9459848656798854
+100%|██████████| 1/1 [00:02<00:00,  2.80s/it]100%|██████████| 1/1 [00:02<00:00,  2.80s/it]
+2026-10-25 19:52:30,058 INFO Processing audio with duration 00:02.640
+2026-10-25 19:52:30,066 DEBUG Processing segment at 00:00.000
+[44/200] clip 21 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.667 wer=0.00
+2026-10-25 19:52:30,434 INFO Processing audio with duration 00:03.000
+2026-10-25 19:52:30,449 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:52:30,879 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:52:33,772 INFO yield speech len 3.2, rtf 0.9041628241539001
+100%|██████████| 1/1 [00:03<00:00,  3.19s/it]100%|██████████| 1/1 [00:03<00:00,  3.19s/it]
+2026-10-25 19:52:33,887 INFO Processing audio with duration 00:03.200
+2026-10-25 19:52:33,898 DEBUG Processing segment at 00:00.000
+[45/200] clip 22 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.551 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:52:34,410 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station.
+2026-10-25 19:52:40,364 INFO yield speech len 7.12, rtf 0.8363047007764324
+100%|██████████| 1/1 [00:06<00:00,  6.26s/it]100%|██████████| 1/1 [00:06<00:00,  6.26s/it]
+2026-10-25 19:52:40,549 INFO Processing audio with duration 00:07.120
+2026-10-25 19:52:40,566 DEBUG Processing segment at 00:00.000
+[46/200] clip 22 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.562 wer=0.00
+2026-10-25 19:52:40,960 INFO Processing audio with duration 00:03.000
+2026-10-25 19:52:40,975 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:52:41,499 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:52:44,954 INFO yield speech len 3.88, rtf 0.8904647581356088
+100%|██████████| 1/1 [00:03<00:00,  3.78s/it]100%|██████████| 1/1 [00:03<00:00,  3.78s/it]
+2026-10-25 19:52:45,093 INFO Processing audio with duration 00:03.880
+2026-10-25 19:52:45,106 DEBUG Processing segment at 00:00.000
+[47/200] clip 23 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.572 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:52:45,567 INFO synthesis text We also need a small plastic snake and a big toy frog for the kids.
+2026-10-25 19:52:51,228 INFO yield speech len 6.68, rtf 0.8473768562613847
+100%|██████████| 1/1 [00:05<00:00,  5.97s/it]100%|██████████| 1/1 [00:05<00:00,  5.97s/it]
+2026-10-25 19:52:51,408 INFO Processing audio with duration 00:06.680
+2026-10-25 19:52:51,422 DEBUG Processing segment at 00:00.000
+[48/200] clip 23 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.707 wer=0.00
+2026-10-25 19:52:51,826 INFO Processing audio with duration 00:03.000
+2026-10-25 19:52:51,853 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:52:52,333 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:52:54,904 INFO yield speech len 2.84, rtf 0.9051388418170768
+100%|██████████| 1/1 [00:02<00:00,  2.89s/it]100%|██████████| 1/1 [00:02<00:00,  2.89s/it]
+2026-10-25 19:52:55,013 INFO Processing audio with duration 00:02.840
+2026-10-25 19:52:55,017 DEBUG Processing segment at 00:00.000
+[49/200] clip 24 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.680 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:52:55,515 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:53:02,598 INFO yield speech len 8.68, rtf 0.8159188081591909
+100%|██████████| 1/1 [00:07<00:00,  7.40s/it]100%|██████████| 1/1 [00:07<00:00,  7.40s/it]
+2026-10-25 19:53:02,818 INFO Processing audio with duration 00:08.680
+2026-10-25 19:53:02,832 DEBUG Processing segment at 00:00.000
+[50/200] clip 24 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.638 wer=0.10
+2026-10-25 19:53:03,248 INFO Processing audio with duration 00:01.963
+2026-10-25 19:53:03,262 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:53:03,605 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:53:07,055 INFO yield speech len 4.08, rtf 0.8455671516119265
+100%|██████████| 1/1 [00:03<00:00,  3.66s/it]100%|██████████| 1/1 [00:03<00:00,  3.66s/it]
+2026-10-25 19:53:07,193 INFO Processing audio with duration 00:04.080
+2026-10-25 19:53:07,206 DEBUG Processing segment at 00:00.000
+[51/200] clip 25 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.414 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:53:07,576 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:53:14,590 INFO yield speech len 8.52, rtf 0.8232141044777884
+100%|██████████| 1/1 [00:07<00:00,  7.23s/it]100%|██████████| 1/1 [00:07<00:00,  7.23s/it]
+2026-10-25 19:53:14,808 INFO Processing audio with duration 00:08.520
+2026-10-25 19:53:14,823 DEBUG Processing segment at 00:00.000
+[52/200] clip 25 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.416 wer=0.10
+2026-10-25 19:53:15,238 INFO Processing audio with duration 00:03.000
+2026-10-25 19:53:15,249 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]min value is  tensor(-1.0249)
+2026-10-25 19:53:15,681 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:53:18,286 INFO yield speech len 2.72, rtf 0.9577431222971747
+100%|██████████| 1/1 [00:02<00:00,  2.91s/it]100%|██████████| 1/1 [00:02<00:00,  2.91s/it]
+2026-10-25 19:53:18,407 INFO Processing audio with duration 00:02.720
+2026-10-25 19:53:18,416 DEBUG Processing segment at 00:00.000
+[53/200] clip 26 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.377 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]min value is  tensor(-1.0249)
+2026-10-25 19:53:18,879 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station.
+2026-10-25 19:53:24,806 INFO yield speech len 7.16, rtf 0.8278514419854021
+100%|██████████| 1/1 [00:06<00:00,  6.23s/it]100%|██████████| 1/1 [00:06<00:00,  6.23s/it]
+2026-10-25 19:53:24,995 INFO Processing audio with duration 00:07.160
+2026-10-25 19:53:25,011 DEBUG Processing segment at 00:00.000
+[54/200] clip 26 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.373 wer=0.00
+2026-10-25 19:53:25,407 INFO Processing audio with duration 00:03.000
+2026-10-25 19:53:25,411 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:53:25,888 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:53:28,860 INFO yield speech len 3.32, rtf 0.8951552661068468
+100%|██████████| 1/1 [00:03<00:00,  3.28s/it]100%|██████████| 1/1 [00:03<00:00,  3.28s/it]
+2026-10-25 19:53:28,987 INFO Processing audio with duration 00:03.320
+2026-10-25 19:53:28,999 DEBUG Processing segment at 00:00.000
+[55/200] clip 27 prompt 3 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.549 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:53:29,528 INFO synthesis text Ask her to bring these things with her from the store. ).
+2026-10-25 19:53:32,200 INFO yield speech len 3.0, rtf 0.8907532691955566
+100%|██████████| 1/1 [00:02<00:00,  2.98s/it]100%|██████████| 1/1 [00:02<00:00,  2.98s/it]
+2026-10-25 19:53:32,303 INFO Processing audio with duration 00:03.000
+2026-10-25 19:53:32,314 DEBUG Processing segment at 00:00.000
+[56/200] clip 27 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.535 wer=0.00
+2026-10-25 19:53:32,692 INFO Processing audio with duration 00:03.000
+2026-10-25 19:53:32,704 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:53:33,186 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:53:35,596 INFO yield speech len 2.44, rtf 0.9875125572329662
+100%|██████████| 1/1 [00:02<00:00,  2.71s/it]100%|██████████| 1/1 [00:02<00:00,  2.71s/it]
+2026-10-25 19:53:35,691 INFO Processing audio with duration 00:02.440
+2026-10-25 19:53:35,703 DEBUG Processing segment at 00:00.000
+[57/200] clip 28 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.495 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:53:36,142 INFO synthesis text We also need a small plastic snake and a big toy frog for the kids.
+2026-10-25 19:53:40,785 INFO yield speech len 5.48, rtf 0.8472262072737199
+100%|██████████| 1/1 [00:04<00:00,  4.95s/it]100%|██████████| 1/1 [00:04<00:00,  4.95s/it]
+2026-10-25 19:53:40,943 INFO Processing audio with duration 00:05.480
+2026-10-25 19:53:40,956 DEBUG Processing segment at 00:00.000
+[58/200] clip 28 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.625 wer=0.00
+2026-10-25 19:53:41,349 INFO Processing audio with duration 00:03.000
+2026-10-25 19:53:41,360 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:53:41,825 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:53:44,435 INFO yield speech len 2.8, rtf 0.9322677339826312
+100%|██████████| 1/1 [00:02<00:00,  2.93s/it]100%|██████████| 1/1 [00:02<00:00,  2.93s/it]
+2026-10-25 19:53:44,556 INFO Processing audio with duration 00:02.800
+2026-10-25 19:53:44,567 DEBUG Processing segment at 00:00.000
+[59/200] clip 29 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.527 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:53:45,063 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:53:51,068 INFO yield speech len 7.16, rtf 0.8386907963779385
+100%|██████████| 1/1 [00:06<00:00,  6.31s/it]100%|██████████| 1/1 [00:06<00:00,  6.31s/it]
+2026-10-25 19:53:51,252 INFO Processing audio with duration 00:07.160
+2026-10-25 19:53:51,268 DEBUG Processing segment at 00:00.000
+[60/200] clip 29 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.465 wer=0.15
+2026-10-25 19:53:51,783 INFO Processing audio with duration 00:02.009
+2026-10-25 19:53:51,804 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:53:52,247 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:53:55,043 INFO yield speech len 3.12, rtf 0.8961637050677568
+100%|██████████| 1/1 [00:03<00:00,  3.10s/it]100%|██████████| 1/1 [00:03<00:00,  3.10s/it]
+2026-10-25 19:53:55,168 INFO Processing audio with duration 00:03.120
+2026-10-25 19:53:55,181 DEBUG Processing segment at 00:00.000
+[61/200] clip 30 prompt 3 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.359 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:53:55,531 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:54:02,315 INFO yield speech len 8.32, rtf 0.8153916264955814
+100%|██████████| 1/1 [00:07<00:00,  7.00s/it]100%|██████████| 1/1 [00:07<00:00,  7.00s/it]
+2026-10-25 19:54:02,523 INFO Processing audio with duration 00:08.320
+2026-10-25 19:54:02,540 DEBUG Processing segment at 00:00.000
+[62/200] clip 30 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.480 wer=0.10
+2026-10-25 19:54:02,935 INFO Processing audio with duration 00:03.000
+2026-10-25 19:54:02,946 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:54:03,445 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:54:06,030 INFO yield speech len 2.8, rtf 0.9232269866125925
+100%|██████████| 1/1 [00:02<00:00,  2.90s/it]100%|██████████| 1/1 [00:02<00:00,  2.90s/it]
+2026-10-25 19:54:06,135 INFO Processing audio with duration 00:02.800
+2026-10-25 19:54:06,147 DEBUG Processing segment at 00:00.000
+[63/200] clip 31 prompt 3 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.407 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:54:06,589 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station.
+2026-10-25 19:54:12,198 INFO yield speech len 6.68, rtf 0.8395731449127197
+100%|██████████| 1/1 [00:05<00:00,  5.92s/it]100%|██████████| 1/1 [00:05<00:00,  5.92s/it]
+2026-10-25 19:54:12,370 INFO Processing audio with duration 00:06.680
+2026-10-25 19:54:12,387 DEBUG Processing segment at 00:00.000
+[64/200] clip 31 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.498 wer=0.00
+2026-10-25 19:54:12,791 INFO Processing audio with duration 00:03.000
+2026-10-25 19:54:12,804 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:54:13,333 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:54:16,448 INFO yield speech len 3.48, rtf 0.8950813748370642
+100%|██████████| 1/1 [00:03<00:00,  3.50s/it]100%|██████████| 1/1 [00:03<00:00,  3.50s/it]
+2026-10-25 19:54:16,568 INFO Processing audio with duration 00:03.480
+2026-10-25 19:54:16,580 DEBUG Processing segment at 00:00.000
+[65/200] clip 32 prompt 3 text fixed: acc_src=1.000 acc=0.688 traced=False far=True sim=0.607 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:54:17,099 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:54:24,277 INFO yield speech len 8.64, rtf 0.8307570108660944
+100%|██████████| 1/1 [00:07<00:00,  7.48s/it]100%|██████████| 1/1 [00:07<00:00,  7.48s/it]
+2026-10-25 19:54:24,494 INFO Processing audio with duration 00:08.640
+2026-10-25 19:54:24,501 DEBUG Processing segment at 00:00.000
+[66/200] clip 32 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.584 wer=0.10
+2026-10-25 19:54:24,912 INFO Processing audio with duration 00:03.000
+2026-10-25 19:54:24,923 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:54:25,412 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:54:27,932 INFO yield speech len 2.8, rtf 0.8999893495014736
+100%|██████████| 1/1 [00:02<00:00,  2.83s/it]100%|██████████| 1/1 [00:02<00:00,  2.83s/it]
+2026-10-25 19:54:28,032 INFO Processing audio with duration 00:02.800
+2026-10-25 19:54:28,044 DEBUG Processing segment at 00:00.000
+[67/200] clip 33 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.559 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:54:28,504 INFO synthesis text Ask her to bring these things with her from the store.
+2026-10-25 19:54:31,277 INFO yield speech len 3.16, rtf 0.8774029303200637
+100%|██████████| 1/1 [00:03<00:00,  3.08s/it]100%|██████████| 1/1 [00:03<00:00,  3.08s/it]
+2026-10-25 19:54:31,382 INFO Processing audio with duration 00:03.160
+2026-10-25 19:54:31,395 DEBUG Processing segment at 00:00.000
+[68/200] clip 33 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.469 wer=0.09
+2026-10-25 19:54:31,772 INFO Processing audio with duration 00:03.000
+2026-10-25 19:54:31,785 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:54:32,215 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:54:35,224 INFO yield speech len 3.4, rtf 0.8849087182213279
+100%|██████████| 1/1 [00:03<00:00,  3.31s/it]100%|██████████| 1/1 [00:03<00:00,  3.31s/it]
+2026-10-25 19:54:35,342 INFO Processing audio with duration 00:03.400
+2026-10-25 19:54:35,356 DEBUG Processing segment at 00:00.000
+[69/200] clip 34 prompt 3 text fixed: acc_src=1.000 acc=0.812 traced=True far=False sim=0.528 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:54:35,798 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station.
+2026-10-25 19:54:41,249 INFO yield speech len 6.48, rtf 0.8411557586104781
+100%|██████████| 1/1 [00:05<00:00,  5.74s/it]100%|██████████| 1/1 [00:05<00:00,  5.74s/it]
+2026-10-25 19:54:41,421 INFO Processing audio with duration 00:06.480
+2026-10-25 19:54:41,436 DEBUG Processing segment at 00:00.000
+2026-10-25 19:54:41,625 DEBUG Processing segment at 00:05.360
+[70/200] clip 34 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.569 wer=0.00
+2026-10-25 19:54:41,951 INFO Processing audio with duration 00:02.392
+2026-10-25 19:54:41,963 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:54:42,358 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:54:45,108 INFO yield speech len 2.88, rtf 0.9548656642436981
+100%|██████████| 1/1 [00:03<00:00,  3.00s/it]100%|██████████| 1/1 [00:03<00:00,  3.00s/it]
+2026-10-25 19:54:45,211 INFO Processing audio with duration 00:02.880
+2026-10-25 19:54:45,226 DEBUG Processing segment at 00:00.000
+[71/200] clip 35 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.375 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:54:45,622 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:54:52,710 INFO yield speech len 8.92, rtf 0.794641479782994
+100%|██████████| 1/1 [00:07<00:00,  7.34s/it]100%|██████████| 1/1 [00:07<00:00,  7.34s/it]
+2026-10-25 19:54:52,933 INFO Processing audio with duration 00:08.920
+2026-10-25 19:54:52,948 DEBUG Processing segment at 00:00.000
+[72/200] clip 35 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.350 wer=0.10
+2026-10-25 19:54:53,321 INFO Processing audio with duration 00:03.000
+2026-10-25 19:54:53,325 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:54:53,797 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:54:55,960 INFO yield speech len 2.16, rtf 1.0010034949691207
+100%|██████████| 1/1 [00:02<00:00,  2.46s/it]100%|██████████| 1/1 [00:02<00:00,  2.46s/it]
+2026-10-25 19:54:56,075 INFO Processing audio with duration 00:02.160
+2026-10-25 19:54:56,086 DEBUG Processing segment at 00:00.000
+[73/200] clip 36 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.503 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:54:56,555 INFO synthesis text Ask her to bring these things with her from the store. ).
+2026-10-25 19:54:59,234 INFO yield speech len 3.0, rtf 0.8930323123931885
+100%|██████████| 1/1 [00:03<00:00,  3.01s/it]100%|██████████| 1/1 [00:03<00:00,  3.01s/it]
+2026-10-25 19:54:59,338 INFO Processing audio with duration 00:03.000
+2026-10-25 19:54:59,350 DEBUG Processing segment at 00:00.000
+[74/200] clip 36 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.508 wer=0.09
+2026-10-25 19:54:59,688 INFO Processing audio with duration 00:03.000
+2026-10-25 19:54:59,699 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:55:00,136 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:55:02,236 INFO yield speech len 2.2, rtf 0.9547406976873224
+100%|██████████| 1/1 [00:02<00:00,  2.40s/it]100%|██████████| 1/1 [00:02<00:00,  2.40s/it]
+2026-10-25 19:55:02,344 INFO Processing audio with duration 00:02.200
+2026-10-25 19:55:02,360 DEBUG Processing segment at 00:00.000
+[75/200] clip 37 prompt 3 text fixed: acc_src=1.000 acc=0.688 traced=False far=True sim=0.548 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:55:02,911 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station.
+2026-10-25 19:55:07,826 INFO yield speech len 5.76, rtf 0.8532788190576766
+100%|██████████| 1/1 [00:05<00:00,  5.23s/it]100%|██████████| 1/1 [00:05<00:00,  5.23s/it]
+2026-10-25 19:55:07,991 INFO Processing audio with duration 00:05.760
+2026-10-25 19:55:08,005 DEBUG Processing segment at 00:00.000
+[76/200] clip 37 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.694 wer=0.00
+2026-10-25 19:55:08,381 INFO Processing audio with duration 00:03.000
+2026-10-25 19:55:08,392 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:55:08,857 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:55:11,190 INFO yield speech len 2.6, rtf 0.8973383903503418
+100%|██████████| 1/1 [00:02<00:00,  2.63s/it]100%|██████████| 1/1 [00:02<00:00,  2.63s/it]
+2026-10-25 19:55:11,308 INFO Processing audio with duration 00:02.600
+2026-10-25 19:55:11,320 DEBUG Processing segment at 00:00.000
+[77/200] clip 38 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.492 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:55:11,813 INFO synthesis text The Greeks used to imagine that it was a sign from the gods to foretell war or heavy rain.
+2026-10-25 19:55:16,020 INFO yield speech len 4.8, rtf 0.8765286207199097
+100%|██████████| 1/1 [00:04<00:00,  4.51s/it]100%|██████████| 1/1 [00:04<00:00,  4.51s/it]
+2026-10-25 19:55:16,176 INFO Processing audio with duration 00:04.800
+2026-10-25 19:55:16,181 DEBUG Processing segment at 00:00.000
+[78/200] clip 38 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.507 wer=0.16
+2026-10-25 19:55:16,562 INFO Processing audio with duration 00:03.000
+2026-10-25 19:55:16,577 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:55:17,054 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:55:19,468 INFO yield speech len 2.64, rtf 0.9142691438848322
+100%|██████████| 1/1 [00:02<00:00,  2.73s/it]100%|██████████| 1/1 [00:02<00:00,  2.73s/it]
+2026-10-25 19:55:19,570 INFO Processing audio with duration 00:02.640
+2026-10-25 19:55:19,574 DEBUG Processing segment at 00:00.000
+[79/200] clip 39 prompt 3 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.614 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:55:20,054 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:55:25,006 INFO yield speech len 5.92, rtf 0.8365793808086498
+100%|██████████| 1/1 [00:05<00:00,  5.26s/it]100%|██████████| 1/1 [00:05<00:00,  5.26s/it]
+2026-10-25 19:55:25,166 INFO Processing audio with duration 00:05.920
+2026-10-25 19:55:25,171 DEBUG Processing segment at 00:00.000
+[80/200] clip 39 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.657 wer=0.10
+2026-10-25 19:55:25,618 INFO Processing audio with duration 00:03.000
+2026-10-25 19:55:25,623 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:55:26,168 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:55:29,565 INFO yield speech len 3.84, rtf 0.88471124569575
+100%|██████████| 1/1 [00:03<00:00,  3.79s/it]100%|██████████| 1/1 [00:03<00:00,  3.79s/it]
+2026-10-25 19:55:29,690 INFO Processing audio with duration 00:03.840
+2026-10-25 19:55:29,702 DEBUG Processing segment at 00:00.000
+[81/200] clip 40 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.629 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:55:30,188 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:55:36,508 INFO yield speech len 7.28, rtf 0.8681066416122101
+100%|██████████| 1/1 [00:06<00:00,  6.63s/it]100%|██████████| 1/1 [00:06<00:00,  6.63s/it]
+2026-10-25 19:55:36,697 INFO Processing audio with duration 00:07.280
+2026-10-25 19:55:36,703 DEBUG Processing segment at 00:00.000
+[82/200] clip 40 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.588 wer=0.05
+2026-10-25 19:55:37,080 INFO Processing audio with duration 00:03.000
+2026-10-25 19:55:37,091 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:55:37,590 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:55:39,673 INFO yield speech len 2.16, rtf 0.964491014127378
+100%|██████████| 1/1 [00:02<00:00,  2.40s/it]100%|██████████| 1/1 [00:02<00:00,  2.40s/it]
+2026-10-25 19:55:39,765 INFO Processing audio with duration 00:02.160
+2026-10-25 19:55:39,776 DEBUG Processing segment at 00:00.000
+[83/200] clip 41 prompt 3 text fixed: acc_src=1.000 acc=0.750 traced=False far=True sim=0.552 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:55:40,262 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station.
+2026-10-25 19:55:45,254 INFO yield speech len 5.88, rtf 0.8490062489801524
+100%|██████████| 1/1 [00:05<00:00,  5.31s/it]100%|██████████| 1/1 [00:05<00:00,  5.31s/it]
+2026-10-25 19:55:45,422 INFO Processing audio with duration 00:05.880
+2026-10-25 19:55:45,437 DEBUG Processing segment at 00:00.000
+[84/200] clip 41 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.638 wer=0.10
+2026-10-25 19:55:45,919 INFO Processing audio with duration 00:03.000
+2026-10-25 19:55:45,924 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:55:46,371 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:55:48,526 INFO yield speech len 2.32, rtf 0.9288294561978044
+100%|██████████| 1/1 [00:02<00:00,  2.47s/it]100%|██████████| 1/1 [00:02<00:00,  2.47s/it]
+2026-10-25 19:55:48,631 INFO Processing audio with duration 00:02.320
+2026-10-25 19:55:48,635 DEBUG Processing segment at 00:00.000
+[85/200] clip 42 prompt 3 text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.513 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:55:49,183 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:55:55,104 INFO yield speech len 6.8, rtf 0.8707509671940523
+100%|██████████| 1/1 [00:06<00:00,  6.25s/it]100%|██████████| 1/1 [00:06<00:00,  6.25s/it]
+2026-10-25 19:55:55,288 INFO Processing audio with duration 00:06.800
+2026-10-25 19:55:55,302 DEBUG Processing segment at 00:00.000
+2026-10-25 19:55:55,495 DEBUG Processing segment at 00:06.360
+2026-10-25 19:55:55,554 DEBUG Log probability threshold is not met with temperature 0.0 (-1.264323 < -1.000000)
+2026-10-25 19:55:55,554 DEBUG No speech threshold is met (0.899414 > 0.600000)
+[86/200] clip 42 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.704 wer=0.20
+2026-10-25 19:55:55,777 INFO Processing audio with duration 00:03.000
+2026-10-25 19:55:55,780 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:55:56,275 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:55:58,588 INFO yield speech len 2.52, rtf 0.9178296914176335
+100%|██████████| 1/1 [00:02<00:00,  2.62s/it]100%|██████████| 1/1 [00:02<00:00,  2.62s/it]
+2026-10-25 19:55:58,690 INFO Processing audio with duration 00:02.520
+2026-10-25 19:55:58,705 DEBUG Processing segment at 00:00.000
+[87/200] clip 43 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.468 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:55:59,221 INFO synthesis text Ask her to bring these things with her from the store.
+2026-10-25 19:56:02,026 INFO yield speech len 3.08, rtf 0.9106524578936688
+100%|██████████| 1/1 [00:03<00:00,  3.16s/it]100%|██████████| 1/1 [00:03<00:00,  3.16s/it]
+2026-10-25 19:56:02,146 INFO Processing audio with duration 00:03.080
+2026-10-25 19:56:02,158 DEBUG Processing segment at 00:00.000
+[88/200] clip 43 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.669 wer=0.09
+2026-10-25 19:56:02,522 INFO Processing audio with duration 00:03.000
+2026-10-25 19:56:02,533 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:56:03,022 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:56:05,348 INFO yield speech len 2.36, rtf 0.985688072139934
+100%|██████████| 1/1 [00:02<00:00,  2.64s/it]100%|██████████| 1/1 [00:02<00:00,  2.64s/it]
+2026-10-25 19:56:05,436 INFO Processing audio with duration 00:02.360
+2026-10-25 19:56:05,440 DEBUG Processing segment at 00:00.000
+[89/200] clip 44 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.410 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:56:05,884 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station.
+2026-10-25 19:56:11,100 INFO yield speech len 6.08, rtf 0.8579839609171215
+100%|██████████| 1/1 [00:05<00:00,  5.53s/it]100%|██████████| 1/1 [00:05<00:00,  5.53s/it]
+2026-10-25 19:56:11,271 INFO Processing audio with duration 00:06.080
+2026-10-25 19:56:11,285 DEBUG Processing segment at 00:00.000
+[90/200] clip 44 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.569 wer=0.05
+2026-10-25 19:56:11,718 INFO Processing audio with duration 00:03.000
+2026-10-25 19:56:11,730 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]min value is  tensor(-1.0208)
+2026-10-25 19:56:12,180 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:56:15,883 INFO yield speech len 4.24, rtf 0.873341088025075
+100%|██████████| 1/1 [00:04<00:00,  4.02s/it]100%|██████████| 1/1 [00:04<00:00,  4.02s/it]
+2026-10-25 19:56:16,029 INFO Processing audio with duration 00:04.240
+2026-10-25 19:56:16,033 DEBUG Processing segment at 00:00.000
+[91/200] clip 45 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.535 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]min value is  tensor(-1.0208)
+2026-10-25 19:56:16,569 INFO synthesis text We also need a small plastic snake and a big toy frog for the kids. ).
+2026-10-25 19:56:20,797 INFO yield speech len 4.92, rtf 0.8592382679140664
+100%|██████████| 1/1 [00:04<00:00,  4.63s/it]100%|██████████| 1/1 [00:04<00:00,  4.63s/it]
+2026-10-25 19:56:20,951 INFO Processing audio with duration 00:04.920
+2026-10-25 19:56:20,974 DEBUG Processing segment at 00:00.000
+[92/200] clip 45 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.551 wer=0.00
+2026-10-25 19:56:21,330 INFO Processing audio with duration 00:03.000
+2026-10-25 19:56:21,341 DEBUG Processing segment at 00:00.000
+2026-10-25 19:56:22,052 DEBUG Compression ratio threshold is not met with temperature 0.0 (8.604938 > 2.400000)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:56:22,468 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:56:24,290 INFO yield speech len 1.76, rtf 1.0354112495075574
+100%|██████████| 1/1 [00:02<00:00,  2.13s/it]100%|██████████| 1/1 [00:02<00:00,  2.13s/it]
+2026-10-25 19:56:24,407 INFO Processing audio with duration 00:01.760
+2026-10-25 19:56:24,420 DEBUG Processing segment at 00:00.000
+[93/200] clip 46 prompt 3 text fixed: acc_src=1.000 acc=0.562 traced=False far=True sim=0.516 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:56:24,897 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:56:29,612 INFO yield speech len 5.52, rtf 0.8541073488152546
+100%|██████████| 1/1 [00:05<00:00,  5.06s/it]100%|██████████| 1/1 [00:05<00:00,  5.06s/it]
+2026-10-25 19:56:29,773 INFO Processing audio with duration 00:05.520
+2026-10-25 19:56:29,790 DEBUG Processing segment at 00:00.000
+2026-10-25 19:56:29,979 DEBUG Processing segment at 00:05.120
+2026-10-25 19:56:30,036 DEBUG Log probability threshold is not met with temperature 0.0 (-1.185156 < -1.000000)
+2026-10-25 19:56:30,036 DEBUG No speech threshold is met (0.890625 > 0.600000)
+[94/200] clip 46 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.677 wer=0.15
+2026-10-25 19:56:30,252 INFO Processing audio with duration 00:03.000
+2026-10-25 19:56:30,264 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:56:30,705 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:56:33,398 INFO yield speech len 3.04, rtf 0.8857494122103641
+100%|██████████| 1/1 [00:02<00:00,  2.99s/it]100%|██████████| 1/1 [00:02<00:00,  2.99s/it]
+2026-10-25 19:56:33,506 INFO Processing audio with duration 00:03.040
+2026-10-25 19:56:33,519 DEBUG Processing segment at 00:00.000
+[95/200] clip 47 prompt 3 text fixed: acc_src=1.000 acc=0.625 traced=False far=True sim=0.553 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:56:34,039 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:56:40,102 INFO yield speech len 7.04, rtf 0.8611762388186022
+100%|██████████| 1/1 [00:06<00:00,  6.37s/it]100%|██████████| 1/1 [00:06<00:00,  6.37s/it]
+2026-10-25 19:56:40,287 INFO Processing audio with duration 00:07.040
+2026-10-25 19:56:40,301 DEBUG Processing segment at 00:00.000
+2026-10-25 19:56:40,495 DEBUG Processing segment at 00:06.000
+[96/200] clip 47 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.564 wer=0.10
+2026-10-25 19:56:40,772 INFO Processing audio with duration 00:03.000
+2026-10-25 19:56:40,785 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:56:41,252 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:56:43,481 INFO yield speech len 2.36, rtf 0.9441784882949571
+100%|██████████| 1/1 [00:02<00:00,  2.53s/it]100%|██████████| 1/1 [00:02<00:00,  2.54s/it]
+2026-10-25 19:56:43,575 INFO Processing audio with duration 00:02.360
+2026-10-25 19:56:43,587 DEBUG Processing segment at 00:00.000
+[97/200] clip 48 prompt 3 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.479 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:56:44,055 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station.
+2026-10-25 19:56:48,548 INFO yield speech len 5.12, rtf 0.8776567876338959
+100%|██████████| 1/1 [00:04<00:00,  4.80s/it]100%|██████████| 1/1 [00:04<00:00,  4.80s/it]
+2026-10-25 19:56:48,700 INFO Processing audio with duration 00:05.120
+2026-10-25 19:56:48,705 DEBUG Processing segment at 00:00.000
+[98/200] clip 48 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.586 wer=0.00
+2026-10-25 19:56:49,060 INFO Processing audio with duration 00:03.000
+2026-10-25 19:56:49,071 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:56:49,544 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:56:51,747 INFO yield speech len 2.28, rtf 0.9665368941792272
+100%|██████████| 1/1 [00:02<00:00,  2.52s/it]100%|██████████| 1/1 [00:02<00:00,  2.52s/it]
+2026-10-25 19:56:51,849 INFO Processing audio with duration 00:02.280
+2026-10-25 19:56:51,862 DEBUG Processing segment at 00:00.000
+[99/200] clip 49 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.557 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:56:52,317 INFO synthesis text Ask her to bring these things with her from the store.
+2026-10-25 19:56:55,253 INFO yield speech len 3.4, rtf 0.8636082621181712
+100%|██████████| 1/1 [00:03<00:00,  3.24s/it]100%|██████████| 1/1 [00:03<00:00,  3.24s/it]
+2026-10-25 19:56:55,363 INFO Processing audio with duration 00:03.400
+2026-10-25 19:56:55,376 DEBUG Processing segment at 00:00.000
+[100/200] clip 49 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.620 wer=0.00
+2026-10-25 19:56:55,835 INFO Processing audio with duration 00:03.000
+2026-10-25 19:56:55,848 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:56:56,289 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:56:59,110 INFO yield speech len 3.24, rtf 0.8708055372591371
+100%|██████████| 1/1 [00:03<00:00,  3.13s/it]100%|██████████| 1/1 [00:03<00:00,  3.13s/it]
+2026-10-25 19:56:59,230 INFO Processing audio with duration 00:03.240
+2026-10-25 19:56:59,243 DEBUG Processing segment at 00:00.000
+[101/200] clip 50 prompt 3 text fixed: acc_src=1.000 acc=0.875 traced=True far=True sim=0.658 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:56:59,731 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station.
+2026-10-25 19:57:05,996 INFO yield speech len 7.52, rtf 0.8330864792174482
+100%|██████████| 1/1 [00:06<00:00,  6.59s/it]100%|██████████| 1/1 [00:06<00:00,  6.59s/it]
+2026-10-25 19:57:06,189 INFO Processing audio with duration 00:07.520
+2026-10-25 19:57:06,195 DEBUG Processing segment at 00:00.000
+[102/200] clip 50 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.710 wer=0.00
+2026-10-25 19:57:06,611 INFO Processing audio with duration 00:03.000
+2026-10-25 19:57:06,623 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:57:07,157 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:57:09,476 INFO yield speech len 2.4, rtf 0.9661299983660381
+100%|██████████| 1/1 [00:02<00:00,  2.69s/it]100%|██████████| 1/1 [00:02<00:00,  2.69s/it]
+2026-10-25 19:57:09,583 INFO Processing audio with duration 00:02.400
+2026-10-25 19:57:09,596 DEBUG Processing segment at 00:00.000
+[103/200] clip 51 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.404 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:57:10,048 INFO synthesis text We also need a small plastic snake and a big toy frog for the kids.
+2026-10-25 19:57:13,759 INFO yield speech len 4.24, rtf 0.8753702325640984
+100%|██████████| 1/1 [00:04<00:00,  4.02s/it]100%|██████████| 1/1 [00:04<00:00,  4.02s/it]
+2026-10-25 19:57:13,886 INFO Processing audio with duration 00:04.240
+2026-10-25 19:57:13,901 DEBUG Processing segment at 00:00.000
+[104/200] clip 51 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.599 wer=0.00
+2026-10-25 19:57:14,290 INFO Processing audio with duration 00:03.000
+2026-10-25 19:57:14,303 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:57:14,818 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:57:17,472 INFO yield speech len 2.72, rtf 0.9757552953327403
+100%|██████████| 1/1 [00:02<00:00,  3.00s/it]100%|██████████| 1/1 [00:02<00:00,  3.00s/it]
+2026-10-25 19:57:17,575 INFO Processing audio with duration 00:02.720
+2026-10-25 19:57:17,579 DEBUG Processing segment at 00:00.000
+[105/200] clip 52 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.720 wer=0.25
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:57:18,116 INFO synthesis text When the sunlight strikes raindrops in the air, they act as a prism and form a rainbow.
+2026-10-25 19:57:23,497 INFO yield speech len 6.52, rtf 0.825264336872686
+100%|██████████| 1/1 [00:05<00:00,  5.69s/it]100%|██████████| 1/1 [00:05<00:00,  5.69s/it]
+2026-10-25 19:57:23,676 INFO Processing audio with duration 00:06.520
+2026-10-25 19:57:23,690 DEBUG Processing segment at 00:00.000
+[106/200] clip 52 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.722 wer=0.00
+2026-10-25 19:57:24,081 INFO Processing audio with duration 00:03.000
+2026-10-25 19:57:24,094 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:57:24,562 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:57:26,836 INFO yield speech len 2.28, rtf 0.997367867252283
+100%|██████████| 1/1 [00:02<00:00,  2.61s/it]100%|██████████| 1/1 [00:02<00:00,  2.61s/it]
+2026-10-25 19:57:26,931 INFO Processing audio with duration 00:02.280
+2026-10-25 19:57:26,943 DEBUG Processing segment at 00:00.000
+[107/200] clip 53 prompt 3 text fixed: acc_src=0.812 acc=1.000 traced=True far=False sim=0.600 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:57:27,385 INFO synthesis text We also need a small plastic snake and a big toy frog for the kids.
+2026-10-25 19:57:30,894 INFO yield speech len 3.96, rtf 0.8862984300863863
+100%|██████████| 1/1 [00:03<00:00,  3.82s/it]100%|██████████| 1/1 [00:03<00:00,  3.82s/it]
+2026-10-25 19:57:31,030 INFO Processing audio with duration 00:03.960
+2026-10-25 19:57:31,043 DEBUG Processing segment at 00:00.000
+[108/200] clip 53 prompt 3 text unseen: acc_src=0.812 acc=0.812 traced=True far=False sim=0.645 wer=0.00
+2026-10-25 19:57:31,413 INFO Processing audio with duration 00:03.000
+2026-10-25 19:57:31,425 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:57:31,960 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:57:34,582 INFO yield speech len 2.8, rtf 0.9364163024084909
+100%|██████████| 1/1 [00:02<00:00,  2.98s/it]100%|██████████| 1/1 [00:02<00:00,  2.98s/it]
+2026-10-25 19:57:34,714 INFO Processing audio with duration 00:02.800
+2026-10-25 19:57:34,720 DEBUG Processing segment at 00:00.000
+[109/200] clip 54 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.577 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:57:35,256 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:57:41,173 INFO yield speech len 7.24, rtf 0.8171958488654036
+100%|██████████| 1/1 [00:06<00:00,  6.32s/it]100%|██████████| 1/1 [00:06<00:00,  6.32s/it]
+2026-10-25 19:57:41,357 INFO Processing audio with duration 00:07.240
+2026-10-25 19:57:41,370 DEBUG Processing segment at 00:00.000
+[110/200] clip 54 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.518 wer=0.00
+2026-10-25 19:57:41,864 INFO Processing audio with duration 00:03.000
+2026-10-25 19:57:41,876 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:57:42,334 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:57:45,617 INFO yield speech len 3.6, rtf 0.9120647774802314
+100%|██████████| 1/1 [00:03<00:00,  3.58s/it]100%|██████████| 1/1 [00:03<00:00,  3.58s/it]
+2026-10-25 19:57:45,753 INFO Processing audio with duration 00:03.600
+2026-10-25 19:57:45,768 DEBUG Processing segment at 00:00.000
+[111/200] clip 55 prompt 3 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.524 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:57:46,245 INFO synthesis text Ask her to bring these things with her from the store.
+2026-10-25 19:57:49,343 INFO yield speech len 3.52, rtf 0.8800118484280326
+100%|██████████| 1/1 [00:03<00:00,  3.42s/it]100%|██████████| 1/1 [00:03<00:00,  3.42s/it]
+2026-10-25 19:57:49,475 INFO Processing audio with duration 00:03.520
+2026-10-25 19:57:49,500 DEBUG Processing segment at 00:00.000
+[112/200] clip 55 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.609 wer=0.09
+2026-10-25 19:57:49,843 INFO Processing audio with duration 00:03.000
+2026-10-25 19:57:49,870 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:57:50,342 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:57:52,888 INFO yield speech len 2.8, rtf 0.909330930028643
+100%|██████████| 1/1 [00:02<00:00,  2.87s/it]100%|██████████| 1/1 [00:02<00:00,  2.87s/it]
+2026-10-25 19:57:53,021 INFO Processing audio with duration 00:02.800
+2026-10-25 19:57:53,036 DEBUG Processing segment at 00:00.000
+[113/200] clip 56 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.462 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:57:53,469 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station. ).
+2026-10-25 19:57:59,182 INFO yield speech len 6.56, rtf 0.8708876080629303
+100%|██████████| 1/1 [00:06<00:00,  6.02s/it]100%|██████████| 1/1 [00:06<00:00,  6.02s/it]
+2026-10-25 19:57:59,363 INFO Processing audio with duration 00:06.560
+2026-10-25 19:57:59,368 DEBUG Processing segment at 00:00.000
+[114/200] clip 56 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.408 wer=0.05
+2026-10-25 19:57:59,751 INFO Processing audio with duration 00:03.000
+2026-10-25 19:57:59,763 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:58:00,215 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:58:02,933 INFO yield speech len 3.0, rtf 0.9057536919911703
+100%|██████████| 1/1 [00:03<00:00,  3.03s/it]100%|██████████| 1/1 [00:03<00:00,  3.04s/it]
+2026-10-25 19:58:03,040 INFO Processing audio with duration 00:03.000
+2026-10-25 19:58:03,045 DEBUG Processing segment at 00:00.000
+[115/200] clip 57 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.458 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:58:03,563 INFO synthesis text We also need a small plastic snake and a big toy frog for the kids.
+2026-10-25 19:58:07,709 INFO yield speech len 5.0, rtf 0.8290709018707275
+100%|██████████| 1/1 [00:04<00:00,  4.45s/it]100%|██████████| 1/1 [00:04<00:00,  4.45s/it]
+2026-10-25 19:58:07,847 INFO Processing audio with duration 00:05.000
+2026-10-25 19:58:07,861 DEBUG Processing segment at 00:00.000
+[116/200] clip 57 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.566 wer=0.00
+2026-10-25 19:58:08,215 INFO Processing audio with duration 00:03.000
+2026-10-25 19:58:08,227 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:58:08,758 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:58:12,230 INFO yield speech len 3.92, rtf 0.8857431460400017
+100%|██████████| 1/1 [00:03<00:00,  3.82s/it]100%|██████████| 1/1 [00:03<00:00,  3.82s/it]
+2026-10-25 19:58:12,370 INFO Processing audio with duration 00:03.920
+2026-10-25 19:58:12,382 DEBUG Processing segment at 00:00.000
+[117/200] clip 58 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.551 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:58:12,827 INFO synthesis text We also need a small plastic snake and a big toy frog for the kids.
+2026-10-25 19:58:16,640 INFO yield speech len 4.4, rtf 0.866544951092113
+100%|██████████| 1/1 [00:04<00:00,  4.13s/it]100%|██████████| 1/1 [00:04<00:00,  4.13s/it]
+2026-10-25 19:58:16,782 INFO Processing audio with duration 00:04.400
+2026-10-25 19:58:16,795 DEBUG Processing segment at 00:00.000
+[118/200] clip 58 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.573 wer=0.00
+2026-10-25 19:58:17,151 INFO Processing audio with duration 00:03.000
+2026-10-25 19:58:17,162 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:58:17,656 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:58:20,713 INFO yield speech len 3.4, rtf 0.8992282783283907
+100%|██████████| 1/1 [00:03<00:00,  3.41s/it]100%|██████████| 1/1 [00:03<00:00,  3.41s/it]
+2026-10-25 19:58:20,832 INFO Processing audio with duration 00:03.400
+2026-10-25 19:58:20,845 DEBUG Processing segment at 00:00.000
+[119/200] clip 59 prompt 3 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.544 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:58:21,324 INFO synthesis text When the sunlight strikes raindrops in the air, they act as a prism and form a rainbow.
+2026-10-25 19:58:25,871 INFO yield speech len 5.24, rtf 0.8676516645737277
+100%|██████████| 1/1 [00:04<00:00,  4.85s/it]100%|██████████| 1/1 [00:04<00:00,  4.85s/it]
+2026-10-25 19:58:26,026 INFO Processing audio with duration 00:05.240
+2026-10-25 19:58:26,040 DEBUG Processing segment at 00:00.000
+[120/200] clip 59 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.511 wer=0.12
+2026-10-25 19:58:26,497 INFO Processing audio with duration 00:02.479
+2026-10-25 19:58:26,509 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:58:26,915 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:58:29,454 INFO yield speech len 2.72, rtf 0.9332751526552088
+100%|██████████| 1/1 [00:02<00:00,  2.81s/it]100%|██████████| 1/1 [00:02<00:00,  2.81s/it]
+2026-10-25 19:58:29,555 INFO Processing audio with duration 00:02.720
+2026-10-25 19:58:29,566 DEBUG Processing segment at 00:00.000
+[121/200] clip 60 prompt 3 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.476 wer=0.25
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:58:29,972 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:58:36,868 INFO yield speech len 8.36, rtf 0.8248708464882591
+100%|██████████| 1/1 [00:07<00:00,  7.16s/it]100%|██████████| 1/1 [00:07<00:00,  7.16s/it]
+2026-10-25 19:58:37,069 INFO Processing audio with duration 00:08.360
+2026-10-25 19:58:37,083 DEBUG Processing segment at 00:00.000
+[122/200] clip 60 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.611 wer=0.20
+2026-10-25 19:58:37,454 INFO Processing audio with duration 00:03.000
+2026-10-25 19:58:37,467 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:58:37,937 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:58:40,627 INFO yield speech len 2.76, rtf 0.9748083093891974
+100%|██████████| 1/1 [00:03<00:00,  3.00s/it]100%|██████████| 1/1 [00:03<00:00,  3.00s/it]
+2026-10-25 19:58:40,742 INFO Processing audio with duration 00:02.760
+2026-10-25 19:58:40,755 DEBUG Processing segment at 00:00.000
+[123/200] clip 61 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.501 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:58:41,206 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station. ).
+2026-10-25 19:58:46,259 INFO yield speech len 5.84, rtf 0.8651523557427812
+100%|██████████| 1/1 [00:05<00:00,  5.36s/it]100%|██████████| 1/1 [00:05<00:00,  5.36s/it]
+2026-10-25 19:58:46,430 INFO Processing audio with duration 00:05.840
+2026-10-25 19:58:46,443 DEBUG Processing segment at 00:00.000
+[124/200] clip 61 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.509 wer=0.00
+2026-10-25 19:58:46,807 INFO Processing audio with duration 00:03.000
+2026-10-25 19:58:46,819 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:58:47,280 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:58:49,301 INFO yield speech len 2.04, rtf 0.990450849720076
+100%|██████████| 1/1 [00:02<00:00,  2.33s/it]100%|██████████| 1/1 [00:02<00:00,  2.33s/it]
+2026-10-25 19:58:49,412 INFO Processing audio with duration 00:02.040
+2026-10-25 19:58:49,415 DEBUG Processing segment at 00:00.000
+[125/200] clip 62 prompt 3 text fixed: acc_src=1.000 acc=0.812 traced=True far=False sim=0.490 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:58:50,032 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:58:55,207 INFO yield speech len 6.2, rtf 0.8345603558324998
+100%|██████████| 1/1 [00:05<00:00,  5.57s/it]100%|██████████| 1/1 [00:05<00:00,  5.57s/it]
+2026-10-25 19:58:55,379 INFO Processing audio with duration 00:06.200
+2026-10-25 19:58:55,391 DEBUG Processing segment at 00:00.000
+[126/200] clip 62 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.662 wer=0.05
+2026-10-25 19:58:55,755 INFO Processing audio with duration 00:03.000
+2026-10-25 19:58:55,758 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:58:56,200 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:59:00,511 INFO yield speech len 5.04, rtf 0.8555250981497386
+100%|██████████| 1/1 [00:04<00:00,  4.62s/it]100%|██████████| 1/1 [00:04<00:00,  4.62s/it]
+2026-10-25 19:59:00,668 INFO Processing audio with duration 00:05.040
+2026-10-25 19:59:00,682 DEBUG Processing segment at 00:00.000
+[127/200] clip 63 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.556 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:59:01,175 INFO synthesis text When the sunlight strikes raindrops in the air, they act as a prism and form a rainbow.
+2026-10-25 19:59:06,794 INFO yield speech len 6.52, rtf 0.8617312630261381
+100%|██████████| 1/1 [00:05<00:00,  5.94s/it]100%|██████████| 1/1 [00:05<00:00,  5.94s/it]
+2026-10-25 19:59:06,964 INFO Processing audio with duration 00:06.520
+2026-10-25 19:59:06,978 DEBUG Processing segment at 00:00.000
+[128/200] clip 63 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.603 wer=0.06
+2026-10-25 19:59:07,333 INFO Processing audio with duration 00:03.000
+2026-10-25 19:59:07,346 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:59:07,816 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:59:10,456 INFO yield speech len 3.0, rtf 0.8797183036804199
+100%|██████████| 1/1 [00:02<00:00,  2.97s/it]100%|██████████| 1/1 [00:02<00:00,  2.97s/it]
+2026-10-25 19:59:10,564 INFO Processing audio with duration 00:03.000
+2026-10-25 19:59:10,569 DEBUG Processing segment at 00:00.000
+[129/200] clip 64 prompt 3 text fixed: acc_src=0.750 acc=0.625 traced=False far=True sim=0.411 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:59:11,051 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:59:15,963 INFO yield speech len 5.8, rtf 0.847010900234354
+100%|██████████| 1/1 [00:05<00:00,  5.21s/it]100%|██████████| 1/1 [00:05<00:00,  5.21s/it]
+2026-10-25 19:59:16,119 INFO Processing audio with duration 00:05.800
+2026-10-25 19:59:16,124 DEBUG Processing segment at 00:00.000
+[130/200] clip 64 prompt 3 text unseen: acc_src=0.750 acc=0.562 traced=False far=True sim=0.514 wer=0.05
+2026-10-25 19:59:16,536 INFO Processing audio with duration 00:02.156
+2026-10-25 19:59:16,548 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:59:16,907 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:59:19,510 INFO yield speech len 2.88, rtf 0.9038294355074565
+100%|██████████| 1/1 [00:02<00:00,  2.86s/it]100%|██████████| 1/1 [00:02<00:00,  2.86s/it]
+2026-10-25 19:59:19,611 INFO Processing audio with duration 00:02.880
+2026-10-25 19:59:19,625 DEBUG Processing segment at 00:00.000
+[131/200] clip 65 prompt 3 text fixed: acc_src=1.000 acc=0.750 traced=False far=True sim=0.472 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:59:20,017 INFO synthesis text Ask her to bring these things with her from the store. ).
+2026-10-25 19:59:23,309 INFO yield speech len 3.84, rtf 0.8574139947692554
+100%|██████████| 1/1 [00:03<00:00,  3.54s/it]100%|██████████| 1/1 [00:03<00:00,  3.54s/it]
+2026-10-25 19:59:23,422 INFO Processing audio with duration 00:03.840
+2026-10-25 19:59:23,434 DEBUG Processing segment at 00:00.000
+[132/200] clip 65 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.325 wer=0.00
+2026-10-25 19:59:23,809 INFO Processing audio with duration 00:03.000
+2026-10-25 19:59:23,822 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:59:24,279 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:59:27,053 INFO yield speech len 3.08, rtf 0.9004865373883928
+100%|██████████| 1/1 [00:03<00:00,  3.08s/it]100%|██████████| 1/1 [00:03<00:00,  3.08s/it]
+2026-10-25 19:59:27,161 INFO Processing audio with duration 00:03.080
+2026-10-25 19:59:27,174 DEBUG Processing segment at 00:00.000
+[133/200] clip 66 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.527 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:59:27,631 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station.
+2026-10-25 19:59:33,679 INFO yield speech len 7.24, rtf 0.8352823020344939
+100%|██████████| 1/1 [00:06<00:00,  6.36s/it]100%|██████████| 1/1 [00:06<00:00,  6.36s/it]
+2026-10-25 19:59:33,864 INFO Processing audio with duration 00:07.240
+2026-10-25 19:59:33,879 DEBUG Processing segment at 00:00.000
+[134/200] clip 66 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.643 wer=0.00
+2026-10-25 19:59:34,269 INFO Processing audio with duration 00:03.000
+2026-10-25 19:59:34,273 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:59:34,789 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:59:36,952 INFO yield speech len 2.32, rtf 0.9322093478564559
+100%|██████████| 1/1 [00:02<00:00,  2.55s/it]100%|██████████| 1/1 [00:02<00:00,  2.55s/it]
+2026-10-25 19:59:37,047 INFO Processing audio with duration 00:02.320
+2026-10-25 19:59:37,058 DEBUG Processing segment at 00:00.000
+[135/200] clip 67 prompt 3 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.476 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:59:37,594 INFO synthesis text We also need a small plastic snake and a big toy frog for the kids.
+2026-10-25 19:59:41,335 INFO yield speech len 4.52, rtf 0.8277216316324421
+100%|██████████| 1/1 [00:04<00:00,  4.06s/it]100%|██████████| 1/1 [00:04<00:00,  4.06s/it]
+2026-10-25 19:59:41,479 INFO Processing audio with duration 00:04.520
+2026-10-25 19:59:41,493 DEBUG Processing segment at 00:00.000
+[136/200] clip 67 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.552 wer=0.00
+2026-10-25 19:59:41,890 INFO Processing audio with duration 00:03.000
+2026-10-25 19:59:41,894 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c68_3_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:59:42,352 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:59:44,903 INFO yield speech len 2.84, rtf 0.8983005940074652
+100%|██████████| 1/1 [00:02<00:00,  2.86s/it]100%|██████████| 1/1 [00:02<00:00,  2.86s/it]
+2026-10-25 19:59:45,007 INFO Processing audio with duration 00:02.840
+2026-10-25 19:59:45,018 DEBUG Processing segment at 00:00.000
+[137/200] clip 68 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.520 wer=0.00
+[cosyvoice] prompt transcript cleaned for the text normaliser (c68_3_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:59:45,501 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 19:59:51,348 INFO yield speech len 7.04, rtf 0.8304482495242899
+100%|██████████| 1/1 [00:06<00:00,  6.15s/it]100%|██████████| 1/1 [00:06<00:00,  6.15s/it]
+2026-10-25 19:59:51,528 INFO Processing audio with duration 00:07.040
+2026-10-25 19:59:51,542 DEBUG Processing segment at 00:00.000
+[138/200] clip 68 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.553 wer=0.05
+2026-10-25 19:59:52,002 INFO Processing audio with duration 00:03.000
+2026-10-25 19:59:52,013 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:59:52,535 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 19:59:56,086 INFO yield speech len 4.04, rtf 0.8789164595084615
+100%|██████████| 1/1 [00:03<00:00,  3.88s/it]100%|██████████| 1/1 [00:03<00:00,  3.88s/it]
+2026-10-25 19:59:56,214 INFO Processing audio with duration 00:04.040
+2026-10-25 19:59:56,228 DEBUG Processing segment at 00:00.000
+[139/200] clip 69 prompt 3 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.660 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 19:59:56,695 INFO synthesis text Some have accepted it as a miracle without physical explanation.
+2026-10-25 20:00:00,254 INFO yield speech len 4.16, rtf 0.8556243891899402
+100%|██████████| 1/1 [00:03<00:00,  3.86s/it]100%|██████████| 1/1 [00:03<00:00,  3.86s/it]
+2026-10-25 20:00:00,392 INFO Processing audio with duration 00:04.160
+2026-10-25 20:00:00,405 DEBUG Processing segment at 00:00.000
+[140/200] clip 69 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.570 wer=0.10
+2026-10-25 20:00:00,880 INFO Processing audio with duration 00:02.351
+2026-10-25 20:00:00,885 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:00:01,256 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:00:04,542 INFO yield speech len 3.92, rtf 0.8382738244776823
+100%|██████████| 1/1 [00:03<00:00,  3.56s/it]100%|██████████| 1/1 [00:03<00:00,  3.56s/it]
+2026-10-25 20:00:04,684 INFO Processing audio with duration 00:03.920
+2026-10-25 20:00:04,703 DEBUG Processing segment at 00:00.000
+[141/200] clip 70 prompt 3 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.394 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:00:05,115 INFO synthesis text When the sunlight strikes raindrops in the air, they act as a prism and form a rainbow.
+2026-10-25 20:00:09,804 INFO yield speech len 5.56, rtf 0.8433072258242601
+100%|██████████| 1/1 [00:04<00:00,  4.95s/it]100%|██████████| 1/1 [00:04<00:00,  4.95s/it]
+2026-10-25 20:00:09,961 INFO Processing audio with duration 00:05.560
+2026-10-25 20:00:09,975 DEBUG Processing segment at 00:00.000
+[142/200] clip 70 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.322 wer=0.00
+2026-10-25 20:00:10,326 INFO Processing audio with duration 00:03.000
+2026-10-25 20:00:10,337 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:00:10,773 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:00:13,423 INFO yield speech len 2.92, rtf 0.9075937205798006
+100%|██████████| 1/1 [00:02<00:00,  2.97s/it]100%|██████████| 1/1 [00:02<00:00,  2.97s/it]
+2026-10-25 20:00:13,528 INFO Processing audio with duration 00:02.920
+2026-10-25 20:00:13,533 DEBUG Processing segment at 00:00.000
+[143/200] clip 71 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.533 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:00:13,961 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 20:00:19,565 INFO yield speech len 6.56, rtf 0.8543691620594118
+100%|██████████| 1/1 [00:05<00:00,  5.90s/it]100%|██████████| 1/1 [00:05<00:00,  5.91s/it]
+2026-10-25 20:00:19,737 INFO Processing audio with duration 00:06.560
+2026-10-25 20:00:19,754 DEBUG Processing segment at 00:00.000
+[144/200] clip 71 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.600 wer=0.00
+2026-10-25 20:00:20,157 INFO Processing audio with duration 00:03.000
+2026-10-25 20:00:20,170 DEBUG Processing segment at 00:00.000
+2026-10-25 20:00:20,517 DEBUG Compression ratio threshold is not met with temperature 0.0 (3.741379 > 2.400000)
+[cosyvoice] prompt transcript cleaned for the text normaliser (c72_3_fixed)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:00:21,081 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:00:23,967 INFO yield speech len 3.28, rtf 0.8798448050894389
+100%|██████████| 1/1 [00:03<00:00,  3.19s/it]100%|██████████| 1/1 [00:03<00:00,  3.19s/it]
+2026-10-25 20:00:24,088 INFO Processing audio with duration 00:03.280
+2026-10-25 20:00:24,100 DEBUG Processing segment at 00:00.000
+2026-10-25 20:00:24,910 DEBUG Compression ratio threshold is not met with temperature 0.0 (19.777778 > 2.400000)
+2026-10-25 20:00:25,323 DEBUG Compression ratio threshold is not met with temperature 0.2 (23.526316 > 2.400000)
+[145/200] clip 72 prompt 3 text fixed: acc_src=1.000 acc=0.562 traced=False far=True sim=0.258 wer=1.25
+[cosyvoice] prompt transcript cleaned for the text normaliser (c72_3_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:00:25,818 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station. ).
+2026-10-25 20:00:33,814 INFO yield speech len 9.72, rtf 0.8225836871582785
+100%|██████████| 1/1 [00:08<00:00,  8.30s/it]100%|██████████| 1/1 [00:08<00:00,  8.30s/it]
+2026-10-25 20:00:34,055 INFO Processing audio with duration 00:09.720
+2026-10-25 20:00:34,070 DEBUG Processing segment at 00:00.000
+2026-10-25 20:00:34,706 DEBUG Compression ratio threshold is not met with temperature 0.0 (21.380952 > 2.400000)
+2026-10-25 20:00:35,264 DEBUG Compression ratio threshold is not met with temperature 0.2 (11.450000 > 2.400000)
+2026-10-25 20:00:35,803 DEBUG Compression ratio threshold is not met with temperature 0.4 (21.380952 > 2.400000)
+2026-10-25 20:00:36,297 DEBUG Compression ratio threshold is not met with temperature 0.6 (13.962963 > 2.400000)
+2026-10-25 20:00:36,767 DEBUG Compression ratio threshold is not met with temperature 0.8 (22.894737 > 2.400000)
+2026-10-25 20:00:36,836 DEBUG Log probability threshold is not met with temperature 1.0 (-1.491514 < -1.000000)
+2026-10-25 20:00:36,836 DEBUG Reset prompt. prompt_reset_on_temperature threshold is met 1.000000 > 0.500000
+[146/200] clip 72 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.141 wer=1.00
+2026-10-25 20:00:37,063 INFO Processing audio with duration 00:03.000
+2026-10-25 20:00:37,091 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:00:37,576 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:00:40,845 INFO yield speech len 3.72, rtf 0.8789094545507943
+100%|██████████| 1/1 [00:03<00:00,  3.59s/it]100%|██████████| 1/1 [00:03<00:00,  3.59s/it]
+2026-10-25 20:00:40,989 INFO Processing audio with duration 00:03.720
+2026-10-25 20:00:41,002 DEBUG Processing segment at 00:00.000
+[147/200] clip 73 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.617 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:00:41,458 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 20:00:47,588 INFO yield speech len 7.4, rtf 0.828458682910816
+100%|██████████| 1/1 [00:06<00:00,  6.43s/it]100%|██████████| 1/1 [00:06<00:00,  6.43s/it]
+2026-10-25 20:00:47,783 INFO Processing audio with duration 00:07.400
+2026-10-25 20:00:47,800 DEBUG Processing segment at 00:00.000
+[148/200] clip 73 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.590 wer=0.00
+2026-10-25 20:00:48,221 INFO Processing audio with duration 00:03.000
+2026-10-25 20:00:48,232 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:00:48,658 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:00:50,602 INFO yield speech len 1.96, rtf 0.9919280908545669
+100%|██████████| 1/1 [00:02<00:00,  2.25s/it]100%|██████████| 1/1 [00:02<00:00,  2.25s/it]
+2026-10-25 20:00:50,705 INFO Processing audio with duration 00:01.960
+2026-10-25 20:00:50,716 DEBUG Processing segment at 00:00.000
+[149/200] clip 74 prompt 3 text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.541 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:00:51,172 INFO synthesis text When the sunlight strikes raindrops in the air, they act as a prism and form a rainbow.
+2026-10-25 20:00:56,521 INFO yield speech len 6.24, rtf 0.8572599062552818
+100%|██████████| 1/1 [00:05<00:00,  5.67s/it]100%|██████████| 1/1 [00:05<00:00,  5.67s/it]
+2026-10-25 20:00:56,695 INFO Processing audio with duration 00:06.240
+2026-10-25 20:00:56,709 DEBUG Processing segment at 00:00.000
+[150/200] clip 74 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.608 wer=0.00
+2026-10-25 20:00:57,188 INFO Processing audio with duration 00:03.000
+2026-10-25 20:00:57,192 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]min value is  tensor(-1.0258)
+2026-10-25 20:00:57,635 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:01:01,387 INFO yield speech len 4.08, rtf 0.919432616701313
+100%|██████████| 1/1 [00:04<00:00,  4.07s/it]100%|██████████| 1/1 [00:04<00:00,  4.07s/it]
+2026-10-25 20:01:01,511 INFO Processing audio with duration 00:04.080
+2026-10-25 20:01:01,526 DEBUG Processing segment at 00:00.000
+[151/200] clip 75 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.370 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]min value is  tensor(-1.0258)
+2026-10-25 20:01:02,009 INFO synthesis text Ask her to bring these things with her from the store. ).
+2026-10-25 20:01:05,236 INFO yield speech len 3.52, rtf 0.9167018939148296
+100%|██████████| 1/1 [00:03<00:00,  3.54s/it]100%|██████████| 1/1 [00:03<00:00,  3.54s/it]
+2026-10-25 20:01:05,347 INFO Processing audio with duration 00:03.520
+2026-10-25 20:01:05,362 DEBUG Processing segment at 00:00.000
+[152/200] clip 75 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.600 wer=0.00
+2026-10-25 20:01:05,720 INFO Processing audio with duration 00:03.000
+2026-10-25 20:01:05,731 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:01:06,233 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:01:08,241 INFO yield speech len 2.12, rtf 0.9469989335761879
+100%|██████████| 1/1 [00:02<00:00,  2.33s/it]100%|██████████| 1/1 [00:02<00:00,  2.33s/it]
+2026-10-25 20:01:08,356 INFO Processing audio with duration 00:02.120
+2026-10-25 20:01:08,360 DEBUG Processing segment at 00:00.000
+[153/200] clip 76 prompt 3 text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.452 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:01:08,882 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station.
+2026-10-25 20:01:14,076 INFO yield speech len 6.28, rtf 0.8270432994623852
+100%|██████████| 1/1 [00:05<00:00,  5.59s/it]100%|██████████| 1/1 [00:05<00:00,  5.59s/it]
+2026-10-25 20:01:14,248 INFO Processing audio with duration 00:06.280
+2026-10-25 20:01:14,253 DEBUG Processing segment at 00:00.000
+2026-10-25 20:01:14,439 DEBUG Processing segment at 00:05.200
+[154/200] clip 76 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.512 wer=0.00
+2026-10-25 20:01:14,816 INFO Processing audio with duration 00:03.000
+2026-10-25 20:01:14,831 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:01:15,313 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:01:17,587 INFO yield speech len 2.44, rtf 0.9321781455493364
+100%|██████████| 1/1 [00:02<00:00,  2.60s/it]100%|██████████| 1/1 [00:02<00:00,  2.60s/it]
+2026-10-25 20:01:17,678 INFO Processing audio with duration 00:02.440
+2026-10-25 20:01:17,689 DEBUG Processing segment at 00:00.000
+[155/200] clip 77 prompt 3 text fixed: acc_src=1.000 acc=0.562 traced=False far=True sim=0.562 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:01:18,199 INFO synthesis text We also need a small plastic snake and a big toy frog for the kids.
+2026-10-25 20:01:21,824 INFO yield speech len 4.16, rtf 0.8715916138428907
+100%|██████████| 1/1 [00:03<00:00,  3.93s/it]100%|██████████| 1/1 [00:03<00:00,  3.93s/it]
+2026-10-25 20:01:21,951 INFO Processing audio with duration 00:04.160
+2026-10-25 20:01:21,956 DEBUG Processing segment at 00:00.000
+[156/200] clip 77 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.641 wer=0.07
+2026-10-25 20:01:22,294 INFO Processing audio with duration 00:03.000
+2026-10-25 20:01:22,304 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:01:22,732 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:01:25,121 INFO yield speech len 2.4, rtf 0.9954918424288433
+100%|██████████| 1/1 [00:02<00:00,  2.69s/it]100%|██████████| 1/1 [00:02<00:00,  2.69s/it]
+2026-10-25 20:01:25,219 INFO Processing audio with duration 00:02.400
+2026-10-25 20:01:25,230 DEBUG Processing segment at 00:00.000
+[157/200] clip 78 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.513 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:01:25,665 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 20:01:31,364 INFO yield speech len 6.76, rtf 0.8430165299297084
+100%|██████████| 1/1 [00:06<00:00,  6.01s/it]100%|██████████| 1/1 [00:06<00:00,  6.01s/it]
+2026-10-25 20:01:31,547 INFO Processing audio with duration 00:06.760
+2026-10-25 20:01:31,564 DEBUG Processing segment at 00:00.000
+[158/200] clip 78 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.603 wer=0.20
+2026-10-25 20:01:31,934 INFO Processing audio with duration 00:03.000
+2026-10-25 20:01:31,947 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:01:32,405 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:01:35,067 INFO yield speech len 2.88, rtf 0.9246221019162072
+100%|██████████| 1/1 [00:02<00:00,  2.97s/it]100%|██████████| 1/1 [00:02<00:00,  2.97s/it]
+2026-10-25 20:01:35,177 INFO Processing audio with duration 00:02.880
+2026-10-25 20:01:35,194 DEBUG Processing segment at 00:00.000
+[159/200] clip 79 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.470 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:01:35,620 INFO synthesis text Some have accepted it as a miracle without physical explanation.
+2026-10-25 20:01:39,144 INFO yield speech len 3.96, rtf 0.889939009541213
+100%|██████████| 1/1 [00:03<00:00,  3.82s/it]100%|██████████| 1/1 [00:03<00:00,  3.82s/it]
+2026-10-25 20:01:39,270 INFO Processing audio with duration 00:03.960
+2026-10-25 20:01:39,284 DEBUG Processing segment at 00:00.000
+[160/200] clip 79 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.491 wer=0.00
+2026-10-25 20:01:39,772 INFO Processing audio with duration 00:03.000
+2026-10-25 20:01:39,785 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:01:40,253 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:01:42,751 INFO yield speech len 2.72, rtf 0.9184424491489634
+100%|██████████| 1/1 [00:02<00:00,  2.80s/it]100%|██████████| 1/1 [00:02<00:00,  2.80s/it]
+2026-10-25 20:01:42,856 INFO Processing audio with duration 00:02.720
+2026-10-25 20:01:42,870 DEBUG Processing segment at 00:00.000
+[161/200] clip 80 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.583 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:01:43,362 INFO synthesis text When the sunlight strikes raindrops in the air, they act as a prism and form a rainbow.
+2026-10-25 20:01:49,757 INFO yield speech len 7.48, rtf 0.8550237844334566
+100%|██████████| 1/1 [00:06<00:00,  6.71s/it]100%|██████████| 1/1 [00:06<00:00,  6.71s/it]
+2026-10-25 20:01:49,959 INFO Processing audio with duration 00:07.480
+2026-10-25 20:01:49,972 DEBUG Processing segment at 00:00.000
+[162/200] clip 80 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.652 wer=0.00
+2026-10-25 20:01:50,330 INFO Processing audio with duration 00:03.000
+2026-10-25 20:01:50,342 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:01:50,799 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:01:53,719 INFO yield speech len 3.4, rtf 0.8586154965793386
+100%|██████████| 1/1 [00:03<00:00,  3.23s/it]100%|██████████| 1/1 [00:03<00:00,  3.23s/it]
+2026-10-25 20:01:53,836 INFO Processing audio with duration 00:03.400
+2026-10-25 20:01:53,841 DEBUG Processing segment at 00:00.000
+[163/200] clip 81 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.590 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:01:54,446 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 20:02:00,401 INFO yield speech len 7.0, rtf 0.8507023538861956
+100%|██████████| 1/1 [00:06<00:00,  6.33s/it]100%|██████████| 1/1 [00:06<00:00,  6.33s/it]
+2026-10-25 20:02:00,590 INFO Processing audio with duration 00:07.000
+2026-10-25 20:02:00,603 DEBUG Processing segment at 00:00.000
+[164/200] clip 81 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.596 wer=0.00
+2026-10-25 20:02:01,022 INFO Processing audio with duration 00:03.000
+2026-10-25 20:02:01,035 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:02:01,514 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:02:04,567 INFO yield speech len 3.36, rtf 0.908789819195157
+100%|██████████| 1/1 [00:03<00:00,  3.36s/it]100%|██████████| 1/1 [00:03<00:00,  3.36s/it]
+2026-10-25 20:02:04,729 INFO Processing audio with duration 00:03.360
+2026-10-25 20:02:04,741 DEBUG Processing segment at 00:00.000
+[165/200] clip 82 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.673 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:02:05,316 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station. ).
+2026-10-25 20:02:11,195 INFO yield speech len 6.84, rtf 0.8595619285315799
+100%|██████████| 1/1 [00:06<00:00,  6.18s/it]100%|██████████| 1/1 [00:06<00:00,  6.19s/it]
+2026-10-25 20:02:11,382 INFO Processing audio with duration 00:06.840
+2026-10-25 20:02:11,395 DEBUG Processing segment at 00:00.000
+[166/200] clip 82 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.651 wer=0.00
+2026-10-25 20:02:11,760 INFO Processing audio with duration 00:03.000
+2026-10-25 20:02:11,773 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:02:12,234 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:02:15,139 INFO yield speech len 3.2, rtf 0.9076140075922012
+100%|██████████| 1/1 [00:03<00:00,  3.22s/it]100%|██████████| 1/1 [00:03<00:00,  3.22s/it]
+2026-10-25 20:02:15,248 INFO Processing audio with duration 00:03.200
+2026-10-25 20:02:15,252 DEBUG Processing segment at 00:00.000
+[167/200] clip 83 prompt 3 text fixed: acc_src=0.875 acc=0.875 traced=True far=False sim=0.534 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:02:15,717 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 20:02:21,955 INFO yield speech len 7.72, rtf 0.8080255182295883
+100%|██████████| 1/1 [00:06<00:00,  6.53s/it]100%|██████████| 1/1 [00:06<00:00,  6.53s/it]
+2026-10-25 20:02:22,157 INFO Processing audio with duration 00:07.720
+2026-10-25 20:02:22,173 DEBUG Processing segment at 00:00.000
+[168/200] clip 83 prompt 3 text unseen: acc_src=0.875 acc=0.750 traced=False far=True sim=0.567 wer=0.00
+2026-10-25 20:02:22,545 INFO Processing audio with duration 00:03.000
+2026-10-25 20:02:22,557 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:02:23,034 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:02:25,340 INFO yield speech len 2.32, rtf 0.9938259576929027
+100%|██████████| 1/1 [00:02<00:00,  2.61s/it]100%|██████████| 1/1 [00:02<00:00,  2.61s/it]
+2026-10-25 20:02:25,435 INFO Processing audio with duration 00:02.320
+2026-10-25 20:02:25,449 DEBUG Processing segment at 00:00.000
+[169/200] clip 84 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.447 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:02:25,902 INFO synthesis text Ask her to bring these things with her from the store.
+2026-10-25 20:02:28,640 INFO yield speech len 3.2, rtf 0.8556530624628067
+100%|██████████| 1/1 [00:03<00:00,  3.03s/it]100%|██████████| 1/1 [00:03<00:00,  3.03s/it]
+2026-10-25 20:02:28,746 INFO Processing audio with duration 00:03.200
+2026-10-25 20:02:28,750 DEBUG Processing segment at 00:00.000
+[170/200] clip 84 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.497 wer=0.00
+2026-10-25 20:02:29,175 INFO Processing audio with duration 00:03.000
+2026-10-25 20:02:29,179 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:02:29,603 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:02:33,156 INFO yield speech len 4.04, rtf 0.8793002898150152
+100%|██████████| 1/1 [00:03<00:00,  3.87s/it]100%|██████████| 1/1 [00:03<00:00,  3.87s/it]
+2026-10-25 20:02:33,278 INFO Processing audio with duration 00:04.040
+2026-10-25 20:02:33,282 DEBUG Processing segment at 00:00.000
+[171/200] clip 85 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.384 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:02:33,719 INFO synthesis text Ask her to bring these things with her from the store.
+2026-10-25 20:02:36,966 INFO yield speech len 3.52, rtf 0.9225231002677571
+100%|██████████| 1/1 [00:03<00:00,  3.56s/it]100%|██████████| 1/1 [00:03<00:00,  3.56s/it]
+2026-10-25 20:02:37,076 INFO Processing audio with duration 00:03.520
+2026-10-25 20:02:37,081 DEBUG Processing segment at 00:00.000
+[172/200] clip 85 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.383 wer=0.00
+2026-10-25 20:02:37,408 INFO Processing audio with duration 00:03.000
+2026-10-25 20:02:37,421 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:02:37,881 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:02:40,615 INFO yield speech len 3.12, rtf 0.8763579986034296
+100%|██████████| 1/1 [00:03<00:00,  3.04s/it]100%|██████████| 1/1 [00:03<00:00,  3.04s/it]
+2026-10-25 20:02:40,724 INFO Processing audio with duration 00:03.120
+2026-10-25 20:02:40,743 DEBUG Processing segment at 00:00.000
+[173/200] clip 86 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.347 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:02:41,225 INFO synthesis text We also need a small plastic snake and a big toy frog for the kids.
+2026-10-25 20:02:46,534 INFO yield speech len 6.32, rtf 0.8400651095788689
+100%|██████████| 1/1 [00:05<00:00,  5.65s/it]100%|██████████| 1/1 [00:05<00:00,  5.65s/it]
+2026-10-25 20:02:46,701 INFO Processing audio with duration 00:06.320
+2026-10-25 20:02:46,715 DEBUG Processing segment at 00:00.000
+[174/200] clip 86 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.559 wer=0.00
+2026-10-25 20:02:47,059 INFO Processing audio with duration 00:03.000
+2026-10-25 20:02:47,072 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:02:47,530 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:02:50,754 INFO yield speech len 3.68, rtf 0.876029742800671
+100%|██████████| 1/1 [00:03<00:00,  3.53s/it]100%|██████████| 1/1 [00:03<00:00,  3.53s/it]
+2026-10-25 20:02:50,890 INFO Processing audio with duration 00:03.680
+2026-10-25 20:02:50,901 DEBUG Processing segment at 00:00.000
+[175/200] clip 87 prompt 3 text fixed: acc_src=0.938 acc=1.000 traced=True far=False sim=0.398 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:02:51,442 INFO synthesis text Ask her to bring these things with her from the store. ).
+2026-10-25 20:02:54,841 INFO yield speech len 3.64, rtf 0.9337645310621995
+100%|██████████| 1/1 [00:03<00:00,  3.71s/it]100%|██████████| 1/1 [00:03<00:00,  3.71s/it]
+2026-10-25 20:02:54,975 INFO Processing audio with duration 00:03.640
+2026-10-25 20:02:54,979 DEBUG Processing segment at 00:00.000
+[176/200] clip 87 prompt 3 text unseen: acc_src=0.938 acc=1.000 traced=True far=False sim=0.366 wer=0.18
+2026-10-25 20:02:55,318 INFO Processing audio with duration 00:03.000
+2026-10-25 20:02:55,332 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:02:55,809 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:02:58,394 INFO yield speech len 2.8, rtf 0.9230566876275199
+100%|██████████| 1/1 [00:02<00:00,  2.91s/it]100%|██████████| 1/1 [00:02<00:00,  2.91s/it]
+2026-10-25 20:02:58,496 INFO Processing audio with duration 00:02.800
+2026-10-25 20:02:58,508 DEBUG Processing segment at 00:00.000
+[177/200] clip 88 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.429 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:02:58,948 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station.
+2026-10-25 20:03:04,527 INFO yield speech len 6.36, rtf 0.8772972244886482
+100%|██████████| 1/1 [00:05<00:00,  5.89s/it]100%|██████████| 1/1 [00:05<00:00,  5.89s/it]
+2026-10-25 20:03:04,715 INFO Processing audio with duration 00:06.360
+2026-10-25 20:03:04,726 DEBUG Processing segment at 00:00.000
+[178/200] clip 88 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.563 wer=0.00
+2026-10-25 20:03:05,103 INFO Processing audio with duration 00:03.000
+2026-10-25 20:03:05,116 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:03:05,588 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:03:08,117 INFO yield speech len 2.76, rtf 0.9160949700120568
+100%|██████████| 1/1 [00:02<00:00,  2.83s/it]100%|██████████| 1/1 [00:02<00:00,  2.83s/it]
+2026-10-25 20:03:08,228 INFO Processing audio with duration 00:02.760
+2026-10-25 20:03:08,242 DEBUG Processing segment at 00:00.000
+[179/200] clip 89 prompt 3 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.428 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:03:08,711 INFO synthesis text We also need a small plastic snake and a big toy frog for the kids.
+2026-10-25 20:03:12,568 INFO yield speech len 4.4, rtf 0.8764418688687411
+100%|██████████| 1/1 [00:04<00:00,  4.18s/it]100%|██████████| 1/1 [00:04<00:00,  4.18s/it]
+2026-10-25 20:03:12,702 INFO Processing audio with duration 00:04.400
+2026-10-25 20:03:12,714 DEBUG Processing segment at 00:00.000
+[180/200] clip 89 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.562 wer=0.20
+2026-10-25 20:03:13,154 INFO Processing audio with duration 00:01.922
+2026-10-25 20:03:13,167 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:03:13,517 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:03:16,914 INFO yield speech len 3.92, rtf 0.8665246014692346
+100%|██████████| 1/1 [00:03<00:00,  3.61s/it]100%|██████████| 1/1 [00:03<00:00,  3.61s/it]
+2026-10-25 20:03:17,041 INFO Processing audio with duration 00:03.920
+2026-10-25 20:03:17,060 DEBUG Processing segment at 00:00.000
+[181/200] clip 90 prompt 3 text fixed: acc_src=1.000 acc=0.688 traced=False far=True sim=0.536 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:03:17,410 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 20:03:24,705 INFO yield speech len 9.04, rtf 0.8068741159101503
+100%|██████████| 1/1 [00:07<00:00,  7.50s/it]100%|██████████| 1/1 [00:07<00:00,  7.51s/it]
+2026-10-25 20:03:24,933 INFO Processing audio with duration 00:09.040
+2026-10-25 20:03:24,954 DEBUG Processing segment at 00:00.000
+2026-10-25 20:03:25,116 DEBUG Processing segment at 00:07.840
+2026-10-25 20:03:25,189 DEBUG Log probability threshold is not met with temperature 0.0 (-1.080729 < -1.000000)
+2026-10-25 20:03:25,189 DEBUG No speech threshold is met (0.848633 > 0.600000)
+[182/200] clip 90 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.552 wer=0.20
+2026-10-25 20:03:25,415 INFO Processing audio with duration 00:03.000
+2026-10-25 20:03:25,426 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:03:25,912 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:03:29,245 INFO yield speech len 3.8, rtf 0.8773241545024671
+100%|██████████| 1/1 [00:03<00:00,  3.69s/it]100%|██████████| 1/1 [00:03<00:00,  3.69s/it]
+2026-10-25 20:03:29,371 INFO Processing audio with duration 00:03.800
+2026-10-25 20:03:29,375 DEBUG Processing segment at 00:00.000
+[183/200] clip 91 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.504 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:03:29,819 INFO synthesis text Some have accepted it as a miracle without physical explanation.
+2026-10-25 20:03:34,884 INFO yield speech len 6.0, rtf 0.8441216548283895
+100%|██████████| 1/1 [00:05<00:00,  5.39s/it]100%|██████████| 1/1 [00:05<00:00,  5.39s/it]
+2026-10-25 20:03:35,052 INFO Processing audio with duration 00:06.000
+2026-10-25 20:03:35,057 DEBUG Processing segment at 00:00.000
+[184/200] clip 91 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.577 wer=0.00
+2026-10-25 20:03:35,380 INFO Processing audio with duration 00:03.000
+2026-10-25 20:03:35,391 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:03:35,935 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:03:39,737 INFO yield speech len 4.4, rtf 0.8641300418160178
+100%|██████████| 1/1 [00:04<00:00,  4.22s/it]100%|██████████| 1/1 [00:04<00:00,  4.22s/it]
+2026-10-25 20:03:39,874 INFO Processing audio with duration 00:04.400
+2026-10-25 20:03:39,886 DEBUG Processing segment at 00:00.000
+[185/200] clip 92 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.402 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:03:40,452 INFO synthesis text When the sunlight strikes raindrops in the air, they act as a prism and form a rainbow.
+2026-10-25 20:03:46,800 INFO yield speech len 7.72, rtf 0.8223017262671278
+100%|██████████| 1/1 [00:06<00:00,  6.65s/it]100%|██████████| 1/1 [00:06<00:00,  6.65s/it]
+2026-10-25 20:03:46,999 INFO Processing audio with duration 00:07.720
+2026-10-25 20:03:47,005 DEBUG Processing segment at 00:00.000
+[186/200] clip 92 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.499 wer=0.12
+2026-10-25 20:03:47,386 INFO Processing audio with duration 00:03.000
+2026-10-25 20:03:47,391 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:03:47,851 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:03:50,691 INFO yield speech len 3.32, rtf 0.8555120014282594
+100%|██████████| 1/1 [00:03<00:00,  3.14s/it]100%|██████████| 1/1 [00:03<00:00,  3.14s/it]
+2026-10-25 20:03:50,805 INFO Processing audio with duration 00:03.320
+2026-10-25 20:03:50,819 DEBUG Processing segment at 00:00.000
+[187/200] clip 93 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.616 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:03:51,362 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 20:03:57,901 INFO yield speech len 7.8, rtf 0.8382855317531488
+100%|██████████| 1/1 [00:06<00:00,  6.92s/it]100%|██████████| 1/1 [00:06<00:00,  6.92s/it]
+2026-10-25 20:03:58,115 INFO Processing audio with duration 00:07.800
+2026-10-25 20:03:58,122 DEBUG Processing segment at 00:00.000
+[188/200] clip 93 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.775 wer=0.05
+2026-10-25 20:03:58,509 INFO Processing audio with duration 00:03.000
+2026-10-25 20:03:58,514 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:03:58,946 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:04:02,913 INFO yield speech len 4.68, rtf 0.8476716330927662
+100%|██████████| 1/1 [00:04<00:00,  4.27s/it]100%|██████████| 1/1 [00:04<00:00,  4.27s/it]
+2026-10-25 20:04:03,066 INFO Processing audio with duration 00:04.680
+2026-10-25 20:04:03,079 DEBUG Processing segment at 00:00.000
+[189/200] clip 94 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.649 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:04:03,538 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station. ).
+2026-10-25 20:04:09,431 INFO yield speech len 6.88, rtf 0.8565922809201618
+100%|██████████| 1/1 [00:06<00:00,  6.20s/it]100%|██████████| 1/1 [00:06<00:00,  6.20s/it]
+2026-10-25 20:04:09,620 INFO Processing audio with duration 00:06.880
+2026-10-25 20:04:09,634 DEBUG Processing segment at 00:00.000
+[190/200] clip 94 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.696 wer=0.00
+2026-10-25 20:04:10,106 INFO Processing audio with duration 00:02.735
+2026-10-25 20:04:10,117 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:04:10,627 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:04:13,352 INFO yield speech len 3.2, rtf 0.851646289229393
+100%|██████████| 1/1 [00:03<00:00,  3.14s/it]100%|██████████| 1/1 [00:03<00:00,  3.14s/it]
+2026-10-25 20:04:13,463 INFO Processing audio with duration 00:03.200
+2026-10-25 20:04:13,478 DEBUG Processing segment at 00:00.000
+[191/200] clip 95 prompt 3 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.360 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:04:13,925 INFO synthesis text Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob.
+2026-10-25 20:04:21,096 INFO yield speech len 8.4, rtf 0.8537262110483078
+100%|██████████| 1/1 [00:07<00:00,  7.45s/it]100%|██████████| 1/1 [00:07<00:00,  7.45s/it]
+2026-10-25 20:04:21,309 INFO Processing audio with duration 00:08.400
+2026-10-25 20:04:21,328 DEBUG Processing segment at 00:00.000
+[192/200] clip 95 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.431 wer=0.10
+2026-10-25 20:04:21,752 INFO Processing audio with duration 00:03.000
+2026-10-25 20:04:21,761 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:04:22,289 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:04:25,833 INFO yield speech len 4.04, rtf 0.8772989310840569
+100%|██████████| 1/1 [00:03<00:00,  3.94s/it]100%|██████████| 1/1 [00:03<00:00,  3.94s/it]
+2026-10-25 20:04:25,960 INFO Processing audio with duration 00:04.040
+2026-10-25 20:04:25,990 DEBUG Processing segment at 00:00.000
+[193/200] clip 96 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.607 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:04:26,493 INFO synthesis text Ask her to bring these things with her from the store.
+2026-10-25 20:04:29,604 INFO yield speech len 3.48, rtf 0.894020686204406
+100%|██████████| 1/1 [00:03<00:00,  3.44s/it]100%|██████████| 1/1 [00:03<00:00,  3.44s/it]
+2026-10-25 20:04:29,713 INFO Processing audio with duration 00:03.480
+2026-10-25 20:04:29,718 DEBUG Processing segment at 00:00.000
+[194/200] clip 96 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.645 wer=0.00
+2026-10-25 20:04:30,051 INFO Processing audio with duration 00:03.000
+2026-10-25 20:04:30,063 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:04:30,533 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:04:33,157 INFO yield speech len 3.04, rtf 0.8630058483073586
+100%|██████████| 1/1 [00:02<00:00,  2.93s/it]100%|██████████| 1/1 [00:02<00:00,  2.93s/it]
+2026-10-25 20:04:33,269 INFO Processing audio with duration 00:03.040
+2026-10-25 20:04:33,283 DEBUG Processing segment at 00:00.000
+[195/200] clip 97 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.443 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:04:33,821 INFO synthesis text We also need a small plastic snake and a big toy frog for the kids.
+2026-10-25 20:04:37,648 INFO yield speech len 4.36, rtf 0.8777091809369008
+100%|██████████| 1/1 [00:04<00:00,  4.12s/it]100%|██████████| 1/1 [00:04<00:00,  4.12s/it]
+2026-10-25 20:04:37,788 INFO Processing audio with duration 00:04.360
+2026-10-25 20:04:37,802 DEBUG Processing segment at 00:00.000
+[196/200] clip 97 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.488 wer=0.07
+2026-10-25 20:04:38,136 INFO Processing audio with duration 00:03.000
+2026-10-25 20:04:38,151 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:04:38,625 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:04:41,270 INFO yield speech len 2.84, rtf 0.9312057998818412
+100%|██████████| 1/1 [00:02<00:00,  2.95s/it]100%|██████████| 1/1 [00:02<00:00,  2.95s/it]
+2026-10-25 20:04:41,375 INFO Processing audio with duration 00:02.840
+2026-10-25 20:04:41,390 DEBUG Processing segment at 00:00.000
+[197/200] clip 98 prompt 3 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.488 wer=0.00
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:04:41,860 INFO synthesis text Ask her to bring these things with her from the store.
+2026-10-25 20:04:44,225 INFO yield speech len 2.68, rtf 0.8823836027686275
+100%|██████████| 1/1 [00:02<00:00,  2.67s/it]100%|██████████| 1/1 [00:02<00:00,  2.67s/it]
+2026-10-25 20:04:44,333 INFO Processing audio with duration 00:02.680
+2026-10-25 20:04:44,345 DEBUG Processing segment at 00:00.000
+[198/200] clip 98 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.503 wer=0.00
+2026-10-25 20:04:44,735 INFO Processing audio with duration 00:03.000
+2026-10-25 20:04:44,749 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:04:45,197 INFO synthesis text This is a test sentence for voice cloning.
+2026-10-25 20:04:48,161 INFO yield speech len 3.36, rtf 0.8821290163766771
+100%|██████████| 1/1 [00:03<00:00,  3.28s/it]100%|██████████| 1/1 [00:03<00:00,  3.28s/it]
+2026-10-25 20:04:48,274 INFO Processing audio with duration 00:03.360
+2026-10-25 20:04:48,287 DEBUG Processing segment at 00:00.000
+[199/200] clip 99 prompt 3 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.596 wer=0.12
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-25 20:04:48,758 INFO synthesis text She can scoop these things into three red bags, and we will go meet her Wednesday at the train station.
+2026-10-25 20:04:54,545 INFO yield speech len 6.92, rtf 0.8362558191222262
+100%|██████████| 1/1 [00:06<00:00,  6.10s/it]100%|██████████| 1/1 [00:06<00:00,  6.10s/it]
+2026-10-25 20:04:54,754 INFO Processing audio with duration 00:06.920
+2026-10-25 20:04:54,761 DEBUG Processing segment at 00:00.000
+2026-10-25 20:04:54,930 DEBUG Processing segment at 00:05.440
+[200/200] clip 99 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.675 wer=0.10
+
+=== summary (prompt|text) ===
+3|fixed {'n_ok': 100, 'n_failed': 0, 'acc_source_mean': 0.9938, 'acc_mean': 0.9319, 'traced_rate': 0.9, 'far_rate': 0.17, 'sim_ecapa_mean': 0.52, 'wer_mean': 0.0488, 'gate_pass': True}
+3|unseen {'n_ok': 100, 'n_failed': 0, 'acc_source_mean': 0.9938, 'acc_mean': 0.9456, 'traced_rate': 0.92, 'far_rate': 0.08, 'sim_ecapa_mean': 0.5636, 'wer_mean': 0.0729, 'gate_pass': True}
+saved results/ce_vctk_cosyvoice_route2vmaug_RQ_p3.json
