@@ -1,0 +1,326 @@
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+[data] 100 held-out clips
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+
+=== R0 (checkpoints/route2_vmaug_R0/route2_epoch19.pt) ===
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[load] checkpoints/route2_vmaug_R0/route2_epoch19.pt: 64 LoRA tensors loaded
+  20/100 clips
+  40/100 clips
+  60/100 clips
+  80/100 clips
+  100/100 clips
+  pesq=2.0550  stoi=0.8837  si_snr=-0.0086  acc_clean=0.9981  acc_mask=0.9981  acc_shuffle=0.9981  acc_replace=0.9131  acc_encodec=0.8869  acc_perturb=0.8900
+
+=== pretrained (pretrained VoiceMark) ===
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+  20/100 clips
+  40/100 clips
+  60/100 clips
+  80/100 clips
+  100/100 clips
+  pesq=2.1261  stoi=0.8921  si_snr=0.5250  acc_clean=0.9812  acc_mask=0.9906  acc_shuffle=0.9731  acc_replace=0.9862  acc_encodec=0.8806  acc_perturb=0.8531
+
+=== stage1old_e29 (checkpoints/stage1_scaleup_aug/stage1_epoch29.pt) ===
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[load] checkpoints/stage1_scaleup_aug/stage1_epoch29.pt: 64 LoRA tensors loaded
+  20/100 clips
+  40/100 clips
+  60/100 clips
+  80/100 clips
+  100/100 clips
+  pesq=2.3602  stoi=0.8994  si_snr=0.5061  acc_clean=0.9838  acc_mask=0.9831  acc_shuffle=0.9781  acc_replace=0.8688  acc_encodec=0.8063  acc_perturb=0.8331
+
+=== stage1vmaug_e29 (checkpoints/stage1_vmaug/stage1_epoch29.pt) ===
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[load] checkpoints/stage1_vmaug/stage1_epoch29.pt: 64 LoRA tensors loaded
+  20/100 clips
+  40/100 clips
+  60/100 clips
+  80/100 clips
+  100/100 clips
+  pesq=2.3059  stoi=0.8975  si_snr=0.4220  acc_clean=0.9900  acc_mask=0.9931  acc_shuffle=0.9888  acc_replace=0.9625  acc_encodec=0.8825  acc_perturb=0.8656
+
+=== route2old_r8 (checkpoints/route2_scaleupaug_train_msgproc/route2_final.pt) ===
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[load] checkpoints/route2_scaleupaug_train_msgproc/route2_final.pt: 64 LoRA tensors loaded
+  20/100 clips
+  40/100 clips
+  60/100 clips
+  80/100 clips
+  100/100 clips
+  pesq=2.1308  stoi=0.8803  si_snr=0.2517  acc_clean=0.9969  acc_mask=0.9981  acc_shuffle=0.9981  acc_replace=0.9106  acc_encodec=0.8700  acc_perturb=0.8994
+
+=== stage1legacy_e29 (checkpoints/stage1_legacy/stage1_epoch29.pt) ===
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[load] checkpoints/stage1_legacy/stage1_epoch29.pt: 64 LoRA tensors loaded
+  20/100 clips
+  40/100 clips
+  60/100 clips
+  80/100 clips
+  100/100 clips
+  pesq=2.3308  stoi=0.8984  si_snr=0.4717  acc_clean=0.9819  acc_mask=0.9888  acc_shuffle=0.9850  acc_replace=0.8413  acc_encodec=0.8275  acc_perturb=0.8413
+
+=== stage1vmaugs1_e29 (checkpoints/stage1_vmaug_s1/stage1_epoch29.pt) ===
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[load] checkpoints/stage1_vmaug_s1/stage1_epoch29.pt: 64 LoRA tensors loaded
+  20/100 clips
+  40/100 clips
+  60/100 clips
+  80/100 clips
+  100/100 clips
+  pesq=2.3348  stoi=0.8983  si_snr=0.4347  acc_clean=0.9906  acc_mask=0.9894  acc_shuffle=0.9856  acc_replace=0.9556  acc_encodec=0.8650  acc_perturb=0.8750
+
+=== R0s1 (checkpoints/route2_vmaug_R0s1/route2_epoch19.pt) ===
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[load] checkpoints/route2_vmaug_R0s1/route2_epoch19.pt: 64 LoRA tensors loaded
+  20/100 clips
+  40/100 clips
+  60/100 clips
+  80/100 clips
+  100/100 clips
+  pesq=2.1399  stoi=0.8850  si_snr=0.1291  acc_clean=1.0000  acc_mask=0.9988  acc_shuffle=0.9994  acc_replace=0.9144  acc_encodec=0.8506  acc_perturb=0.9056
+
+=== R0f (checkpoints/route2_vmaug_R0f/route2_epoch19.pt) ===
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[load] checkpoints/route2_vmaug_R0f/route2_epoch19.pt: 64 LoRA tensors loaded
+  20/100 clips
+  40/100 clips
+  60/100 clips
+  80/100 clips
+  100/100 clips
+  pesq=2.1443  stoi=0.8769  si_snr=0.4248  acc_clean=0.9938  acc_mask=0.9900  acc_shuffle=0.9894  acc_replace=0.8694  acc_encodec=0.8325  acc_perturb=0.8938
+
+=== RQlo (checkpoints/route2_vmaug_RQlo/route2_epoch19.pt) ===
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[load] checkpoints/route2_vmaug_RQlo/route2_epoch19.pt: 64 LoRA tensors loaded
+  20/100 clips
+  40/100 clips
+  60/100 clips
+  80/100 clips
+  100/100 clips
+  pesq=2.2556  stoi=0.8881  si_snr=0.7193  acc_clean=1.0000  acc_mask=0.9988  acc_shuffle=1.0000  acc_replace=0.9419  acc_encodec=0.8756  acc_perturb=0.8906
+
+=== RQ (checkpoints/route2_vmaug_RQ/route2_epoch19.pt) ===
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[load] checkpoints/route2_vmaug_RQ/route2_epoch19.pt: 64 LoRA tensors loaded
+  20/100 clips
+  40/100 clips
+  60/100 clips
+  80/100 clips
+  100/100 clips
+  pesq=2.3096  stoi=0.8975  si_snr=0.3814  acc_clean=0.9938  acc_mask=0.9894  acc_shuffle=0.9919  acc_replace=0.8662  acc_encodec=0.8356  acc_perturb=0.8725
+
+=== RQA (checkpoints/route2_vmaug_RQA/route2_epoch19.pt) ===
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[load] checkpoints/route2_vmaug_RQA/route2_epoch19.pt: 64 LoRA tensors loaded
+  20/100 clips
+  40/100 clips
+  60/100 clips
+  80/100 clips
+  100/100 clips
+  pesq=2.2221  stoi=0.8945  si_snr=0.5639  acc_clean=0.9981  acc_mask=0.9988  acc_shuffle=1.0000  acc_replace=0.9906  acc_encodec=0.9006  acc_perturb=0.9075
+
+=== Summary (means) ===
+checkpoint                     acc_clean   acc_encodec      acc_mask   acc_perturb   acc_replace   acc_shuffle          pesq        si_snr          stoi
+R0                                0.9981        0.8869        0.9981        0.8900        0.9131        0.9981        2.0550       -0.0086        0.8837
+pretrained                        0.9812        0.8806        0.9906        0.8531        0.9862        0.9731        2.1261        0.5250        0.8921
+stage1old_e29                     0.9838        0.8063        0.9831        0.8331        0.8688        0.9781        2.3602        0.5061        0.8994
+stage1vmaug_e29                   0.9900        0.8825        0.9931        0.8656        0.9625        0.9888        2.3059        0.4220        0.8975
+route2old_r8                      0.9969        0.8700        0.9981        0.8994        0.9106        0.9981        2.1308        0.2517        0.8803
+stage1legacy_e29                  0.9819        0.8275        0.9888        0.8413        0.8413        0.9850        2.3308        0.4717        0.8984
+stage1vmaugs1_e29                 0.9906        0.8650        0.9894        0.8750        0.9556        0.9856        2.3348        0.4347        0.8983
+R0s1                              1.0000        0.8506        0.9988        0.9056        0.9144        0.9994        2.1399        0.1291        0.8850
+R0f                               0.9938        0.8325        0.9900        0.8938        0.8694        0.9894        2.1443        0.4248        0.8769
+RQlo                              1.0000        0.8756        0.9988        0.8906        0.9419        1.0000        2.2556        0.7193        0.8881
+RQ                                0.9938        0.8356        0.9894        0.8725        0.8662        0.9919        2.3096        0.3814        0.8975
+RQA                               0.9981        0.9006        0.9988        0.9075        0.9906        1.0000        2.2221        0.5639        0.8945
+codec_only_no_watermark                -             -             -             -             -             -        2.5242        0.2772        0.9034
+
+pretrained_vs_R0
+  pesq           diff=+0.0711  t_p=1.4e-05  wilcoxon_p=9.5e-06
+  stoi           diff=+0.0084  t_p=1.9e-29  wilcoxon_p=1.8e-17
+  si_snr         diff=+0.5336  t_p=7.1e-15  wilcoxon_p=3.1e-13
+  acc_clean      diff=-0.0169  t_p=0.00076  wilcoxon_p=0.0012
+  acc_mask       diff=-0.0075  t_p=0.057  wilcoxon_p=0.042
+  acc_shuffle    diff=-0.0250  t_p=0.00011  wilcoxon_p=0.00037
+  acc_replace    diff=+0.0731  t_p=5.3e-06  wilcoxon_p=3.7e-06
+  acc_encodec    diff=-0.0063  t_p=0.63  wilcoxon_p=0.71
+  acc_perturb    diff=-0.0369  t_p=0.0029  wilcoxon_p=0.0044
+
+stage1old_e29_vs_R0
+  pesq           diff=+0.3052  t_p=1.4e-42  wilcoxon_p=3.9e-18
+  stoi           diff=+0.0157  t_p=5.5e-49  wilcoxon_p=3.9e-18
+  si_snr         diff=+0.5147  t_p=2e-12  wilcoxon_p=1.8e-11
+  acc_clean      diff=-0.0144  t_p=0.014  wilcoxon_p=0.026
+  acc_mask       diff=-0.0150  t_p=0.0098  wilcoxon_p=0.011
+  acc_shuffle    diff=-0.0200  t_p=0.00048  wilcoxon_p=0.0012
+  acc_replace    diff=-0.0444  t_p=0.0073  wilcoxon_p=0.005
+  acc_encodec    diff=-0.0806  t_p=2.9e-06  wilcoxon_p=1e-05
+  acc_perturb    diff=-0.0569  t_p=1.8e-05  wilcoxon_p=2.1e-05
+
+stage1vmaug_e29_vs_R0
+  pesq           diff=+0.2509  t_p=3.5e-41  wilcoxon_p=3.9e-18
+  stoi           diff=+0.0138  t_p=1.4e-45  wilcoxon_p=3.9e-18
+  si_snr         diff=+0.4306  t_p=1.1e-09  wilcoxon_p=8.2e-10
+  acc_clean      diff=-0.0081  t_p=0.074  wilcoxon_p=0.09
+  acc_mask       diff=-0.0050  t_p=0.21  wilcoxon_p=0.26
+  acc_shuffle    diff=-0.0094  t_p=0.05  wilcoxon_p=0.087
+  acc_replace    diff=+0.0494  t_p=0.0013  wilcoxon_p=0.0017
+  acc_encodec    diff=-0.0044  t_p=0.75  wilcoxon_p=0.89
+  acc_perturb    diff=-0.0244  t_p=0.026  wilcoxon_p=0.037
+
+route2old_r8_vs_R0
+  pesq           diff=+0.0758  t_p=1.8e-12  wilcoxon_p=7.4e-13
+  stoi           diff=-0.0034  t_p=9.6e-12  wilcoxon_p=2.2e-10
+  si_snr         diff=+0.2603  t_p=1.5e-10  wilcoxon_p=2.2e-09
+  acc_clean      diff=-0.0013  t_p=0.67  wilcoxon_p=0.79
+  acc_mask       diff=+0.0000  t_p=1  wilcoxon_p=1
+  acc_shuffle    diff=+0.0000  t_p=1  wilcoxon_p=1
+  acc_replace    diff=-0.0025  t_p=0.84  wilcoxon_p=0.77
+  acc_encodec    diff=-0.0169  t_p=0.13  wilcoxon_p=0.093
+  acc_perturb    diff=+0.0094  t_p=0.15  wilcoxon_p=0.17
+
+stage1legacy_e29_vs_R0
+  pesq           diff=+0.2758  t_p=1.2e-41  wilcoxon_p=3.9e-18
+  stoi           diff=+0.0148  t_p=4.8e-47  wilcoxon_p=3.9e-18
+  si_snr         diff=+0.4803  t_p=1.1e-11  wilcoxon_p=7.1e-11
+  acc_clean      diff=-0.0163  t_p=0.005  wilcoxon_p=0.011
+  acc_mask       diff=-0.0094  t_p=0.046  wilcoxon_p=0.064
+  acc_shuffle    diff=-0.0131  t_p=0.016  wilcoxon_p=0.025
+  acc_replace    diff=-0.0719  t_p=1.6e-05  wilcoxon_p=2.5e-05
+  acc_encodec    diff=-0.0594  t_p=9.4e-05  wilcoxon_p=0.00018
+  acc_perturb    diff=-0.0488  t_p=6.7e-05  wilcoxon_p=6.4e-05
+
+stage1vmaugs1_e29_vs_R0
+  pesq           diff=+0.2798  t_p=1.7e-41  wilcoxon_p=3.9e-18
+  stoi           diff=+0.0146  t_p=6.2e-49  wilcoxon_p=3.9e-18
+  si_snr         diff=+0.4433  t_p=7.7e-11  wilcoxon_p=2.3e-10
+  acc_clean      diff=-0.0075  t_p=0.11  wilcoxon_p=0.11
+  acc_mask       diff=-0.0088  t_p=0.061  wilcoxon_p=0.09
+  acc_shuffle    diff=-0.0125  t_p=0.025  wilcoxon_p=0.041
+  acc_replace    diff=+0.0425  t_p=0.0038  wilcoxon_p=0.0031
+  acc_encodec    diff=-0.0219  t_p=0.13  wilcoxon_p=0.18
+  acc_perturb    diff=-0.0150  t_p=0.17  wilcoxon_p=0.24
+
+R0s1_vs_R0
+  pesq           diff=+0.0849  t_p=6.9e-23  wilcoxon_p=1.8e-16
+  stoi           diff=+0.0013  t_p=0.00027  wilcoxon_p=0.00016
+  si_snr         diff=+0.1377  t_p=0.00018  wilcoxon_p=4e-05
+  acc_clean      diff=+0.0019  t_p=0.32  wilcoxon_p=0.32
+  acc_mask       diff=+0.0006  t_p=0.78  wilcoxon_p=0.65
+  acc_shuffle    diff=+0.0013  t_p=0.53  wilcoxon_p=0.65
+  acc_replace    diff=+0.0013  t_p=0.89  wilcoxon_p=0.98
+  acc_encodec    diff=-0.0362  t_p=0.0072  wilcoxon_p=0.0098
+  acc_perturb    diff=+0.0156  t_p=0.082  wilcoxon_p=0.086
+
+R0f_vs_R0
+  pesq           diff=+0.0893  t_p=1.4e-14  wilcoxon_p=4.1e-12
+  stoi           diff=-0.0068  t_p=6.3e-23  wilcoxon_p=1.8e-16
+  si_snr         diff=+0.4334  t_p=6e-12  wilcoxon_p=2.9e-11
+  acc_clean      diff=-0.0044  t_p=0.21  wilcoxon_p=0.29
+  acc_mask       diff=-0.0081  t_p=0.042  wilcoxon_p=0.062
+  acc_shuffle    diff=-0.0088  t_p=0.034  wilcoxon_p=0.06
+  acc_replace    diff=-0.0437  t_p=0.0014  wilcoxon_p=0.0012
+  acc_encodec    diff=-0.0544  t_p=0.00026  wilcoxon_p=0.00022
+  acc_perturb    diff=+0.0037  t_p=0.63  wilcoxon_p=0.58
+
+RQlo_vs_R0
+  pesq           diff=+0.2006  t_p=9.3e-35  wilcoxon_p=5.3e-18
+  stoi           diff=+0.0044  t_p=2.4e-19  wilcoxon_p=5.9e-16
+  si_snr         diff=+0.7279  t_p=4.6e-31  wilcoxon_p=5.1e-18
+  acc_clean      diff=+0.0019  t_p=0.32  wilcoxon_p=0.32
+  acc_mask       diff=+0.0006  t_p=0.78  wilcoxon_p=0.65
+  acc_shuffle    diff=+0.0019  t_p=0.32  wilcoxon_p=0.32
+  acc_replace    diff=+0.0288  t_p=0.0024  wilcoxon_p=0.0018
+  acc_encodec    diff=-0.0112  t_p=0.27  wilcoxon_p=0.32
+  acc_perturb    diff=+0.0006  t_p=0.93  wilcoxon_p=0.9
+
+RQ_vs_R0
+  pesq           diff=+0.2547  t_p=2.1e-39  wilcoxon_p=3.9e-18
+  stoi           diff=+0.0139  t_p=2.2e-50  wilcoxon_p=3.9e-18
+  si_snr         diff=+0.3900  t_p=1.6e-08  wilcoxon_p=1.9e-08
+  acc_clean      diff=-0.0044  t_p=0.24  wilcoxon_p=0.33
+  acc_mask       diff=-0.0088  t_p=0.061  wilcoxon_p=0.058
+  acc_shuffle    diff=-0.0063  t_p=0.049  wilcoxon_p=0.04
+  acc_replace    diff=-0.0469  t_p=0.0013  wilcoxon_p=0.00088
+  acc_encodec    diff=-0.0512  t_p=5.3e-05  wilcoxon_p=0.00013
+  acc_perturb    diff=-0.0175  t_p=0.066  wilcoxon_p=0.068
+
+RQA_vs_R0
+  pesq           diff=+0.1671  t_p=3e-30  wilcoxon_p=2.8e-17
+  stoi           diff=+0.0109  t_p=5.8e-41  wilcoxon_p=4.4e-18
+  si_snr         diff=+0.5725  t_p=4.1e-17  wilcoxon_p=1.2e-13
+  acc_clean      diff=+0.0000  t_p=1  wilcoxon_p=1
+  acc_mask       diff=+0.0006  t_p=0.78  wilcoxon_p=0.65
+  acc_shuffle    diff=+0.0019  t_p=0.32  wilcoxon_p=0.32
+  acc_replace    diff=+0.0775  t_p=4.8e-07  wilcoxon_p=4.7e-07
+  acc_encodec    diff=+0.0138  t_p=0.26  wilcoxon_p=0.21
+  acc_perturb    diff=+0.0175  t_p=0.007  wilcoxon_p=0.0094
+
+Saved results/results_quality_paired_route2_vmaug_v3.json
