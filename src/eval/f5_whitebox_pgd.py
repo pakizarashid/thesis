@@ -240,7 +240,7 @@ def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilo
             if not torch.isfinite(g_ct).all():                                       # never let the content term void a Q2 step
                 g_ct = torch.zeros_like(delta)
                 diag["ct_nonfinite"] = diag.get("ct_nonfinite", 0) + 1
-            if float(g_ct.abs().max()) == 0.0:
+            elif float(g_ct.abs().max()) == 0.0:                                     # e.g. rollout too short for the sentence
                 diag["ct_zero"] = diag.get("ct_zero", 0) + 1
             diag.setdefault("ct_loss", []).append(float(ct_loss.item()))
         else:
