@@ -1,0 +1,59 @@
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[backbone] loaded checkpoints/route2_vmaug_R0/route2_epoch19.pt (epoch 19)
+Download Vocos from huggingface charactr/vocos-mel-24khz
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+vocab :  /usr/local/lib/python3.13/dist-packages/f5_tts/infer/examples/vocab.txt
+token :  custom
+model :  /root/.cache/huggingface/hub/models--SWivid--F5-TTS/snapshots/84e5a410d9cead4de2f847e7c9369a6440bdfaca/F5TTS_v1_Base/model_1250000.safetensors 
+
+INFO:speechbrain.utils.fetching:Fetch hyperparams.yaml: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-ecapa-voxceleb/hyperparams.yaml'
+INFO:speechbrain.utils.fetching:Fetch embedding_model.ckpt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-ecapa-voxceleb/embedding_model.ckpt'
+INFO:speechbrain.utils.fetching:Fetch mean_var_norm_emb.ckpt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-ecapa-voxceleb/mean_var_norm_emb.ckpt'
+INFO:speechbrain.utils.fetching:Fetch classifier.ckpt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-ecapa-voxceleb/classifier.ckpt'
+INFO:speechbrain.utils.fetching:Fetch label_encoder.txt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-ecapa-voxceleb/label_encoder.ckpt'
+INFO:speechbrain.utils.parameter_transfer:Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+/usr/local/lib/python3.13/dist-packages/speechbrain/utils/checkpoints.py:202: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  state_dict = torch.load(path, map_location=device)
+/usr/local/lib/python3.13/dist-packages/speechbrain/processing/features.py:1550: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  stats = torch.load(path, map_location=self.device)
+WARNING:speechbrain.inference.interfaces:Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+INFO:speechbrain.utils.fetching:Fetch hyperparams.yaml: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-xvect-voxceleb/hyperparams.yaml'
+INFO:speechbrain.utils.fetching:Fetch embedding_model.ckpt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-xvect-voxceleb/embedding_model.ckpt'
+INFO:speechbrain.utils.fetching:Fetch mean_var_norm_emb.ckpt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-xvect-voxceleb/mean_var_norm_emb.ckpt'
+INFO:speechbrain.utils.fetching:Fetch classifier.ckpt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-xvect-voxceleb/classifier.ckpt'
+INFO:speechbrain.utils.fetching:Fetch label_encoder.txt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-xvect-voxceleb/label_encoder.ckpt'
+INFO:speechbrain.utils.parameter_transfer:Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+WARNING:speechbrain.inference.interfaces:Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+Loading weights:   0%|          | 0/266 [00:00<?, ?it/s]Loading weights: 100%|██████████| 266/266 [00:00<00:00, 10757.94it/s]
+[50] acc wm/rs/q2 1.000/0.938/1.000 pesq 1.79/1.38/1.51 dis 0.670->0.518 skip=0 | 75 s/clip, ~61 min left
+[51] acc wm/rs/q2 1.000/1.000/1.000 pesq 1.92/1.39/1.53 dis 0.669->0.455 skip=0 | 66 s/clip, ~52 min left
+[52] acc wm/rs/q2 1.000/0.875/1.000 pesq 2.09/1.62/1.78 dis 0.691->0.383 skip=0 | 63 s/clip, ~50 min left
+[53] acc wm/rs/q2 1.000/0.875/1.000 pesq 2.06/1.41/1.60 dis 0.681->0.454 skip=0 | 61 s/clip, ~47 min left
+[54] acc wm/rs/q2 1.000/1.000/1.000 pesq 1.07/1.05/1.06 dis 0.718->0.586 skip=0 | 60 s/clip, ~45 min left
+[55] acc wm/rs/q2 1.000/1.000/1.000 pesq 2.39/2.00/2.07 dis 0.711->0.501 skip=0 | 60 s/clip, ~44 min left
+[56] acc wm/rs/q2 1.000/0.875/1.000 pesq 1.79/1.46/1.59 dis 0.733->0.414 skip=0 | 59 s/clip, ~43 min left
+[57] acc wm/rs/q2 1.000/1.000/1.000 pesq 2.10/1.42/1.64 dis 0.812->0.467 skip=0 | 59 s/clip, ~41 min left
+[58] acc wm/rs/q2 1.000/0.625/1.000 pesq 2.04/1.52/1.70 dis 0.812->0.550 skip=0 | 59 s/clip, ~40 min left
+[59] acc wm/rs/q2 1.000/0.875/1.000 pesq 2.08/1.77/1.89 dis 0.653->0.412 skip=0 | 59 s/clip, ~39 min left
+[60] acc wm/rs/q2 1.000/1.000/1.000 pesq 2.02/1.66/1.78 dis 0.669->0.527 skip=0 | 59 s/clip, ~38 min left
+[61] acc wm/rs/q2 1.000/1.000/1.000 pesq 1.88/1.66/1.72 dis 0.690->0.499 skip=0 | 58 s/clip, ~37 min left
+[62] acc wm/rs/q2 1.000/1.000/1.000 pesq 1.90/1.66/1.71 dis 0.668->0.431 skip=0 | 58 s/clip, ~36 min left
+[63] acc wm/rs/q2 1.000/0.875/1.000 pesq 1.96/1.66/1.73 dis 0.668->0.412 skip=0 | 58 s/clip, ~35 min left
+[64] acc wm/rs/q2 1.000/0.938/1.000 pesq 1.78/1.58/1.66 dis 0.733->0.551 skip=0 | 58 s/clip, ~34 min left
+[65] acc wm/rs/q2 1.000/0.875/1.000 pesq 1.93/1.27/1.41 dis 0.737->0.559 skip=0 | 58 s/clip, ~33 min left
+[66] acc wm/rs/q2 1.000/0.625/1.000 pesq 2.15/1.78/1.92 dis 0.734->0.513 skip=0 | 58 s/clip, ~32 min left
+[67] acc wm/rs/q2 1.000/1.000/1.000 pesq 2.04/1.66/1.79 dis 0.619->0.466 skip=0 | 58 s/clip, ~31 min left
+[68] acc wm/rs/q2 1.000/0.688/1.000 pesq 2.12/1.28/1.51 dis 0.751->0.573 skip=0 | 58 s/clip, ~30 min left
+[69] acc wm/rs/q2 1.000/0.875/1.000 pesq 2.04/1.59/1.72 dis 0.745->0.487 skip=0 | 58 s/clip, ~29 min left
