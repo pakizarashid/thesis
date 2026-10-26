@@ -1,0 +1,1764 @@
+[preflight] omegaconf 2.3.1 ok; numpy/torch ok
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index_test-clean.json
+[LibriSpeechSubset] Using 200 utterances (eval split, speaker-disjoint from the other split).
+[plan] cloner=cosyvoice clips=200 prompts=['full'] texts=['unseen'] -> 200 clones to run
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[backbone] loaded checkpoints/route2_vmaug_R0/route2_epoch19.pt (epoch 19)
+2026-10-26 12:48:51,740 INFO NumExpr defaulting to 4 threads.
+2026-10-26 12:48:52,571 DEBUG Skipping import of cpp extensions: Could not load this library: /usr/local/lib/python3.13/dist-packages/torchao/_C.abi3.so
+2026-10-26 12:48:55,220 DEBUG Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2026-10-26 12:48:55,385 DEBUG Creating converter from 7 to 5
+2026-10-26 12:48:55,386 DEBUG Creating converter from 5 to 7
+2026-10-26 12:48:55,386 DEBUG Creating converter from 7 to 5
+2026-10-26 12:48:55,386 DEBUG Creating converter from 5 to 7
+2026-10-26 12:48:55,709 DEBUG etils.epath found. Using etils.epath for file I/O.
+[cosyvoice] using CosyVoice2 from cosyvoice.cli.cosyvoice
+Sliding Window Attention is enabled but not implemented for `sdpa`; unexpected results may be encountered.
+/usr/local/lib/python3.13/dist-packages/diffusers/models/lora.py:391: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+2026-10-26 12:49:03,176 INFO input frame rate=25
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/usr/local/lib/python3.13/dist-packages/pyworld/__init__.py:13: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+[1;31m2026-10-26 12:49:05.626846416 [E:onnxruntime:Default, provider_bridge_ort.cc:2458 operator()] /onnxruntime_src/onnxruntime/core/session/provider_bridge_ort.cc:2043 onnxruntime::Provider& onnxruntime::ProviderLibrary::Get() [ONNXRuntimeError] : 1 : FAIL : Failed to load library /usr/local/lib/python3.13/dist-packages/onnxruntime/capi/libonnxruntime_providers_cuda.so with error: libcublasLt.so.13: cannot open shared object file: No such file or directory
+[m
+[0;93m2026-10-26 12:49:05.626905310 [W:onnxruntime:Default, onnxruntime_pybind_state.cc:1295 CreateExecutionProviderFactoryInstance] Failed to create CUDAExecutionProvider. Require cuDNN 9.* and CUDA 13.*. Please install all dependencies as mentioned in the GPU requirements page (https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html#requirements), make sure they're in the PATH, and that your GPU is supported.[m
+2026-10-26 12:49:06,798 INFO use wetext frontend
+[cosyvoice] loaded /kaggle/working/CosyVoice/pretrained_models/CosyVoice2-0.5B; sample_rate=24000
+2026-10-26 12:49:10,166 INFO Applied quirks (see `speechbrain.utils.quirks`): [disable_jit_profiling, allow_tf32]
+2026-10-26 12:49:10,167 INFO Excluded quirks specified by the `SB_DISABLE_QUIRKS` environment (comma-separated list): []
+2026-10-26 12:49:10,181 INFO Fetch hyperparams.yaml: Using symlink found at '/tmp/ecapa_model/hyperparams.yaml'
+2026-10-26 12:49:10,351 INFO Fetch embedding_model.ckpt: Using symlink found at '/tmp/ecapa_model/embedding_model.ckpt'
+2026-10-26 12:49:10,351 INFO Fetch mean_var_norm_emb.ckpt: Using symlink found at '/tmp/ecapa_model/mean_var_norm_emb.ckpt'
+2026-10-26 12:49:10,351 INFO Fetch classifier.ckpt: Using symlink found at '/tmp/ecapa_model/classifier.ckpt'
+2026-10-26 12:49:10,352 INFO Fetch label_encoder.txt: Using symlink found at '/tmp/ecapa_model/label_encoder.ckpt'
+2026-10-26 12:49:10,352 INFO Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+/usr/local/lib/python3.13/dist-packages/speechbrain/utils/checkpoints.py:202: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  state_dict = torch.load(path, map_location=device)
+/usr/local/lib/python3.13/dist-packages/speechbrain/processing/features.py:1550: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  stats = torch.load(path, map_location=self.device)
+2026-10-26 12:49:10,460 WARNING Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+2026-10-26 12:49:10,608 DEBUG Starting new HTTPS connection (1): huggingface.co:443
+2026-10-26 12:49:10,740 DEBUG https://huggingface.co:443 "GET /api/models/Systran/faster-whisper-base.en/revision/main HTTP/1.1" 200 None
+[transcribe] loading faster-whisper base.en (float16)
+2026-10-26 12:49:12,152 DEBUG https://huggingface.co:443 "GET /api/models/Systran/faster-whisper-base.en/revision/main HTTP/1.1" 200 None
+2026-10-26 12:49:12,328 INFO Processing audio with duration 00:13.853
+2026-10-26 12:49:12,340 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c0_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:49:12,801 WARNING synthesis text There was something individual about the great farm a most unusual trimness and care for detail. too short than prompt text unless he could secure an engine of smoother running and more exactly government regulated than those available for his dynamo and lamp. Edison realized that he would find it almost impossible to give a steady light., this may lead to bad performance
+/usr/local/lib/python3.13/dist-packages/torchaudio/__init__.py:86: UserWarning: The 'backend' parameter is not used by TorchCodec AudioDecoder.
+  return load_with_torchcodec(
+2026-10-26 12:49:14,259 INFO synthesis text There was something individual about the great farm a most unusual trimness and care for detail.
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:103: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with self.llm_context, torch.cuda.amp.autocast(self.fp16 is True and hasattr(self.llm, 'vllm') is False):
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:293: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast(self.fp16):
+2026-10-26 12:49:22,136 INFO yield speech len 7.6, rtf 1.0364144099386114
+100%|██████████| 1/1 [00:09<00:00,  9.36s/it]100%|██████████| 1/1 [00:09<00:00,  9.36s/it]
+2026-10-26 12:49:22,371 INFO Processing audio with duration 00:07.600
+2026-10-26 12:49:22,377 DEBUG Processing segment at 00:00.000
+2026-10-26 12:49:22,541 DEBUG Processing segment at 00:06.720
+[1/200] clip 0 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.511 wer=0.00
+2026-10-26 12:49:22,880 INFO Processing audio with duration 00:03.750
+2026-10-26 12:49:22,885 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:49:23,384 INFO synthesis text He still held on to it with both hands as he rushed into his mother's cottage.
+2026-10-26 12:49:27,889 INFO yield speech len 5.48, rtf 0.8219640185363101
+100%|██████████| 1/1 [00:04<00:00,  4.88s/it]100%|██████████| 1/1 [00:04<00:00,  4.88s/it]
+2026-10-26 12:49:28,058 INFO Processing audio with duration 00:05.480
+2026-10-26 12:49:28,063 DEBUG Processing segment at 00:00.000
+[2/200] clip 1 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.505 wer=0.00
+2026-10-26 12:49:29,268 INFO Processing audio with duration 00:17.605
+2026-10-26 12:49:29,277 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c2_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:49:29,560 WARNING synthesis text A bed quilt made of patches of different kinds and colors of cloth all neatly sewed together. too short than prompt text In december eighteen eighty eight Mister WJ Jenks read an interesting paper before the American Institute of Electrical Engineers on the six years of practical experience had up to that time with the meter, then more generally in use than any other., this may lead to bad performance
+2026-10-26 12:49:31,085 INFO synthesis text A bed quilt made of patches of different kinds and colors of cloth all neatly sewed together.
+2026-10-26 12:49:38,649 INFO yield speech len 6.72, rtf 1.1255904677368347
+100%|██████████| 1/1 [00:09<00:00,  9.11s/it]100%|██████████| 1/1 [00:09<00:00,  9.11s/it]
+2026-10-26 12:49:38,857 INFO Processing audio with duration 00:06.720
+2026-10-26 12:49:38,863 DEBUG Processing segment at 00:00.000
+[3/200] clip 2 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.426 wer=0.00
+2026-10-26 12:49:39,689 INFO Processing audio with duration 00:10.660
+2026-10-26 12:49:39,696 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c3_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:49:39,957 WARNING synthesis text Burn fire burn flicker flicker flame. too short than prompt text The street conductors were of the overhead full line construction, and were installed by the construction company that had been organized by Edison to build and equip central stations., this may lead to bad performance
+2026-10-26 12:49:40,886 INFO synthesis text Burn fire burn flicker flicker flame.
+2026-10-26 12:49:45,032 INFO yield speech len 3.76, rtf 1.1026399566772136
+100%|██████████| 1/1 [00:05<00:00,  5.09s/it]100%|██████████| 1/1 [00:05<00:00,  5.09s/it]
+2026-10-26 12:49:45,171 INFO Processing audio with duration 00:03.760
+2026-10-26 12:49:45,175 DEBUG Processing segment at 00:00.000
+[4/200] clip 3 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.429 wer=0.33
+2026-10-26 12:49:45,612 INFO Processing audio with duration 00:04.898
+2026-10-26 12:49:45,617 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:49:46,200 INFO synthesis text In the stern i curved the tail up almost as high as the head.
+2026-10-26 12:49:50,475 INFO yield speech len 4.92, rtf 0.8688689247379459
+100%|██████████| 1/1 [00:04<00:00,  4.73s/it]100%|██████████| 1/1 [00:04<00:00,  4.73s/it]
+2026-10-26 12:49:50,640 INFO Processing audio with duration 00:04.920
+2026-10-26 12:49:50,645 DEBUG Processing segment at 00:00.000
+[5/200] clip 4 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.516 wer=0.07
+2026-10-26 12:49:51,456 INFO Processing audio with duration 00:10.190
+2026-10-26 12:49:51,463 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c5_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:49:52,591 INFO synthesis text Paul answers the man who is named jesus christ and the son of god gave himself for our sins.
+2026-10-26 12:49:58,979 INFO yield speech len 6.28, rtf 1.0171270674201334
+100%|██████████| 1/1 [00:07<00:00,  7.26s/it]100%|██████████| 1/1 [00:07<00:00,  7.26s/it]
+2026-10-26 12:49:59,174 INFO Processing audio with duration 00:06.280
+2026-10-26 12:49:59,179 DEBUG Processing segment at 00:00.000
+[6/200] clip 5 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.532 wer=0.00
+2026-10-26 12:49:59,913 INFO Processing audio with duration 00:08.795
+2026-10-26 12:49:59,919 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c6_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:50:00,895 INFO synthesis text It is enough said george gamewell sharply and he turned upon the crowd.
+2026-10-26 12:50:05,791 INFO yield speech len 4.8, rtf 1.0199158887068431
+100%|██████████| 1/1 [00:05<00:00,  5.69s/it]100%|██████████| 1/1 [00:05<00:00,  5.69s/it]
+2026-10-26 12:50:05,964 INFO Processing audio with duration 00:04.800
+2026-10-26 12:50:05,969 DEBUG Processing segment at 00:00.000
+[7/200] clip 6 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.444 wer=0.00
+2026-10-26 12:50:06,955 INFO Processing audio with duration 00:12.435
+2026-10-26 12:50:06,963 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c7_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:50:07,232 WARNING synthesis text Never mind now interposed the captain we will talk of that by and by. too short than prompt text How strange it seemed to the sad woman as she watched the growth and the beauty that became every day more brilliant and the intelligence that threw its quivering sunshine over the tiny features of this child., this may lead to bad performance
+2026-10-26 12:50:08,272 INFO synthesis text Never mind now interposed the captain we will talk of that by and by.
+2026-10-26 12:50:14,212 INFO yield speech len 5.16, rtf 1.1511241742806841
+100%|██████████| 1/1 [00:06<00:00,  7.00s/it]100%|██████████| 1/1 [00:06<00:00,  7.00s/it]
+2026-10-26 12:50:14,392 INFO Processing audio with duration 00:05.160
+2026-10-26 12:50:14,396 DEBUG Processing segment at 00:00.000
+[8/200] clip 7 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.380 wer=0.07
+2026-10-26 12:50:14,806 INFO Processing audio with duration 00:03.645
+2026-10-26 12:50:14,810 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:50:15,303 INFO synthesis text But now nothing could hold me back.
+2026-10-26 12:50:17,600 INFO yield speech len 2.56, rtf 0.8972698822617531
+100%|██████████| 1/1 [00:02<00:00,  2.66s/it]100%|██████████| 1/1 [00:02<00:00,  2.66s/it]
+2026-10-26 12:50:17,720 INFO Processing audio with duration 00:02.560
+2026-10-26 12:50:17,723 DEBUG Processing segment at 00:00.000
+[9/200] clip 8 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.582 wer=0.00
+2026-10-26 12:50:19,100 INFO Processing audio with duration 00:16.645
+2026-10-26 12:50:19,109 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c9_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:50:19,439 WARNING synthesis text When the king comes to paris everybody calls out vive le roi. too short than prompt text Hester could only account for the child's character, and even then most vaguely and imperfectly, by recalling what she herself had been during that momentous period, while Pearl was imbibing her soul from the spiritual world, and her bodily frame from its material of earth., this may lead to bad performance
+2026-10-26 12:50:20,844 INFO synthesis text When the king comes to paris everybody calls out vive le roi.
+2026-10-26 12:50:26,323 INFO yield speech len 3.48, rtf 1.5745028682138729
+100%|██████████| 1/1 [00:06<00:00,  6.91s/it]100%|██████████| 1/1 [00:06<00:00,  6.91s/it]
+2026-10-26 12:50:26,477 INFO Processing audio with duration 00:03.480
+2026-10-26 12:50:26,481 DEBUG Processing segment at 00:00.000
+[10/200] clip 9 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.638 wer=0.25
+2026-10-26 12:50:27,083 INFO Processing audio with duration 00:06.350
+2026-10-26 12:50:27,088 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:50:27,247 WARNING synthesis text Stuff it into you his belly counselled him. too short than prompt text I wish she weren't so restless and didn't get so worked up over things,\" she said sadly., this may lead to bad performance
+2026-10-26 12:50:27,799 INFO synthesis text Stuff it into you his belly counselled him.
+2026-10-26 12:50:31,367 INFO yield speech len 3.72, rtf 0.9592385061325565
+100%|██████████| 1/1 [00:04<00:00,  4.13s/it]100%|██████████| 1/1 [00:04<00:00,  4.14s/it]
+2026-10-26 12:50:31,508 INFO Processing audio with duration 00:03.720
+2026-10-26 12:50:31,512 DEBUG Processing segment at 00:00.000
+[11/200] clip 10 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.371 wer=0.38
+2026-10-26 12:50:32,286 INFO Processing audio with duration 00:09.665
+2026-10-26 12:50:32,293 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c11_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:50:32,522 WARNING synthesis text Will the hurons hear his groans. too short than prompt text And the old gentleman was so delighted with his success that he had to burst out into a series of short, happy bits of laughter that occupied quite a space of time., this may lead to bad performance
+2026-10-26 12:50:33,327 INFO synthesis text Will the hurons hear his groans.
+2026-10-26 12:50:36,485 INFO yield speech len 2.6, rtf 1.2147381672492394
+100%|██████████| 1/1 [00:03<00:00,  3.99s/it]100%|██████████| 1/1 [00:03<00:00,  3.99s/it]
+2026-10-26 12:50:36,617 INFO Processing audio with duration 00:02.600
+2026-10-26 12:50:36,620 DEBUG Processing segment at 00:00.000
+[12/200] clip 11 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.443 wer=0.17
+2026-10-26 12:50:36,966 INFO Processing audio with duration 00:02.875
+2026-10-26 12:50:36,970 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:50:37,391 INFO synthesis text I think i should be doing you a service to turn you out of such a place.
+2026-10-26 12:50:40,966 INFO yield speech len 4.36, rtf 0.8199077133738666
+100%|██████████| 1/1 [00:03<00:00,  3.87s/it]100%|██████████| 1/1 [00:03<00:00,  3.87s/it]
+2026-10-26 12:50:41,115 INFO Processing audio with duration 00:04.360
+2026-10-26 12:50:41,120 DEBUG Processing segment at 00:00.000
+[13/200] clip 12 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.278 wer=0.00
+2026-10-26 12:50:41,699 INFO Processing audio with duration 00:06.550
+2026-10-26 12:50:41,704 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:50:42,461 INFO synthesis text But in this vignette copied from turner you have the two principles brought out perfectly.
+2026-10-26 12:50:48,242 INFO yield speech len 6.32, rtf 0.9146939727324473
+100%|██████████| 1/1 [00:06<00:00,  6.38s/it]100%|██████████| 1/1 [00:06<00:00,  6.38s/it]
+2026-10-26 12:50:48,429 INFO Processing audio with duration 00:06.320
+2026-10-26 12:50:48,434 DEBUG Processing segment at 00:00.000
+[14/200] clip 13 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.581 wer=0.00
+2026-10-26 12:50:48,873 INFO Processing audio with duration 00:04.090
+2026-10-26 12:50:48,877 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]min value is  tensor(-1.0047)
+2026-10-26 12:50:49,399 INFO synthesis text But it is surmised that you will find difficulties in the way of your entering at once upon your government.
+2026-10-26 12:50:55,734 INFO yield speech len 7.92, rtf 0.7998969217743537
+100%|██████████| 1/1 [00:06<00:00,  6.73s/it]100%|██████████| 1/1 [00:06<00:00,  6.73s/it]
+2026-10-26 12:50:55,955 INFO Processing audio with duration 00:07.920
+2026-10-26 12:50:55,961 DEBUG Processing segment at 00:00.000
+2026-10-26 12:50:56,132 DEBUG Processing segment at 00:07.840
+2026-10-26 12:50:56,254 DEBUG Log probability threshold is not met with temperature 0.0 (-1.191106 < -1.000000)
+2026-10-26 12:50:56,254 DEBUG No speech threshold is met (0.993652 > 0.600000)
+[15/200] clip 14 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.514 wer=0.00
+2026-10-26 12:50:57,017 INFO Processing audio with duration 00:11.285
+2026-10-26 12:50:57,024 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c15_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:50:57,257 WARNING synthesis text All the furniture belonged to other times. too short than prompt text Then, the Republic of Britain Ula was to be declared as non existent, and the British flag was to be exalted, and a British governor installed in the executive chambers., this may lead to bad performance
+2026-10-26 12:50:58,201 INFO synthesis text All the furniture belonged to other times.
+2026-10-26 12:51:01,963 INFO yield speech len 2.88, rtf 1.3063858780595992
+100%|██████████| 1/1 [00:04<00:00,  4.72s/it]100%|██████████| 1/1 [00:04<00:00,  4.72s/it]
+2026-10-26 12:51:02,086 INFO Processing audio with duration 00:02.880
+2026-10-26 12:51:02,089 DEBUG Processing segment at 00:00.000
+[16/200] clip 15 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.336 wer=0.14
+2026-10-26 12:51:02,580 INFO Processing audio with duration 00:05.535
+2026-10-26 12:51:02,585 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:51:03,254 INFO synthesis text Then turning to jane she asked in a somewhat altered tone has she been a good girl jane.
+2026-10-26 12:51:08,519 INFO yield speech len 6.08, rtf 0.8660021581147846
+100%|██████████| 1/1 [00:05<00:00,  5.79s/it]100%|██████████| 1/1 [00:05<00:00,  5.79s/it]
+2026-10-26 12:51:08,705 INFO Processing audio with duration 00:06.080
+2026-10-26 12:51:08,710 DEBUG Processing segment at 00:00.000
+[17/200] clip 16 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.286 wer=0.00
+2026-10-26 12:51:09,409 INFO Processing audio with duration 00:08.105
+2026-10-26 12:51:09,415 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c17_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:51:10,319 INFO synthesis text You gave me double five i want double nine hallo is that you horatio hamlet speaking.
+2026-10-26 12:51:16,150 INFO yield speech len 6.08, rtf 0.9590296760985726
+100%|██████████| 1/1 [00:06<00:00,  6.55s/it]100%|██████████| 1/1 [00:06<00:00,  6.55s/it]
+2026-10-26 12:51:16,335 INFO Processing audio with duration 00:06.080
+2026-10-26 12:51:16,340 DEBUG Processing segment at 00:00.000
+[18/200] clip 17 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.418 wer=0.06
+2026-10-26 12:51:17,066 INFO Processing audio with duration 00:08.915
+2026-10-26 12:51:17,072 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c18_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:51:17,309 WARNING synthesis text The democratic committee figured out a way to do this. too short than prompt text If you will give us your promise to meet Captain Attalax here at this time tomorrow, we will stretch a point and delay the departure of the John Bright for twenty four hours., this may lead to bad performance
+2026-10-26 12:51:18,084 INFO synthesis text The democratic committee figured out a way to do this.
+2026-10-26 12:51:21,509 INFO yield speech len 3.28, rtf 1.0442006151850631
+100%|██████████| 1/1 [00:04<00:00,  4.22s/it]100%|██████████| 1/1 [00:04<00:00,  4.22s/it]
+2026-10-26 12:51:21,648 INFO Processing audio with duration 00:03.280
+2026-10-26 12:51:21,651 DEBUG Processing segment at 00:00.000
+[19/200] clip 18 prompt full text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.249 wer=0.00
+2026-10-26 12:51:22,234 INFO Processing audio with duration 00:07.075
+2026-10-26 12:51:22,239 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:51:23,036 INFO synthesis text The strange woman and her passionate sentence that rang out so sharply had frightened them both.
+2026-10-26 12:51:28,057 INFO yield speech len 5.64, rtf 0.8903551186230166
+100%|██████████| 1/1 [00:05<00:00,  5.64s/it]100%|██████████| 1/1 [00:05<00:00,  5.64s/it]
+2026-10-26 12:51:28,242 INFO Processing audio with duration 00:05.640
+2026-10-26 12:51:28,247 DEBUG Processing segment at 00:00.000
+[20/200] clip 19 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.417 wer=0.06
+2026-10-26 12:51:28,611 INFO Processing audio with duration 00:02.340
+2026-10-26 12:51:28,614 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:51:28,979 INFO synthesis text They regained their apartment apparently without disturbing the household of gamewell.
+2026-10-26 12:51:33,500 INFO yield speech len 5.64, rtf 0.8015690965855375
+100%|██████████| 1/1 [00:04<00:00,  4.78s/it]100%|██████████| 1/1 [00:04<00:00,  4.78s/it]
+2026-10-26 12:51:33,661 INFO Processing audio with duration 00:05.640
+2026-10-26 12:51:33,666 DEBUG Processing segment at 00:00.000
+[21/200] clip 20 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.484 wer=0.18
+2026-10-26 12:51:34,573 INFO Processing audio with duration 00:11.990
+2026-10-26 12:51:34,580 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:51:34,815 WARNING synthesis text No cathedral not even burgos itself could vie with the church at montmartre. too short than prompt text There was something of sweetness and fondness in her tones and manner, which was new to Rachel,  and comforting, and she returned the greeting as kindly, and felt more like her for herself., this may lead to bad performance
+2026-10-26 12:51:35,800 INFO synthesis text No cathedral not even burgos itself could vie with the church at montmartre.
+2026-10-26 12:51:41,159 INFO yield speech len 5.0, rtf 1.0716983318328857
+100%|██████████| 1/1 [00:06<00:00,  6.36s/it]100%|██████████| 1/1 [00:06<00:00,  6.36s/it]
+2026-10-26 12:51:41,327 INFO Processing audio with duration 00:05.000
+2026-10-26 12:51:41,331 DEBUG Processing segment at 00:00.000
+[22/200] clip 21 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.515 wer=0.08
+2026-10-26 12:51:41,708 INFO Processing audio with duration 00:02.745
+2026-10-26 12:51:41,712 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:51:42,124 INFO synthesis text The poor little things cried cynthia think of them having been turned to the wall all these years.
+2026-10-26 12:51:47,844 INFO yield speech len 7.36, rtf 0.7772712279920992
+100%|██████████| 1/1 [00:06<00:00,  6.02s/it]100%|██████████| 1/1 [00:06<00:00,  6.02s/it]
+2026-10-26 12:51:48,047 INFO Processing audio with duration 00:07.360
+2026-10-26 12:51:48,052 DEBUG Processing segment at 00:00.000
+[23/200] clip 22 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.478 wer=0.00
+2026-10-26 12:51:48,608 INFO Processing audio with duration 00:05.620
+2026-10-26 12:51:48,612 DEBUG Processing segment at 00:00.000
+2026-10-26 12:51:48,741 DEBUG Processing segment at 00:05.280
+2026-10-26 12:51:49,476 DEBUG Compression ratio threshold is not met with temperature 0.0 (16.108108 > 2.400000)
+2026-10-26 12:51:49,511 DEBUG Log probability threshold is not met with temperature 0.2 (-1.821335 < -1.000000)
+2026-10-26 12:51:49,511 DEBUG No speech threshold is met (0.947754 > 0.600000)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:51:49,534 WARNING synthesis text O life of this our spring. too short than prompt text The somber old trees, like gigantic hearse prunes, black and awful., this may lead to bad performance
+2026-10-26 12:51:50,017 INFO synthesis text O life of this our spring.
+2026-10-26 12:51:54,787 INFO yield speech len 5.6, rtf 0.8517031584467207
+100%|██████████| 1/1 [00:05<00:00,  5.27s/it]100%|██████████| 1/1 [00:05<00:00,  5.27s/it]
+2026-10-26 12:51:54,962 INFO Processing audio with duration 00:05.600
+2026-10-26 12:51:54,967 DEBUG Processing segment at 00:00.000
+[24/200] clip 23 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.340 wer=0.17
+2026-10-26 12:51:55,385 INFO Processing audio with duration 00:04.215
+2026-10-26 12:51:55,389 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:51:55,928 INFO synthesis text Hose man's excuse for wetting the walk.
+2026-10-26 12:51:59,171 INFO yield speech len 3.6, rtf 0.9007646640141804
+100%|██████████| 1/1 [00:03<00:00,  3.64s/it]100%|██████████| 1/1 [00:03<00:00,  3.64s/it]
+2026-10-26 12:51:59,305 INFO Processing audio with duration 00:03.600
+2026-10-26 12:51:59,309 DEBUG Processing segment at 00:00.000
+[25/200] clip 24 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.400 wer=0.14
+2026-10-26 12:52:00,058 INFO Processing audio with duration 00:08.845
+2026-10-26 12:52:00,065 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c25_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:52:01,058 INFO synthesis text The chaos in which his ardour extinguished itself was a cold indifferent knowledge of himself.
+2026-10-26 12:52:06,722 INFO yield speech len 5.76, rtf 0.9833072622617086
+100%|██████████| 1/1 [00:06<00:00,  6.45s/it]100%|██████████| 1/1 [00:06<00:00,  6.45s/it]
+2026-10-26 12:52:06,910 INFO Processing audio with duration 00:05.760
+2026-10-26 12:52:06,915 DEBUG Processing segment at 00:00.000
+[26/200] clip 25 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.583 wer=0.07
+2026-10-26 12:52:07,592 INFO Processing audio with duration 00:07.707
+2026-10-26 12:52:07,597 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:52:08,468 INFO synthesis text Distrusting his own judgment his appeals to the opinion of chingachgook were frequent and earnest.
+2026-10-26 12:52:13,945 INFO yield speech len 5.84, rtf 0.9379064791823087
+100%|██████████| 1/1 [00:06<00:00,  6.19s/it]100%|██████████| 1/1 [00:06<00:00,  6.19s/it]
+2026-10-26 12:52:14,124 INFO Processing audio with duration 00:05.840
+2026-10-26 12:52:14,129 DEBUG Processing segment at 00:00.000
+2026-10-26 12:52:14,268 DEBUG Processing segment at 00:05.680
+[27/200] clip 26 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.582 wer=0.47
+2026-10-26 12:52:15,638 INFO Processing audio with duration 00:20.000
+2026-10-26 12:52:15,648 DEBUG Processing segment at 00:00.000
+2026-10-26 12:52:15,963 DEBUG Processing segment at 00:14.560
+[cosyvoice] prompt transcript cleaned for the text normaliser (c27_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:52:16,140 WARNING synthesis text Consumption becomes a larger element in the standard of living in the city than in the country. too short than prompt text that no harm whatever could result to them from the information she sought. They were induced to confess that one summer's night, the same she had mentioned, themselves and another friend being out on a stroll with her dawphill, they had been concerned in the abduction of a girl whom redawphill carried off, was the rest of them detained her family., this may lead to bad performance
+2026-10-26 12:52:17,823 INFO synthesis text Consumption becomes a larger element in the standard of living in the city than in the country.
+2026-10-26 12:52:26,289 INFO yield speech len 5.64, rtf 1.5010171325494213
+100%|██████████| 1/1 [00:10<00:00, 10.18s/it]100%|██████████| 1/1 [00:10<00:00, 10.18s/it]
+2026-10-26 12:52:26,481 INFO Processing audio with duration 00:05.640
+2026-10-26 12:52:26,486 DEBUG Processing segment at 00:00.000
+[28/200] clip 27 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.631 wer=0.00
+2026-10-26 12:52:27,015 INFO Processing audio with duration 00:05.640
+2026-10-26 12:52:27,019 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:52:27,671 INFO synthesis text They unite every quality and sometimes you will find me referring to them as colorists sometimes as chiaroscurists.
+2026-10-26 12:52:34,733 INFO yield speech len 8.12, rtf 0.8696994758004626
+100%|██████████| 1/1 [00:07<00:00,  7.57s/it]100%|██████████| 1/1 [00:07<00:00,  7.57s/it]
+2026-10-26 12:52:34,960 INFO Processing audio with duration 00:08.120
+2026-10-26 12:52:34,965 DEBUG Processing segment at 00:00.000
+[29/200] clip 28 prompt full text unseen: acc_src=0.875 acc=1.000 traced=True far=False sim=0.487 wer=0.00
+2026-10-26 12:52:36,013 INFO Processing audio with duration 00:13.644
+2026-10-26 12:52:36,022 DEBUG Processing segment at 00:00.000
+2026-10-26 12:52:36,270 DEBUG Processing segment at 00:12.760
+[cosyvoice] prompt transcript cleaned for the text normaliser (c29_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:52:36,392 WARNING synthesis text I never see lou's scythe over here. too short than prompt text Time rolled on. The hour of her delivery arrived. It took place in the Octo's secrecy. Her mother taking upon her the office of midwife as she gave birth to a son, one of the most beautiful people I've ever seen., this may lead to bad performance
+2026-10-26 12:52:37,539 INFO synthesis text I never see lou's scythe over here.
+2026-10-26 12:52:41,179 INFO yield speech len 2.12, rtf 1.7169794946346641
+100%|██████████| 1/1 [00:04<00:00,  4.81s/it]100%|██████████| 1/1 [00:04<00:00,  4.81s/it]
+2026-10-26 12:52:41,306 INFO Processing audio with duration 00:02.120
+2026-10-26 12:52:41,309 DEBUG Processing segment at 00:00.000
+[30/200] clip 29 prompt full text unseen: acc_src=0.812 acc=1.000 traced=True far=False sim=0.391 wer=0.43
+2026-10-26 12:52:41,827 INFO Processing audio with duration 00:05.365
+2026-10-26 12:52:41,831 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:52:41,985 WARNING synthesis text Ham to be or not to be. too short than prompt text He still held onto it with both hands as he rushed into his mother's cottage., this may lead to bad performance
+2026-10-26 12:52:42,476 INFO synthesis text Ham to be or not to be.
+2026-10-26 12:52:44,423 INFO yield speech len 1.84, rtf 1.0578978320826655
+100%|██████████| 1/1 [00:02<00:00,  2.45s/it]100%|██████████| 1/1 [00:02<00:00,  2.45s/it]
+2026-10-26 12:52:44,532 INFO Processing audio with duration 00:01.840
+2026-10-26 12:52:44,536 DEBUG Processing segment at 00:00.000
+[31/200] clip 30 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.378 wer=0.00
+2026-10-26 12:52:44,871 INFO Processing audio with duration 00:03.020
+2026-10-26 12:52:44,875 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:52:45,296 INFO synthesis text It won't be much but i'm grateful to find a friend.
+2026-10-26 12:52:49,003 INFO yield speech len 4.48, rtf 0.8274903787033898
+100%|██████████| 1/1 [00:04<00:00,  4.02s/it]100%|██████████| 1/1 [00:04<00:00,  4.02s/it]
+2026-10-26 12:52:49,154 INFO Processing audio with duration 00:04.480
+2026-10-26 12:52:49,158 DEBUG Processing segment at 00:00.000
+[32/200] clip 31 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.327 wer=0.00
+2026-10-26 12:52:49,731 INFO Processing audio with duration 00:06.465
+2026-10-26 12:52:49,736 DEBUG Processing segment at 00:00.000
+2026-10-26 12:52:49,893 DEBUG Processing segment at 00:06.400
+2026-10-26 12:52:50,538 DEBUG Compression ratio threshold is not met with temperature 0.0 (16.263158 > 2.400000)
+2026-10-26 12:52:50,596 DEBUG Log probability threshold is not met with temperature 0.2 (-1.823008 < -1.000000)
+2026-10-26 12:52:50,596 DEBUG No speech threshold is met (0.971680 > 0.600000)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:52:51,199 INFO synthesis text You see loving some one as i love you makes the whole world different.
+2026-10-26 12:52:55,581 INFO yield speech len 4.88, rtf 0.8979453415167137
+100%|██████████| 1/1 [00:04<00:00,  4.98s/it]100%|██████████| 1/1 [00:04<00:00,  4.98s/it]
+2026-10-26 12:52:55,747 INFO Processing audio with duration 00:04.880
+2026-10-26 12:52:55,751 DEBUG Processing segment at 00:00.000
+[33/200] clip 32 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.413 wer=0.21
+2026-10-26 12:52:56,482 INFO Processing audio with duration 00:09.057
+2026-10-26 12:52:56,488 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c33_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:52:56,696 WARNING synthesis text The work had to be condensed. too short than prompt text Now, Delia can try to obtain a great influence and ascendancy over the mind of the children by means of these dolls., this may lead to bad performance
+2026-10-26 12:52:57,477 INFO synthesis text The work had to be condensed.
+2026-10-26 12:53:00,533 INFO yield speech len 2.6, rtf 1.175166001686683
+100%|██████████| 1/1 [00:03<00:00,  3.86s/it]100%|██████████| 1/1 [00:03<00:00,  3.86s/it]
+2026-10-26 12:53:00,646 INFO Processing audio with duration 00:02.600
+2026-10-26 12:53:00,650 DEBUG Processing segment at 00:00.000
+[34/200] clip 33 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.388 wer=0.00
+2026-10-26 12:53:01,222 INFO Processing audio with duration 00:06.957
+2026-10-26 12:53:01,227 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:53:01,994 INFO synthesis text Many if not all the elements of the pre socratic philosophy are included in the timaeus.
+2026-10-26 12:53:07,495 INFO yield speech len 6.0, rtf 0.91682501633962
+100%|██████████| 1/1 [00:06<00:00,  6.10s/it]100%|██████████| 1/1 [00:06<00:00,  6.10s/it]
+2026-10-26 12:53:07,683 INFO Processing audio with duration 00:06.000
+2026-10-26 12:53:07,688 DEBUG Processing segment at 00:00.000
+[35/200] clip 34 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.380 wer=0.06
+2026-10-26 12:53:08,128 INFO Processing audio with duration 00:03.115
+2026-10-26 12:53:08,132 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:53:08,559 INFO synthesis text Never mind now interposed the captain we will talk of that by and by.
+2026-10-26 12:53:12,924 INFO yield speech len 5.4, rtf 0.8084007104237874
+100%|██████████| 1/1 [00:04<00:00,  4.67s/it]100%|██████████| 1/1 [00:04<00:00,  4.67s/it]
+2026-10-26 12:53:13,094 INFO Processing audio with duration 00:05.400
+2026-10-26 12:53:13,099 DEBUG Processing segment at 00:00.000
+[36/200] clip 35 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.276 wer=0.07
+2026-10-26 12:53:13,455 INFO Processing audio with duration 00:02.900
+2026-10-26 12:53:13,459 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:53:13,886 INFO synthesis text But now nothing could hold me back.
+2026-10-26 12:53:15,807 INFO yield speech len 2.08, rtf 0.9231071059520428
+100%|██████████| 1/1 [00:02<00:00,  2.22s/it]100%|██████████| 1/1 [00:02<00:00,  2.22s/it]
+2026-10-26 12:53:15,914 INFO Processing audio with duration 00:02.080
+2026-10-26 12:53:15,917 DEBUG Processing segment at 00:00.000
+[37/200] clip 36 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.380 wer=0.00
+2026-10-26 12:53:16,285 INFO Processing audio with duration 00:03.365
+2026-10-26 12:53:16,289 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:53:16,737 INFO synthesis text When the king comes to paris everybody calls out vive le roi.
+2026-10-26 12:53:21,026 INFO yield speech len 5.2, rtf 0.8247170998499943
+100%|██████████| 1/1 [00:04<00:00,  4.62s/it]100%|██████████| 1/1 [00:04<00:00,  4.62s/it]
+2026-10-26 12:53:21,192 INFO Processing audio with duration 00:05.200
+2026-10-26 12:53:21,196 DEBUG Processing segment at 00:00.000
+[38/200] clip 37 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.369 wer=0.25
+2026-10-26 12:53:21,815 INFO Processing audio with duration 00:07.270
+2026-10-26 12:53:21,820 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:53:22,596 INFO synthesis text There was a unanimous groan at this and much reproach after which in his preoccupied way he explained.
+2026-10-26 12:53:29,534 INFO yield speech len 7.72, rtf 0.8986574380508977
+100%|██████████| 1/1 [00:07<00:00,  7.58s/it]100%|██████████| 1/1 [00:07<00:00,  7.58s/it]
+2026-10-26 12:53:29,759 INFO Processing audio with duration 00:07.720
+2026-10-26 12:53:29,765 DEBUG Processing segment at 00:00.000
+[39/200] clip 38 prompt full text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.384 wer=0.00
+2026-10-26 12:53:30,169 INFO Processing audio with duration 00:02.885
+2026-10-26 12:53:30,173 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:53:30,590 INFO synthesis text Rejoice in thy growth said the sunbeams.
+2026-10-26 12:53:33,881 INFO yield speech len 3.8, rtf 0.866122183046843
+100%|██████████| 1/1 [00:03<00:00,  3.60s/it]100%|██████████| 1/1 [00:03<00:00,  3.60s/it]
+2026-10-26 12:53:34,012 INFO Processing audio with duration 00:03.800
+2026-10-26 12:53:34,016 DEBUG Processing segment at 00:00.000
+[40/200] clip 39 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.242 wer=0.00
+2026-10-26 12:53:34,593 INFO Processing audio with duration 00:06.045
+2026-10-26 12:53:34,598 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:53:35,320 INFO synthesis text Distrusting his own judgment his appeals to the opinion of chingachgook were frequent and earnest.
+2026-10-26 12:53:40,902 INFO yield speech len 6.48, rtf 0.8613543745912151
+100%|██████████| 1/1 [00:06<00:00,  6.14s/it]100%|██████████| 1/1 [00:06<00:00,  6.14s/it]
+2026-10-26 12:53:41,095 INFO Processing audio with duration 00:06.480
+2026-10-26 12:53:41,100 DEBUG Processing segment at 00:00.000
+[41/200] clip 40 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.424 wer=0.07
+2026-10-26 12:53:42,546 INFO Processing audio with duration 00:20.000
+2026-10-26 12:53:42,557 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c41_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:53:42,943 WARNING synthesis text Consumption becomes a larger element in the standard of living in the city than in the country. too short than prompt text and almost of exaltation, that the apostagical succession was interrupted, that all the bishops of Europe and Asia were infected by the contagion of guilt and schism, and that the prerogatives of the Catholic Church were confined to the chosen portion of the African believers, who alone had preserved inviolate the integrity of the, this may lead to bad performance
+2026-10-26 12:53:44,692 INFO synthesis text Consumption becomes a larger element in the standard of living in the city than in the country.
+2026-10-26 12:53:52,490 INFO yield speech len 5.36, rtf 1.4548099307871576
+100%|██████████| 1/1 [00:09<00:00,  9.58s/it]100%|██████████| 1/1 [00:09<00:00,  9.58s/it]
+2026-10-26 12:53:52,686 INFO Processing audio with duration 00:05.360
+2026-10-26 12:53:52,690 DEBUG Processing segment at 00:00.000
+[42/200] clip 41 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.424 wer=0.00
+2026-10-26 12:53:53,243 INFO Processing audio with duration 00:05.610
+2026-10-26 12:53:53,247 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:53:53,914 INFO synthesis text They unite every quality and sometimes you will find me referring to them as colorists sometimes as chiaroscurists.
+2026-10-26 12:54:01,133 INFO yield speech len 8.36, rtf 0.8634551004929977
+100%|██████████| 1/1 [00:07<00:00,  7.73s/it]100%|██████████| 1/1 [00:07<00:00,  7.73s/it]
+2026-10-26 12:54:01,367 INFO Processing audio with duration 00:08.360
+2026-10-26 12:54:01,373 DEBUG Processing segment at 00:00.000
+[43/200] clip 42 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.449 wer=0.22
+2026-10-26 12:54:01,858 INFO Processing audio with duration 00:04.275
+2026-10-26 12:54:01,862 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:54:02,389 INFO synthesis text I never see lou's scythe over here.
+2026-10-26 12:54:05,442 INFO yield speech len 3.44, rtf 0.8873765551766684
+100%|██████████| 1/1 [00:03<00:00,  3.45s/it]100%|██████████| 1/1 [00:03<00:00,  3.45s/it]
+2026-10-26 12:54:05,577 INFO Processing audio with duration 00:03.440
+2026-10-26 12:54:05,581 DEBUG Processing segment at 00:00.000
+[44/200] clip 43 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.495 wer=0.29
+2026-10-26 12:54:06,667 INFO Processing audio with duration 00:15.110
+2026-10-26 12:54:06,676 DEBUG Processing segment at 00:00.000
+2026-10-26 12:54:06,915 DEBUG Processing segment at 00:11.560
+[cosyvoice] prompt transcript cleaned for the text normaliser (c44_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:54:07,031 WARNING synthesis text Finally the one party went off exulting and the other was left in desolation and woe. too short than prompt text But this inestimable privilege was soon violated with the knowledge of truth, the emperor imbibed the maxims of persecution, and the sects which dissented from the Catholic Church were afflicted and oppressed by the triumph of Christianity., this may lead to bad performance
+2026-10-26 12:54:08,264 INFO synthesis text Finally the one party went off exulting and the other was left in desolation and woe.
+2026-10-26 12:54:14,858 INFO yield speech len 5.12, rtf 1.2879123911261559
+100%|██████████| 1/1 [00:07<00:00,  7.85s/it]100%|██████████| 1/1 [00:07<00:00,  7.85s/it]
+2026-10-26 12:54:15,036 INFO Processing audio with duration 00:05.120
+2026-10-26 12:54:15,040 DEBUG Processing segment at 00:00.000
+2026-10-26 12:54:15,185 DEBUG Processing segment at 00:05.040
+2026-10-26 12:54:15,771 DEBUG Compression ratio threshold is not met with temperature 0.0 (8.659574 > 2.400000)
+2026-10-26 12:54:15,804 DEBUG Log probability threshold is not met with temperature 0.2 (-1.892822 < -1.000000)
+2026-10-26 12:54:15,804 DEBUG No speech threshold is met (0.970215 > 0.600000)
+[45/200] clip 44 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.434 wer=0.06
+2026-10-26 12:54:16,476 INFO Processing audio with duration 00:09.485
+2026-10-26 12:54:16,482 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c45_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:54:17,495 INFO synthesis text But in such a case miss milner's election of a husband shall not direct mine.
+2026-10-26 12:54:22,859 INFO yield speech len 5.2, rtf 1.031496891608605
+100%|██████████| 1/1 [00:06<00:00,  6.16s/it]100%|██████████| 1/1 [00:06<00:00,  6.16s/it]
+2026-10-26 12:54:23,025 INFO Processing audio with duration 00:05.200
+2026-10-26 12:54:23,029 DEBUG Processing segment at 00:00.000
+2026-10-26 12:54:23,164 DEBUG Processing segment at 00:05.140
+2026-10-26 12:54:23,222 DEBUG Log probability threshold is not met with temperature 0.0 (-1.459961 < -1.000000)
+2026-10-26 12:54:23,222 DEBUG No speech threshold is met (0.965332 > 0.600000)
+[46/200] clip 45 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.541 wer=0.00
+2026-10-26 12:54:23,411 INFO Processing audio with duration 00:02.160
+2026-10-26 12:54:23,414 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:54:23,769 INFO synthesis text We sunk his ship and men but him we brought to you.
+2026-10-26 12:54:26,955 INFO yield speech len 4.08, rtf 0.7807910442352295
+100%|██████████| 1/1 [00:03<00:00,  3.42s/it]100%|██████████| 1/1 [00:03<00:00,  3.42s/it]
+2026-10-26 12:54:27,096 INFO Processing audio with duration 00:04.080
+2026-10-26 12:54:27,101 DEBUG Processing segment at 00:00.000
+2026-10-26 12:54:27,219 DEBUG Processing segment at 00:04.000
+2026-10-26 12:54:27,295 DEBUG Log probability threshold is not met with temperature 0.0 (-1.066406 < -1.000000)
+2026-10-26 12:54:27,295 DEBUG No speech threshold is met (0.937012 > 0.600000)
+[47/200] clip 46 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.324 wer=0.00
+2026-10-26 12:54:28,243 INFO Processing audio with duration 00:14.440
+2026-10-26 12:54:28,252 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c47_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:54:28,584 WARNING synthesis text It was myself i was defying hilda. too short than prompt text He is a welcome figure at the garden parties of the elect, who are always ready to encourage him by accepting free seats for his play. Actor managers nod to him and ears allow him to contribute without charge to his symposium on the price of golf balls., this may lead to bad performance
+2026-10-26 12:54:29,782 INFO synthesis text It was myself i was defying hilda.
+2026-10-26 12:54:33,953 INFO yield speech len 2.56, rtf 1.629478670656681
+100%|██████████| 1/1 [00:05<00:00,  5.39s/it]100%|██████████| 1/1 [00:05<00:00,  5.39s/it]
+2026-10-26 12:54:34,068 INFO Processing audio with duration 00:02.560
+2026-10-26 12:54:34,072 DEBUG Processing segment at 00:00.000
+[48/200] clip 47 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.467 wer=0.00
+2026-10-26 12:54:34,618 INFO Processing audio with duration 00:06.215
+2026-10-26 12:54:34,623 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:54:35,310 INFO synthesis text Will whispered robin opening his door as he spoke are you ready.
+2026-10-26 12:54:39,628 INFO yield speech len 4.72, rtf 0.9148738646911363
+100%|██████████| 1/1 [00:04<00:00,  4.86s/it]100%|██████████| 1/1 [00:04<00:00,  4.86s/it]
+2026-10-26 12:54:39,793 INFO Processing audio with duration 00:04.720
+2026-10-26 12:54:39,798 DEBUG Processing segment at 00:00.000
+[49/200] clip 48 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.246 wer=0.00
+2026-10-26 12:54:40,251 INFO Processing audio with duration 00:04.430
+2026-10-26 12:54:40,255 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:54:40,828 INFO synthesis text Nothing was to be done but to put about and return in disappointment towards the north.
+2026-10-26 12:54:45,641 INFO yield speech len 5.76, rtf 0.8356673849953545
+100%|██████████| 1/1 [00:05<00:00,  5.25s/it]100%|██████████| 1/1 [00:05<00:00,  5.25s/it]
+2026-10-26 12:54:45,808 INFO Processing audio with duration 00:05.760
+2026-10-26 12:54:45,813 DEBUG Processing segment at 00:00.000
+[50/200] clip 49 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.495 wer=0.00
+2026-10-26 12:54:46,329 INFO Processing audio with duration 00:05.000
+2026-10-26 12:54:46,334 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:54:46,928 INFO synthesis text He went here there and everywhere in perfect contentment.
+2026-10-26 12:54:51,228 INFO yield speech len 4.96, rtf 0.8670041638035928
+100%|██████████| 1/1 [00:04<00:00,  4.75s/it]100%|██████████| 1/1 [00:04<00:00,  4.75s/it]
+2026-10-26 12:54:51,389 INFO Processing audio with duration 00:04.960
+2026-10-26 12:54:51,393 DEBUG Processing segment at 00:00.000
+[51/200] clip 50 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.458 wer=0.00
+2026-10-26 12:54:51,908 INFO Processing audio with duration 00:05.625
+2026-10-26 12:54:51,913 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:54:52,545 INFO synthesis text Yes but the meridian of the palais royal is the most exact.
+2026-10-26 12:54:56,536 INFO yield speech len 4.4, rtf 0.9072166139429265
+100%|██████████| 1/1 [00:04<00:00,  4.49s/it]100%|██████████| 1/1 [00:04<00:00,  4.49s/it]
+2026-10-26 12:54:56,682 INFO Processing audio with duration 00:04.400
+2026-10-26 12:54:56,686 DEBUG Processing segment at 00:00.000
+2026-10-26 12:54:56,819 DEBUG Processing segment at 00:04.340
+2026-10-26 12:54:56,869 DEBUG Log probability threshold is not met with temperature 0.0 (-1.419922 < -1.000000)
+2026-10-26 12:54:56,869 DEBUG No speech threshold is met (0.963867 > 0.600000)
+[52/200] clip 51 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.435 wer=0.00
+2026-10-26 12:54:57,337 INFO Processing audio with duration 00:06.905
+2026-10-26 12:54:57,342 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:54:57,507 WARNING synthesis text Heredity the cause of all our faults. too short than prompt text He gave up his position and shut the family up in that tomb of a house so that he couldn't study his books., this may lead to bad performance
+2026-10-26 12:54:58,089 INFO synthesis text Heredity the cause of all our faults.
+2026-10-26 12:55:01,817 INFO yield speech len 4.0, rtf 0.9321749210357666
+100%|██████████| 1/1 [00:04<00:00,  4.33s/it]100%|██████████| 1/1 [00:04<00:00,  4.33s/it]
+2026-10-26 12:55:01,968 INFO Processing audio with duration 00:04.000
+2026-10-26 12:55:01,972 DEBUG Processing segment at 00:00.000
+[53/200] clip 52 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.284 wer=0.00
+2026-10-26 12:55:02,362 INFO Processing audio with duration 00:03.700
+2026-10-26 12:55:02,366 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:55:02,847 INFO synthesis text When he finished she said cheerfully.
+2026-10-26 12:55:05,548 INFO yield speech len 3.04, rtf 0.8884182886073464
+100%|██████████| 1/1 [00:03<00:00,  3.05s/it]100%|██████████| 1/1 [00:03<00:00,  3.05s/it]
+2026-10-26 12:55:05,670 INFO Processing audio with duration 00:03.040
+2026-10-26 12:55:05,674 DEBUG Processing segment at 00:00.000
+2026-10-26 12:55:05,786 DEBUG Processing segment at 00:03.000
+2026-10-26 12:55:05,871 DEBUG Log probability threshold is not met with temperature 0.0 (-1.660714 < -1.000000)
+2026-10-26 12:55:05,871 DEBUG No speech threshold is met (0.874512 > 0.600000)
+[54/200] clip 53 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.398 wer=0.00
+2026-10-26 12:55:07,020 INFO Processing audio with duration 00:17.745
+2026-10-26 12:55:07,030 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c54_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:55:07,394 WARNING synthesis text He returned carrying his jumping shoes which are provided as you are aware with several sharp spikes. too short than prompt text They began with the one in the family sitting room. Colonel Wheeler, Ralph Thurston, Mister and Misses Bill Harmon with Natty and Ruffus, Mister and Misses Popple with Digby and Lally Joy, all standing in admiring groups and thrilling with delight at the order of events., this may lead to bad performance
+2026-10-26 12:55:08,853 INFO synthesis text He returned carrying his jumping shoes which are provided as you are aware with several sharp spikes.
+2026-10-26 12:55:17,663 INFO yield speech len 7.0, rtf 1.2585601466042655
+100%|██████████| 1/1 [00:10<00:00, 10.29s/it]100%|██████████| 1/1 [00:10<00:00, 10.29s/it]
+2026-10-26 12:55:17,883 INFO Processing audio with duration 00:07.000
+2026-10-26 12:55:17,889 DEBUG Processing segment at 00:00.000
+2026-10-26 12:55:18,058 DEBUG Processing segment at 00:06.720
+2026-10-26 12:55:18,703 DEBUG Compression ratio threshold is not met with temperature 0.0 (10.275000 > 2.400000)
+2026-10-26 12:55:18,740 DEBUG Log probability threshold is not met with temperature 0.2 (-2.196365 < -1.000000)
+2026-10-26 12:55:18,740 DEBUG No speech threshold is met (0.982422 > 0.600000)
+[55/200] clip 54 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.414 wer=0.00
+2026-10-26 12:55:19,123 INFO Processing audio with duration 00:04.770
+2026-10-26 12:55:19,128 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:55:19,708 INFO synthesis text But in this vignette copied from turner you have the two principles brought out perfectly.
+2026-10-26 12:55:24,709 INFO yield speech len 5.96, rtf 0.8390809865605912
+100%|██████████| 1/1 [00:05<00:00,  5.43s/it]100%|██████████| 1/1 [00:05<00:00,  5.43s/it]
+2026-10-26 12:55:24,891 INFO Processing audio with duration 00:05.960
+2026-10-26 12:55:24,896 DEBUG Processing segment at 00:00.000
+[56/200] clip 55 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.543 wer=0.00
+2026-10-26 12:55:25,252 INFO Processing audio with duration 00:02.755
+2026-10-26 12:55:25,256 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:55:25,672 INFO synthesis text I wish you weren't so restless and didn't get so worked up over things she said sadly.
+2026-10-26 12:55:30,096 INFO yield speech len 5.48, rtf 0.8074159169719166
+100%|██████████| 1/1 [00:04<00:00,  4.70s/it]100%|██████████| 1/1 [00:04<00:00,  4.70s/it]
+2026-10-26 12:55:30,253 INFO Processing audio with duration 00:05.480
+2026-10-26 12:55:30,257 DEBUG Processing segment at 00:00.000
+[57/200] clip 56 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.533 wer=0.00
+2026-10-26 12:55:30,887 INFO Processing audio with duration 00:07.145
+2026-10-26 12:55:30,892 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c57_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:55:31,106 WARNING synthesis text Yes so they said but that would i think have been worse. too short than prompt text But they could not have proven a case against Lucy if she was innocent, and all their threats of arresting her were probably a mere bluff., this may lead to bad performance
+2026-10-26 12:55:31,710 INFO synthesis text Yes so they said but that would i think have been worse.
+2026-10-26 12:55:35,593 INFO yield speech len 4.24, rtf 0.9157844871844885
+100%|██████████| 1/1 [00:04<00:00,  4.51s/it]100%|██████████| 1/1 [00:04<00:00,  4.51s/it]
+2026-10-26 12:55:35,751 INFO Processing audio with duration 00:04.240
+2026-10-26 12:55:35,755 DEBUG Processing segment at 00:00.000
+[58/200] clip 57 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.612 wer=0.00
+2026-10-26 12:55:36,190 INFO Processing audio with duration 00:04.015
+2026-10-26 12:55:36,194 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:55:36,685 INFO synthesis text Each of us is lashed to some part of the raft.
+2026-10-26 12:55:39,826 INFO yield speech len 3.56, rtf 0.882182362374295
+100%|██████████| 1/1 [00:03<00:00,  3.52s/it]100%|██████████| 1/1 [00:03<00:00,  3.52s/it]
+2026-10-26 12:55:39,963 INFO Processing audio with duration 00:03.560
+2026-10-26 12:55:39,967 DEBUG Processing segment at 00:00.000
+[59/200] clip 58 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.299 wer=0.00
+2026-10-26 12:55:40,373 INFO Processing audio with duration 00:04.215
+2026-10-26 12:55:40,377 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:55:40,937 INFO synthesis text But in such a case miss milner's election of a husband shall not direct mine.
+2026-10-26 12:55:45,731 INFO yield speech len 5.88, rtf 0.8153404102844446
+100%|██████████| 1/1 [00:05<00:00,  5.22s/it]100%|██████████| 1/1 [00:05<00:00,  5.22s/it]
+2026-10-26 12:55:45,905 INFO Processing audio with duration 00:05.880
+2026-10-26 12:55:45,910 DEBUG Processing segment at 00:00.000
+[60/200] clip 59 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.548 wer=0.00
+2026-10-26 12:55:46,345 INFO Processing audio with duration 00:03.075
+2026-10-26 12:55:46,349 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:55:46,787 INFO synthesis text Some girl has been here twice to interview my men and i have refused to admit her.
+2026-10-26 12:55:52,828 INFO yield speech len 7.48, rtf 0.8075688293273435
+100%|██████████| 1/1 [00:06<00:00,  6.35s/it]100%|██████████| 1/1 [00:06<00:00,  6.35s/it]
+2026-10-26 12:55:53,033 INFO Processing audio with duration 00:07.480
+2026-10-26 12:55:53,039 DEBUG Processing segment at 00:00.000
+[61/200] clip 60 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.510 wer=0.00
+2026-10-26 12:55:53,455 INFO Processing audio with duration 00:03.670
+2026-10-26 12:55:53,458 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:55:53,935 INFO synthesis text She pressed his hand gently in gratitude.
+2026-10-26 12:55:56,858 INFO yield speech len 3.4, rtf 0.8595970097710105
+100%|██████████| 1/1 [00:03<00:00,  3.28s/it]100%|██████████| 1/1 [00:03<00:00,  3.28s/it]
+2026-10-26 12:55:56,988 INFO Processing audio with duration 00:03.400
+2026-10-26 12:55:56,992 DEBUG Processing segment at 00:00.000
+[62/200] clip 61 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.304 wer=0.00
+2026-10-26 12:55:57,491 INFO Processing audio with duration 00:05.880
+2026-10-26 12:55:57,496 DEBUG Processing segment at 00:00.000
+2026-10-26 12:55:57,660 DEBUG Processing segment at 00:05.800
+2026-10-26 12:55:58,281 DEBUG Compression ratio threshold is not met with temperature 0.0 (11.640625 > 2.400000)
+2026-10-26 12:55:58,679 DEBUG Compression ratio threshold is not met with temperature 0.2 (13.622951 > 2.400000)
+2026-10-26 12:55:59,083 DEBUG Compression ratio threshold is not met with temperature 0.4 (13.622951 > 2.400000)
+2026-10-26 12:55:59,236 DEBUG Compression ratio threshold is not met with temperature 0.6 (3.129032 > 2.400000)
+2026-10-26 12:55:59,236 DEBUG Log probability threshold is not met with temperature 0.6 (-1.257714 < -1.000000)
+2026-10-26 12:55:59,236 DEBUG No speech threshold is met (0.978027 > 0.600000)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:55:59,276 WARNING synthesis text But i do not think such an inference is warranted. too short than prompt text Here is a ring for sitt to friendly, and here is a bracelet, and a sword would not be ashamed to hang at your side., this may lead to bad performance
+2026-10-26 12:55:59,775 INFO synthesis text But i do not think such an inference is warranted.
+2026-10-26 12:56:03,018 INFO yield speech len 3.32, rtf 0.9768733059067325
+100%|██████████| 1/1 [00:03<00:00,  3.76s/it]100%|██████████| 1/1 [00:03<00:00,  3.76s/it]
+2026-10-26 12:56:03,154 INFO Processing audio with duration 00:03.320
+2026-10-26 12:56:03,158 DEBUG Processing segment at 00:00.000
+[63/200] clip 62 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.310 wer=0.00
+2026-10-26 12:56:03,721 INFO Processing audio with duration 00:06.585
+2026-10-26 12:56:03,726 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c63_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:56:03,930 WARNING synthesis text You will take me on board count will you not. too short than prompt text They pointedly drew back from John Yago as he approached the empty chair next to me and moved around to the opposite side of the table., this may lead to bad performance
+2026-10-26 12:56:04,504 INFO synthesis text You will take me on board count will you not.
+2026-10-26 12:56:08,001 INFO yield speech len 3.6, rtf 0.9711572196748521
+100%|██████████| 1/1 [00:04<00:00,  4.09s/it]100%|██████████| 1/1 [00:04<00:00,  4.09s/it]
+2026-10-26 12:56:08,124 INFO Processing audio with duration 00:03.600
+2026-10-26 12:56:08,128 DEBUG Processing segment at 00:00.000
+[64/200] clip 63 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.587 wer=0.00
+2026-10-26 12:56:08,515 INFO Processing audio with duration 00:03.455
+2026-10-26 12:56:08,519 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:56:08,991 INFO synthesis text Well said mademoiselle de tonnay charente i also think a good deal but i take care.
+2026-10-26 12:56:14,271 INFO yield speech len 6.4, rtf 0.8249815553426743
+100%|██████████| 1/1 [00:05<00:00,  5.62s/it]100%|██████████| 1/1 [00:05<00:00,  5.62s/it]
+2026-10-26 12:56:14,460 INFO Processing audio with duration 00:06.400
+2026-10-26 12:56:14,465 DEBUG Processing segment at 00:00.000
+[65/200] clip 64 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.382 wer=0.31
+2026-10-26 12:56:14,916 INFO Processing audio with duration 00:03.160
+2026-10-26 12:56:14,920 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:56:15,369 INFO synthesis text Hose man's excuse for wetting the walk.
+2026-10-26 12:56:17,471 INFO yield speech len 2.28, rtf 0.9215632028747024
+100%|██████████| 1/1 [00:02<00:00,  2.42s/it]100%|██████████| 1/1 [00:02<00:00,  2.42s/it]
+2026-10-26 12:56:17,581 INFO Processing audio with duration 00:02.280
+2026-10-26 12:56:17,585 DEBUG Processing segment at 00:00.000
+[66/200] clip 65 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.372 wer=0.14
+2026-10-26 12:56:18,036 INFO Processing audio with duration 00:04.755
+2026-10-26 12:56:18,040 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:56:18,617 INFO synthesis text Out in the woods stood a nice little fir tree.
+2026-10-26 12:56:22,500 INFO yield speech len 4.32, rtf 0.8988522821002536
+100%|██████████| 1/1 [00:04<00:00,  4.32s/it]100%|██████████| 1/1 [00:04<00:00,  4.32s/it]
+2026-10-26 12:56:22,652 INFO Processing audio with duration 00:04.320
+2026-10-26 12:56:22,656 DEBUG Processing segment at 00:00.000
+[67/200] clip 66 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.245 wer=0.00
+2026-10-26 12:56:23,191 INFO Processing audio with duration 00:06.100
+2026-10-26 12:56:23,196 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c67_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:56:23,375 WARNING synthesis text Cold is it my darling bless your sweet face. too short than prompt text The strange woman and her passionate sentence that rang out so sharply had frightened them both., this may lead to bad performance
+2026-10-26 12:56:23,888 INFO synthesis text Cold is it my darling bless your sweet face.
+2026-10-26 12:56:27,546 INFO yield speech len 3.92, rtf 0.9331699536771191
+100%|██████████| 1/1 [00:04<00:00,  4.19s/it]100%|██████████| 1/1 [00:04<00:00,  4.19s/it]
+2026-10-26 12:56:27,687 INFO Processing audio with duration 00:03.920
+2026-10-26 12:56:27,691 DEBUG Processing segment at 00:00.000
+[68/200] clip 67 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.404 wer=0.00
+2026-10-26 12:56:28,029 INFO Processing audio with duration 00:02.395
+2026-10-26 12:56:28,032 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:56:28,408 INFO synthesis text But now here is a subject of which you will wonder at first why turner drew it at all.
+2026-10-26 12:56:33,848 INFO yield speech len 6.8, rtf 0.8000412057427799
+100%|██████████| 1/1 [00:05<00:00,  5.70s/it]100%|██████████| 1/1 [00:05<00:00,  5.70s/it]
+2026-10-26 12:56:34,038 INFO Processing audio with duration 00:06.800
+2026-10-26 12:56:34,044 DEBUG Processing segment at 00:00.000
+[69/200] clip 68 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.268 wer=0.05
+2026-10-26 12:56:34,422 INFO Processing audio with duration 00:02.720
+2026-10-26 12:56:34,426 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:56:34,828 INFO synthesis text The paris plant like that at the crystal palace was a temporary exhibit.
+2026-10-26 12:56:39,284 INFO yield speech len 5.56, rtf 0.8013240725016423
+100%|██████████| 1/1 [00:04<00:00,  4.75s/it]100%|██████████| 1/1 [00:04<00:00,  4.75s/it]
+2026-10-26 12:56:39,455 INFO Processing audio with duration 00:05.560
+2026-10-26 12:56:39,459 DEBUG Processing segment at 00:00.000
+[70/200] clip 69 prompt full text unseen: acc_src=0.875 acc=1.000 traced=True far=False sim=0.419 wer=0.00
+2026-10-26 12:56:40,075 INFO Processing audio with duration 00:06.515
+2026-10-26 12:56:40,080 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:56:40,799 INFO synthesis text I wish you weren't so restless and didn't get so worked up over things she said sadly.
+2026-10-26 12:56:45,612 INFO yield speech len 5.28, rtf 0.9115225889466025
+100%|██████████| 1/1 [00:05<00:00,  5.39s/it]100%|██████████| 1/1 [00:05<00:00,  5.39s/it]
+2026-10-26 12:56:45,789 INFO Processing audio with duration 00:05.280
+2026-10-26 12:56:45,794 DEBUG Processing segment at 00:00.000
+[71/200] clip 70 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.489 wer=0.06
+2026-10-26 12:56:46,166 INFO Processing audio with duration 00:02.690
+2026-10-26 12:56:46,170 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:56:46,559 INFO synthesis text Yes so they said but that would i think have been worse.
+2026-10-26 12:56:49,323 INFO yield speech len 3.4, rtf 0.8127965646631578
+100%|██████████| 1/1 [00:03<00:00,  3.05s/it]100%|██████████| 1/1 [00:03<00:00,  3.05s/it]
+2026-10-26 12:56:49,437 INFO Processing audio with duration 00:03.400
+2026-10-26 12:56:49,441 DEBUG Processing segment at 00:00.000
+[72/200] clip 71 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.440 wer=0.00
+2026-10-26 12:56:50,159 INFO Processing audio with duration 00:08.485
+2026-10-26 12:56:50,165 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:56:50,384 WARNING synthesis text Each of us is lashed to some part of the raft. too short than prompt text Why did they not invade the Catholic provinces and preach their doctrine to Godless princes,  bishops and doctors, as we have done by the help of God?, this may lead to bad performance
+2026-10-26 12:56:51,118 INFO synthesis text Each of us is lashed to some part of the raft.
+2026-10-26 12:56:54,355 INFO yield speech len 2.96, rtf 1.0938420489027694
+100%|██████████| 1/1 [00:03<00:00,  3.99s/it]100%|██████████| 1/1 [00:03<00:00,  3.99s/it]
+2026-10-26 12:56:54,491 INFO Processing audio with duration 00:02.960
+2026-10-26 12:56:54,495 DEBUG Processing segment at 00:00.000
+[73/200] clip 72 prompt full text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.468 wer=0.00
+2026-10-26 12:56:54,853 INFO Processing audio with duration 00:03.460
+2026-10-26 12:56:54,856 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:56:55,314 INFO synthesis text But in such a case miss milner's election of a husband shall not direct mine.
+2026-10-26 12:57:01,024 INFO yield speech len 7.04, rtf 0.8110577409917658
+100%|██████████| 1/1 [00:06<00:00,  6.04s/it]100%|██████████| 1/1 [00:06<00:00,  6.04s/it]
+2026-10-26 12:57:01,219 INFO Processing audio with duration 00:07.040
+2026-10-26 12:57:01,224 DEBUG Processing segment at 00:00.000
+[74/200] clip 73 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.467 wer=0.00
+2026-10-26 12:57:01,546 INFO Processing audio with duration 00:02.105
+2026-10-26 12:57:01,550 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:57:01,898 INFO synthesis text We sunk his ship and men but him we brought to you.
+2026-10-26 12:57:05,002 INFO yield speech len 3.88, rtf 0.7999772263556412
+100%|██████████| 1/1 [00:03<00:00,  3.34s/it]100%|██████████| 1/1 [00:03<00:00,  3.34s/it]
+2026-10-26 12:57:05,138 INFO Processing audio with duration 00:03.880
+2026-10-26 12:57:05,142 DEBUG Processing segment at 00:00.000
+[75/200] clip 74 prompt full text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.543 wer=0.08
+2026-10-26 12:57:05,747 INFO Processing audio with duration 00:06.480
+2026-10-26 12:57:05,752 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:57:06,445 INFO synthesis text Lend me your ear for ten minutes and you shall learn just what stagecraft is.
+2026-10-26 12:57:11,438 INFO yield speech len 5.6, rtf 0.8916774392127992
+100%|██████████| 1/1 [00:05<00:00,  5.56s/it]100%|██████████| 1/1 [00:05<00:00,  5.56s/it]
+2026-10-26 12:57:11,602 INFO Processing audio with duration 00:05.600
+2026-10-26 12:57:11,607 DEBUG Processing segment at 00:00.000
+[76/200] clip 75 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.653 wer=0.07
+2026-10-26 12:57:12,605 INFO Processing audio with duration 00:13.085
+2026-10-26 12:57:12,612 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c76_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:57:12,854 WARNING synthesis text It was a deliberate theft from his employers to protect a girl he loved. too short than prompt text The king's ears were now open to Montrose's councils, who proposed none but the boldest and most daring, agreeably to the desperate state of the royal cause in Scotland., this may lead to bad performance
+2026-10-26 12:57:13,939 INFO synthesis text It was a deliberate theft from his employers to protect a girl he loved.
+2026-10-26 12:57:20,218 INFO yield speech len 5.36, rtf 1.1714060359926366
+100%|██████████| 1/1 [00:07<00:00,  7.38s/it]100%|██████████| 1/1 [00:07<00:00,  7.38s/it]
+2026-10-26 12:57:20,389 INFO Processing audio with duration 00:05.360
+2026-10-26 12:57:20,393 DEBUG Processing segment at 00:00.000
+[77/200] clip 76 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.598 wer=0.00
+2026-10-26 12:57:21,463 INFO Processing audio with duration 00:14.600
+2026-10-26 12:57:21,471 DEBUG Processing segment at 00:00.000
+2026-10-26 12:57:21,697 DEBUG Processing segment at 00:13.280
+[cosyvoice] prompt transcript cleaned for the text normaliser (c77_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:57:21,797 WARNING synthesis text She pressed his hand gently in gratitude. too short than prompt text Before the settlement of Terrans, the administration must be possessed entirely by the parliaments of both kingdoms, and how incompatible that scheme with the liberty of the king is easily imagined., this may lead to bad performance
+2026-10-26 12:57:23,007 INFO synthesis text She pressed his hand gently in gratitude.
+2026-10-26 12:57:28,231 INFO yield speech len 3.76, rtf 1.389358842626531
+100%|██████████| 1/1 [00:06<00:00,  6.45s/it]100%|██████████| 1/1 [00:06<00:00,  6.45s/it]
+2026-10-26 12:57:28,371 INFO Processing audio with duration 00:03.760
+2026-10-26 12:57:28,376 DEBUG Processing segment at 00:00.000
+[78/200] clip 77 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.665 wer=0.00
+2026-10-26 12:57:29,691 INFO Processing audio with duration 00:18.730
+2026-10-26 12:57:29,702 DEBUG Processing segment at 00:00.000
+2026-10-26 12:57:29,943 DEBUG Processing segment at 00:16.480
+[cosyvoice] prompt transcript cleaned for the text normaliser (c78_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:57:30,065 WARNING synthesis text Will whispered robin opening his door as he spoke are you ready. too short than prompt text If any still retained rancor against him, in his present condition, they passed in silence. While his well wishers more generous than prudent, accompanied his march with tears, with acclamations and with prayers for his safety., this may lead to bad performance
+2026-10-26 12:57:31,654 INFO synthesis text Will whispered robin opening his door as he spoke are you ready.
+2026-10-26 12:57:38,679 INFO yield speech len 4.88, rtf 1.4396390465439344
+100%|██████████| 1/1 [00:08<00:00,  8.64s/it]100%|██████████| 1/1 [00:08<00:00,  8.64s/it]
+2026-10-26 12:57:38,852 INFO Processing audio with duration 00:04.880
+2026-10-26 12:57:38,857 DEBUG Processing segment at 00:00.000
+[79/200] clip 78 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.573 wer=0.17
+2026-10-26 12:57:40,307 INFO Processing audio with duration 00:20.000
+2026-10-26 12:57:40,317 DEBUG Processing segment at 00:00.000
+2026-10-26 12:57:40,535 DEBUG Processing segment at 00:14.320
+[cosyvoice] prompt transcript cleaned for the text normaliser (c79_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:57:40,666 WARNING synthesis text Nothing was to be done but to put about and return in disappointment towards the north. too short than prompt text The persons of distinction who united themselves to him was Lord Napier of Murchiston, son of the famous inventor of the logarithms, the passion to whom the title of a great man is more justly due than to any other whom his country ever, this may lead to bad performance
+2026-10-26 12:57:42,383 INFO synthesis text Nothing was to be done but to put about and return in disappointment towards the north.
+2026-10-26 12:57:52,723 INFO yield speech len 7.92, rtf 1.3055508786981755
+100%|██████████| 1/1 [00:12<00:00, 12.09s/it]100%|██████████| 1/1 [00:12<00:00, 12.09s/it]
+2026-10-26 12:57:52,968 INFO Processing audio with duration 00:07.920
+2026-10-26 12:57:52,974 DEBUG Processing segment at 00:00.000
+[80/200] clip 79 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.640 wer=0.00
+2026-10-26 12:57:54,132 INFO Processing audio with duration 00:14.945
+2026-10-26 12:57:54,140 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c80_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:57:54,402 WARNING synthesis text He went here there and everywhere in perfect contentment. too short than prompt text The definition of my experience is difficult. Broadly speaking, it is everything that is connected with what I am experiencing now by certain links of which the various forms of memory are among the most important., this may lead to bad performance
+2026-10-26 12:57:55,649 INFO synthesis text He went here there and everywhere in perfect contentment.
+2026-10-26 12:58:01,421 INFO yield speech len 4.76, rtf 1.2124394168372916
+100%|██████████| 1/1 [00:07<00:00,  7.04s/it]100%|██████████| 1/1 [00:07<00:00,  7.04s/it]
+2026-10-26 12:58:01,585 INFO Processing audio with duration 00:04.760
+2026-10-26 12:58:01,590 DEBUG Processing segment at 00:00.000
+2026-10-26 12:58:01,718 DEBUG Processing segment at 00:04.640
+[81/200] clip 80 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.300 wer=0.00
+2026-10-26 12:58:02,396 INFO Processing audio with duration 00:07.940
+2026-10-26 12:58:02,402 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c81_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:58:02,598 WARNING synthesis text Yes but the meridian of the palais royal is the most exact. too short than prompt text I come now to the other characteristic which memory images must have in order to account for our knowledge of the past., this may lead to bad performance
+2026-10-26 12:58:03,262 INFO synthesis text Yes but the meridian of the palais royal is the most exact.
+2026-10-26 12:58:07,370 INFO yield speech len 4.16, rtf 0.9875059127807617
+100%|██████████| 1/1 [00:04<00:00,  4.79s/it]100%|██████████| 1/1 [00:04<00:00,  4.79s/it]
+2026-10-26 12:58:07,525 INFO Processing audio with duration 00:04.160
+2026-10-26 12:58:07,529 DEBUG Processing segment at 00:00.000
+[82/200] clip 81 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.450 wer=0.00
+2026-10-26 12:58:07,932 INFO Processing audio with duration 00:03.620
+2026-10-26 12:58:07,936 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:58:08,408 INFO synthesis text Heredity the cause of all our faults.
+2026-10-26 12:58:10,679 INFO yield speech len 2.56, rtf 0.8869786746799946
+100%|██████████| 1/1 [00:02<00:00,  2.62s/it]100%|██████████| 1/1 [00:02<00:00,  2.62s/it]
+2026-10-26 12:58:10,787 INFO Processing audio with duration 00:02.560
+2026-10-26 12:58:10,797 DEBUG Processing segment at 00:00.000
+[83/200] clip 82 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.356 wer=0.00
+2026-10-26 12:58:11,176 INFO Processing audio with duration 00:03.235
+2026-10-26 12:58:11,179 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:58:11,622 INFO synthesis text When he finished she said cheerfully.
+2026-10-26 12:58:14,586 INFO yield speech len 3.4, rtf 0.8717665952794692
+100%|██████████| 1/1 [00:03<00:00,  3.29s/it]100%|██████████| 1/1 [00:03<00:00,  3.29s/it]
+2026-10-26 12:58:14,699 INFO Processing audio with duration 00:03.400
+2026-10-26 12:58:14,703 DEBUG Processing segment at 00:00.000
+[84/200] clip 83 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.403 wer=0.00
+2026-10-26 12:58:15,908 INFO Processing audio with duration 00:16.910
+2026-10-26 12:58:15,917 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c84_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:58:16,219 WARNING synthesis text He returned carrying his jumping shoes which are provided as you are aware with several sharp spikes. too short than prompt text Our confidence, or lack of confidence, in the accuracy of a memory image must, in fundamental cases, be based upon a characteristic of the image itself, since we cannot evoke the past bodily and compare it with the present image., this may lead to bad performance
+2026-10-26 12:58:17,636 INFO synthesis text He returned carrying his jumping shoes which are provided as you are aware with several sharp spikes.
+2026-10-26 12:58:25,585 INFO yield speech len 6.36, rtf 1.2497338483918388
+100%|██████████| 1/1 [00:09<00:00,  9.39s/it]100%|██████████| 1/1 [00:09<00:00,  9.39s/it]
+2026-10-26 12:58:25,784 INFO Processing audio with duration 00:06.360
+2026-10-26 12:58:25,789 DEBUG Processing segment at 00:00.000
+2026-10-26 12:58:25,931 DEBUG Processing segment at 00:06.240
+2026-10-26 12:58:26,008 DEBUG Log probability threshold is not met with temperature 0.0 (-1.450521 < -1.000000)
+2026-10-26 12:58:26,008 DEBUG No speech threshold is met (0.971680 > 0.600000)
+[85/200] clip 84 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.497 wer=0.00
+2026-10-26 12:58:26,619 INFO Processing audio with duration 00:08.415
+2026-10-26 12:58:26,625 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c85_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:58:26,848 WARNING synthesis text I never see lou's scythe over here. too short than prompt text Will, cried he softly, and stuttly, who had chosen his couch across the door of his young master's chamber, sprang up at once an answer., this may lead to bad performance
+2026-10-26 12:58:27,561 INFO synthesis text I never see lou's scythe over here.
+2026-10-26 12:58:30,624 INFO yield speech len 2.72, rtf 1.1260480565183302
+100%|██████████| 1/1 [00:03<00:00,  3.80s/it]100%|██████████| 1/1 [00:03<00:00,  3.80s/it]
+2026-10-26 12:58:30,740 INFO Processing audio with duration 00:02.720
+2026-10-26 12:58:30,744 DEBUG Processing segment at 00:00.000
+[86/200] clip 85 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.521 wer=0.29
+2026-10-26 12:58:31,217 INFO Processing audio with duration 00:05.025
+2026-10-26 12:58:31,221 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:58:31,810 INFO synthesis text Finally the one party went off exulting and the other was left in desolation and woe.
+2026-10-26 12:58:36,758 INFO yield speech len 5.76, rtf 0.8590086880657408
+100%|██████████| 1/1 [00:05<00:00,  5.40s/it]100%|██████████| 1/1 [00:05<00:00,  5.40s/it]
+2026-10-26 12:58:36,929 INFO Processing audio with duration 00:05.760
+2026-10-26 12:58:36,934 DEBUG Processing segment at 00:00.000
+[87/200] clip 86 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.360 wer=0.06
+2026-10-26 12:58:37,521 INFO Processing audio with duration 00:06.550
+2026-10-26 12:58:37,526 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:58:37,722 WARNING synthesis text I am so very tired of being all alone here. too short than prompt text Stuttly was by his side and a flash, and then they both began feeling about them to ascertain the shape and character of this vault., this may lead to bad performance
+2026-10-26 12:58:38,275 INFO synthesis text I am so very tired of being all alone here.
+2026-10-26 12:58:41,341 INFO yield speech len 3.04, rtf 1.0085967810530412
+100%|██████████| 1/1 [00:03<00:00,  3.64s/it]100%|██████████| 1/1 [00:03<00:00,  3.64s/it]
+2026-10-26 12:58:41,452 INFO Processing audio with duration 00:03.040
+2026-10-26 12:58:41,455 DEBUG Processing segment at 00:00.000
+[88/200] clip 87 prompt full text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.587 wer=0.00
+2026-10-26 12:58:41,952 INFO Processing audio with duration 00:05.475
+2026-10-26 12:58:41,957 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:58:42,568 INFO synthesis text Grandfather was alexander carey l l d doctor of laws that is.
+2026-10-26 12:58:47,136 INFO yield speech len 5.44, rtf 0.8397511699620415
+100%|██████████| 1/1 [00:05<00:00,  5.05s/it]100%|██████████| 1/1 [00:05<00:00,  5.05s/it]
+2026-10-26 12:58:47,309 INFO Processing audio with duration 00:05.440
+2026-10-26 12:58:47,314 DEBUG Processing segment at 00:00.000
+[89/200] clip 88 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.503 wer=0.08
+2026-10-26 12:58:47,742 INFO Processing audio with duration 00:04.165
+2026-10-26 12:58:47,746 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:58:48,272 INFO synthesis text Two hundred warriors feasted in his hall and followed him to battle.
+2026-10-26 12:58:53,140 INFO yield speech len 5.92, rtf 0.822320902669752
+100%|██████████| 1/1 [00:05<00:00,  5.26s/it]100%|██████████| 1/1 [00:05<00:00,  5.26s/it]
+2026-10-26 12:58:53,312 INFO Processing audio with duration 00:05.920
+2026-10-26 12:58:53,316 DEBUG Processing segment at 00:00.000
+[90/200] clip 89 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.570 wer=0.00
+2026-10-26 12:58:54,487 INFO Processing audio with duration 00:15.350
+2026-10-26 12:58:54,496 DEBUG Processing segment at 00:00.000
+2026-10-26 12:58:54,693 DEBUG Processing segment at 00:12.600
+[cosyvoice] prompt transcript cleaned for the text normaliser (c90_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:58:54,805 WARNING synthesis text In the stern i curved the tail up almost as high as the head. too short than prompt text In this supposed depths of this dialogue, the Neoplatonists found hidden means in connections with the Jewish and Christian scriptures, and out of them, they elicited doctrines quite at variance with the spirit of Plato., this may lead to bad performance
+2026-10-26 12:58:56,059 INFO synthesis text In the stern i curved the tail up almost as high as the head.
+2026-10-26 12:59:02,045 INFO yield speech len 4.48, rtf 1.3361283178840364
+100%|██████████| 1/1 [00:07<00:00,  7.27s/it]100%|██████████| 1/1 [00:07<00:00,  7.27s/it]
+2026-10-26 12:59:02,202 INFO Processing audio with duration 00:04.480
+2026-10-26 12:59:02,207 DEBUG Processing segment at 00:00.000
+2026-10-26 12:59:02,336 DEBUG Processing segment at 00:04.440
+2026-10-26 12:59:02,984 DEBUG Compression ratio threshold is not met with temperature 0.0 (9.265306 > 2.400000)
+2026-10-26 12:59:03,536 DEBUG Compression ratio threshold is not met with temperature 0.2 (22.476190 > 2.400000)
+2026-10-26 12:59:03,933 DEBUG Compression ratio threshold is not met with temperature 0.4 (15.084746 > 2.400000)
+2026-10-26 12:59:04,036 DEBUG Log probability threshold is not met with temperature 0.6 (-1.533077 < -1.000000)
+2026-10-26 12:59:04,036 DEBUG No speech threshold is met (0.960938 > 0.600000)
+[91/200] clip 90 prompt full text unseen: acc_src=0.875 acc=1.000 traced=True far=False sim=0.521 wer=0.00
+2026-10-26 12:59:04,614 INFO Processing audio with duration 00:08.505
+2026-10-26 12:59:04,619 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:59:04,807 WARNING synthesis text Mohammed also speaks highly of christ. too short than prompt text The subject was a very noble one.  He described the most famous action in which the Athenian people were ever engaged., this may lead to bad performance
+2026-10-26 12:59:05,534 INFO synthesis text Mohammed also speaks highly of christ.
+2026-10-26 12:59:09,166 INFO yield speech len 3.44, rtf 1.0558037563811902
+100%|██████████| 1/1 [00:04<00:00,  4.38s/it]100%|██████████| 1/1 [00:04<00:00,  4.38s/it]
+2026-10-26 12:59:09,290 INFO Processing audio with duration 00:03.440
+2026-10-26 12:59:09,295 DEBUG Processing segment at 00:00.000
+[92/200] clip 91 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.339 wer=0.17
+2026-10-26 12:59:09,928 INFO Processing audio with duration 00:07.830
+2026-10-26 12:59:09,934 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c92_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:59:10,807 INFO synthesis text They regained their apartment apparently without disturbing the household of gamewell.
+2026-10-26 12:59:16,112 INFO yield speech len 5.56, rtf 0.9541538979509753
+100%|██████████| 1/1 [00:06<00:00,  6.02s/it]100%|██████████| 1/1 [00:06<00:00,  6.02s/it]
+2026-10-26 12:59:16,284 INFO Processing audio with duration 00:05.560
+2026-10-26 12:59:16,289 DEBUG Processing segment at 00:00.000
+[93/200] clip 92 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.443 wer=0.18
+2026-10-26 12:59:17,066 INFO Processing audio with duration 00:09.880
+2026-10-26 12:59:17,072 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c93_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:59:18,093 INFO synthesis text Upon this madame deigned to turn her eyes languishingly towards the comte observing.
+2026-10-26 12:59:24,388 INFO yield speech len 6.2, rtf 1.015263219033518
+100%|██████████| 1/1 [00:07<00:00,  7.12s/it]100%|██████████| 1/1 [00:07<00:00,  7.12s/it]
+2026-10-26 12:59:24,578 INFO Processing audio with duration 00:06.200
+2026-10-26 12:59:24,583 DEBUG Processing segment at 00:00.000
+[94/200] clip 93 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.480 wer=0.31
+2026-10-26 12:59:25,189 INFO Processing audio with duration 00:06.890
+2026-10-26 12:59:25,194 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:59:25,935 INFO synthesis text My tongue refused to articulate my power of speech left me.
+2026-10-26 12:59:30,364 INFO yield speech len 4.76, rtf 0.9304538995277982
+100%|██████████| 1/1 [00:05<00:00,  5.03s/it]100%|██████████| 1/1 [00:05<00:00,  5.03s/it]
+2026-10-26 12:59:30,520 INFO Processing audio with duration 00:04.760
+2026-10-26 12:59:30,525 DEBUG Processing segment at 00:00.000
+2026-10-26 12:59:30,663 DEBUG Processing segment at 00:04.720
+2026-10-26 12:59:30,900 DEBUG Compression ratio threshold is not met with temperature 0.0 (3.813953 > 2.400000)
+2026-10-26 12:59:31,345 DEBUG Compression ratio threshold is not met with temperature 0.2 (15.000000 > 2.400000)
+2026-10-26 12:59:31,393 DEBUG Log probability threshold is not met with temperature 0.4 (-1.279321 < -1.000000)
+2026-10-26 12:59:31,394 DEBUG No speech threshold is met (0.962402 > 0.600000)
+[95/200] clip 94 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.479 wer=0.00
+2026-10-26 12:59:31,736 INFO Processing audio with duration 00:03.980
+2026-10-26 12:59:31,741 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:59:32,243 INFO synthesis text I think i should be doing you a service to turn you out of such a place.
+2026-10-26 12:59:35,843 INFO yield speech len 4.12, rtf 0.873739395326781
+100%|██████████| 1/1 [00:03<00:00,  3.97s/it]100%|██████████| 1/1 [00:03<00:00,  3.97s/it]
+2026-10-26 12:59:35,987 INFO Processing audio with duration 00:04.120
+2026-10-26 12:59:35,991 DEBUG Processing segment at 00:00.000
+[96/200] clip 95 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.433 wer=0.00
+2026-10-26 12:59:36,344 INFO Processing audio with duration 00:02.885
+2026-10-26 12:59:36,347 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:59:36,770 INFO synthesis text But in this vignette copied from turner you have the two principles brought out perfectly.
+2026-10-26 12:59:41,349 INFO yield speech len 5.64, rtf 0.8118166145703472
+100%|██████████| 1/1 [00:04<00:00,  4.86s/it]100%|██████████| 1/1 [00:04<00:00,  4.86s/it]
+2026-10-26 12:59:41,499 INFO Processing audio with duration 00:05.640
+2026-10-26 12:59:41,504 DEBUG Processing segment at 00:00.000
+[97/200] clip 96 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.325 wer=0.00
+2026-10-26 12:59:42,014 INFO Processing audio with duration 00:05.290
+2026-10-26 12:59:42,024 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:59:42,650 INFO synthesis text I wish you weren't so restless and didn't get so worked up over things she said sadly.
+2026-10-26 12:59:47,792 INFO yield speech len 6.04, rtf 0.8512236819362009
+100%|██████████| 1/1 [00:05<00:00,  5.63s/it]100%|██████████| 1/1 [00:05<00:00,  5.63s/it]
+2026-10-26 12:59:47,969 INFO Processing audio with duration 00:06.040
+2026-10-26 12:59:47,974 DEBUG Processing segment at 00:00.000
+[98/200] clip 97 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.655 wer=0.00
+2026-10-26 12:59:48,437 INFO Processing audio with duration 00:04.730
+2026-10-26 12:59:48,441 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:59:49,006 INFO synthesis text Yes so they said but that would i think have been worse.
+2026-10-26 12:59:53,673 INFO yield speech len 5.52, rtf 0.8454093466634336
+100%|██████████| 1/1 [00:05<00:00,  5.10s/it]100%|██████████| 1/1 [00:05<00:00,  5.10s/it]
+2026-10-26 12:59:53,843 INFO Processing audio with duration 00:05.520
+2026-10-26 12:59:53,848 DEBUG Processing segment at 00:00.000
+[99/200] clip 98 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.392 wer=0.08
+2026-10-26 12:59:54,368 INFO Processing audio with duration 00:05.505
+2026-10-26 12:59:54,372 DEBUG Processing segment at 00:00.000
+2026-10-26 12:59:54,501 DEBUG Processing segment at 00:04.660
+2026-10-26 12:59:54,555 DEBUG Log probability threshold is not met with temperature 0.0 (-1.095703 < -1.000000)
+2026-10-26 12:59:54,555 DEBUG No speech threshold is met (0.906738 > 0.600000)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:59:55,048 INFO synthesis text Each of us is lashed to some part of the raft.
+2026-10-26 12:59:58,350 INFO yield speech len 3.52, rtf 0.9382885288108479
+100%|██████████| 1/1 [00:03<00:00,  3.79s/it]100%|██████████| 1/1 [00:03<00:00,  3.79s/it]
+2026-10-26 12:59:58,492 INFO Processing audio with duration 00:03.520
+2026-10-26 12:59:58,496 DEBUG Processing segment at 00:00.000
+[100/200] clip 99 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.477 wer=0.00
+2026-10-26 12:59:59,183 INFO Processing audio with duration 00:07.706
+2026-10-26 12:59:59,195 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c100_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:00:00,041 INFO synthesis text But in this vignette copied from turner you have the two principles brought out perfectly.
+2026-10-26 13:00:06,187 INFO yield speech len 6.88, rtf 0.8934167928473894
+100%|██████████| 1/1 [00:06<00:00,  6.81s/it]100%|██████████| 1/1 [00:06<00:00,  6.81s/it]
+2026-10-26 13:00:06,381 INFO Processing audio with duration 00:06.880
+2026-10-26 13:00:06,386 DEBUG Processing segment at 00:00.000
+[101/200] clip 100 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.475 wer=0.00
+2026-10-26 13:00:07,214 INFO Processing audio with duration 00:10.366
+2026-10-26 13:00:07,220 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c101_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:00:08,317 INFO synthesis text I wish you weren't so restless and didn't get so worked up over things she said sadly.
+2026-10-26 13:00:15,153 INFO yield speech len 6.8, rtf 1.0053820119184607
+100%|██████████| 1/1 [00:07<00:00,  7.72s/it]100%|██████████| 1/1 [00:07<00:00,  7.72s/it]
+2026-10-26 13:00:15,350 INFO Processing audio with duration 00:06.800
+2026-10-26 13:00:15,355 DEBUG Processing segment at 00:00.000
+[102/200] clip 101 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.299 wer=0.00
+2026-10-26 13:00:16,273 INFO Processing audio with duration 00:12.025
+2026-10-26 13:00:16,280 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:00:16,507 WARNING synthesis text Yes so they said but that would i think have been worse. too short than prompt text Let a box women are put into, measured for it, and put in young.  If we go anywhere, it's in a box, veiled and pinioned and shut in by disabilities., this may lead to bad performance
+2026-10-26 13:00:17,520 INFO synthesis text Yes so they said but that would i think have been worse.
+2026-10-26 13:00:22,744 INFO yield speech len 4.8, rtf 1.0882469018300376
+100%|██████████| 1/1 [00:06<00:00,  6.26s/it]100%|██████████| 1/1 [00:06<00:00,  6.26s/it]
+2026-10-26 13:00:22,901 INFO Processing audio with duration 00:04.800
+2026-10-26 13:00:22,905 DEBUG Processing segment at 00:00.000
+[103/200] clip 102 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.152 wer=0.08
+2026-10-26 13:00:23,253 INFO Processing audio with duration 00:02.618
+2026-10-26 13:00:23,257 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:00:23,660 INFO synthesis text Each of us is lashed to some part of the raft.
+2026-10-26 13:00:26,385 INFO yield speech len 3.24, rtf 0.8409378705201325
+100%|██████████| 1/1 [00:03<00:00,  3.00s/it]100%|██████████| 1/1 [00:03<00:00,  3.00s/it]
+2026-10-26 13:00:26,506 INFO Processing audio with duration 00:03.240
+2026-10-26 13:00:26,509 DEBUG Processing segment at 00:00.000
+[104/200] clip 103 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.250 wer=0.00
+2026-10-26 13:00:27,571 INFO Processing audio with duration 00:14.670
+2026-10-26 13:00:27,579 DEBUG Processing segment at 00:00.000
+2026-10-26 13:00:27,769 DEBUG Processing segment at 00:11.740
+[cosyvoice] prompt transcript cleaned for the text normaliser (c104_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:00:27,909 WARNING synthesis text But in such a case miss milner's election of a husband shall not direct mine. too short than prompt text She doesn't say, but it's on the frontier, and on the map everything beyond is marked Indians and Desert, and looks as desolate as a Wednesday meeting. It was time for him to do something., this may lead to bad performance
+2026-10-26 13:00:29,127 INFO synthesis text But in such a case miss milner's election of a husband shall not direct mine.
+2026-10-26 13:00:35,728 INFO yield speech len 5.32, rtf 1.2408270423573657
+100%|██████████| 1/1 [00:07<00:00,  7.84s/it]100%|██████████| 1/1 [00:07<00:00,  7.84s/it]
+2026-10-26 13:00:35,909 INFO Processing audio with duration 00:05.320
+2026-10-26 13:00:35,913 DEBUG Processing segment at 00:00.000
+2026-10-26 13:00:36,047 DEBUG Processing segment at 00:05.140
+2026-10-26 13:00:36,114 DEBUG Log probability threshold is not met with temperature 0.0 (-1.345052 < -1.000000)
+2026-10-26 13:00:36,114 DEBUG No speech threshold is met (0.965332 > 0.600000)
+[105/200] clip 104 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.456 wer=0.07
+2026-10-26 13:00:36,612 INFO Processing audio with duration 00:06.640
+2026-10-26 13:00:36,617 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:00:37,343 INFO synthesis text Will whispered robin opening his door as he spoke are you ready.
+2026-10-26 13:00:42,663 INFO yield speech len 5.96, rtf 0.8927451684170922
+100%|██████████| 1/1 [00:05<00:00,  5.91s/it]100%|██████████| 1/1 [00:05<00:00,  5.91s/it]
+2026-10-26 13:00:42,846 INFO Processing audio with duration 00:05.960
+2026-10-26 13:00:42,851 DEBUG Processing segment at 00:00.000
+2026-10-26 13:00:43,022 DEBUG Processing segment at 00:05.940
+2026-10-26 13:00:43,098 DEBUG Log probability threshold is not met with temperature 0.0 (-1.132813 < -1.000000)
+2026-10-26 13:00:43,098 DEBUG No speech threshold is met (0.953613 > 0.600000)
+[106/200] clip 105 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.363 wer=0.08
+2026-10-26 13:00:43,695 INFO Processing audio with duration 00:08.825
+2026-10-26 13:00:43,701 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c106_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:00:44,693 INFO synthesis text Nothing was to be done but to put about and return in disappointment towards the north.
+2026-10-26 13:00:50,571 INFO yield speech len 6.0, rtf 0.9797939459482828
+100%|██████████| 1/1 [00:06<00:00,  6.63s/it]100%|██████████| 1/1 [00:06<00:00,  6.63s/it]
+2026-10-26 13:00:50,754 INFO Processing audio with duration 00:06.000
+2026-10-26 13:00:50,759 DEBUG Processing segment at 00:00.000
+[107/200] clip 106 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.544 wer=0.00
+2026-10-26 13:00:51,215 INFO Processing audio with duration 00:03.995
+2026-10-26 13:00:51,219 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:00:51,732 INFO synthesis text Hers happened to be in the same frame too but she evidently didn't care about that.
+2026-10-26 13:00:55,745 INFO yield speech len 4.84, rtf 0.8292217392566775
+100%|██████████| 1/1 [00:04<00:00,  4.39s/it]100%|██████████| 1/1 [00:04<00:00,  4.39s/it]
+2026-10-26 13:00:55,900 INFO Processing audio with duration 00:04.840
+2026-10-26 13:00:55,904 DEBUG Processing segment at 00:00.000
+2026-10-26 13:00:56,038 DEBUG Processing segment at 00:04.720
+2026-10-26 13:00:56,662 DEBUG Compression ratio threshold is not met with temperature 0.0 (12.614035 > 2.400000)
+2026-10-26 13:00:57,106 DEBUG Compression ratio threshold is not met with temperature 0.2 (15.000000 > 2.400000)
+2026-10-26 13:00:57,140 DEBUG Log probability threshold is not met with temperature 0.4 (-1.909897 < -1.000000)
+2026-10-26 13:00:57,140 DEBUG No speech threshold is met (0.967773 > 0.600000)
+[108/200] clip 107 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.463 wer=0.00
+2026-10-26 13:00:57,350 INFO Processing audio with duration 00:02.440
+2026-10-26 13:00:57,355 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:00:57,730 INFO synthesis text He continued his pretended search and to give color to his errand made two arrests.
+2026-10-26 13:01:03,048 INFO yield speech len 6.64, rtf 0.8007885102766106
+100%|██████████| 1/1 [00:05<00:00,  5.59s/it]100%|██████████| 1/1 [00:05<00:00,  5.59s/it]
+2026-10-26 13:01:03,230 INFO Processing audio with duration 00:06.640
+2026-10-26 13:01:03,235 DEBUG Processing segment at 00:00.000
+[109/200] clip 108 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.527 wer=0.00
+2026-10-26 13:01:03,822 INFO Processing audio with duration 00:06.555
+2026-10-26 13:01:03,827 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:01:04,581 INFO synthesis text Pride after satisfaction uplifted him like long slow waves.
+2026-10-26 13:01:08,780 INFO yield speech len 4.56, rtf 0.9209316550639639
+100%|██████████| 1/1 [00:04<00:00,  4.78s/it]100%|██████████| 1/1 [00:04<00:00,  4.78s/it]
+2026-10-26 13:01:08,934 INFO Processing audio with duration 00:04.560
+2026-10-26 13:01:08,938 DEBUG Processing segment at 00:00.000
+[110/200] clip 109 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.379 wer=0.00
+2026-10-26 13:01:09,401 INFO Processing audio with duration 00:03.910
+2026-10-26 13:01:09,405 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:01:09,908 INFO synthesis text Hose man's excuse for wetting the walk.
+2026-10-26 13:01:12,581 INFO yield speech len 2.76, rtf 0.9681777677674225
+100%|██████████| 1/1 [00:03<00:00,  3.05s/it]100%|██████████| 1/1 [00:03<00:00,  3.05s/it]
+2026-10-26 13:01:12,690 INFO Processing audio with duration 00:02.760
+2026-10-26 13:01:12,694 DEBUG Processing segment at 00:00.000
+[111/200] clip 110 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.549 wer=0.29
+2026-10-26 13:01:13,311 INFO Processing audio with duration 00:07.320
+2026-10-26 13:01:13,316 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:01:13,506 WARNING synthesis text Out in the woods stood a nice little fir tree. too short than prompt text From rubbing shoulders with scientists in our little universe by the botanical gardens,  the boy had come to know a thing or two., this may lead to bad performance
+2026-10-26 13:01:14,127 INFO synthesis text Out in the woods stood a nice little fir tree.
+2026-10-26 13:01:17,211 INFO yield speech len 2.96, rtf 1.041909246831327
+100%|██████████| 1/1 [00:03<00:00,  3.73s/it]100%|██████████| 1/1 [00:03<00:00,  3.73s/it]
+2026-10-26 13:01:17,327 INFO Processing audio with duration 00:02.960
+2026-10-26 13:01:17,330 DEBUG Processing segment at 00:00.000
+[112/200] clip 111 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.472 wer=0.20
+2026-10-26 13:01:17,645 INFO Processing audio with duration 00:02.180
+2026-10-26 13:01:17,648 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:01:17,998 INFO synthesis text Cold is it my darling bless your sweet face.
+2026-10-26 13:01:21,070 INFO yield speech len 3.76, rtf 0.8170733426479584
+100%|██████████| 1/1 [00:03<00:00,  3.32s/it]100%|██████████| 1/1 [00:03<00:00,  3.32s/it]
+2026-10-26 13:01:21,190 INFO Processing audio with duration 00:03.760
+2026-10-26 13:01:21,193 DEBUG Processing segment at 00:00.000
+[113/200] clip 112 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.434 wer=0.33
+2026-10-26 13:01:21,532 INFO Processing audio with duration 00:02.695
+2026-10-26 13:01:21,535 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:01:21,935 INFO synthesis text But now here is a subject of which you will wonder at first why turner drew it at all.
+2026-10-26 13:01:27,644 INFO yield speech len 7.2, rtf 0.7929843333032396
+100%|██████████| 1/1 [00:05<00:00,  5.99s/it]100%|██████████| 1/1 [00:05<00:00,  5.99s/it]
+2026-10-26 13:01:27,834 INFO Processing audio with duration 00:07.200
+2026-10-26 13:01:27,839 DEBUG Processing segment at 00:00.000
+[114/200] clip 113 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.555 wer=0.00
+2026-10-26 13:01:28,158 INFO Processing audio with duration 00:02.340
+2026-10-26 13:01:28,161 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:01:28,528 INFO synthesis text The paris plant like that at the crystal palace was a temporary exhibit.
+2026-10-26 13:01:33,251 INFO yield speech len 5.88, rtf 0.8032042963975141
+100%|██████████| 1/1 [00:04<00:00,  4.97s/it]100%|██████████| 1/1 [00:04<00:00,  4.97s/it]
+2026-10-26 13:01:33,408 INFO Processing audio with duration 00:05.880
+2026-10-26 13:01:33,412 DEBUG Processing segment at 00:00.000
+[115/200] clip 114 prompt full text unseen: acc_src=0.812 acc=0.688 traced=False far=True sim=0.292 wer=0.00
+2026-10-26 13:01:34,349 INFO Processing audio with duration 00:11.645
+2026-10-26 13:01:34,356 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:01:34,580 WARNING synthesis text I shall never get to twenty at that rate. too short than prompt text Upon the large square in front of the hotel, the shadows of the tents, intersected by the golden moon beams, formed, as it were, a huge mosaic of jet and yellow flagstones., this may lead to bad performance
+2026-10-26 13:01:35,554 INFO synthesis text I shall never get to twenty at that rate.
+2026-10-26 13:01:39,843 INFO yield speech len 3.44, rtf 1.2468489103539047
+100%|██████████| 1/1 [00:05<00:00,  5.28s/it]100%|██████████| 1/1 [00:05<00:00,  5.28s/it]
+2026-10-26 13:01:39,971 INFO Processing audio with duration 00:03.440
+2026-10-26 13:01:39,975 DEBUG Processing segment at 00:00.000
+[116/200] clip 115 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.492 wer=0.11
+2026-10-26 13:01:40,851 INFO Processing audio with duration 00:12.015
+2026-10-26 13:01:40,858 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:01:41,119 WARNING synthesis text Lend me your ear for ten minutes and you shall learn just what stagecraft is. too short than prompt text I awoke to consciousness, fighting, at first it seemed as if I was fighting with the phantom,  but gradually my opponent became more real to me.  It was kaffir.\", this may lead to bad performance
+2026-10-26 13:01:42,130 INFO synthesis text Lend me your ear for ten minutes and you shall learn just what stagecraft is.
+2026-10-26 13:01:48,910 INFO yield speech len 6.36, rtf 1.0659643689041618
+100%|██████████| 1/1 [00:07<00:00,  7.81s/it]100%|██████████| 1/1 [00:07<00:00,  7.81s/it]
+2026-10-26 13:01:49,097 INFO Processing audio with duration 00:06.360
+2026-10-26 13:01:49,102 DEBUG Processing segment at 00:00.000
+[117/200] clip 116 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.624 wer=0.07
+2026-10-26 13:01:49,620 INFO Processing audio with duration 00:05.560
+2026-10-26 13:01:49,625 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c117_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:01:50,301 INFO synthesis text It was a deliberate theft from his employers to protect a girl he loved.
+2026-10-26 13:01:54,011 INFO yield speech len 4.0, rtf 0.9273910522460938
+100%|██████████| 1/1 [00:04<00:00,  4.20s/it]100%|██████████| 1/1 [00:04<00:00,  4.20s/it]
+2026-10-26 13:01:54,137 INFO Processing audio with duration 00:04.000
+2026-10-26 13:01:54,141 DEBUG Processing segment at 00:00.000
+[118/200] clip 117 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.560 wer=0.07
+2026-10-26 13:01:54,586 INFO Processing audio with duration 00:04.455
+2026-10-26 13:01:54,590 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:01:55,141 INFO synthesis text She pressed his hand gently in gratitude.
+2026-10-26 13:01:57,431 INFO yield speech len 2.32, rtf 0.9872963716243877
+100%|██████████| 1/1 [00:02<00:00,  2.69s/it]100%|██████████| 1/1 [00:02<00:00,  2.69s/it]
+2026-10-26 13:01:57,546 INFO Processing audio with duration 00:02.320
+2026-10-26 13:01:57,549 DEBUG Processing segment at 00:00.000
+[119/200] clip 118 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.397 wer=0.00
+2026-10-26 13:01:57,999 INFO Processing audio with duration 00:05.050
+2026-10-26 13:01:58,003 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:01:58,594 INFO synthesis text But i do not think such an inference is warranted.
+2026-10-26 13:02:02,122 INFO yield speech len 3.88, rtf 0.9093115624693251
+100%|██████████| 1/1 [00:03<00:00,  3.98s/it]100%|██████████| 1/1 [00:03<00:00,  3.98s/it]
+2026-10-26 13:02:02,251 INFO Processing audio with duration 00:03.880
+2026-10-26 13:02:02,255 DEBUG Processing segment at 00:00.000
+[120/200] clip 119 prompt full text unseen: acc_src=0.750 acc=0.750 traced=False far=True sim=0.465 wer=0.00
+2026-10-26 13:02:02,649 INFO Processing audio with duration 00:02.630
+2026-10-26 13:02:02,652 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:02:03,039 INFO synthesis text You see loving some one as i love you makes the whole world different.
+2026-10-26 13:02:09,139 INFO yield speech len 7.68, rtf 0.7943592655162017
+100%|██████████| 1/1 [00:06<00:00,  6.38s/it]100%|██████████| 1/1 [00:06<00:00,  6.38s/it]
+2026-10-26 13:02:09,351 INFO Processing audio with duration 00:07.680
+2026-10-26 13:02:09,356 DEBUG Processing segment at 00:00.000
+[121/200] clip 120 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.485 wer=0.14
+2026-10-26 13:02:10,162 INFO Processing audio with duration 00:10.440
+2026-10-26 13:02:10,168 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c121_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:02:10,384 WARNING synthesis text The work had to be condensed. too short than prompt text Nothing is more lugubrious than the contemplation thus in its nudity, in the broad light of thought, of the horrible swarming of slang., this may lead to bad performance
+2026-10-26 13:02:11,281 INFO synthesis text The work had to be condensed.
+2026-10-26 13:02:14,564 INFO yield speech len 2.4, rtf 1.368231475353241
+100%|██████████| 1/1 [00:04<00:00,  4.20s/it]100%|██████████| 1/1 [00:04<00:00,  4.20s/it]
+2026-10-26 13:02:14,674 INFO Processing audio with duration 00:02.400
+2026-10-26 13:02:14,678 DEBUG Processing segment at 00:00.000
+[122/200] clip 121 prompt full text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.428 wer=0.00
+2026-10-26 13:02:14,992 INFO Processing audio with duration 00:02.590
+2026-10-26 13:02:14,995 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:02:15,380 INFO synthesis text Many if not all the elements of the pre socratic philosophy are included in the timaeus.
+2026-10-26 13:02:20,752 INFO yield speech len 6.68, rtf 0.8041240141063394
+100%|██████████| 1/1 [00:05<00:00,  5.65s/it]100%|██████████| 1/1 [00:05<00:00,  5.65s/it]
+2026-10-26 13:02:20,956 INFO Processing audio with duration 00:06.680
+2026-10-26 13:02:20,961 DEBUG Processing segment at 00:00.000
+[123/200] clip 122 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.438 wer=0.19
+2026-10-26 13:02:21,433 INFO Processing audio with duration 00:04.590
+2026-10-26 13:02:21,437 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:02:22,004 INFO synthesis text Upon this madame deigned to turn her eyes languishingly towards the comte observing.
+2026-10-26 13:02:27,718 INFO yield speech len 6.84, rtf 0.8353018272689908
+100%|██████████| 1/1 [00:06<00:00,  6.16s/it]100%|██████████| 1/1 [00:06<00:00,  6.16s/it]
+2026-10-26 13:02:27,912 INFO Processing audio with duration 00:06.840
+2026-10-26 13:02:27,917 DEBUG Processing segment at 00:00.000
+[124/200] clip 123 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.496 wer=0.23
+2026-10-26 13:02:28,797 INFO Processing audio with duration 00:11.270
+2026-10-26 13:02:28,803 DEBUG Processing segment at 00:00.000
+2026-10-26 13:02:28,976 DEBUG Processing segment at 00:06.560
+[cosyvoice] prompt transcript cleaned for the text normaliser (c124_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:02:29,091 WARNING synthesis text My tongue refused to articulate my power of speech left me. too short than prompt text They constitute two different orders of facts which correspond to each other, which are always interlaced, and which often bring forth results., this may lead to bad performance
+2026-10-26 13:02:30,022 INFO synthesis text My tongue refused to articulate my power of speech left me.
+2026-10-26 13:02:36,367 INFO yield speech len 5.96, rtf 1.064580238905529
+100%|██████████| 1/1 [00:07<00:00,  7.29s/it]100%|██████████| 1/1 [00:07<00:00,  7.29s/it]
+2026-10-26 13:02:36,547 INFO Processing audio with duration 00:05.960
+2026-10-26 13:02:36,552 DEBUG Processing segment at 00:00.000
+[125/200] clip 124 prompt full text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.318 wer=0.00
+2026-10-26 13:02:37,032 INFO Processing audio with duration 00:04.205
+2026-10-26 13:02:37,036 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:02:37,554 INFO synthesis text Cold is it my darling bless your sweet face.
+2026-10-26 13:02:41,454 INFO yield speech len 4.56, rtf 0.8554340454570035
+100%|██████████| 1/1 [00:04<00:00,  4.30s/it]100%|██████████| 1/1 [00:04<00:00,  4.30s/it]
+2026-10-26 13:02:41,598 INFO Processing audio with duration 00:04.560
+2026-10-26 13:02:41,603 DEBUG Processing segment at 00:00.000
+[126/200] clip 125 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.220 wer=0.00
+2026-10-26 13:02:42,306 INFO Processing audio with duration 00:08.315
+2026-10-26 13:02:42,311 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:02:43,216 INFO synthesis text But now here is a subject of which you will wonder at first why turner drew it at all.
+2026-10-26 13:02:49,668 INFO yield speech len 6.84, rtf 0.9433166674006055
+100%|██████████| 1/1 [00:07<00:00,  7.18s/it]100%|██████████| 1/1 [00:07<00:00,  7.18s/it]
+2026-10-26 13:02:49,867 INFO Processing audio with duration 00:06.840
+2026-10-26 13:02:49,872 DEBUG Processing segment at 00:00.000
+[127/200] clip 126 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.451 wer=0.00
+2026-10-26 13:02:50,703 INFO Processing audio with duration 00:10.660
+2026-10-26 13:02:50,710 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c127_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:02:51,844 INFO synthesis text The paris plant like that at the crystal palace was a temporary exhibit.
+2026-10-26 13:02:58,585 INFO yield speech len 6.68, rtf 1.0091505721657577
+100%|██████████| 1/1 [00:07<00:00,  7.64s/it]100%|██████████| 1/1 [00:07<00:00,  7.64s/it]
+2026-10-26 13:02:58,781 INFO Processing audio with duration 00:06.680
+2026-10-26 13:02:58,785 DEBUG Processing segment at 00:00.000
+[128/200] clip 127 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.398 wer=0.08
+2026-10-26 13:02:59,243 INFO Processing audio with duration 00:04.690
+2026-10-26 13:02:59,247 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:02:59,804 INFO synthesis text All the furniture belonged to other times.
+2026-10-26 13:03:02,973 INFO yield speech len 3.4, rtf 0.9319861496196074
+100%|██████████| 1/1 [00:03<00:00,  3.60s/it]100%|██████████| 1/1 [00:03<00:00,  3.60s/it]
+2026-10-26 13:03:03,091 INFO Processing audio with duration 00:03.400
+2026-10-26 13:03:03,095 DEBUG Processing segment at 00:00.000
+[129/200] clip 128 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.310 wer=0.00
+2026-10-26 13:03:03,569 INFO Processing audio with duration 00:05.240
+2026-10-26 13:03:03,574 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:03:04,180 INFO synthesis text Then turning to jane she asked in a somewhat altered tone has she been a good girl jane.
+2026-10-26 13:03:09,559 INFO yield speech len 6.2, rtf 0.8675149948366226
+100%|██████████| 1/1 [00:05<00:00,  5.85s/it]100%|██████████| 1/1 [00:05<00:00,  5.85s/it]
+2026-10-26 13:03:09,736 INFO Processing audio with duration 00:06.200
+2026-10-26 13:03:09,741 DEBUG Processing segment at 00:00.000
+2026-10-26 13:03:09,900 DEBUG Processing segment at 00:06.140
+2026-10-26 13:03:10,521 DEBUG Compression ratio threshold is not met with temperature 0.0 (26.235294 > 2.400000)
+2026-10-26 13:03:10,563 DEBUG Log probability threshold is not met with temperature 0.2 (-1.515815 < -1.000000)
+2026-10-26 13:03:10,563 DEBUG No speech threshold is met (0.944336 > 0.600000)
+[130/200] clip 129 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.218 wer=0.00
+2026-10-26 13:03:10,821 INFO Processing audio with duration 00:02.335
+2026-10-26 13:03:10,836 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:03:11,193 INFO synthesis text I never see lou's scythe over here.
+2026-10-26 13:03:13,443 INFO yield speech len 2.52, rtf 0.8926950749896821
+100%|██████████| 1/1 [00:02<00:00,  2.49s/it]100%|██████████| 1/1 [00:02<00:00,  2.49s/it]
+2026-10-26 13:03:13,551 INFO Processing audio with duration 00:02.520
+2026-10-26 13:03:13,555 DEBUG Processing segment at 00:00.000
+[131/200] clip 130 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.384 wer=0.14
+2026-10-26 13:03:14,625 INFO Processing audio with duration 00:14.755
+2026-10-26 13:03:14,633 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c131_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:03:14,934 WARNING synthesis text Finally the one party went off exulting and the other was left in desolation and woe. too short than prompt text Shall I never miss home talk, and blessing, and the common kiss that comes to each intern? Nor count it strange, when I look up, to drop on a new range of walls and floors, another home than this., this may lead to bad performance
+2026-10-26 13:03:16,117 INFO synthesis text Finally the one party went off exulting and the other was left in desolation and woe.
+2026-10-26 13:03:22,720 INFO yield speech len 5.36, rtf 1.2318257075637133
+100%|██████████| 1/1 [00:07<00:00,  7.81s/it]100%|██████████| 1/1 [00:07<00:00,  7.81s/it]
+2026-10-26 13:03:22,897 INFO Processing audio with duration 00:05.360
+2026-10-26 13:03:22,902 DEBUG Processing segment at 00:00.000
+2026-10-26 13:03:23,040 DEBUG Processing segment at 00:05.280
+2026-10-26 13:03:23,647 DEBUG Compression ratio threshold is not met with temperature 0.0 (13.448276 > 2.400000)
+2026-10-26 13:03:23,680 DEBUG Log probability threshold is not met with temperature 0.2 (-2.042259 < -1.000000)
+2026-10-26 13:03:23,680 DEBUG No speech threshold is met (0.971680 > 0.600000)
+[132/200] clip 131 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.495 wer=0.06
+2026-10-26 13:03:24,335 INFO Processing audio with duration 00:09.800
+2026-10-26 13:03:24,341 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:03:24,545 WARNING synthesis text I am so very tired of being all alone here. too short than prompt text till we arise linked in a golden band, and never part,  but walk, united bearing food to all our tender flowers., this may lead to bad performance
+2026-10-26 13:03:25,380 INFO synthesis text I am so very tired of being all alone here.
+2026-10-26 13:03:29,459 INFO yield speech len 3.8, rtf 1.0735191169537996
+100%|██████████| 1/1 [00:04<00:00,  4.93s/it]100%|██████████| 1/1 [00:04<00:00,  4.93s/it]
+2026-10-26 13:03:29,593 INFO Processing audio with duration 00:03.800
+2026-10-26 13:03:29,597 DEBUG Processing segment at 00:00.000
+[133/200] clip 132 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.453 wer=0.00
+2026-10-26 13:03:29,924 INFO Processing audio with duration 00:02.510
+2026-10-26 13:03:29,927 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:03:30,314 INFO synthesis text Grandfather was alexander carey l l d doctor of laws that is.
+2026-10-26 13:03:34,746 INFO yield speech len 5.48, rtf 0.8088013551531046
+100%|██████████| 1/1 [00:04<00:00,  4.70s/it]100%|██████████| 1/1 [00:04<00:00,  4.70s/it]
+2026-10-26 13:03:34,904 INFO Processing audio with duration 00:05.480
+2026-10-26 13:03:34,908 DEBUG Processing segment at 00:00.000
+[134/200] clip 133 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.291 wer=0.17
+2026-10-26 13:03:35,283 INFO Processing audio with duration 00:02.885
+2026-10-26 13:03:35,287 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:03:35,693 INFO synthesis text Two hundred warriors feasted in his hall and followed him to battle.
+2026-10-26 13:03:39,480 INFO yield speech len 4.68, rtf 0.8092179767086976
+100%|██████████| 1/1 [00:04<00:00,  4.08s/it]100%|██████████| 1/1 [00:04<00:00,  4.08s/it]
+2026-10-26 13:03:39,625 INFO Processing audio with duration 00:04.680
+2026-10-26 13:03:39,629 DEBUG Processing segment at 00:00.000
+[135/200] clip 134 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.266 wer=0.25
+2026-10-26 13:03:41,146 INFO Processing audio with duration 00:19.945
+2026-10-26 13:03:41,157 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c135_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:03:41,518 WARNING synthesis text Yes but the meridian of the palais royal is the most exact. too short than prompt text In the early morning of the next day, May twenty nine, a company of dragons with one empty saddle came down from the fort, and while the pro slaver men still slept, the prisoner and his escort were on their way across the prairies to the Compton in the charge of officers of the United States Army., this may lead to bad performance
+2026-10-26 13:03:43,184 INFO synthesis text Yes but the meridian of the palais royal is the most exact.
+2026-10-26 13:03:49,890 INFO yield speech len 4.16, rtf 1.6119373532441945
+100%|██████████| 1/1 [00:08<00:00,  8.40s/it]100%|██████████| 1/1 [00:08<00:00,  8.40s/it]
+2026-10-26 13:03:50,053 INFO Processing audio with duration 00:04.160
+2026-10-26 13:03:50,057 DEBUG Processing segment at 00:00.000
+[136/200] clip 135 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.466 wer=0.08
+2026-10-26 13:03:50,633 INFO Processing audio with duration 00:06.750
+2026-10-26 13:03:50,638 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:03:51,415 INFO synthesis text Stuff it into you his belly counselled him.
+2026-10-26 13:03:54,645 INFO yield speech len 3.36, rtf 0.9613829709234692
+100%|██████████| 1/1 [00:03<00:00,  3.84s/it]100%|██████████| 1/1 [00:03<00:00,  3.84s/it]
+2026-10-26 13:03:54,781 INFO Processing audio with duration 00:03.360
+2026-10-26 13:03:54,785 DEBUG Processing segment at 00:00.000
+[137/200] clip 136 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.403 wer=0.12
+2026-10-26 13:03:55,425 INFO Processing audio with duration 00:07.920
+2026-10-26 13:03:55,431 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c137_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:03:55,632 WARNING synthesis text Will the hurons hear his groans. too short than prompt text Davidson, who had been haranging the mob, planted his two guns before the building and trained them upon it., this may lead to bad performance
+2026-10-26 13:03:56,294 INFO synthesis text Will the hurons hear his groans.
+2026-10-26 13:03:59,315 INFO yield speech len 2.96, rtf 1.020607352256775
+100%|██████████| 1/1 [00:03<00:00,  3.71s/it]100%|██████████| 1/1 [00:03<00:00,  3.71s/it]
+2026-10-26 13:03:59,432 INFO Processing audio with duration 00:02.960
+2026-10-26 13:03:59,436 DEBUG Processing segment at 00:00.000
+[138/200] clip 137 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.532 wer=0.33
+2026-10-26 13:04:00,023 INFO Processing audio with duration 00:07.060
+2026-10-26 13:04:00,029 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:04:00,803 INFO synthesis text I think i should be doing you a service to turn you out of such a place.
+2026-10-26 13:04:05,519 INFO yield speech len 5.08, rtf 0.9283243201849029
+100%|██████████| 1/1 [00:05<00:00,  5.35s/it]100%|██████████| 1/1 [00:05<00:00,  5.35s/it]
+2026-10-26 13:04:05,684 INFO Processing audio with duration 00:05.080
+2026-10-26 13:04:05,688 DEBUG Processing segment at 00:00.000
+[139/200] clip 138 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.451 wer=0.00
+2026-10-26 13:04:06,667 INFO Processing audio with duration 00:02.710
+2026-10-26 13:04:06,670 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:04:07,080 INFO synthesis text But in this vignette copied from turner you have the two principles brought out perfectly.
+2026-10-26 13:04:12,935 INFO yield speech len 7.4, rtf 0.7913325928352974
+100%|██████████| 1/1 [00:06<00:00,  6.14s/it]100%|██████████| 1/1 [00:06<00:00,  6.14s/it]
+2026-10-26 13:04:13,140 INFO Processing audio with duration 00:07.400
+2026-10-26 13:04:13,145 DEBUG Processing segment at 00:00.000
+[140/200] clip 139 prompt full text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.318 wer=0.00
+2026-10-26 13:04:13,627 INFO Processing audio with duration 00:03.837
+2026-10-26 13:04:13,632 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:04:14,143 INFO synthesis text She had another weight on her mind this christmas.
+2026-10-26 13:04:17,553 INFO yield speech len 3.92, rtf 0.8699134904511121
+100%|██████████| 1/1 [00:03<00:00,  3.80s/it]100%|██████████| 1/1 [00:03<00:00,  3.80s/it]
+2026-10-26 13:04:17,683 INFO Processing audio with duration 00:03.920
+2026-10-26 13:04:17,687 DEBUG Processing segment at 00:00.000
+[141/200] clip 140 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.369 wer=0.00
+2026-10-26 13:04:18,347 INFO Processing audio with duration 00:07.310
+2026-10-26 13:04:18,354 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c141_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:04:18,568 WARNING synthesis text Mister edison was a leader far ahead of the time. too short than prompt text There were plenty of people to help, but of course the young lady who should go down as governess would be in supreme authority., this may lead to bad performance
+2026-10-26 13:04:19,194 INFO synthesis text Mister edison was a leader far ahead of the time.
+2026-10-26 13:04:22,930 INFO yield speech len 3.92, rtf 0.9531365365398173
+100%|██████████| 1/1 [00:04<00:00,  4.38s/it]100%|██████████| 1/1 [00:04<00:00,  4.38s/it]
+2026-10-26 13:04:23,072 INFO Processing audio with duration 00:03.920
+2026-10-26 13:04:23,077 DEBUG Processing segment at 00:00.000
+[142/200] clip 141 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.480 wer=0.10
+2026-10-26 13:04:23,695 INFO Processing audio with duration 00:07.428
+2026-10-26 13:04:23,700 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c142_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:04:24,551 INFO synthesis text But it is surmised that you will find difficulties in the way of your entering at once upon your government.
+2026-10-26 13:04:30,779 INFO yield speech len 6.72, rtf 0.926731030146281
+100%|██████████| 1/1 [00:06<00:00,  6.87s/it]100%|██████████| 1/1 [00:06<00:00,  6.87s/it]
+2026-10-26 13:04:30,986 INFO Processing audio with duration 00:06.720
+2026-10-26 13:04:30,992 DEBUG Processing segment at 00:00.000
+2026-10-26 13:04:31,154 DEBUG Processing segment at 00:05.840
+[143/200] clip 142 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.515 wer=0.00
+2026-10-26 13:04:31,717 INFO Processing audio with duration 00:07.529
+2026-10-26 13:04:31,723 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:04:32,541 INFO synthesis text You have come andella andella was the name of jane's doll to make rosalie a visit.
+2026-10-26 13:04:38,598 INFO yield speech len 6.72, rtf 0.9012805209273385
+100%|██████████| 1/1 [00:06<00:00,  6.71s/it]100%|██████████| 1/1 [00:06<00:00,  6.71s/it]
+2026-10-26 13:04:38,795 INFO Processing audio with duration 00:06.720
+2026-10-26 13:04:38,800 DEBUG Processing segment at 00:00.000
+[144/200] clip 143 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.603 wer=0.25
+2026-10-26 13:04:39,295 INFO Processing audio with duration 00:04.682
+2026-10-26 13:04:39,300 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:04:39,871 INFO synthesis text Ham to be or not to be.
+2026-10-26 13:04:42,525 INFO yield speech len 2.8, rtf 0.9477558306285314
+100%|██████████| 1/1 [00:03<00:00,  3.09s/it]100%|██████████| 1/1 [00:03<00:00,  3.09s/it]
+2026-10-26 13:04:42,646 INFO Processing audio with duration 00:02.800
+2026-10-26 13:04:42,650 DEBUG Processing segment at 00:00.000
+[145/200] clip 144 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.279 wer=0.14
+2026-10-26 13:04:43,361 INFO Processing audio with duration 00:08.005
+2026-10-26 13:04:43,374 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c145_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:04:43,584 WARNING synthesis text It won't be much but i'm grateful to find a friend. too short than prompt text A moment before the ghost of the ancient kingdom of the Danes had looked forth through the vester of the Haysracht city., this may lead to bad performance
+2026-10-26 13:04:44,258 INFO synthesis text It won't be much but i'm grateful to find a friend.
+2026-10-26 13:04:47,835 INFO yield speech len 3.48, rtf 1.0278873745052295
+100%|██████████| 1/1 [00:04<00:00,  4.27s/it]100%|██████████| 1/1 [00:04<00:00,  4.27s/it]
+2026-10-26 13:04:47,980 INFO Processing audio with duration 00:03.480
+2026-10-26 13:04:47,984 DEBUG Processing segment at 00:00.000
+[146/200] clip 145 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.364 wer=0.00
+2026-10-26 13:04:48,476 INFO Processing audio with duration 00:05.175
+2026-10-26 13:04:48,480 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:04:49,085 INFO synthesis text You see loving some one as i love you makes the whole world different.
+2026-10-26 13:04:53,961 INFO yield speech len 5.68, rtf 0.8585048393464425
+100%|██████████| 1/1 [00:05<00:00,  5.35s/it]100%|██████████| 1/1 [00:05<00:00,  5.35s/it]
+2026-10-26 13:04:54,135 INFO Processing audio with duration 00:05.680
+2026-10-26 13:04:54,139 DEBUG Processing segment at 00:00.000
+[147/200] clip 146 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.365 wer=0.14
+2026-10-26 13:04:54,529 INFO Processing audio with duration 00:03.275
+2026-10-26 13:04:54,533 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:04:54,982 INFO synthesis text The work had to be condensed.
+2026-10-26 13:04:56,977 INFO yield speech len 2.16, rtf 0.9238000269289369
+100%|██████████| 1/1 [00:02<00:00,  2.32s/it]100%|██████████| 1/1 [00:02<00:00,  2.32s/it]
+2026-10-26 13:04:57,070 INFO Processing audio with duration 00:02.160
+2026-10-26 13:04:57,073 DEBUG Processing segment at 00:00.000
+[148/200] clip 147 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.242 wer=0.00
+2026-10-26 13:04:58,234 INFO Processing audio with duration 00:16.330
+2026-10-26 13:04:58,242 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c148_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:04:58,568 WARNING synthesis text Many if not all the elements of the pre socratic philosophy are included in the timaeus. too short than prompt text idle and inbittering finally to argue against his own dispassionate certitude, that the commandment of love bade us not to love our neighbor as ourselves with the same amount and intensity of love, but to love him as ourselves with the same kind of love., this may lead to bad performance
+2026-10-26 13:04:59,929 INFO synthesis text Many if not all the elements of the pre socratic philosophy are included in the timaeus.
+2026-10-26 13:05:07,617 INFO yield speech len 6.16, rtf 1.2480676561206967
+100%|██████████| 1/1 [00:09<00:00,  9.07s/it]100%|██████████| 1/1 [00:09<00:00,  9.07s/it]
+2026-10-26 13:05:07,819 INFO Processing audio with duration 00:06.160
+2026-10-26 13:05:07,824 DEBUG Processing segment at 00:00.000
+[149/200] clip 148 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.573 wer=0.06
+2026-10-26 13:05:08,427 INFO Processing audio with duration 00:06.730
+2026-10-26 13:05:08,432 DEBUG Processing segment at 00:00.000
+2026-10-26 13:05:08,584 DEBUG Processing segment at 00:05.720
+[cosyvoice] prompt transcript cleaned for the text normaliser (c149_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:05:09,263 INFO synthesis text Upon this madame deigned to turn her eyes languishingly towards the comte observing.
+2026-10-26 13:05:14,127 INFO yield speech len 5.32, rtf 0.9143231954789699
+100%|██████████| 1/1 [00:05<00:00,  5.47s/it]100%|██████████| 1/1 [00:05<00:00,  5.47s/it]
+2026-10-26 13:05:14,297 INFO Processing audio with duration 00:05.320
+2026-10-26 13:05:14,302 DEBUG Processing segment at 00:00.000
+[150/200] clip 149 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.342 wer=0.23
+2026-10-26 13:05:15,101 INFO Processing audio with duration 00:09.040
+2026-10-26 13:05:15,107 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c150_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:05:15,354 WARNING synthesis text Never mind now interposed the captain we will talk of that by and by. too short than prompt text Why you sit to fetch the first living critter we met, and that was this big oat! replied the captain, panting hard as he held fast to where the goats mourns., this may lead to bad performance
+2026-10-26 13:05:16,118 INFO synthesis text Never mind now interposed the captain we will talk of that by and by.
+2026-10-26 13:05:20,715 INFO yield speech len 4.4, rtf 1.0447671738537874
+100%|██████████| 1/1 [00:05<00:00,  5.38s/it]100%|██████████| 1/1 [00:05<00:00,  5.38s/it]
+2026-10-26 13:05:20,868 INFO Processing audio with duration 00:04.400
+2026-10-26 13:05:20,872 DEBUG Processing segment at 00:00.000
+[151/200] clip 150 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.411 wer=0.21
+2026-10-26 13:05:21,359 INFO Processing audio with duration 00:05.095
+2026-10-26 13:05:21,364 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:05:21,520 WARNING synthesis text But now nothing could hold me back. too short than prompt text The combined bands of both the countries played the music and a fine supper was served., this may lead to bad performance
+2026-10-26 13:05:21,981 INFO synthesis text But now nothing could hold me back.
+2026-10-26 13:05:24,661 INFO yield speech len 2.72, rtf 0.9851993006818434
+100%|██████████| 1/1 [00:03<00:00,  3.16s/it]100%|██████████| 1/1 [00:03<00:00,  3.16s/it]
+2026-10-26 13:05:24,774 INFO Processing audio with duration 00:02.720
+2026-10-26 13:05:24,778 DEBUG Processing segment at 00:00.000
+[152/200] clip 151 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.381 wer=0.00
+2026-10-26 13:05:25,090 INFO Processing audio with duration 00:02.555
+2026-10-26 13:05:25,093 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:05:25,485 INFO synthesis text When the king comes to paris everybody calls out vive le roi.
+2026-10-26 13:05:29,051 INFO yield speech len 4.36, rtf 0.8177311048595183
+100%|██████████| 1/1 [00:03<00:00,  3.84s/it]100%|██████████| 1/1 [00:03<00:00,  3.84s/it]
+2026-10-26 13:05:29,193 INFO Processing audio with duration 00:04.360
+2026-10-26 13:05:29,198 DEBUG Processing segment at 00:00.000
+2026-10-26 13:05:29,338 DEBUG Processing segment at 00:04.240
+[153/200] clip 152 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.330 wer=0.17
+2026-10-26 13:05:30,075 INFO Processing audio with duration 00:08.630
+2026-10-26 13:05:30,081 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c153_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:05:31,104 INFO synthesis text There was a unanimous groan at this and much reproach after which in his preoccupied way he explained.
+2026-10-26 13:05:37,307 INFO yield speech len 6.76, rtf 0.9175697374626024
+100%|██████████| 1/1 [00:06<00:00,  7.00s/it]100%|██████████| 1/1 [00:06<00:00,  7.00s/it]
+2026-10-26 13:05:37,507 INFO Processing audio with duration 00:06.760
+2026-10-26 13:05:37,512 DEBUG Processing segment at 00:00.000
+[154/200] clip 153 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.436 wer=0.00
+2026-10-26 13:05:38,310 INFO Processing audio with duration 00:09.310
+2026-10-26 13:05:38,316 DEBUG Processing segment at 00:00.000
+2026-10-26 13:05:38,506 DEBUG Processing segment at 00:05.400
+[cosyvoice] prompt transcript cleaned for the text normaliser (c154_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:05:38,642 WARNING synthesis text However that was over now the tree gone the story at an end. too short than prompt text Now then, let's enter the city and enjoy the great feast that's being put on nearly storm myself for this congruent kingdoms. It's hard work., this may lead to bad performance
+2026-10-26 13:05:39,436 INFO synthesis text However that was over now the tree gone the story at an end.
+2026-10-26 13:05:44,260 INFO yield speech len 4.52, rtf 1.067306140882779
+100%|██████████| 1/1 [00:05<00:00,  5.65s/it]100%|██████████| 1/1 [00:05<00:00,  5.65s/it]
+2026-10-26 13:05:44,430 INFO Processing audio with duration 00:04.520
+2026-10-26 13:05:44,445 DEBUG Processing segment at 00:00.000
+[155/200] clip 154 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.570 wer=0.00
+2026-10-26 13:05:44,870 INFO Processing audio with duration 00:02.675
+2026-10-26 13:05:44,873 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:05:45,275 INFO synthesis text He started at the thought he hurried forth sadly.
+2026-10-26 13:05:49,173 INFO yield speech len 4.8, rtf 0.8120696246623993
+100%|██████████| 1/1 [00:04<00:00,  4.20s/it]100%|██████████| 1/1 [00:04<00:00,  4.20s/it]
+2026-10-26 13:05:49,316 INFO Processing audio with duration 00:04.800
+2026-10-26 13:05:49,320 DEBUG Processing segment at 00:00.000
+[156/200] clip 155 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.199 wer=0.00
+2026-10-26 13:05:49,740 INFO Processing audio with duration 00:03.815
+2026-10-26 13:05:49,744 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:05:50,235 INFO synthesis text Indeed he had looked away with the purpose of not seeing it.
+2026-10-26 13:05:53,334 INFO yield speech len 3.44, rtf 0.9007569662360257
+100%|██████████| 1/1 [00:03<00:00,  3.47s/it]100%|██████████| 1/1 [00:03<00:00,  3.47s/it]
+2026-10-26 13:05:53,456 INFO Processing audio with duration 00:03.440
+2026-10-26 13:05:53,460 DEBUG Processing segment at 00:00.000
+[157/200] clip 156 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.343 wer=0.00
+2026-10-26 13:05:53,886 INFO Processing audio with duration 00:04.070
+2026-10-26 13:05:53,890 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:05:54,401 INFO synthesis text But anders cared nothing about that.
+2026-10-26 13:05:56,566 INFO yield speech len 2.36, rtf 0.9173352839583058
+100%|██████████| 1/1 [00:02<00:00,  2.56s/it]100%|██████████| 1/1 [00:02<00:00,  2.56s/it]
+2026-10-26 13:05:56,683 INFO Processing audio with duration 00:02.360
+2026-10-26 13:05:56,686 DEBUG Processing segment at 00:00.000
+[158/200] clip 157 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.490 wer=0.00
+2026-10-26 13:05:57,689 INFO Processing audio with duration 00:13.950
+2026-10-26 13:05:57,697 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:05:57,927 WARNING synthesis text I am my dear and all strangers are welcome to my home. too short than prompt text To grow, and grow, to get older, and be tall, thought the tree.  That, after all, is the most delightful thing in the world., this may lead to bad performance
+2026-10-26 13:05:59,088 INFO synthesis text I am my dear and all strangers are welcome to my home.
+2026-10-26 13:06:04,754 INFO yield speech len 4.96, rtf 1.1422626433833953
+100%|██████████| 1/1 [00:06<00:00,  6.84s/it]100%|██████████| 1/1 [00:06<00:00,  6.84s/it]
+2026-10-26 13:06:04,913 INFO Processing audio with duration 00:04.960
+2026-10-26 13:06:04,918 DEBUG Processing segment at 00:00.000
+[159/200] clip 158 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.393 wer=0.00
+2026-10-26 13:06:05,634 INFO Processing audio with duration 00:08.730
+2026-10-26 13:06:05,640 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:06:06,575 INFO synthesis text Some girl has been here twice to interview my men and i have refused to admit her.
+2026-10-26 13:06:13,217 INFO yield speech len 6.72, rtf 0.9883521213417962
+100%|██████████| 1/1 [00:07<00:00,  7.41s/it]100%|██████████| 1/1 [00:07<00:00,  7.41s/it]
+2026-10-26 13:06:13,415 INFO Processing audio with duration 00:06.720
+2026-10-26 13:06:13,420 DEBUG Processing segment at 00:00.000
+[160/200] clip 159 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.454 wer=0.00
+2026-10-26 13:06:13,815 INFO Processing audio with duration 00:02.240
+2026-10-26 13:06:13,818 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:06:14,188 INFO synthesis text Lend me your ear for ten minutes and you shall learn just what stagecraft is.
+2026-10-26 13:06:18,656 INFO yield speech len 5.56, rtf 0.8036278563437702
+100%|██████████| 1/1 [00:04<00:00,  4.72s/it]100%|██████████| 1/1 [00:04<00:00,  4.72s/it]
+2026-10-26 13:06:18,815 INFO Processing audio with duration 00:05.560
+2026-10-26 13:06:18,820 DEBUG Processing segment at 00:00.000
+[161/200] clip 160 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.404 wer=0.07
+2026-10-26 13:06:19,613 INFO Processing audio with duration 00:09.865
+2026-10-26 13:06:19,619 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c161_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:06:19,862 WARNING synthesis text It was a deliberate theft from his employers to protect a girl he loved. too short than prompt text He often stopped to examine the trees, nor did he cross a rivulet without attentively considering the quantity, the velocity, and the color of its waters., this may lead to bad performance
+2026-10-26 13:06:20,701 INFO synthesis text It was a deliberate theft from his employers to protect a girl he loved.
+2026-10-26 13:06:25,513 INFO yield speech len 4.36, rtf 1.103665358429655
+100%|██████████| 1/1 [00:05<00:00,  5.67s/it]100%|██████████| 1/1 [00:05<00:00,  5.67s/it]
+2026-10-26 13:06:25,658 INFO Processing audio with duration 00:04.360
+2026-10-26 13:06:25,662 DEBUG Processing segment at 00:00.000
+2026-10-26 13:06:25,790 DEBUG Processing segment at 00:04.280
+2026-10-26 13:06:26,406 DEBUG Compression ratio threshold is not met with temperature 0.0 (13.227848 > 2.400000)
+2026-10-26 13:06:26,804 DEBUG Compression ratio threshold is not met with temperature 0.2 (10.607143 > 2.400000)
+2026-10-26 13:06:27,012 DEBUG Compression ratio threshold is not met with temperature 0.4 (4.388060 > 2.400000)
+2026-10-26 13:06:27,224 DEBUG Compression ratio threshold is not met with temperature 0.6 (2.945652 > 2.400000)
+2026-10-26 13:06:27,224 DEBUG Log probability threshold is not met with temperature 0.6 (-1.078625 < -1.000000)
+2026-10-26 13:06:27,225 DEBUG No speech threshold is met (0.976562 > 0.600000)
+[162/200] clip 161 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.506 wer=0.00
+2026-10-26 13:06:27,872 INFO Processing audio with duration 00:09.695
+2026-10-26 13:06:27,879 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c162_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:06:28,117 WARNING synthesis text She pressed his hand gently in gratitude. too short than prompt text It was silent and gloomy, being tenanted solely by the captive, and lighted by the dying embers of a fire which had been used for the purpose of cookery., this may lead to bad performance
+2026-10-26 13:06:28,938 INFO synthesis text She pressed his hand gently in gratitude.
+2026-10-26 13:06:32,658 INFO yield speech len 3.28, rtf 1.1340847829493081
+100%|██████████| 1/1 [00:04<00:00,  4.56s/it]100%|██████████| 1/1 [00:04<00:00,  4.56s/it]
+2026-10-26 13:06:32,792 INFO Processing audio with duration 00:03.280
+2026-10-26 13:06:32,796 DEBUG Processing segment at 00:00.000
+2026-10-26 13:06:32,931 DEBUG Processing segment at 00:03.000
+2026-10-26 13:06:32,998 DEBUG Log probability threshold is not met with temperature 0.0 (-1.266335 < -1.000000)
+2026-10-26 13:06:32,998 DEBUG No speech threshold is met (0.884766 > 0.600000)
+[163/200] clip 162 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.533 wer=0.00
+2026-10-26 13:06:33,883 INFO Processing audio with duration 00:13.480
+2026-10-26 13:06:33,891 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c163_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:06:34,194 WARNING synthesis text But i do not think such an inference is warranted. too short than prompt text Since the period of our tale, the active spirit of the country has surrounded it with a belt of rich and thriving settlements, though none but the hunter or the savage is ever known even now to penetrate its wild recesses., this may lead to bad performance
+2026-10-26 13:06:35,316 INFO synthesis text But i do not think such an inference is warranted.
+2026-10-26 13:06:40,078 INFO yield speech len 3.44, rtf 1.384345944537673
+100%|██████████| 1/1 [00:05<00:00,  5.90s/it]100%|██████████| 1/1 [00:05<00:00,  5.90s/it]
+2026-10-26 13:06:40,210 INFO Processing audio with duration 00:03.440
+2026-10-26 13:06:40,214 DEBUG Processing segment at 00:00.000
+[164/200] clip 163 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.524 wer=0.00
+2026-10-26 13:06:40,766 INFO Processing audio with duration 00:06.425
+2026-10-26 13:06:40,777 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:06:40,966 WARNING synthesis text You will take me on board count will you not. too short than prompt text Distrusting his own judgment, his appeals to the opinion of Chingacuko frequent and earnest., this may lead to bad performance
+2026-10-26 13:06:41,512 INFO synthesis text You will take me on board count will you not.
+2026-10-26 13:06:45,004 INFO yield speech len 3.6, rtf 0.9699766503440009
+100%|██████████| 1/1 [00:04<00:00,  4.06s/it]100%|██████████| 1/1 [00:04<00:00,  4.06s/it]
+2026-10-26 13:06:45,133 INFO Processing audio with duration 00:03.600
+2026-10-26 13:06:45,137 DEBUG Processing segment at 00:00.000
+[165/200] clip 164 prompt full text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.567 wer=0.00
+2026-10-26 13:06:45,920 INFO Processing audio with duration 00:08.940
+2026-10-26 13:06:45,926 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c165_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:06:46,935 INFO synthesis text He continued his pretended search and to give color to his errand made two arrests.
+2026-10-26 13:06:51,886 INFO yield speech len 5.16, rtf 0.9595413078633389
+100%|██████████| 1/1 [00:05<00:00,  5.75s/it]100%|██████████| 1/1 [00:05<00:00,  5.75s/it]
+2026-10-26 13:06:52,061 INFO Processing audio with duration 00:05.160
+2026-10-26 13:06:52,066 DEBUG Processing segment at 00:00.000
+[166/200] clip 165 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.570 wer=0.00
+2026-10-26 13:06:52,424 INFO Processing audio with duration 00:02.740
+2026-10-26 13:06:52,427 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:06:52,827 INFO synthesis text Pride after satisfaction uplifted him like long slow waves.
+2026-10-26 13:06:56,291 INFO yield speech len 4.12, rtf 0.8407600875039702
+100%|██████████| 1/1 [00:03<00:00,  3.76s/it]100%|██████████| 1/1 [00:03<00:00,  3.76s/it]
+2026-10-26 13:06:56,421 INFO Processing audio with duration 00:04.120
+2026-10-26 13:06:56,425 DEBUG Processing segment at 00:00.000
+[167/200] clip 166 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.439 wer=0.00
+2026-10-26 13:06:56,954 INFO Processing audio with duration 00:05.985
+2026-10-26 13:06:56,959 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:06:57,649 INFO synthesis text However that was over now the tree gone the story at an end.
+2026-10-26 13:07:01,553 INFO yield speech len 4.08, rtf 0.9568003462810142
+100%|██████████| 1/1 [00:04<00:00,  4.45s/it]100%|██████████| 1/1 [00:04<00:00,  4.45s/it]
+2026-10-26 13:07:01,701 INFO Processing audio with duration 00:04.080
+2026-10-26 13:07:01,705 DEBUG Processing segment at 00:00.000
+[168/200] clip 167 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.533 wer=0.00
+2026-10-26 13:07:02,121 INFO Processing audio with duration 00:03.450
+2026-10-26 13:07:02,126 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:07:02,590 INFO synthesis text In the communities of the western culture this point is at present found among the lower middle class.
+2026-10-26 13:07:08,375 INFO yield speech len 7.28, rtf 0.7946998535931765
+100%|██████████| 1/1 [00:06<00:00,  6.12s/it]100%|██████████| 1/1 [00:06<00:00,  6.12s/it]
+2026-10-26 13:07:08,569 INFO Processing audio with duration 00:07.280
+2026-10-26 13:07:08,575 DEBUG Processing segment at 00:00.000
+[169/200] clip 168 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.510 wer=0.00
+2026-10-26 13:07:09,215 INFO Processing audio with duration 00:07.535
+2026-10-26 13:07:09,220 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:07:09,422 WARNING synthesis text Might learn something useful down there. too short than prompt text I understand you to say that there are three students who use this stair and are in the habit of passing your door.  Yes, there are., this may lead to bad performance
+2026-10-26 13:07:10,080 INFO synthesis text Might learn something useful down there.
+2026-10-26 13:07:12,628 INFO yield speech len 2.12, rtf 1.2019627499130536
+100%|██████████| 1/1 [00:03<00:00,  3.23s/it]100%|██████████| 1/1 [00:03<00:00,  3.23s/it]
+2026-10-26 13:07:12,742 INFO Processing audio with duration 00:02.120
+2026-10-26 13:07:12,745 DEBUG Processing segment at 00:00.000
+[170/200] clip 169 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.461 wer=0.00
+2026-10-26 13:07:13,186 INFO Processing audio with duration 00:03.595
+2026-10-26 13:07:13,190 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]max value is  tensor(1.0012)
+2026-10-26 13:07:13,695 INFO synthesis text There was something individual about the great farm a most unusual trimness and care for detail.
+2026-10-26 13:07:19,100 INFO yield speech len 6.56, rtf 0.8240403562057309
+100%|██████████| 1/1 [00:05<00:00,  5.76s/it]100%|██████████| 1/1 [00:05<00:00,  5.76s/it]
+2026-10-26 13:07:19,292 INFO Processing audio with duration 00:06.560
+2026-10-26 13:07:19,298 DEBUG Processing segment at 00:00.000
+[171/200] clip 170 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.392 wer=0.00
+2026-10-26 13:07:19,677 INFO Processing audio with duration 00:03.240
+2026-10-26 13:07:19,681 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:07:20,126 INFO synthesis text He still held on to it with both hands as he rushed into his mother's cottage.
+2026-10-26 13:07:24,427 INFO yield speech len 5.16, rtf 0.8336634598961172
+100%|██████████| 1/1 [00:04<00:00,  4.61s/it]100%|██████████| 1/1 [00:04<00:00,  4.61s/it]
+2026-10-26 13:07:24,568 INFO Processing audio with duration 00:05.160
+2026-10-26 13:07:24,573 DEBUG Processing segment at 00:00.000
+[172/200] clip 171 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.468 wer=0.00
+2026-10-26 13:07:24,981 INFO Processing audio with duration 00:03.840
+2026-10-26 13:07:24,985 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:07:25,485 INFO synthesis text A bed quilt made of patches of different kinds and colors of cloth all neatly sewed together.
+2026-10-26 13:07:30,178 INFO yield speech len 5.64, rtf 0.8320217436932503
+100%|██████████| 1/1 [00:05<00:00,  5.05s/it]100%|██████████| 1/1 [00:05<00:00,  5.05s/it]
+2026-10-26 13:07:30,340 INFO Processing audio with duration 00:05.640
+2026-10-26 13:07:30,345 DEBUG Processing segment at 00:00.000
+[173/200] clip 172 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.525 wer=0.00
+2026-10-26 13:07:31,150 INFO Processing audio with duration 00:10.080
+2026-10-26 13:07:31,156 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c173_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:07:31,438 WARNING synthesis text Burn fire burn flicker flicker flame. too short than prompt text I know his farm is in better order than any other within ten miles of us. And as for the kitchen, he added smiling, I don't believe there's one in the kingdom to beat it., this may lead to bad performance
+2026-10-26 13:07:32,252 INFO synthesis text Burn fire burn flicker flicker flame.
+2026-10-26 13:07:36,106 INFO yield speech len 3.52, rtf 1.0949063707481732
+100%|██████████| 1/1 [00:04<00:00,  4.68s/it]100%|██████████| 1/1 [00:04<00:00,  4.68s/it]
+2026-10-26 13:07:36,234 INFO Processing audio with duration 00:03.520
+2026-10-26 13:07:36,238 DEBUG Processing segment at 00:00.000
+[174/200] clip 173 prompt full text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.552 wer=0.00
+2026-10-26 13:07:36,892 INFO Processing audio with duration 00:07.990
+2026-10-26 13:07:36,897 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:07:37,128 WARNING synthesis text In the stern i curved the tail up almost as high as the head. too short than prompt text And there's linen in the house, as I could well spare you,  where I got lots of sheeting and table clothing and towlings isn't made up., this may lead to bad performance
+2026-10-26 13:07:37,785 INFO synthesis text In the stern i curved the tail up almost as high as the head.
+2026-10-26 13:07:41,877 INFO yield speech len 4.0, rtf 1.0228499174118042
+100%|██████████| 1/1 [00:04<00:00,  4.76s/it]100%|██████████| 1/1 [00:04<00:00,  4.76s/it]
+2026-10-26 13:07:42,011 INFO Processing audio with duration 00:04.000
+2026-10-26 13:07:42,015 DEBUG Processing segment at 00:00.000
+[175/200] clip 174 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.589 wer=0.07
+2026-10-26 13:07:42,537 INFO Processing audio with duration 00:04.640
+2026-10-26 13:07:42,541 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:07:43,116 INFO synthesis text It won't be much but i'm grateful to find a friend.
+2026-10-26 13:07:46,364 INFO yield speech len 3.64, rtf 0.8923063566396524
+100%|██████████| 1/1 [00:03<00:00,  3.68s/it]100%|██████████| 1/1 [00:03<00:00,  3.68s/it]
+2026-10-26 13:07:46,506 INFO Processing audio with duration 00:03.640
+2026-10-26 13:07:46,510 DEBUG Processing segment at 00:00.000
+[176/200] clip 175 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=True sim=0.356 wer=0.00
+2026-10-26 13:07:47,478 INFO Processing audio with duration 00:13.005
+2026-10-26 13:07:47,486 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:07:47,754 WARNING synthesis text You see loving some one as i love you makes the whole world different. too short than prompt text The objection of course presents itself that expenditure on women's dress and household paraphernalia is an obvious exception to this rule,  but it will appear in the sequel that this exception is much more obvious than substantial., this may lead to bad performance
+2026-10-26 13:07:48,842 INFO synthesis text You see loving some one as i love you makes the whole world different.
+2026-10-26 13:07:54,016 INFO yield speech len 3.92, rtf 1.3199256999152047
+100%|██████████| 1/1 [00:06<00:00,  6.28s/it]100%|██████████| 1/1 [00:06<00:00,  6.28s/it]
+2026-10-26 13:07:54,156 INFO Processing audio with duration 00:03.920
+2026-10-26 13:07:54,160 DEBUG Processing segment at 00:00.000
+[177/200] clip 176 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.559 wer=0.14
+2026-10-26 13:07:54,664 INFO Processing audio with duration 00:05.355
+2026-10-26 13:07:54,668 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:07:54,828 WARNING synthesis text The work had to be condensed. too short than prompt text In the communities of the Western culture, this point is at present found among the lower middle class., this may lead to bad performance
+2026-10-26 13:07:55,305 INFO synthesis text The work had to be condensed.
+2026-10-26 13:07:57,773 INFO yield speech len 2.44, rtf 1.0114368845204837
+100%|██████████| 1/1 [00:02<00:00,  2.96s/it]100%|██████████| 1/1 [00:02<00:00,  2.96s/it]
+2026-10-26 13:07:57,875 INFO Processing audio with duration 00:02.440
+2026-10-26 13:07:57,879 DEBUG Processing segment at 00:00.000
+[178/200] clip 177 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.308 wer=0.00
+2026-10-26 13:07:58,678 INFO Processing audio with duration 00:10.615
+2026-10-26 13:07:58,684 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:07:58,927 WARNING synthesis text Many if not all the elements of the pre socratic philosophy are included in the timaeus. too short than prompt text Such consumption as falls to the women is merely incidental to their work.  It is a means to their continued labour and not to consumption directed to their own comfort and fullness of life., this may lead to bad performance
+2026-10-26 13:07:59,832 INFO synthesis text Many if not all the elements of the pre socratic philosophy are included in the timaeus.
+2026-10-26 13:08:05,944 INFO yield speech len 5.8, rtf 1.0537910461425781
+100%|██████████| 1/1 [00:07<00:00,  7.03s/it]100%|██████████| 1/1 [00:07<00:00,  7.03s/it]
+2026-10-26 13:08:06,130 INFO Processing audio with duration 00:05.800
+2026-10-26 13:08:06,134 DEBUG Processing segment at 00:00.000
+[179/200] clip 178 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.494 wer=0.06
+2026-10-26 13:08:06,975 INFO Processing audio with duration 00:10.600
+2026-10-26 13:08:06,982 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c179_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:08:07,262 WARNING synthesis text Upon this madame deigned to turn her eyes languishingly towards the comte observing. too short than prompt text If beauty or comfort is achieved, and it is more or less fortuitous circumstance if they are, they must be achieved by means and methods that commend themselves to the great economic law of wasted effort., this may lead to bad performance
+2026-10-26 13:08:08,157 INFO synthesis text Upon this madame deigned to turn her eyes languishingly towards the comte observing.
+2026-10-26 13:08:14,455 INFO yield speech len 5.92, rtf 1.0638140746065088
+100%|██████████| 1/1 [00:07<00:00,  7.21s/it]100%|██████████| 1/1 [00:07<00:00,  7.21s/it]
+2026-10-26 13:08:14,635 INFO Processing audio with duration 00:05.920
+2026-10-26 13:08:14,640 DEBUG Processing segment at 00:00.000
+[180/200] clip 179 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.565 wer=0.23
+2026-10-26 13:08:16,085 INFO Processing audio with duration 00:19.000
+2026-10-26 13:08:16,095 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c180_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:08:16,481 WARNING synthesis text My tongue refused to articulate my power of speech left me. too short than prompt text However, remembering what you told me, namely that you had commended the matter to a higher decision than ours, and that you were resolved to submit with resignation to that decision whatever it might be, I hold it my duty to yield also and to be silent, and may be all for the best., this may lead to bad performance
+2026-10-26 13:08:18,107 INFO synthesis text My tongue refused to articulate my power of speech left me.
+2026-10-26 13:08:24,252 INFO yield speech len 3.68, rtf 1.6697344572647757
+100%|██████████| 1/1 [00:07<00:00,  7.80s/it]100%|██████████| 1/1 [00:07<00:00,  7.80s/it]
+2026-10-26 13:08:24,416 INFO Processing audio with duration 00:03.680
+2026-10-26 13:08:24,420 DEBUG Processing segment at 00:00.000
+[181/200] clip 180 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.405 wer=0.09
+2026-10-26 13:08:25,152 INFO Processing audio with duration 00:09.205
+2026-10-26 13:08:25,159 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c181_full_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:08:26,224 INFO synthesis text Atchison who had been haranguing the mob planted his two guns before the building and trained them upon it.
+2026-10-26 13:08:32,499 INFO yield speech len 6.28, rtf 0.9992752864861943
+100%|██████████| 1/1 [00:07<00:00,  7.09s/it]100%|██████████| 1/1 [00:07<00:00,  7.09s/it]
+2026-10-26 13:08:32,690 INFO Processing audio with duration 00:06.280
+2026-10-26 13:08:32,695 DEBUG Processing segment at 00:00.000
+[182/200] clip 181 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.499 wer=0.00
+2026-10-26 13:08:33,317 INFO Processing audio with duration 00:06.520
+2026-10-26 13:08:33,322 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:08:33,492 WARNING synthesis text Stuff it into you his belly counselled him. too short than prompt text I'm not good enough for you, and you must be kept from the contamination of two intimate society., this may lead to bad performance
+2026-10-26 13:08:34,058 INFO synthesis text Stuff it into you his belly counselled him.
+2026-10-26 13:08:37,498 INFO yield speech len 3.52, rtf 0.9771540083668449
+100%|██████████| 1/1 [00:04<00:00,  4.03s/it]100%|██████████| 1/1 [00:04<00:00,  4.03s/it]
+2026-10-26 13:08:37,627 INFO Processing audio with duration 00:03.520
+2026-10-26 13:08:37,631 DEBUG Processing segment at 00:00.000
+[183/200] clip 182 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.339 wer=0.12
+2026-10-26 13:08:37,934 INFO Processing audio with duration 00:01.695
+2026-10-26 13:08:37,937 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:08:38,258 INFO synthesis text Will the hurons hear his groans.
+2026-10-26 13:08:40,598 INFO yield speech len 2.64, rtf 0.88646493174813
+100%|██████████| 1/1 [00:02<00:00,  2.55s/it]100%|██████████| 1/1 [00:02<00:00,  2.55s/it]
+2026-10-26 13:08:40,703 INFO Processing audio with duration 00:02.640
+2026-10-26 13:08:40,707 DEBUG Processing segment at 00:00.000
+[184/200] clip 183 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.323 wer=0.17
+2026-10-26 13:08:41,078 INFO Processing audio with duration 00:03.000
+2026-10-26 13:08:41,082 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 13:08:41,514 INFO synthesis text I think i should be doing you a service to turn you out of such a place.
