@@ -2,7 +2,8 @@
 [LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
 [LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
 [LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
-[plan] cloner=maskgct clips=100 prompts=['6', 'full'] texts=['fixed', 'unseen'] -> 400 clones to run
+[resume] 200 completed records kept from results/ce_libri_maskgct_stage1vmaug_e29_pdur.json
+[plan] cloner=maskgct clips=100 prompts=['6', 'full'] texts=['fixed', 'unseen'] -> 200 clones to run
 /usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
   WeightNorm.apply(module, name, dim)
 /kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
@@ -35,560 +36,148 @@ INFO:speechbrain.utils.parameter_transfer:Loading pretrained files for: embeddin
 WARNING:speechbrain.inference.interfaces:Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
 [transcribe] loading faster-whisper base.en (float16)
 WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 136])
+[1/200] clip 50 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.611 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 269])
+[2/200] clip 50 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.715 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 128])
+[3/200] clip 50 prompt full text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.433 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 254])
+[4/200] clip 50 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.699 wer=0.00
+WARNING:phonemizer:words count mismatch on 300.0% of the lines (3/1)
 predict semantic shape torch.Size([1, 154])
-[1/400] clip 0 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.452 wer=0.12
+[5/200] clip 51 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.479 wer=0.12
+WARNING:phonemizer:words count mismatch on 300.0% of the lines (3/1)
 WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
 predict semantic shape torch.Size([1, 300])
-[2/400] clip 0 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.530 wer=0.12
-predict semantic shape torch.Size([1, 109])
-[3/400] clip 0 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.639 wer=0.88
-predict semantic shape torch.Size([1, 213])
-[4/400] clip 0 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.623 wer=1.31
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 189])
-[5/400] clip 1 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.473 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 273])
-[6/400] clip 1 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.556 wer=0.27
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 171])
-[7/400] clip 1 prompt full text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.649 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 248])
-[8/400] clip 1 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.575 wer=0.09
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 192])
-[9/400] clip 2 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.460 wer=0.38
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 380])
-[10/400] clip 2 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.688 wer=0.07
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 164])
-[11/400] clip 2 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.634 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 324])
-[12/400] clip 2 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.688 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 136])
-[13/400] clip 3 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.495 wer=0.12
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 265])
-[14/400] clip 3 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.587 wer=0.06
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 121])
-[15/400] clip 3 prompt full text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.613 wer=0.00
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 235])
-[16/400] clip 3 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.668 wer=0.17
-predict semantic shape torch.Size([1, 166])
-[17/400] clip 4 prompt 6 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.383 wer=0.38
-predict semantic shape torch.Size([1, 387])
-[18/400] clip 4 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.405 wer=0.00
-predict semantic shape torch.Size([1, 163])
-[19/400] clip 4 prompt full text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.481 wer=0.00
-predict semantic shape torch.Size([1, 380])
-[20/400] clip 4 prompt full text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.553 wer=0.00
-predict semantic shape torch.Size([1, 183])
-[21/400] clip 5 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.619 wer=0.00
-predict semantic shape torch.Size([1, 167])
-[22/400] clip 5 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.520 wer=0.00
-WARNING:phonemizer:words count mismatch on 300.0% of the lines (3/1)
-predict semantic shape torch.Size([1, 151])
-[23/400] clip 5 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.713 wer=0.00
-WARNING:phonemizer:words count mismatch on 300.0% of the lines (3/1)
-predict semantic shape torch.Size([1, 138])
-[24/400] clip 5 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.572 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 135])
-[25/400] clip 6 prompt 6 text fixed: acc_src=1.000 acc=0.812 traced=True far=False sim=0.618 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 210])
-[26/400] clip 6 prompt 6 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.605 wer=0.15
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 179])
-[27/400] clip 6 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.543 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 278])
-[28/400] clip 6 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.693 wer=0.15
-predict semantic shape torch.Size([1, 147])
-[29/400] clip 7 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.523 wer=0.12
-predict semantic shape torch.Size([1, 135])
-[30/400] clip 7 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.569 wer=0.17
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 157])
-[31/400] clip 7 prompt full text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.631 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+[6/200] clip 51 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.526 wer=0.06
+WARNING:phonemizer:words count mismatch on 400.0% of the lines (4/1)
 predict semantic shape torch.Size([1, 144])
-[32/400] clip 7 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.662 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 147])
-[33/400] clip 8 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.523 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 291])
-[34/400] clip 8 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.704 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 158])
-[35/400] clip 8 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.633 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 312])
-[36/400] clip 8 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.709 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 152])
-[37/400] clip 9 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.536 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 143])
-[38/400] clip 9 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.642 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 156])
-[39/400] clip 9 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.595 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 147])
-[40/400] clip 9 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.658 wer=0.00
-predict semantic shape torch.Size([1, 136])
-[41/400] clip 10 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.522 wer=0.12
-predict semantic shape torch.Size([1, 129])
-[42/400] clip 10 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.419 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 151])
-[43/400] clip 10 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.552 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 143])
-[44/400] clip 10 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.382 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 150])
-[45/400] clip 11 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.494 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 425])
-[46/400] clip 11 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.536 wer=0.00
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 125])
-[47/400] clip 11 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.480 wer=0.00
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 356])
-[48/400] clip 11 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.557 wer=0.00
-predict semantic shape torch.Size([1, 156])
-[49/400] clip 12 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.548 wer=0.25
-predict semantic shape torch.Size([1, 304])
-[50/400] clip 12 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.484 wer=0.12
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 138])
-[51/400] clip 12 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.493 wer=0.12
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 269])
-[52/400] clip 12 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.562 wer=0.00
-predict semantic shape torch.Size([1, 125])
-[53/400] clip 13 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.483 wer=0.00
-predict semantic shape torch.Size([1, 181])
-[54/400] clip 13 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.350 wer=0.18
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 142])
-[55/400] clip 13 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.513 wer=0.00
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 206])
-[56/400] clip 13 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.590 wer=0.18
-predict semantic shape torch.Size([1, 144])
-[57/400] clip 14 prompt 6 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.459 wer=0.12
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 284])
-[58/400] clip 14 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.437 wer=0.07
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 140])
-[59/400] clip 14 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.490 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 276])
-[60/400] clip 14 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.508 wer=0.00
-predict semantic shape torch.Size([1, 134])
-[61/400] clip 15 prompt 6 text fixed: acc_src=1.000 acc=0.750 traced=False far=True sim=0.402 wer=0.00
-predict semantic shape torch.Size([1, 194])
-[62/400] clip 15 prompt 6 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.440 wer=0.09
-predict semantic shape torch.Size([1, 134])
-[63/400] clip 15 prompt full text fixed: acc_src=1.000 acc=0.750 traced=False far=True sim=0.462 wer=0.00
-predict semantic shape torch.Size([1, 194])
-[64/400] clip 15 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.461 wer=0.09
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 133])
-[65/400] clip 16 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.543 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 122])
-[66/400] clip 16 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.675 wer=0.14
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 132])
-[67/400] clip 16 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.621 wer=0.00
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 121])
-[68/400] clip 16 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.560 wer=0.00
-predict semantic shape torch.Size([1, 111])
-[69/400] clip 17 prompt 6 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.722 wer=0.00
-predict semantic shape torch.Size([1, 173])
-[70/400] clip 17 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.672 wer=0.15
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 122])
-[71/400] clip 17 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.652 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 190])
-[72/400] clip 17 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.735 wer=0.00
-predict semantic shape torch.Size([1, 158])
-[73/400] clip 18 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.523 wer=0.00
-predict semantic shape torch.Size([1, 145])
-[74/400] clip 18 prompt 6 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.615 wer=0.33
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 134])
-[75/400] clip 18 prompt full text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.492 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 123])
-[76/400] clip 18 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.472 wer=0.33
-predict semantic shape torch.Size([1, 121])
-[77/400] clip 19 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.480 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 239])
-[78/400] clip 19 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.627 wer=0.00
-predict semantic shape torch.Size([1, 127])
-[79/400] clip 19 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.522 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 250])
-[80/400] clip 19 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.688 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 144])
-[81/400] clip 20 prompt 6 text fixed: acc_src=0.875 acc=0.812 traced=True far=True sim=0.442 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+[7/200] clip 51 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.483 wer=0.00
+WARNING:phonemizer:words count mismatch on 400.0% of the lines (4/1)
 WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
 predict semantic shape torch.Size([1, 280])
-[82/400] clip 20 prompt 6 text unseen: acc_src=0.875 acc=0.562 traced=False far=True sim=0.415 wer=0.22
+[8/200] clip 51 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.498 wer=0.11
+predict semantic shape torch.Size([1, 166])
+[9/200] clip 52 prompt 6 text fixed: acc_src=1.000 acc=0.875 traced=True far=True sim=0.450 wer=0.12
+predict semantic shape torch.Size([1, 387])
+[10/200] clip 52 prompt 6 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.538 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 132])
+[11/200] clip 52 prompt full text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.500 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 309])
+[12/200] clip 52 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.628 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 142])
+[13/200] clip 53 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.411 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 221])
+[14/200] clip 53 prompt 6 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.487 wer=0.15
 WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 143])
-[83/400] clip 20 prompt full text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.374 wer=0.00
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 279])
-[84/400] clip 20 prompt full text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.447 wer=0.22
-predict semantic shape torch.Size([1, 196])
-[85/400] clip 21 prompt 6 text fixed: acc_src=1.000 acc=0.812 traced=True far=False sim=0.327 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 556])
-[86/400] clip 21 prompt 6 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.519 wer=0.00
-predict semantic shape torch.Size([1, 200])
-[87/400] clip 21 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.356 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 569])
-[88/400] clip 21 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.483 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 229])
-[89/400] clip 22 prompt 6 text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.236 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 402])
-[90/400] clip 22 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.340 wer=0.18
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 192])
-[91/400] clip 22 prompt full text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.357 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 337])
-[92/400] clip 22 prompt full text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.495 wer=0.09
-predict semantic shape torch.Size([1, 140])
-[93/400] clip 23 prompt 6 text fixed: acc_src=1.000 acc=0.812 traced=True far=False sim=0.480 wer=0.00
-predict semantic shape torch.Size([1, 210])
-[94/400] clip 23 prompt 6 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.432 wer=0.14
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 154])
-[95/400] clip 23 prompt full text fixed: acc_src=1.000 acc=0.812 traced=True far=False sim=0.501 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 231])
-[96/400] clip 23 prompt full text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.512 wer=0.14
-predict semantic shape torch.Size([1, 158])
-[97/400] clip 24 prompt 6 text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.465 wer=0.00
-predict semantic shape torch.Size([1, 370])
-[98/400] clip 24 prompt 6 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.553 wer=0.00
-predict semantic shape torch.Size([1, 167])
-[99/400] clip 24 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.313 wer=0.00
-predict semantic shape torch.Size([1, 390])
-[100/400] clip 24 prompt full text unseen: acc_src=1.000 acc=0.938 traced=True far=True sim=0.538 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 145])
-[101/400] clip 25 prompt 6 text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.597 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 227])
-[102/400] clip 25 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.736 wer=0.15
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
 predict semantic shape torch.Size([1, 144])
-[103/400] clip 25 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.691 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 225])
-[104/400] clip 25 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.742 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 140])
-[105/400] clip 26 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.512 wer=0.25
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 202])
-[106/400] clip 26 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.598 wer=0.27
-WARNING:phonemizer:words count mismatch on 400.0% of the lines (4/1)
-predict semantic shape torch.Size([1, 120])
-[107/400] clip 26 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.424 wer=0.25
-WARNING:phonemizer:words count mismatch on 400.0% of the lines (4/1)
-predict semantic shape torch.Size([1, 174])
-[108/400] clip 26 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.570 wer=0.27
-predict semantic shape torch.Size([1, 147])
-[109/400] clip 27 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.442 wer=0.00
-predict semantic shape torch.Size([1, 135])
-[110/400] clip 27 prompt 6 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.650 wer=0.29
-predict semantic shape torch.Size([1, 147])
-[111/400] clip 27 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.581 wer=0.00
-predict semantic shape torch.Size([1, 135])
-[112/400] clip 27 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.643 wer=0.00
-predict semantic shape torch.Size([1, 189])
-[113/400] clip 28 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.636 wer=0.25
-predict semantic shape torch.Size([1, 178])
-[114/400] clip 28 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.554 wer=0.00
-predict semantic shape torch.Size([1, 158])
-[115/400] clip 28 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.563 wer=0.00
-predict semantic shape torch.Size([1, 149])
-[116/400] clip 28 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.635 wer=0.00
-predict semantic shape torch.Size([1, 156])
-[117/400] clip 29 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.436 wer=0.00
-predict semantic shape torch.Size([1, 143])
-[118/400] clip 29 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.485 wer=0.00
-predict semantic shape torch.Size([1, 180])
-[119/400] clip 29 prompt full text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.504 wer=0.00
-predict semantic shape torch.Size([1, 165])
-[120/400] clip 29 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.401 wer=0.17
-predict semantic shape torch.Size([1, 117])
-[121/400] clip 30 prompt 6 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.651 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 231])
-[122/400] clip 30 prompt 6 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.617 wer=0.00
+[15/200] clip 53 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.527 wer=0.00
 WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 124])
-[123/400] clip 30 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.588 wer=0.00
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 245])
-[124/400] clip 30 prompt full text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.694 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 120])
-[125/400] clip 31 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.577 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 233])
-[126/400] clip 31 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.668 wer=0.06
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 120])
-[127/400] clip 31 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.567 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 233])
-[128/400] clip 31 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.609 wer=0.17
-predict semantic shape torch.Size([1, 124])
-[129/400] clip 32 prompt 6 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.538 wer=0.12
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 351])
-[130/400] clip 32 prompt 6 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.635 wer=0.06
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 129])
-[131/400] clip 32 prompt full text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.613 wer=0.00
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 366])
-[132/400] clip 32 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.612 wer=0.00
-predict semantic shape torch.Size([1, 138])
-[133/400] clip 33 prompt 6 text fixed: acc_src=1.000 acc=0.812 traced=True far=False sim=0.519 wer=0.00
-predict semantic shape torch.Size([1, 269])
-[134/400] clip 33 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.610 wer=0.19
-predict semantic shape torch.Size([1, 125])
-[135/400] clip 33 prompt full text fixed: acc_src=1.000 acc=0.562 traced=False far=True sim=0.545 wer=0.00
-predict semantic shape torch.Size([1, 243])
-[136/400] clip 33 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.613 wer=0.12
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 127])
-[137/400] clip 34 prompt 6 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.599 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 190])
-[138/400] clip 34 prompt 6 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.629 wer=0.07
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 119])
-[139/400] clip 34 prompt full text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.611 wer=0.00
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 178])
-[140/400] clip 34 prompt full text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.627 wer=0.21
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 177])
-[141/400] clip 35 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.512 wer=0.12
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 413])
-[142/400] clip 35 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.597 wer=0.00
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 153])
-[143/400] clip 35 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.437 wer=0.00
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 359])
-[144/400] clip 35 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.635 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 146])
-[145/400] clip 36 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.548 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 227])
-[146/400] clip 36 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.589 wer=0.15
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 146])
-[147/400] clip 36 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.580 wer=0.12
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 227])
-[148/400] clip 36 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.577 wer=0.15
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 145])
-[149/400] clip 37 prompt 6 text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.492 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 210])
-[150/400] clip 37 prompt 6 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.586 wer=0.09
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 142])
-[151/400] clip 37 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.582 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 206])
-[152/400] clip 37 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.688 wer=0.09
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 171])
-[153/400] clip 38 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.562 wer=0.12
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 157])
-[154/400] clip 38 prompt 6 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.507 wer=0.00
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 158])
-[155/400] clip 38 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.505 wer=0.12
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 145])
-[156/400] clip 38 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.419 wer=0.00
-predict semantic shape torch.Size([1, 125])
-[157/400] clip 39 prompt 6 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.564 wer=0.00
-predict semantic shape torch.Size([1, 118])
-[158/400] clip 39 prompt 6 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.489 wer=0.00
-predict semantic shape torch.Size([1, 137])
-[159/400] clip 39 prompt full text fixed: acc_src=1.000 acc=0.625 traced=False far=True sim=0.628 wer=0.00
-predict semantic shape torch.Size([1, 129])
-[160/400] clip 39 prompt full text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.497 wer=0.00
+predict semantic shape torch.Size([1, 224])
+[16/200] clip 53 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.624 wer=0.00
 predict semantic shape torch.Size([1, 163])
-[161/400] clip 40 prompt 6 text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.504 wer=0.00
-predict semantic shape torch.Size([1, 381])
-[162/400] clip 40 prompt 6 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.576 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 142])
-[163/400] clip 40 prompt full text fixed: acc_src=1.000 acc=0.938 traced=True far=False sim=0.567 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 331])
-[164/400] clip 40 prompt full text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.593 wer=0.00
-predict semantic shape torch.Size([1, 125])
-[165/400] clip 41 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.454 wer=0.00
-predict semantic shape torch.Size([1, 195])
-[166/400] clip 41 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.496 wer=0.15
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 139])
-[167/400] clip 41 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.361 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 217])
-[168/400] clip 41 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.465 wer=0.15
-predict semantic shape torch.Size([1, 156])
-[169/400] clip 42 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.515 wer=0.00
-predict semantic shape torch.Size([1, 143])
-[170/400] clip 42 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.564 wer=0.17
-predict semantic shape torch.Size([1, 152])
-[171/400] clip 42 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.496 wer=0.00
-predict semantic shape torch.Size([1, 139])
-[172/400] clip 42 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.513 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 122])
-[173/400] clip 43 prompt 6 text fixed: acc_src=1.000 acc=0.750 traced=False far=True sim=0.435 wer=0.12
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 214])
-[174/400] clip 43 prompt 6 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.522 wer=0.09
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 121])
-[175/400] clip 43 prompt full text fixed: acc_src=1.000 acc=0.812 traced=True far=True sim=0.514 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 213])
-[176/400] clip 43 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.505 wer=0.09
+[17/200] clip 54 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.393 wer=0.12
+predict semantic shape torch.Size([1, 150])
+[18/200] clip 54 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.566 wer=0.33
+WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
+predict semantic shape torch.Size([1, 144])
+[19/200] clip 54 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.367 wer=0.00
+WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
+predict semantic shape torch.Size([1, 132])
+[20/200] clip 54 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.448 wer=0.00
+predict semantic shape torch.Size([1, 138])
+[21/200] clip 55 prompt 6 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.609 wer=0.00
+predict semantic shape torch.Size([1, 269])
+[22/200] clip 55 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.721 wer=0.06
 WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
 predict semantic shape torch.Size([1, 133])
-[177/400] clip 44 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.457 wer=0.00
+[23/200] clip 55 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.629 wer=0.00
 WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 200])
-[178/400] clip 44 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.526 wer=0.07
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 146])
-[179/400] clip 44 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.393 wer=0.00
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 219])
-[180/400] clip 44 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.537 wer=0.14
-predict semantic shape torch.Size([1, 132])
-[181/400] clip 45 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.120 wer=0.00
-predict semantic shape torch.Size([1, 190])
-[182/400] clip 45 prompt 6 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.105 wer=0.09
-predict semantic shape torch.Size([1, 132])
-[183/400] clip 45 prompt full text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.080 wer=0.00
-predict semantic shape torch.Size([1, 190])
-[184/400] clip 45 prompt full text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.139 wer=0.09
-predict semantic shape torch.Size([1, 128])
-[185/400] clip 46 prompt 6 text fixed: acc_src=1.000 acc=0.688 traced=False far=True sim=0.410 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 253])
-[186/400] clip 46 prompt 6 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.419 wer=0.00
-predict semantic shape torch.Size([1, 138])
-[187/400] clip 46 prompt full text fixed: acc_src=1.000 acc=0.750 traced=False far=True sim=0.493 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 259])
+[24/200] clip 55 prompt full text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.687 wer=0.00
+predict semantic shape torch.Size([1, 171])
+[25/200] clip 56 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.546 wer=0.00
+predict semantic shape torch.Size([1, 257])
+[26/200] clip 56 prompt 6 text unseen: acc_src=1.000 acc=0.938 traced=True far=True sim=0.591 wer=0.07
+predict semantic shape torch.Size([1, 181])
+[27/200] clip 56 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.592 wer=0.00
 predict semantic shape torch.Size([1, 272])
-[188/400] clip 46 prompt full text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.548 wer=0.07
+[28/200] clip 56 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.636 wer=0.07
 WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 130])
-[189/400] clip 47 prompt 6 text fixed: acc_src=1.000 acc=0.875 traced=True far=False sim=0.260 wer=0.25
+predict semantic shape torch.Size([1, 124])
+[29/200] clip 57 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.571 wer=0.00
 WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 202])
-[190/400] clip 47 prompt 6 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.261 wer=0.15
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 121])
-[191/400] clip 47 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.417 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 189])
-[192/400] clip 47 prompt full text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.348 wer=0.15
-predict semantic shape torch.Size([1, 147])
-[193/400] clip 48 prompt 6 text fixed: acc_src=1.000 acc=0.625 traced=False far=True sim=0.389 wer=0.12
-predict semantic shape torch.Size([1, 221])
-[194/400] clip 48 prompt 6 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.350 wer=0.21
-predict semantic shape torch.Size([1, 157])
-[195/400] clip 48 prompt full text fixed: acc_src=1.000 acc=0.750 traced=False far=True sim=0.411 wer=0.00
-predict semantic shape torch.Size([1, 235])
-[196/400] clip 48 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.449 wer=0.21
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 93])
-[197/400] clip 49 prompt 6 text fixed: acc_src=0.750 acc=0.625 traced=False far=True sim=0.316 wer=0.12
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 263])
-[198/400] clip 49 prompt 6 text unseen: acc_src=0.750 acc=0.750 traced=False far=True sim=0.387 wer=0.11
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-predict semantic shape torch.Size([1, 109])
-[199/400] clip 49 prompt full text fixed: acc_src=0.750 acc=0.750 traced=False far=True sim=0.366 wer=0.00
-WARNING:phonemizer:words count mismatch on 200.0% of the lines (2/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 308])
-[200/400] clip 49 prompt full text unseen: acc_src=0.750 acc=0.750 traced=False far=True sim=0.462 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 136])
-[201/400] clip 50 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.474 wer=0.00
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
-predict semantic shape torch.Size([1, 269])
-[202/400] clip 50 prompt 6 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.611 wer=0.00
+predict semantic shape torch.Size([1, 113])
+[30/200] clip 57 prompt 6 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.552 wer=0.00
 WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
 predict semantic shape torch.Size([1, 128])
-[203/400] clip 50 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.452 wer=0.00
+[31/200] clip 57 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.641 wer=0.00
 WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 117])
+[32/200] clip 57 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.517 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 156])
+[33/200] clip 58 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.716 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 243])
+[34/200] clip 58 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.709 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 197])
+[35/200] clip 58 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.733 wer=0.12
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 306])
+[36/200] clip 58 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.699 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 180])
+[37/200] clip 59 prompt 6 text fixed: acc_src=1.000 acc=0.750 traced=False far=True sim=0.496 wer=0.12
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 260])
+[38/200] clip 59 prompt 6 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.508 wer=0.09
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 172])
+[39/200] clip 59 prompt full text fixed: acc_src=1.000 acc=0.750 traced=False far=True sim=0.426 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 249])
+[40/200] clip 59 prompt full text unseen: acc_src=1.000 acc=0.875 traced=True far=True sim=0.425 wer=0.09
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 128])
+[41/200] clip 60 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.460 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 250])
+[42/200] clip 60 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.615 wer=0.19
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 143])
+[43/200] clip 60 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.422 wer=0.12
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 278])
+[44/200] clip 60 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.619 wer=0.12
+predict semantic shape torch.Size([1, 112])
+[45/200] clip 61 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.524 wer=0.12
+predict semantic shape torch.Size([1, 162])
+[46/200] clip 61 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.460 wer=0.36
+predict semantic shape torch.Size([1, 117])
+[47/200] clip 61 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.533 wer=0.00
+predict semantic shape torch.Size([1, 170])
+[48/200] clip 61 prompt full text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.559 wer=0.09
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 135])
+[49/200] clip 62 prompt 6 text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.496 wer=0.12
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 266])
+[50/200] clip 62 prompt 6 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.459 wer=0.00
+WARNING:phonemizer:words count mismatch on 300.0% of the lines (3/1)
+predict semantic shape torch.Size([1, 127])
+[51/200] clip 62 prompt full text fixed: acc_src=1.000 acc=1.000 traced=True far=False sim=0.485 wer=0.00
+WARNING:phonemizer:words count mismatch on 300.0% of the lines (3/1)
 WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
