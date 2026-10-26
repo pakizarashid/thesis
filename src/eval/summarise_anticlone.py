@@ -19,7 +19,6 @@ from scipy.stats import binomtest, wilcoxon
 
 TAGS = ["pretrained", "R0", "RQA"]
 ARMS = ["wm", "rs", "q2"]
-EXTRA_ARMS = ["a0", "q2c"]   # a0: YourTTS-surrogate perturbation (surrogate comparison); q2c: Q2 + intelligibility term. RQA only
 CLONERS = ["f5tts", "maskgct", "cosyvoice", "xtts", "yourtts"]
 N_BOOT, SEED = 10000, 20261026
 SENS_FROM = 40          # clips 0-39 were Q2's development clips
@@ -105,19 +104,10 @@ def main():
         if m:
             man[t] = {r["index"]: r for r in m["records"]}
             S["prompts"][t] = m["summary"]
-            for xa in EXTRA_ARMS:
-                xm = load(f"{R}/anticlone/prompts/{t}/{xa}_manifest.json")
-                if xm:
-                    S["prompts"][t][xa] = xm["summary"][xa]
-                    for r in xm["records"]:
-                        if r["index"] in man[t]:
-                            man[t][r["index"]]["arms"][xa] = r[xa]
     print("\n== protected prompts (3 s, vs clean; on the saved 16-bit files) ==")
     print(f"{'tag':11s} {'arm':3s} {'PESQ':>6s} {'STOI':>6s} {'SI-SNR':>7s} {'SNR':>6s} {'srcACC':>7s}")
     for t in man:
-        for arm in ARMS + EXTRA_ARMS:
-            if arm not in S["prompts"][t]:
-                continue
+        for arm in ARMS:
             s = S["prompts"][t][arm]
             print(f"{t:11s} {arm:3s} {s['pesq']:6.3f} {s['stoi']:6.3f} {s['si_snr']:7.2f} {s['snr_db']:6.2f} {s['acc_source']:7.3f}")
     if "RQA" in man and "pretrained" in man:
@@ -131,7 +121,7 @@ def main():
     D = {}
     for cl in CLONERS:
         for t in TAGS:
-            for arm in ARMS + EXTRA_ARMS:
+            for arm in ARMS:
                 d = load(f"{R}/ce_ac_{cl}_{t}_{arm}.json")
                 if d:
                     D[(cl, t, arm)] = d
@@ -185,60 +175,6 @@ def main():
                           + (" (beyond random noise)" if h["beyond_random_noise"] else ""))
                 if mode == "unseen":
                     S["sensitivity_40_99"][f"{cl}|{t}"] = drop(wm, q2, SENS_FROM)
-
-    # ---- surrogate comparison (pre-registration addendum): Q2 (F5-TTS surrogate) vs A0 (YourTTS surrogate), RQA
-    S["surrogate"] = {}
-    print("\n== surrogate comparison, RQA: held-out drop of A0 (YourTTS surrogate) and Q2 (F5-TTS surrogate) ==")
-    for cl in CLONERS:
-        for mode in modes:
-            wm, a0, q2 = rec(cl, "RQA", "wm", mode), rec(cl, "RQA", "a0", mode), rec(cl, "RQA", "q2", mode)
-            if not (wm and a0 and q2):
-                continue
-            h = {"wm_minus_a0": drop(wm, a0), "a0_minus_q2": drop(a0, q2)}
-            ks, aa, aq, _ = paired(a0, q2, "acc_clone")
-            h["acc_a0"], h["acc_q2"] = float(aa.mean()), float(aq.mean())
-            h["traced_a0"] = float(np.mean([a0[k]["traced"] for k in ks]))
-            h["traced_q2"] = float(np.mean([q2[k]["traced"] for k in ks]))
-            x = h["a0_minus_q2"]
-            if x:
-                h["verdict"] = ("F5 SURROGATE TRANSFERS BETTER" if x["p_one_sided"] < 0.05 and x["ci_speaker"][0] > 0
-                                else "NO DIFFERENCE SHOWN")
-            S["surrogate"][f"{cl}|{mode}"] = h
-            f = lambda z: (f"{z['mean']:+.4f} [{z['ci_speaker'][0]:+.4f},{z['ci_speaker'][1]:+.4f}] p {z['p_one_sided']:.1e}" if z else "-")
-            print(f"{cl:9s} {mode:6s} wm-a0 {f(h['wm_minus_a0'])} | a0-q2 {f(x)} | ACC a0 {h['acc_a0']:.3f} q2 {h['acc_q2']:.3f} "
-                  f"traced {h['traced_a0']:.2f}/{h['traced_q2']:.2f} -> {h.get('verdict')}")
-    if "RQA" in man and all("a0" in man["RQA"][k]["arms"] for k in man["RQA"]):
-        d = np.array([man["RQA"][k]["arms"]["q2"]["pesq"] - man["RQA"][k]["arms"]["a0"]["pesq"] for k in sorted(man["RQA"])])
-        S["surrogate"]["pesq_q2_minus_a0"] = {"mean": float(d.mean()), "p_two_sided": wil(d, "two-sided")}
-        print("PESQ q2 - a0 (RQA):", round(float(d.mean()), 3))
-
-    # ---- intelligibility addendum: q2c (Q2 + wav2vec2 CTC term) vs q2, RQA. WER is scored by Whisper (not in the loss)
-    S["content"] = {}
-    print("\n== intelligibility addendum, RQA: q2c vs q2 (WER by Whisper; CTC of wav2vec2 was in the loss) ==")
-    for cl in CLONERS:
-        for mode in modes:
-            q2, q2c, wm = rec(cl, "RQA", "q2", mode), rec(cl, "RQA", "q2c", mode), rec(cl, "RQA", "wm", mode)
-            if not (q2 and q2c):
-                continue
-            ks, wq, wc, spk = paired(q2c, q2, "wer")
-            d = wq - wc
-            h = {"n": len(ks), "wer_q2c": float(wq.mean()), "wer_q2": float(wc.mean()), "wer_diff": float(d.mean()),
-                 "wer_ci_speaker": boot_ci(d, spk), "wer_p_one_sided": wil(d, "greater"),
-                 "unusable_q2c": float(np.mean(wq > 0.5)), "unusable_q2": float(np.mean(wc > 0.5)),
-                 "res_drop_q2_minus_q2c": drop(q2, q2c), "wm_minus_q2c": drop(wm, q2c) if wm else None}
-            ks2, a_c, a_q, _ = paired(q2c, q2, "acc_clone")
-            h["acc_q2c"], h["acc_q2"] = float(a_c.mean()), float(a_q.mean())
-            h["traced_q2c"] = float(np.mean([q2c[k]["traced"] for k in ks2]))
-            h["verdict"] = ("RAISES WER" if h["wer_diff"] >= 0.10 and h["wer_p_one_sided"] < 0.05 and h["wer_ci_speaker"][0] > 0
-                            else "NO WER GAIN SHOWN")
-            S["content"][f"{cl}|{mode}"] = h
-            print(f"{cl:9s} {mode:6s} WER q2c {h['wer_q2c']:.3f} vs q2 {h['wer_q2']:.3f} (+{h['wer_diff']:.3f}, p {h['wer_p_one_sided']:.1e}) "
-                  f"WER>0.5 {h['unusable_q2c']:.2f}/{h['unusable_q2']:.2f} ACC {h['acc_q2c']:.3f}/{h['acc_q2']:.3f} "
-                  f"traced q2c {h['traced_q2c']:.2f} -> {h['verdict']}")
-    if "RQA" in man and all("q2c" in man["RQA"][k]["arms"] for k in man["RQA"]):
-        d = np.array([man["RQA"][k]["arms"]["q2c"]["pesq"] - man["RQA"][k]["arms"]["q2"]["pesq"] for k in sorted(man["RQA"])])
-        S["content"]["pesq_q2c_minus_q2"] = {"mean": float(d.mean()), "p_two_sided": wil(d, "two-sided")}
-        print("PESQ q2c - q2 (RQA):", round(float(d.mean()), 3))
 
     # ---- H2: the watermark survives protection (RQA, decisive cloners)
     print("\n== H2: watermark under protection (RQA, unseen) ==")
