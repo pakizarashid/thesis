@@ -1,0 +1,199 @@
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[backbone] loaded checkpoints/route2_vmaug_RQA/route2_epoch19.pt (epoch 19)
+Download Vocos from huggingface charactr/vocos-mel-24khz
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+vocab :  /usr/local/lib/python3.13/dist-packages/f5_tts/infer/examples/vocab.txt
+token :  custom
+model :  /root/.cache/huggingface/hub/models--SWivid--F5-TTS/snapshots/84e5a410d9cead4de2f847e7c9369a6440bdfaca/F5TTS_v1_Base/model_1250000.safetensors 
+
+INFO:speechbrain.utils.fetching:Fetch hyperparams.yaml: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-ecapa-voxceleb/hyperparams.yaml'
+INFO:speechbrain.utils.fetching:Fetch embedding_model.ckpt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-ecapa-voxceleb/embedding_model.ckpt'
+INFO:speechbrain.utils.fetching:Fetch mean_var_norm_emb.ckpt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-ecapa-voxceleb/mean_var_norm_emb.ckpt'
+INFO:speechbrain.utils.fetching:Fetch classifier.ckpt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-ecapa-voxceleb/classifier.ckpt'
+INFO:speechbrain.utils.fetching:Fetch label_encoder.txt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-ecapa-voxceleb/label_encoder.ckpt'
+INFO:speechbrain.utils.parameter_transfer:Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+/usr/local/lib/python3.13/dist-packages/speechbrain/utils/checkpoints.py:202: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  state_dict = torch.load(path, map_location=device)
+/usr/local/lib/python3.13/dist-packages/speechbrain/processing/features.py:1550: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  stats = torch.load(path, map_location=self.device)
+WARNING:speechbrain.inference.interfaces:Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+INFO:speechbrain.utils.fetching:Fetch hyperparams.yaml: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-xvect-voxceleb/hyperparams.yaml'
+INFO:speechbrain.utils.fetching:Fetch embedding_model.ckpt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-xvect-voxceleb/embedding_model.ckpt'
+INFO:speechbrain.utils.fetching:Fetch mean_var_norm_emb.ckpt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-xvect-voxceleb/mean_var_norm_emb.ckpt'
+INFO:speechbrain.utils.fetching:Fetch classifier.ckpt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-xvect-voxceleb/classifier.ckpt'
+INFO:speechbrain.utils.fetching:Fetch label_encoder.txt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-xvect-voxceleb/label_encoder.ckpt'
+INFO:speechbrain.utils.parameter_transfer:Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+WARNING:speechbrain.inference.interfaces:Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+Loading weights:   0%|          | 0/266 [00:00<?, ?it/s]Loading weights: 100%|██████████| 266/266 [00:00<00:00, 9784.48it/s]
+Loading weights:   0%|          | 0/212 [00:00<?, ?it/s]Loading weights: 100%|██████████| 212/212 [00:00<00:00, 2601.17it/s]
+[transformers] [1mWav2Vec2ForCTC LOAD REPORT[0m from: facebook/wav2vec2-base-960h
+Key                        | Status  | 
+---------------------------+---------+-
+wav2vec2.masked_spec_embed | MISSING | 
+
+Notes:
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+  [whitebox step 0] non-finite gradient, step skipped
+  [whitebox step 1] non-finite gradient, step skipped
+  [whitebox step 2] non-finite gradient, step skipped
+  [whitebox step 3] non-finite gradient, step skipped
+  [whitebox step 4] non-finite gradient, step skipped
+  [whitebox step 5] non-finite gradient, step skipped
+  [whitebox step 6] non-finite gradient, step skipped
+  [whitebox step 7] non-finite gradient, step skipped
+  [whitebox step 8] non-finite gradient, step skipped
+  [whitebox step 9] non-finite gradient, step skipped
+  [whitebox step 10] non-finite gradient, step skipped
+  [whitebox step 11] non-finite gradient, step skipped
+  [whitebox step 12] non-finite gradient, step skipped
+  [whitebox step 13] non-finite gradient, step skipped
+  [whitebox step 14] non-finite gradient, step skipped
+  [whitebox step 15] non-finite gradient, step skipped
+  [whitebox step 16] non-finite gradient, step skipped
+  [whitebox step 17] non-finite gradient, step skipped
+  [whitebox step 18] non-finite gradient, step skipped
+  [whitebox step 19] non-finite gradient, step skipped
+  [whitebox step 20] non-finite gradient, step skipped
+  [whitebox step 21] non-finite gradient, step skipped
+  [whitebox step 22] non-finite gradient, step skipped
+  [whitebox step 23] non-finite gradient, step skipped
+  [whitebox step 24] non-finite gradient, step skipped
+  [whitebox step 25] non-finite gradient, step skipped
+  [whitebox step 26] non-finite gradient, step skipped
+  [whitebox step 27] non-finite gradient, step skipped
+  [whitebox step 28] non-finite gradient, step skipped
+  [whitebox step 29] non-finite gradient, step skipped
+  [whitebox step 30] non-finite gradient, step skipped
+  [whitebox step 31] non-finite gradient, step skipped
+  [whitebox step 32] non-finite gradient, step skipped
+  [whitebox step 33] non-finite gradient, step skipped
+  [whitebox step 34] non-finite gradient, step skipped
+  [whitebox step 35] non-finite gradient, step skipped
+  [whitebox step 36] non-finite gradient, step skipped
+  [whitebox step 37] non-finite gradient, step skipped
+  [whitebox step 38] non-finite gradient, step skipped
+  [whitebox step 39] non-finite gradient, step skipped
+[50] q2c acc 1.000 pesq 1.70 dis 0.648->0.648 ctc 4.95->4.95 skip=40 | 97 s/clip, ~80 min left
+[51] q2c acc 1.000 pesq 1.61 dis 0.712->0.482 ctc 0.48->0.73 skip=0 | 87 s/clip, ~69 min left
+[52] q2c acc 1.000 pesq 1.94 dis 0.718->0.451 ctc 0.26->0.42 skip=0 | 84 s/clip, ~66 min left
+[53] q2c acc 1.000 pesq 1.72 dis 0.696->0.490 ctc 2.02->1.12 skip=0 | 82 s/clip, ~63 min left
+  [whitebox step 4] non-finite gradient, step skipped
+  [whitebox step 5] non-finite gradient, step skipped
+  [whitebox step 6] non-finite gradient, step skipped
+  [whitebox step 7] non-finite gradient, step skipped
+  [whitebox step 8] non-finite gradient, step skipped
+  [whitebox step 9] non-finite gradient, step skipped
+  [whitebox step 10] non-finite gradient, step skipped
+  [whitebox step 11] non-finite gradient, step skipped
+  [whitebox step 12] non-finite gradient, step skipped
+  [whitebox step 13] non-finite gradient, step skipped
+  [whitebox step 14] non-finite gradient, step skipped
+  [whitebox step 15] non-finite gradient, step skipped
+  [whitebox step 16] non-finite gradient, step skipped
+  [whitebox step 17] non-finite gradient, step skipped
+  [whitebox step 18] non-finite gradient, step skipped
+  [whitebox step 19] non-finite gradient, step skipped
+  [whitebox step 20] non-finite gradient, step skipped
+  [whitebox step 21] non-finite gradient, step skipped
+  [whitebox step 22] non-finite gradient, step skipped
+  [whitebox step 23] non-finite gradient, step skipped
+  [whitebox step 24] non-finite gradient, step skipped
+  [whitebox step 25] non-finite gradient, step skipped
+  [whitebox step 26] non-finite gradient, step skipped
+  [whitebox step 27] non-finite gradient, step skipped
+  [whitebox step 28] non-finite gradient, step skipped
+  [whitebox step 29] non-finite gradient, step skipped
+  [whitebox step 30] non-finite gradient, step skipped
+  [whitebox step 31] non-finite gradient, step skipped
+  [whitebox step 32] non-finite gradient, step skipped
+  [whitebox step 33] non-finite gradient, step skipped
+  [whitebox step 34] non-finite gradient, step skipped
+  [whitebox step 35] non-finite gradient, step skipped
+  [whitebox step 36] non-finite gradient, step skipped
+  [whitebox step 37] non-finite gradient, step skipped
+  [whitebox step 38] non-finite gradient, step skipped
+  [whitebox step 39] non-finite gradient, step skipped
+[54] q2c acc 1.000 pesq 1.07 dis 0.689->0.635 ctc 0.28->0.23 skip=36 | 81 s/clip, ~61 min left
+  [whitebox step 19] non-finite gradient, step skipped
+  [whitebox step 20] non-finite gradient, step skipped
+  [whitebox step 21] non-finite gradient, step skipped
+  [whitebox step 22] non-finite gradient, step skipped
+  [whitebox step 23] non-finite gradient, step skipped
+  [whitebox step 24] non-finite gradient, step skipped
+  [whitebox step 25] non-finite gradient, step skipped
+  [whitebox step 26] non-finite gradient, step skipped
+  [whitebox step 27] non-finite gradient, step skipped
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[backbone] loaded checkpoints/route2_vmaug_RQA/route2_epoch19.pt (epoch 19)
+Download Vocos from huggingface charactr/vocos-mel-24khz
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+vocab :  /usr/local/lib/python3.13/dist-packages/f5_tts/infer/examples/vocab.txt
+token :  custom
+model :  /root/.cache/huggingface/hub/models--SWivid--F5-TTS/snapshots/84e5a410d9cead4de2f847e7c9369a6440bdfaca/F5TTS_v1_Base/model_1250000.safetensors 
+
+INFO:speechbrain.utils.fetching:Fetch hyperparams.yaml: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-ecapa-voxceleb/hyperparams.yaml'
+INFO:speechbrain.utils.fetching:Fetch embedding_model.ckpt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-ecapa-voxceleb/embedding_model.ckpt'
+INFO:speechbrain.utils.fetching:Fetch mean_var_norm_emb.ckpt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-ecapa-voxceleb/mean_var_norm_emb.ckpt'
+INFO:speechbrain.utils.fetching:Fetch classifier.ckpt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-ecapa-voxceleb/classifier.ckpt'
+INFO:speechbrain.utils.fetching:Fetch label_encoder.txt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-ecapa-voxceleb/label_encoder.ckpt'
+INFO:speechbrain.utils.parameter_transfer:Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+/usr/local/lib/python3.13/dist-packages/speechbrain/utils/checkpoints.py:202: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  state_dict = torch.load(path, map_location=device)
+/usr/local/lib/python3.13/dist-packages/speechbrain/processing/features.py:1550: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  stats = torch.load(path, map_location=self.device)
+WARNING:speechbrain.inference.interfaces:Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+INFO:speechbrain.utils.fetching:Fetch hyperparams.yaml: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-xvect-voxceleb/hyperparams.yaml'
+INFO:speechbrain.utils.fetching:Fetch embedding_model.ckpt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-xvect-voxceleb/embedding_model.ckpt'
+INFO:speechbrain.utils.fetching:Fetch mean_var_norm_emb.ckpt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-xvect-voxceleb/mean_var_norm_emb.ckpt'
+INFO:speechbrain.utils.fetching:Fetch classifier.ckpt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-xvect-voxceleb/classifier.ckpt'
+INFO:speechbrain.utils.fetching:Fetch label_encoder.txt: Using symlink found at '/kaggle/working/thesis/pretrained_models/spkrec-xvect-voxceleb/label_encoder.ckpt'
+INFO:speechbrain.utils.parameter_transfer:Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+WARNING:speechbrain.inference.interfaces:Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+Loading weights:   0%|          | 0/266 [00:00<?, ?it/s]Loading weights: 100%|██████████| 266/266 [00:00<00:00, 11493.37it/s]
+Loading weights:   0%|          | 0/212 [00:00<?, ?it/s]Loading weights: 100%|██████████| 212/212 [00:00<00:00, 2726.71it/s]
+[transformers] [1mWav2Vec2ForCTC LOAD REPORT[0m from: facebook/wav2vec2-base-960h
+Key                        | Status  | 
+---------------------------+---------+-
+wav2vec2.masked_spec_embed | MISSING | 
+
+Notes:
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+[50] q2c acc 1.000 pesq 1.64 dis 0.648->0.559 ctc 4.95->5.53 skip=0 | 96 s/clip, ~79 min left
+[51] q2c acc 1.000 pesq 1.61 dis 0.712->0.415 ctc 0.48->0.59 skip=0 | 86 s/clip, ~69 min left
+[52] q2c acc 1.000 pesq 1.94 dis 0.718->0.444 ctc 0.26->0.43 skip=0 | 83 s/clip, ~65 min left
+[53] q2c acc 1.000 pesq 1.73 dis 0.696->0.520 ctc 2.02->1.40 skip=0 | 81 s/clip, ~62 min left
+[54] q2c acc 1.000 pesq 1.07 dis 0.689->0.458 ctc 0.28->0.67 skip=0 | 80 s/clip, ~60 min left
+[55] q2c acc 1.000 pesq 2.23 dis 0.749->0.532 ctc 0.88->1.05 skip=0 | 79 s/clip, ~58 min left
+[56] q2c acc 1.000 pesq 1.68 dis 0.749->0.499 ctc 0.72->1.31 skip=0 | 79 s/clip, ~57 min left
+[57] q2c acc 1.000 pesq 1.84 dis 0.828->0.537 ctc 1.38->1.35 skip=0 | 78 s/clip, ~55 min left
+[58] q2c acc 1.000 pesq 1.57 dis 0.836->0.517 ctc 0.44->1.56 skip=0 | 78 s/clip, ~54 min left
+[59] q2c acc 1.000 pesq 2.07 dis 0.716->0.455 ctc 0.56->1.11 skip=0 | 79 s/clip, ~53 min left
+[60] q2c acc 1.000 pesq 2.01 dis 0.759->0.601 ctc 0.49->0.68 skip=0 | 79 s/clip, ~51 min left
+[61] q2c acc 1.000 pesq 1.91 dis 0.736->0.534 ctc 0.15->0.57 skip=0 | 79 s/clip, ~50 min left
+[62] q2c acc 1.000 pesq 1.91 dis 0.741->0.483 ctc 0.83->1.19 skip=0 | 78 s/clip, ~48 min left
+[63] q2c acc 1.000 pesq 1.87 dis 0.748->0.463 ctc 0.86->1.30 skip=0 | 78 s/clip, ~47 min left
+[64] q2c acc 1.000 pesq 1.82 dis 0.813->0.582 ctc 0.87->1.54 skip=0 | 78 s/clip, ~45 min left
