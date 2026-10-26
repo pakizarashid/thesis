@@ -1,0 +1,883 @@
+[preflight] omegaconf 2.3.1 ok; numpy/torch ok
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+[plan] cloner=cosyvoice clips=100 prompts=['3'] texts=['unseen'] -> 100 clones to run
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[backbone] loaded checkpoints/route2_vmaug_RQA/route2_epoch19.pt (epoch 19)
+2026-10-26 12:07:43,992 INFO NumExpr defaulting to 4 threads.
+2026-10-26 12:07:44,836 DEBUG Skipping import of cpp extensions: Could not load this library: /usr/local/lib/python3.13/dist-packages/torchao/_C.abi3.so
+2026-10-26 12:07:47,470 DEBUG Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2026-10-26 12:07:47,640 DEBUG Creating converter from 7 to 5
+2026-10-26 12:07:47,640 DEBUG Creating converter from 5 to 7
+2026-10-26 12:07:47,640 DEBUG Creating converter from 7 to 5
+2026-10-26 12:07:47,640 DEBUG Creating converter from 5 to 7
+2026-10-26 12:07:48,056 DEBUG etils.epath found. Using etils.epath for file I/O.
+[cosyvoice] using CosyVoice2 from cosyvoice.cli.cosyvoice
+Sliding Window Attention is enabled but not implemented for `sdpa`; unexpected results may be encountered.
+/usr/local/lib/python3.13/dist-packages/diffusers/models/lora.py:391: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+2026-10-26 12:07:55,867 INFO input frame rate=25
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/usr/local/lib/python3.13/dist-packages/pyworld/__init__.py:13: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+[1;31m2026-10-26 12:07:58.325448772 [E:onnxruntime:Default, provider_bridge_ort.cc:2458 operator()] /onnxruntime_src/onnxruntime/core/session/provider_bridge_ort.cc:2043 onnxruntime::Provider& onnxruntime::ProviderLibrary::Get() [ONNXRuntimeError] : 1 : FAIL : Failed to load library /usr/local/lib/python3.13/dist-packages/onnxruntime/capi/libonnxruntime_providers_cuda.so with error: libcublasLt.so.13: cannot open shared object file: No such file or directory
+[m
+[0;93m2026-10-26 12:07:58.325516362 [W:onnxruntime:Default, onnxruntime_pybind_state.cc:1295 CreateExecutionProviderFactoryInstance] Failed to create CUDAExecutionProvider. Require cuDNN 9.* and CUDA 13.*. Please install all dependencies as mentioned in the GPU requirements page (https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html#requirements), make sure they're in the PATH, and that your GPU is supported.[m
+2026-10-26 12:07:59,491 INFO use wetext frontend
+[cosyvoice] loaded /kaggle/working/CosyVoice/pretrained_models/CosyVoice2-0.5B; sample_rate=24000
+2026-10-26 12:08:02,850 INFO Applied quirks (see `speechbrain.utils.quirks`): [allow_tf32, disable_jit_profiling]
+2026-10-26 12:08:02,850 INFO Excluded quirks specified by the `SB_DISABLE_QUIRKS` environment (comma-separated list): []
+2026-10-26 12:08:02,864 INFO Fetch hyperparams.yaml: Using symlink found at '/tmp/ecapa_model/hyperparams.yaml'
+2026-10-26 12:08:03,037 INFO Fetch embedding_model.ckpt: Using symlink found at '/tmp/ecapa_model/embedding_model.ckpt'
+2026-10-26 12:08:03,037 INFO Fetch mean_var_norm_emb.ckpt: Using symlink found at '/tmp/ecapa_model/mean_var_norm_emb.ckpt'
+2026-10-26 12:08:03,037 INFO Fetch classifier.ckpt: Using symlink found at '/tmp/ecapa_model/classifier.ckpt'
+2026-10-26 12:08:03,037 INFO Fetch label_encoder.txt: Using symlink found at '/tmp/ecapa_model/label_encoder.ckpt'
+2026-10-26 12:08:03,037 INFO Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+/usr/local/lib/python3.13/dist-packages/speechbrain/utils/checkpoints.py:202: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  state_dict = torch.load(path, map_location=device)
+/usr/local/lib/python3.13/dist-packages/speechbrain/processing/features.py:1550: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  stats = torch.load(path, map_location=self.device)
+2026-10-26 12:08:03,144 WARNING Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+2026-10-26 12:08:03,292 DEBUG Starting new HTTPS connection (1): huggingface.co:443
+2026-10-26 12:08:03,442 DEBUG https://huggingface.co:443 "GET /api/models/Systran/faster-whisper-base.en/revision/main HTTP/1.1" 200 None
+/usr/local/lib/python3.13/dist-packages/resemblyzer/voice_encoder.py:43: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  checkpoint = torch.load(weights_fpath, map_location="cpu")
+[transcribe] loading faster-whisper base.en (float16)
+2026-10-26 12:08:04,005 DEBUG https://huggingface.co:443 "GET /api/models/Systran/faster-whisper-base.en/revision/main HTTP/1.1" 200 None
+2026-10-26 12:08:04,181 INFO Processing audio with duration 00:03.000
+2026-10-26 12:08:04,186 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]/usr/local/lib/python3.13/dist-packages/torchaudio/__init__.py:86: UserWarning: The 'backend' parameter is not used by TorchCodec AudioDecoder.
+  return load_with_torchcodec(
+2026-10-26 12:08:05,098 INFO synthesis text And where did it lead right to this room ronicky stepped from among the smooth silks.
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:103: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with self.llm_context, torch.cuda.amp.autocast(self.fp16 is True and hasattr(self.llm, 'vllm') is False):
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:293: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast(self.fp16):
+2026-10-26 12:08:09,985 INFO yield speech len 5.92, rtf 0.8255157921765301
+100%|██████████| 1/1 [00:05<00:00,  5.47s/it]100%|██████████| 1/1 [00:05<00:00,  5.48s/it]
+2026-10-26 12:08:11,012 INFO Processing audio with duration 00:05.920
+2026-10-26 12:08:11,018 DEBUG Processing segment at 00:00.000
+[1/100] clip 0 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.320 res=0.697 wer=0.06
+2026-10-26 12:08:11,261 INFO Processing audio with duration 00:03.000
+2026-10-26 12:08:11,265 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]/usr/local/lib/python3.13/dist-packages/torchaudio/__init__.py:86: UserWarning: The 'backend' parameter is not used by TorchCodec AudioDecoder.
+  return load_with_torchcodec(
+2026-10-26 12:08:11,715 INFO synthesis text You know they are very stylish people especially missus chester ross.
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:103: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with self.llm_context, torch.cuda.amp.autocast(self.fp16 is True and hasattr(self.llm, 'vllm') is False):
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:293: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast(self.fp16):
+2026-10-26 12:08:17,486 INFO yield speech len 7.56, rtf 0.7632553577423096
+100%|██████████| 1/1 [00:06<00:00,  6.08s/it]100%|██████████| 1/1 [00:06<00:00,  6.08s/it]
+2026-10-26 12:08:17,784 INFO Processing audio with duration 00:07.560
+2026-10-26 12:08:17,790 DEBUG Processing segment at 00:00.000
+[2/100] clip 1 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.403 res=0.792 wer=0.18
+2026-10-26 12:08:18,004 INFO Processing audio with duration 00:03.000
+2026-10-26 12:08:18,008 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:08:18,445 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-26 12:08:22,824 INFO yield speech len 5.36, rtf 0.8169664375817597
+100%|██████████| 1/1 [00:04<00:00,  4.69s/it]100%|██████████| 1/1 [00:04<00:00,  4.69s/it]
+2026-10-26 12:08:23,068 INFO Processing audio with duration 00:05.360
+2026-10-26 12:08:23,073 DEBUG Processing segment at 00:00.000
+[3/100] clip 2 prompt 3 text unseen: acc_src=0.812 acc=0.812 traced=True far=False sim=0.489 res=0.780 wer=0.00
+2026-10-26 12:08:23,282 INFO Processing audio with duration 00:03.000
+2026-10-26 12:08:23,286 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:08:23,735 INFO synthesis text How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+2026-10-26 12:08:28,068 INFO yield speech len 5.48, rtf 0.7907500232223176
+100%|██████████| 1/1 [00:04<00:00,  4.66s/it]100%|██████████| 1/1 [00:04<00:00,  4.66s/it]
+2026-10-26 12:08:28,337 INFO Processing audio with duration 00:05.480
+2026-10-26 12:08:28,341 DEBUG Processing segment at 00:00.000
+[4/100] clip 3 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.487 res=0.817 wer=0.22
+2026-10-26 12:08:28,557 INFO Processing audio with duration 00:03.000
+2026-10-26 12:08:28,560 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:08:29,004 INFO synthesis text It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+2026-10-26 12:08:34,447 INFO yield speech len 6.8, rtf 0.8004777922349818
+100%|██████████| 1/1 [00:05<00:00,  5.75s/it]100%|██████████| 1/1 [00:05<00:00,  5.75s/it]
+2026-10-26 12:08:34,790 INFO Processing audio with duration 00:06.800
+2026-10-26 12:08:34,804 DEBUG Processing segment at 00:00.000
+[5/100] clip 4 prompt 3 text unseen: acc_src=0.688 acc=0.812 traced=True far=False sim=0.407 res=0.763 wer=0.00
+2026-10-26 12:08:35,031 INFO Processing audio with duration 00:03.000
+2026-10-26 12:08:35,043 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:08:35,712 INFO synthesis text And always had an odd inquiring look.
+2026-10-26 12:08:38,524 INFO yield speech len 3.32, rtf 0.8472121623625238
+100%|██████████| 1/1 [00:03<00:00,  3.33s/it]100%|██████████| 1/1 [00:03<00:00,  3.33s/it]
+2026-10-26 12:08:38,786 INFO Processing audio with duration 00:03.320
+2026-10-26 12:08:38,796 DEBUG Processing segment at 00:00.000
+[6/100] clip 5 prompt 3 text unseen: acc_src=0.938 acc=0.938 traced=True far=False sim=0.595 res=0.791 wer=0.14
+2026-10-26 12:08:39,029 INFO Processing audio with duration 00:03.000
+2026-10-26 12:08:39,043 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:08:39,775 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-26 12:08:45,199 INFO yield speech len 6.56, rtf 0.8268508242397774
+100%|██████████| 1/1 [00:06<00:00,  6.01s/it]100%|██████████| 1/1 [00:06<00:00,  6.01s/it]
+2026-10-26 12:08:45,524 INFO Processing audio with duration 00:06.560
+2026-10-26 12:08:45,529 DEBUG Processing segment at 00:00.000
+[7/100] clip 6 prompt 3 text unseen: acc_src=0.625 acc=0.688 traced=False far=True sim=0.489 res=0.752 wer=0.00
+2026-10-26 12:08:45,742 INFO Processing audio with duration 00:03.000
+2026-10-26 12:08:45,752 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:08:46,502 INFO synthesis text And the second to benjamin tipton.
+2026-10-26 12:08:49,021 INFO yield speech len 2.88, rtf 0.8746789561377631
+100%|██████████| 1/1 [00:03<00:00,  3.09s/it]100%|██████████| 1/1 [00:03<00:00,  3.09s/it]
+2026-10-26 12:08:49,272 INFO Processing audio with duration 00:02.880
+2026-10-26 12:08:49,283 DEBUG Processing segment at 00:00.000
+[8/100] clip 7 prompt 3 text unseen: acc_src=0.875 acc=0.750 traced=False far=True sim=0.435 res=0.807 wer=0.00
+2026-10-26 12:08:49,470 INFO Processing audio with duration 00:03.000
+2026-10-26 12:08:49,481 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:08:50,188 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-26 12:08:55,386 INFO yield speech len 5.84, rtf 0.8901647917211872
+100%|██████████| 1/1 [00:05<00:00,  5.69s/it]100%|██████████| 1/1 [00:05<00:00,  5.69s/it]
+2026-10-26 12:08:55,723 INFO Processing audio with duration 00:05.840
+2026-10-26 12:08:55,740 DEBUG Processing segment at 00:00.000
+[9/100] clip 8 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.515 res=0.804 wer=0.00
+2026-10-26 12:08:55,979 INFO Processing audio with duration 00:03.000
+2026-10-26 12:08:55,994 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:08:56,763 INFO synthesis text And there they told me they had buried it.
+2026-10-26 12:08:59,349 INFO yield speech len 2.96, rtf 0.8737535090059848
+100%|██████████| 1/1 [00:03<00:00,  3.20s/it]100%|██████████| 1/1 [00:03<00:00,  3.20s/it]
+2026-10-26 12:08:59,602 INFO Processing audio with duration 00:02.960
+2026-10-26 12:08:59,616 DEBUG Processing segment at 00:00.000
+[10/100] clip 9 prompt 3 text unseen: acc_src=0.688 acc=0.688 traced=False far=True sim=0.467 res=0.712 wer=0.00
+2026-10-26 12:08:59,894 INFO Processing audio with duration 00:03.000
+2026-10-26 12:08:59,907 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:09:00,756 INFO synthesis text And there they told me they had buried it.
+2026-10-26 12:09:03,427 INFO yield speech len 3.04, rtf 0.8784767044217963
+100%|██████████| 1/1 [00:03<00:00,  3.29s/it]100%|██████████| 1/1 [00:03<00:00,  3.29s/it]
+2026-10-26 12:09:03,695 INFO Processing audio with duration 00:03.040
+2026-10-26 12:09:03,706 DEBUG Processing segment at 00:00.000
+[11/100] clip 10 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.463 res=0.815 wer=0.00
+2026-10-26 12:09:03,944 INFO Processing audio with duration 00:03.000
+2026-10-26 12:09:03,958 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:09:04,705 INFO synthesis text Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+2026-10-26 12:09:10,872 INFO yield speech len 7.36, rtf 0.8379449662954911
+100%|██████████| 1/1 [00:06<00:00,  6.77s/it]100%|██████████| 1/1 [00:06<00:00,  6.77s/it]
+2026-10-26 12:09:11,216 INFO Processing audio with duration 00:07.360
+2026-10-26 12:09:11,228 DEBUG Processing segment at 00:00.000
+[12/100] clip 11 prompt 3 text unseen: acc_src=0.938 acc=0.938 traced=True far=False sim=0.165 res=0.732 wer=0.06
+2026-10-26 12:09:11,475 INFO Processing audio with duration 00:03.000
+2026-10-26 12:09:11,487 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:09:12,257 INFO synthesis text And where did it lead right to this room ronicky stepped from among the smooth silks.
+2026-10-26 12:09:16,104 INFO yield speech len 4.68, rtf 0.8219785160488553
+100%|██████████| 1/1 [00:04<00:00,  4.44s/it]100%|██████████| 1/1 [00:04<00:00,  4.44s/it]
+2026-10-26 12:09:16,443 INFO Processing audio with duration 00:04.680
+2026-10-26 12:09:16,461 DEBUG Processing segment at 00:00.000
+[13/100] clip 12 prompt 3 text unseen: acc_src=0.812 acc=0.812 traced=True far=False sim=0.306 res=0.727 wer=0.06
+2026-10-26 12:09:16,727 INFO Processing audio with duration 00:03.000
+2026-10-26 12:09:16,741 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:09:17,442 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-26 12:09:21,344 INFO yield speech len 4.72, rtf 0.8266565658278385
+100%|██████████| 1/1 [00:04<00:00,  4.46s/it]100%|██████████| 1/1 [00:04<00:00,  4.46s/it]
+2026-10-26 12:09:21,706 INFO Processing audio with duration 00:04.720
+2026-10-26 12:09:21,724 DEBUG Processing segment at 00:00.000
+[14/100] clip 13 prompt 3 text unseen: acc_src=0.625 acc=0.438 traced=False far=True sim=0.514 res=0.750 wer=0.09
+2026-10-26 12:09:21,924 INFO Processing audio with duration 00:03.000
+2026-10-26 12:09:21,936 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:09:22,586 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-26 12:09:26,524 INFO yield speech len 4.48, rtf 0.8789634598152978
+100%|██████████| 1/1 [00:04<00:00,  4.46s/it]100%|██████████| 1/1 [00:04<00:00,  4.46s/it]
+2026-10-26 12:09:26,818 INFO Processing audio with duration 00:04.480
+2026-10-26 12:09:26,830 DEBUG Processing segment at 00:00.000
+[15/100] clip 14 prompt 3 text unseen: acc_src=0.875 acc=0.812 traced=True far=True sim=0.353 res=0.803 wer=0.00
+2026-10-26 12:09:27,151 INFO Processing audio with duration 00:02.540
+2026-10-26 12:09:27,162 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:09:27,850 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-26 12:09:31,757 INFO yield speech len 4.32, rtf 0.9045353642216435
+100%|██████████| 1/1 [00:04<00:00,  4.42s/it]100%|██████████| 1/1 [00:04<00:00,  4.42s/it]
+2026-10-26 12:09:31,973 INFO Processing audio with duration 00:04.320
+2026-10-26 12:09:31,986 DEBUG Processing segment at 00:00.000
+[16/100] clip 15 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.397 res=0.721 wer=0.09
+2026-10-26 12:09:32,199 INFO Processing audio with duration 00:03.000
+2026-10-26 12:09:32,211 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:09:32,927 INFO synthesis text And always had an odd inquiring look.
+2026-10-26 12:09:35,028 INFO yield speech len 2.12, rtf 0.9913411905180732
+100%|██████████| 1/1 [00:02<00:00,  2.69s/it]100%|██████████| 1/1 [00:02<00:00,  2.69s/it]
+2026-10-26 12:09:35,242 INFO Processing audio with duration 00:02.120
+2026-10-26 12:09:35,259 DEBUG Processing segment at 00:00.000
+[17/100] clip 16 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.428 res=0.742 wer=0.00
+2026-10-26 12:09:35,487 INFO Processing audio with duration 00:03.000
+2026-10-26 12:09:35,491 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:09:36,246 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-26 12:09:39,877 INFO yield speech len 4.48, rtf 0.8105157209294183
+100%|██████████| 1/1 [00:04<00:00,  4.22s/it]100%|██████████| 1/1 [00:04<00:00,  4.22s/it]
+2026-10-26 12:09:40,184 INFO Processing audio with duration 00:04.480
+2026-10-26 12:09:40,202 DEBUG Processing segment at 00:00.000
+[18/100] clip 17 prompt 3 text unseen: acc_src=0.938 acc=0.812 traced=True far=True sim=0.614 res=0.795 wer=0.15
+2026-10-26 12:09:40,411 INFO Processing audio with duration 00:03.000
+2026-10-26 12:09:40,425 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:09:41,182 INFO synthesis text And the second to benjamin tipton.
+2026-10-26 12:09:43,638 INFO yield speech len 2.6, rtf 0.9445475614987886
+100%|██████████| 1/1 [00:03<00:00,  3.03s/it]100%|██████████| 1/1 [00:03<00:00,  3.03s/it]
+2026-10-26 12:09:43,941 INFO Processing audio with duration 00:02.600
+2026-10-26 12:09:43,953 DEBUG Processing segment at 00:00.000
+[19/100] clip 18 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.322 res=0.693 wer=0.00
+2026-10-26 12:09:44,194 INFO Processing audio with duration 00:03.000
+2026-10-26 12:09:44,206 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:09:44,902 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-26 12:09:51,181 INFO yield speech len 7.52, rtf 0.8350051780964466
+100%|██████████| 1/1 [00:06<00:00,  6.84s/it]100%|██████████| 1/1 [00:06<00:00,  6.84s/it]
+2026-10-26 12:09:51,474 INFO Processing audio with duration 00:07.520
+2026-10-26 12:09:51,480 DEBUG Processing segment at 00:00.000
+[20/100] clip 19 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.470 res=0.820 wer=0.00
+2026-10-26 12:09:51,766 INFO Processing audio with duration 00:03.000
+2026-10-26 12:09:51,778 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:09:52,439 INFO synthesis text How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+2026-10-26 12:09:57,081 INFO yield speech len 5.52, rtf 0.8410104806872383
+100%|██████████| 1/1 [00:05<00:00,  5.17s/it]100%|██████████| 1/1 [00:05<00:00,  5.17s/it]
+2026-10-26 12:09:57,389 INFO Processing audio with duration 00:05.520
+2026-10-26 12:09:57,401 DEBUG Processing segment at 00:00.000
+[21/100] clip 20 prompt 3 text unseen: acc_src=0.812 acc=0.750 traced=False far=True sim=0.461 res=0.742 wer=0.11
+2026-10-26 12:09:57,700 INFO Processing audio with duration 00:03.000
+2026-10-26 12:09:57,726 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:09:58,352 INFO synthesis text Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+2026-10-26 12:10:05,174 INFO yield speech len 8.44, rtf 0.808261017098811
+100%|██████████| 1/1 [00:07<00:00,  7.24s/it]100%|██████████| 1/1 [00:07<00:00,  7.24s/it]
+2026-10-26 12:10:05,496 INFO Processing audio with duration 00:08.440
+2026-10-26 12:10:05,504 DEBUG Processing segment at 00:00.000
+[22/100] clip 21 prompt 3 text unseen: acc_src=0.625 acc=0.875 traced=True far=False sim=0.407 res=0.856 wer=0.06
+2026-10-26 12:10:05,738 INFO Processing audio with duration 00:03.000
+2026-10-26 12:10:05,750 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:10:06,472 INFO synthesis text Her residence on the piazzi barberini being considered an insecure abode.
+2026-10-26 12:10:11,079 INFO yield speech len 5.56, rtf 0.8285993723560581
+100%|██████████| 1/1 [00:05<00:00,  5.18s/it]100%|██████████| 1/1 [00:05<00:00,  5.18s/it]
+2026-10-26 12:10:11,459 INFO Processing audio with duration 00:05.560
+2026-10-26 12:10:11,464 DEBUG Processing segment at 00:00.000
+[23/100] clip 22 prompt 3 text unseen: acc_src=0.812 acc=0.562 traced=False far=True sim=0.316 res=0.807 wer=0.18
+2026-10-26 12:10:11,680 INFO Processing audio with duration 00:03.000
+2026-10-26 12:10:11,693 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:10:12,421 INFO synthesis text But civil you can speak and shall george merry you may lay to that.
+2026-10-26 12:10:16,577 INFO yield speech len 4.96, rtf 0.8378023582120095
+100%|██████████| 1/1 [00:04<00:00,  4.73s/it]100%|██████████| 1/1 [00:04<00:00,  4.73s/it]
+2026-10-26 12:10:16,862 INFO Processing audio with duration 00:04.960
+2026-10-26 12:10:16,866 DEBUG Processing segment at 00:00.000
+[24/100] clip 23 prompt 3 text unseen: acc_src=0.625 acc=0.625 traced=False far=True sim=0.513 res=0.779 wer=0.14
+2026-10-26 12:10:17,118 INFO Processing audio with duration 00:03.000
+2026-10-26 12:10:17,130 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:10:17,794 INFO synthesis text It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+2026-10-26 12:10:22,670 INFO yield speech len 5.84, rtf 0.8349503556342974
+100%|██████████| 1/1 [00:05<00:00,  5.40s/it]100%|██████████| 1/1 [00:05<00:00,  5.40s/it]
+2026-10-26 12:10:22,952 INFO Processing audio with duration 00:05.840
+2026-10-26 12:10:22,958 DEBUG Processing segment at 00:00.000
+[25/100] clip 24 prompt 3 text unseen: acc_src=0.938 acc=0.875 traced=True far=False sim=0.377 res=0.742 wer=0.11
+2026-10-26 12:10:23,253 INFO Processing audio with duration 00:03.000
+2026-10-26 12:10:23,267 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:10:23,987 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-26 12:10:28,049 INFO yield speech len 4.76, rtf 0.8535205316142876
+100%|██████████| 1/1 [00:04<00:00,  4.60s/it]100%|██████████| 1/1 [00:04<00:00,  4.60s/it]
+2026-10-26 12:10:28,312 INFO Processing audio with duration 00:04.760
+2026-10-26 12:10:28,317 DEBUG Processing segment at 00:00.000
+[26/100] clip 25 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.534 res=0.835 wer=0.15
+2026-10-26 12:10:28,552 INFO Processing audio with duration 00:03.000
+2026-10-26 12:10:28,565 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:10:29,318 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-26 12:10:33,256 INFO yield speech len 4.56, rtf 0.8635935553333216
+100%|██████████| 1/1 [00:04<00:00,  4.51s/it]100%|██████████| 1/1 [00:04<00:00,  4.51s/it]
+2026-10-26 12:10:33,529 INFO Processing audio with duration 00:04.560
+2026-10-26 12:10:33,534 DEBUG Processing segment at 00:00.000
+[27/100] clip 26 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.661 res=0.877 wer=0.09
+2026-10-26 12:10:33,738 INFO Processing audio with duration 00:03.000
+2026-10-26 12:10:33,751 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:10:34,523 INFO synthesis text And always had an odd inquiring look.
+2026-10-26 12:10:36,663 INFO yield speech len 2.32, rtf 0.9222702733401595
+100%|██████████| 1/1 [00:02<00:00,  2.73s/it]100%|██████████| 1/1 [00:02<00:00,  2.73s/it]
+2026-10-26 12:10:36,897 INFO Processing audio with duration 00:02.320
+2026-10-26 12:10:36,903 DEBUG Processing segment at 00:00.000
+[28/100] clip 27 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.435 res=0.818 wer=0.00
+2026-10-26 12:10:37,104 INFO Processing audio with duration 00:03.000
+2026-10-26 12:10:37,116 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:10:37,828 INFO synthesis text And there they told me they had buried it.
+2026-10-26 12:10:39,755 INFO yield speech len 2.0, rtf 0.9631747007369995
+100%|██████████| 1/1 [00:02<00:00,  2.50s/it]100%|██████████| 1/1 [00:02<00:00,  2.50s/it]
+2026-10-26 12:10:39,969 INFO Processing audio with duration 00:02.000
+2026-10-26 12:10:39,975 DEBUG Processing segment at 00:00.000
+[29/100] clip 28 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.465 res=0.909 wer=0.00
+2026-10-26 12:10:40,158 INFO Processing audio with duration 00:03.000
+2026-10-26 12:10:40,170 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:10:40,884 INFO synthesis text And the second to benjamin tipton.
+2026-10-26 12:10:42,979 INFO yield speech len 2.44, rtf 0.858909477953051
+100%|██████████| 1/1 [00:02<00:00,  2.67s/it]100%|██████████| 1/1 [00:02<00:00,  2.67s/it]
+2026-10-26 12:10:43,156 INFO Processing audio with duration 00:02.440
+2026-10-26 12:10:43,160 DEBUG Processing segment at 00:00.000
+[30/100] clip 29 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.403 res=0.840 wer=0.00
+2026-10-26 12:10:43,481 INFO Processing audio with duration 00:03.000
+2026-10-26 12:10:43,490 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:10:44,066 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-26 12:10:48,080 INFO yield speech len 4.72, rtf 0.8503019304598792
+100%|██████████| 1/1 [00:04<00:00,  4.41s/it]100%|██████████| 1/1 [00:04<00:00,  4.41s/it]
+2026-10-26 12:10:48,431 INFO Processing audio with duration 00:04.720
+2026-10-26 12:10:48,449 DEBUG Processing segment at 00:00.000
+[31/100] clip 30 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.558 res=0.806 wer=0.00
+2026-10-26 12:10:48,689 INFO Processing audio with duration 00:03.000
+2026-10-26 12:10:48,701 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:10:49,414 INFO synthesis text How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+2026-10-26 12:10:54,394 INFO yield speech len 5.88, rtf 0.8468798634146346
+100%|██████████| 1/1 [00:05<00:00,  5.56s/it]100%|██████████| 1/1 [00:05<00:00,  5.56s/it]
+2026-10-26 12:10:54,657 INFO Processing audio with duration 00:05.880
+2026-10-26 12:10:54,669 DEBUG Processing segment at 00:00.000
+[32/100] clip 31 prompt 3 text unseen: acc_src=0.938 acc=0.812 traced=True far=True sim=0.534 res=0.785 wer=0.00
+2026-10-26 12:10:54,921 INFO Processing audio with duration 00:03.000
+2026-10-26 12:10:54,946 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:10:55,654 INFO synthesis text Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+2026-10-26 12:11:02,563 INFO yield speech len 8.52, rtf 0.8109254736295889
+100%|██████████| 1/1 [00:07<00:00,  7.45s/it]100%|██████████| 1/1 [00:07<00:00,  7.45s/it]
+2026-10-26 12:11:02,975 INFO Processing audio with duration 00:08.520
+2026-10-26 12:11:02,993 DEBUG Processing segment at 00:00.000
+2026-10-26 12:11:03,215 DEBUG Processing segment at 00:07.720
+2026-10-26 12:11:03,275 DEBUG Log probability threshold is not met with temperature 0.0 (-1.169922 < -1.000000)
+2026-10-26 12:11:03,275 DEBUG No speech threshold is met (0.916504 > 0.600000)
+[33/100] clip 32 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.541 res=0.763 wer=0.17
+2026-10-26 12:11:03,353 INFO Processing audio with duration 00:03.000
+2026-10-26 12:11:03,365 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:11:04,085 INFO synthesis text And where did it lead right to this room ronicky stepped from among the smooth silks.
+2026-10-26 12:11:08,848 INFO yield speech len 5.96, rtf 0.7990623880552765
+100%|██████████| 1/1 [00:05<00:00,  5.35s/it]100%|██████████| 1/1 [00:05<00:00,  5.35s/it]
+2026-10-26 12:11:09,208 INFO Processing audio with duration 00:05.960
+2026-10-26 12:11:09,220 DEBUG Processing segment at 00:00.000
+[34/100] clip 33 prompt 3 text unseen: acc_src=0.750 acc=0.750 traced=False far=True sim=0.488 res=0.768 wer=0.06
+2026-10-26 12:11:09,496 INFO Processing audio with duration 00:03.000
+2026-10-26 12:11:09,506 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:11:10,241 INFO synthesis text But civil you can speak and shall george merry you may lay to that.
+2026-10-26 12:11:14,251 INFO yield speech len 4.92, rtf 0.8150802395208095
+100%|██████████| 1/1 [00:04<00:00,  4.60s/it]100%|██████████| 1/1 [00:04<00:00,  4.60s/it]
+2026-10-26 12:11:14,507 INFO Processing audio with duration 00:04.920
+2026-10-26 12:11:14,513 DEBUG Processing segment at 00:00.000
+[35/100] clip 34 prompt 3 text unseen: acc_src=0.938 acc=0.812 traced=True far=False sim=0.550 res=0.787 wer=0.14
+2026-10-26 12:11:14,805 INFO Processing audio with duration 00:03.000
+2026-10-26 12:11:14,809 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:11:15,503 INFO synthesis text It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+2026-10-26 12:11:20,303 INFO yield speech len 5.88, rtf 0.8162662690999557
+100%|██████████| 1/1 [00:05<00:00,  5.36s/it]100%|██████████| 1/1 [00:05<00:00,  5.36s/it]
+2026-10-26 12:11:20,592 INFO Processing audio with duration 00:05.880
+2026-10-26 12:11:20,604 DEBUG Processing segment at 00:00.000
+[36/100] clip 35 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.311 res=0.804 wer=0.00
+2026-10-26 12:11:20,871 INFO Processing audio with duration 00:03.000
+2026-10-26 12:11:20,883 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:11:21,573 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-26 12:11:25,822 INFO yield speech len 5.12, rtf 0.8298483677208424
+100%|██████████| 1/1 [00:04<00:00,  4.81s/it]100%|██████████| 1/1 [00:04<00:00,  4.81s/it]
+2026-10-26 12:11:26,045 INFO Processing audio with duration 00:05.120
+2026-10-26 12:11:26,058 DEBUG Processing segment at 00:00.000
+[37/100] clip 36 prompt 3 text unseen: acc_src=0.938 acc=0.875 traced=True far=False sim=0.334 res=0.864 wer=0.15
+2026-10-26 12:11:26,296 INFO Processing audio with duration 00:03.000
+2026-10-26 12:11:26,299 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:11:27,116 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-26 12:11:30,774 INFO yield speech len 4.4, rtf 0.8312516862695867
+100%|██████████| 1/1 [00:04<00:00,  4.28s/it]100%|██████████| 1/1 [00:04<00:00,  4.28s/it]
+2026-10-26 12:11:31,031 INFO Processing audio with duration 00:04.400
+2026-10-26 12:11:31,037 DEBUG Processing segment at 00:00.000
+[38/100] clip 37 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.243 res=0.841 wer=0.09
+2026-10-26 12:11:31,227 INFO Processing audio with duration 00:03.000
+2026-10-26 12:11:31,239 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:11:31,875 INFO synthesis text And always had an odd inquiring look.
+2026-10-26 12:11:34,405 INFO yield speech len 3.08, rtf 0.8212747511925635
+100%|██████████| 1/1 [00:03<00:00,  3.04s/it]100%|██████████| 1/1 [00:03<00:00,  3.04s/it]
+2026-10-26 12:11:34,754 INFO Processing audio with duration 00:03.080
+2026-10-26 12:11:34,758 DEBUG Processing segment at 00:00.000
+[39/100] clip 38 prompt 3 text unseen: acc_src=0.938 acc=0.750 traced=False far=True sim=0.434 res=0.821 wer=0.00
+2026-10-26 12:11:34,992 INFO Processing audio with duration 00:03.000
+2026-10-26 12:11:35,004 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:11:35,702 INFO synthesis text And there they told me they had buried it.
+2026-10-26 12:11:38,025 INFO yield speech len 2.76, rtf 0.8414968200351881
+100%|██████████| 1/1 [00:02<00:00,  2.89s/it]100%|██████████| 1/1 [00:02<00:00,  2.89s/it]
+2026-10-26 12:11:38,254 INFO Processing audio with duration 00:02.760
+2026-10-26 12:11:38,266 DEBUG Processing segment at 00:00.000
+[40/100] clip 39 prompt 3 text unseen: acc_src=0.938 acc=0.688 traced=False far=True sim=0.333 res=0.800 wer=0.00
+2026-10-26 12:11:38,554 INFO Processing audio with duration 00:03.000
+2026-10-26 12:11:38,567 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:11:39,213 INFO synthesis text It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+2026-10-26 12:11:45,049 INFO yield speech len 7.04, rtf 0.8289462463422255
+100%|██████████| 1/1 [00:06<00:00,  6.33s/it]100%|██████████| 1/1 [00:06<00:00,  6.33s/it]
+2026-10-26 12:11:45,448 INFO Processing audio with duration 00:07.040
+2026-10-26 12:11:45,460 DEBUG Processing segment at 00:00.000
+[41/100] clip 40 prompt 3 text unseen: acc_src=0.688 acc=0.750 traced=False far=True sim=0.280 res=0.833 wer=0.00
+2026-10-26 12:11:45,718 INFO Processing audio with duration 00:03.000
+2026-10-26 12:11:45,732 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:11:46,463 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-26 12:11:50,498 INFO yield speech len 4.76, rtf 0.8477079768140777
+100%|██████████| 1/1 [00:04<00:00,  4.61s/it]100%|██████████| 1/1 [00:04<00:00,  4.61s/it]
+2026-10-26 12:11:50,755 INFO Processing audio with duration 00:04.760
+2026-10-26 12:11:50,763 DEBUG Processing segment at 00:00.000
+[42/100] clip 41 prompt 3 text unseen: acc_src=0.688 acc=0.625 traced=False far=True sim=0.553 res=0.884 wer=0.15
+2026-10-26 12:11:51,004 INFO Processing audio with duration 00:03.000
+2026-10-26 12:11:51,019 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:11:51,758 INFO synthesis text And the second to benjamin tipton.
+2026-10-26 12:11:54,307 INFO yield speech len 2.76, rtf 0.9236688199250596
+100%|██████████| 1/1 [00:03<00:00,  3.12s/it]100%|██████████| 1/1 [00:03<00:00,  3.12s/it]
+2026-10-26 12:11:54,580 INFO Processing audio with duration 00:02.760
+2026-10-26 12:11:54,598 DEBUG Processing segment at 00:00.000
+[43/100] clip 42 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.414 res=0.807 wer=0.00
+2026-10-26 12:11:54,823 INFO Processing audio with duration 00:03.000
+2026-10-26 12:11:54,836 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:11:55,700 INFO synthesis text Her residence on the piazzi barberini being considered an insecure abode.
+2026-10-26 12:12:00,019 INFO yield speech len 5.36, rtf 0.8058360708293629
+100%|██████████| 1/1 [00:04<00:00,  4.95s/it]100%|██████████| 1/1 [00:04<00:00,  4.95s/it]
+2026-10-26 12:12:00,337 INFO Processing audio with duration 00:05.360
+2026-10-26 12:12:00,349 DEBUG Processing segment at 00:00.000
+[44/100] clip 43 prompt 3 text unseen: acc_src=0.875 acc=0.562 traced=False far=True sim=0.282 res=0.830 wer=0.00
+2026-10-26 12:12:00,668 INFO Processing audio with duration 00:03.000
+2026-10-26 12:12:00,675 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:12:01,319 INFO synthesis text But civil you can speak and shall george merry you may lay to that.
+2026-10-26 12:12:05,934 INFO yield speech len 5.72, rtf 0.8067567448515992
+100%|██████████| 1/1 [00:05<00:00,  5.03s/it]100%|██████████| 1/1 [00:05<00:00,  5.03s/it]
+2026-10-26 12:12:06,221 INFO Processing audio with duration 00:05.720
+2026-10-26 12:12:06,226 DEBUG Processing segment at 00:00.000
+[45/100] clip 44 prompt 3 text unseen: acc_src=0.875 acc=0.750 traced=False far=True sim=0.492 res=0.857 wer=0.07
+2026-10-26 12:12:06,546 INFO Processing audio with duration 00:02.420
+2026-10-26 12:12:06,558 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:12:07,253 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-26 12:12:10,877 INFO yield speech len 4.4, rtf 0.8236038142984563
+100%|██████████| 1/1 [00:04<00:00,  4.15s/it]100%|██████████| 1/1 [00:04<00:00,  4.15s/it]
+2026-10-26 12:12:11,103 INFO Processing audio with duration 00:04.400
+2026-10-26 12:12:11,122 DEBUG Processing segment at 00:00.000
+[46/100] clip 45 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.178 res=0.668 wer=0.09
+2026-10-26 12:12:11,364 INFO Processing audio with duration 00:03.000
+2026-10-26 12:12:11,378 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:12:12,111 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-26 12:12:16,010 INFO yield speech len 4.56, rtf 0.855082953185366
+100%|██████████| 1/1 [00:04<00:00,  4.48s/it]100%|██████████| 1/1 [00:04<00:00,  4.48s/it]
+2026-10-26 12:12:16,241 INFO Processing audio with duration 00:04.560
+2026-10-26 12:12:16,254 DEBUG Processing segment at 00:00.000
+[47/100] clip 46 prompt 3 text unseen: acc_src=0.875 acc=0.688 traced=False far=True sim=0.583 res=0.812 wer=0.07
+2026-10-26 12:12:16,447 INFO Processing audio with duration 00:03.000
+2026-10-26 12:12:16,451 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:12:17,174 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-26 12:12:19,872 INFO yield speech len 3.32, rtf 0.8127669972109508
+100%|██████████| 1/1 [00:03<00:00,  3.29s/it]100%|██████████| 1/1 [00:03<00:00,  3.29s/it]
+2026-10-26 12:12:20,189 INFO Processing audio with duration 00:03.320
+2026-10-26 12:12:20,199 DEBUG Processing segment at 00:00.000
+[48/100] clip 47 prompt 3 text unseen: acc_src=0.875 acc=0.688 traced=False far=True sim=0.349 res=0.661 wer=0.15
+2026-10-26 12:12:20,453 INFO Processing audio with duration 00:03.000
+2026-10-26 12:12:20,461 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:12:21,156 INFO synthesis text But civil you can speak and shall george merry you may lay to that.
+2026-10-26 12:12:26,047 INFO yield speech len 6.12, rtf 0.7990832032721027
+100%|██████████| 1/1 [00:05<00:00,  5.43s/it]100%|██████████| 1/1 [00:05<00:00,  5.43s/it]
+2026-10-26 12:12:26,326 INFO Processing audio with duration 00:06.120
+2026-10-26 12:12:26,338 DEBUG Processing segment at 00:00.000
+[49/100] clip 48 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.397 res=0.809 wer=0.29
+2026-10-26 12:12:26,628 INFO Processing audio with duration 00:03.000
+2026-10-26 12:12:26,641 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:12:27,389 INFO synthesis text Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+2026-10-26 12:12:32,346 INFO yield speech len 6.04, rtf 0.820721656281427
+100%|██████████| 1/1 [00:05<00:00,  5.55s/it]100%|██████████| 1/1 [00:05<00:00,  5.55s/it]
+2026-10-26 12:12:32,692 INFO Processing audio with duration 00:06.040
+2026-10-26 12:12:32,710 DEBUG Processing segment at 00:00.000
+[50/100] clip 49 prompt 3 text unseen: acc_src=0.625 acc=0.625 traced=False far=True sim=0.413 res=0.699 wer=0.11
+2026-10-26 12:12:33,097 INFO Processing audio with duration 00:03.000
+2026-10-26 12:12:33,110 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:12:33,889 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-26 12:12:37,781 INFO yield speech len 4.64, rtf 0.8387011700663074
+100%|██████████| 1/1 [00:04<00:00,  4.47s/it]100%|██████████| 1/1 [00:04<00:00,  4.47s/it]
+2026-10-26 12:12:38,074 INFO Processing audio with duration 00:04.640
+2026-10-26 12:12:38,086 DEBUG Processing segment at 00:00.000
+[51/100] clip 50 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.241 res=0.794 wer=0.00
+2026-10-26 12:12:38,354 INFO Processing audio with duration 00:03.000
+2026-10-26 12:12:38,366 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:12:39,054 INFO synthesis text How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+2026-10-26 12:12:44,481 INFO yield speech len 6.76, rtf 0.8027712268942206
+100%|██████████| 1/1 [00:05<00:00,  5.98s/it]100%|██████████| 1/1 [00:05<00:00,  5.98s/it]
+2026-10-26 12:12:44,806 INFO Processing audio with duration 00:06.760
+2026-10-26 12:12:44,816 DEBUG Processing segment at 00:00.000
+[52/100] clip 51 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.453 res=0.870 wer=0.17
+2026-10-26 12:12:45,078 INFO Processing audio with duration 00:03.000
+2026-10-26 12:12:45,091 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:12:45,918 INFO synthesis text It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+2026-10-26 12:12:51,337 INFO yield speech len 6.52, rtf 0.8312219125361531
+100%|██████████| 1/1 [00:06<00:00,  6.12s/it]100%|██████████| 1/1 [00:06<00:00,  6.12s/it]
+2026-10-26 12:12:51,661 INFO Processing audio with duration 00:06.520
+2026-10-26 12:12:51,673 DEBUG Processing segment at 00:00.000
+[53/100] clip 52 prompt 3 text unseen: acc_src=0.812 acc=0.875 traced=True far=False sim=0.374 res=0.786 wer=0.00
+2026-10-26 12:12:51,931 INFO Processing audio with duration 00:03.000
+2026-10-26 12:12:51,944 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:12:52,704 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-26 12:12:56,942 INFO yield speech len 5.04, rtf 0.840955168481857
+100%|██████████| 1/1 [00:04<00:00,  4.82s/it]100%|██████████| 1/1 [00:04<00:00,  4.82s/it]
+2026-10-26 12:12:57,286 INFO Processing audio with duration 00:05.040
+2026-10-26 12:12:57,296 DEBUG Processing segment at 00:00.000
+[54/100] clip 53 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.387 res=0.798 wer=0.15
+2026-10-26 12:12:57,539 INFO Processing audio with duration 00:03.000
+2026-10-26 12:12:57,543 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:12:58,261 INFO synthesis text And the second to benjamin tipton.
+2026-10-26 12:13:01,413 INFO yield speech len 3.48, rtf 0.905746769631046
+100%|██████████| 1/1 [00:03<00:00,  3.73s/it]100%|██████████| 1/1 [00:03<00:00,  3.73s/it]
+2026-10-26 12:13:01,678 INFO Processing audio with duration 00:03.480
+2026-10-26 12:13:01,690 DEBUG Processing segment at 00:00.000
+[55/100] clip 54 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.417 res=0.821 wer=0.00
+2026-10-26 12:13:02,001 INFO Processing audio with duration 00:03.000
+2026-10-26 12:13:02,013 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:13:02,830 INFO synthesis text And where did it lead right to this room ronicky stepped from among the smooth silks.
+2026-10-26 12:13:07,084 INFO yield speech len 5.24, rtf 0.8118405141903243
+100%|██████████| 1/1 [00:04<00:00,  4.91s/it]100%|██████████| 1/1 [00:04<00:00,  4.91s/it]
+2026-10-26 12:13:07,357 INFO Processing audio with duration 00:05.240
+2026-10-26 12:13:07,361 DEBUG Processing segment at 00:00.000
+2026-10-26 12:13:07,562 DEBUG Processing segment at 00:02.640
+[56/100] clip 55 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.544 res=0.836 wer=0.12
+2026-10-26 12:13:07,757 INFO Processing audio with duration 00:03.000
+2026-10-26 12:13:07,761 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:13:08,489 INFO synthesis text But civil you can speak and shall george merry you may lay to that.
+2026-10-26 12:13:13,581 INFO yield speech len 6.24, rtf 0.8160332074532142
+100%|██████████| 1/1 [00:05<00:00,  5.61s/it]100%|██████████| 1/1 [00:05<00:00,  5.61s/it]
+2026-10-26 12:13:13,889 INFO Processing audio with duration 00:06.240
+2026-10-26 12:13:13,901 DEBUG Processing segment at 00:00.000
+[57/100] clip 56 prompt 3 text unseen: acc_src=0.812 acc=0.812 traced=True far=False sim=0.434 res=0.783 wer=0.29
+2026-10-26 12:13:14,117 INFO Processing audio with duration 00:03.000
+2026-10-26 12:13:14,126 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:13:14,848 INFO synthesis text And always had an odd inquiring look.
+2026-10-26 12:13:17,316 INFO yield speech len 2.92, rtf 0.8451803089821176
+100%|██████████| 1/1 [00:03<00:00,  3.06s/it]100%|██████████| 1/1 [00:03<00:00,  3.06s/it]
+2026-10-26 12:13:17,559 INFO Processing audio with duration 00:02.920
+2026-10-26 12:13:17,571 DEBUG Processing segment at 00:00.000
+[58/100] clip 57 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.628 res=0.782 wer=0.00
+2026-10-26 12:13:17,802 INFO Processing audio with duration 00:03.000
+2026-10-26 12:13:17,812 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:13:18,629 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-26 12:13:22,836 INFO yield speech len 5.16, rtf 0.8152593475903651
+100%|██████████| 1/1 [00:04<00:00,  4.86s/it]100%|██████████| 1/1 [00:04<00:00,  4.86s/it]
+2026-10-26 12:13:23,092 INFO Processing audio with duration 00:05.160
+2026-10-26 12:13:23,102 DEBUG Processing segment at 00:00.000
+[59/100] clip 58 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.662 res=0.864 wer=0.15
+2026-10-26 12:13:23,316 INFO Processing audio with duration 00:03.000
+2026-10-26 12:13:23,328 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:13:24,071 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-26 12:13:28,347 INFO yield speech len 5.32, rtf 0.8038895918910665
+100%|██████████| 1/1 [00:04<00:00,  4.87s/it]100%|██████████| 1/1 [00:04<00:00,  4.87s/it]
+2026-10-26 12:13:28,640 INFO Processing audio with duration 00:05.320
+2026-10-26 12:13:28,655 DEBUG Processing segment at 00:00.000
+[60/100] clip 59 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.359 res=0.710 wer=0.09
+2026-10-26 12:13:29,041 INFO Processing audio with duration 00:03.000
+2026-10-26 12:13:29,062 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:13:29,763 INFO synthesis text And where did it lead right to this room ronicky stepped from among the smooth silks.
+2026-10-26 12:13:34,083 INFO yield speech len 5.36, rtf 0.805876904459142
+100%|██████████| 1/1 [00:04<00:00,  4.90s/it]100%|██████████| 1/1 [00:04<00:00,  4.90s/it]
+2026-10-26 12:13:34,414 INFO Processing audio with duration 00:05.360
+2026-10-26 12:13:34,418 DEBUG Processing segment at 00:00.000
+[61/100] clip 60 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.561 res=0.876 wer=0.00
+2026-10-26 12:13:34,690 INFO Processing audio with duration 00:03.000
+2026-10-26 12:13:34,694 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:13:35,405 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-26 12:13:39,466 INFO yield speech len 5.12, rtf 0.7932180538773537
+100%|██████████| 1/1 [00:04<00:00,  4.63s/it]100%|██████████| 1/1 [00:04<00:00,  4.63s/it]
+2026-10-26 12:13:39,707 INFO Processing audio with duration 00:05.120
+2026-10-26 12:13:39,719 DEBUG Processing segment at 00:00.000
+[62/100] clip 61 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.556 res=0.841 wer=0.09
+2026-10-26 12:13:39,925 INFO Processing audio with duration 00:03.000
+2026-10-26 12:13:39,937 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:13:40,788 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-26 12:13:44,281 INFO yield speech len 4.2, rtf 0.8315492811657134
+100%|██████████| 1/1 [00:04<00:00,  4.15s/it]100%|██████████| 1/1 [00:04<00:00,  4.15s/it]
+2026-10-26 12:13:44,607 INFO Processing audio with duration 00:04.200
+2026-10-26 12:13:44,624 DEBUG Processing segment at 00:00.000
+[63/100] clip 62 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.616 res=0.852 wer=0.00
+2026-10-26 12:13:44,812 INFO Processing audio with duration 00:03.000
+2026-10-26 12:13:44,824 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:13:45,725 INFO synthesis text How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+2026-10-26 12:13:51,085 INFO yield speech len 6.72, rtf 0.7975711354187557
+100%|██████████| 1/1 [00:06<00:00,  6.08s/it]100%|██████████| 1/1 [00:06<00:00,  6.08s/it]
+2026-10-26 12:13:51,456 INFO Processing audio with duration 00:06.720
+2026-10-26 12:13:51,461 DEBUG Processing segment at 00:00.000
+[64/100] clip 63 prompt 3 text unseen: acc_src=0.812 acc=0.500 traced=False far=True sim=0.429 res=0.790 wer=0.00
+2026-10-26 12:13:51,689 INFO Processing audio with duration 00:03.000
+2026-10-26 12:13:51,702 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:13:52,567 INFO synthesis text It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+2026-10-26 12:13:58,086 INFO yield speech len 7.04, rtf 0.7840214466506784
+100%|██████████| 1/1 [00:06<00:00,  6.23s/it]100%|██████████| 1/1 [00:06<00:00,  6.23s/it]
+2026-10-26 12:13:58,462 INFO Processing audio with duration 00:07.040
+2026-10-26 12:13:58,480 DEBUG Processing segment at 00:00.000
+[65/100] clip 64 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.519 res=0.844 wer=0.00
+2026-10-26 12:13:58,818 INFO Processing audio with duration 00:03.000
+2026-10-26 12:13:58,849 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:13:59,604 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-26 12:14:03,392 INFO yield speech len 4.64, rtf 0.8163484519925611
+100%|██████████| 1/1 [00:04<00:00,  4.38s/it]100%|██████████| 1/1 [00:04<00:00,  4.38s/it]
+2026-10-26 12:14:03,650 INFO Processing audio with duration 00:04.640
+2026-10-26 12:14:03,662 DEBUG Processing segment at 00:00.000
+[66/100] clip 65 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.460 res=0.905 wer=0.15
+2026-10-26 12:14:03,894 INFO Processing audio with duration 00:03.000
+2026-10-26 12:14:03,906 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:14:04,557 INFO synthesis text And the second to benjamin tipton.
+2026-10-26 12:14:06,492 INFO yield speech len 2.0, rtf 0.9671362638473511
+100%|██████████| 1/1 [00:02<00:00,  2.45s/it]100%|██████████| 1/1 [00:02<00:00,  2.45s/it]
+2026-10-26 12:14:06,685 INFO Processing audio with duration 00:02.000
+2026-10-26 12:14:06,694 DEBUG Processing segment at 00:00.000
+[67/100] clip 66 prompt 3 text unseen: acc_src=0.625 acc=0.750 traced=False far=True sim=0.558 res=0.862 wer=0.17
+2026-10-26 12:14:06,866 INFO Processing audio with duration 00:03.000
+2026-10-26 12:14:06,870 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:14:07,587 INFO synthesis text Her residence on the piazzi barberini being considered an insecure abode.
+2026-10-26 12:14:11,827 INFO yield speech len 5.12, rtf 0.8281928021460772
+100%|██████████| 1/1 [00:04<00:00,  4.83s/it]100%|██████████| 1/1 [00:04<00:00,  4.83s/it]
+2026-10-26 12:14:12,137 INFO Processing audio with duration 00:05.120
+2026-10-26 12:14:12,158 DEBUG Processing segment at 00:00.000
+[68/100] clip 67 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.407 res=0.787 wer=0.00
+2026-10-26 12:14:12,415 INFO Processing audio with duration 00:03.000
+2026-10-26 12:14:12,427 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:14:13,075 INFO synthesis text But civil you can speak and shall george merry you may lay to that.
+2026-10-26 12:14:16,685 INFO yield speech len 4.36, rtf 0.8280167885876576
+100%|██████████| 1/1 [00:04<00:00,  4.12s/it]100%|██████████| 1/1 [00:04<00:00,  4.12s/it]
+2026-10-26 12:14:16,963 INFO Processing audio with duration 00:04.360
+2026-10-26 12:14:16,969 DEBUG Processing segment at 00:00.000
+[69/100] clip 68 prompt 3 text unseen: acc_src=0.625 acc=0.688 traced=False far=True sim=0.538 res=0.820 wer=0.07
+2026-10-26 12:14:17,164 INFO Processing audio with duration 00:03.000
+2026-10-26 12:14:17,176 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:14:17,878 INFO synthesis text And always had an odd inquiring look.
+2026-10-26 12:14:20,737 INFO yield speech len 3.4, rtf 0.8410319160012638
+100%|██████████| 1/1 [00:03<00:00,  3.44s/it]100%|██████████| 1/1 [00:03<00:00,  3.44s/it]
+2026-10-26 12:14:20,963 INFO Processing audio with duration 00:03.400
+2026-10-26 12:14:20,976 DEBUG Processing segment at 00:00.000
+[70/100] clip 69 prompt 3 text unseen: acc_src=0.875 acc=0.875 traced=True far=False sim=0.522 res=0.844 wer=0.00
+2026-10-26 12:14:21,290 INFO Processing audio with duration 00:03.000
+2026-10-26 12:14:21,294 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:14:21,991 INFO synthesis text And there they told me they had buried it.
+2026-10-26 12:14:25,079 INFO yield speech len 3.44, rtf 0.897643108700597
+100%|██████████| 1/1 [00:03<00:00,  3.68s/it]100%|██████████| 1/1 [00:03<00:00,  3.68s/it]
+2026-10-26 12:14:25,315 INFO Processing audio with duration 00:03.440
+2026-10-26 12:14:25,328 DEBUG Processing segment at 00:00.000
+[71/100] clip 70 prompt 3 text unseen: acc_src=0.438 acc=0.750 traced=False far=True sim=0.351 res=0.595 wer=0.00
+2026-10-26 12:14:25,513 INFO Processing audio with duration 00:03.000
+2026-10-26 12:14:25,527 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:14:26,285 INFO synthesis text Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+2026-10-26 12:14:32,506 INFO yield speech len 7.52, rtf 0.8272554012055093
+100%|██████████| 1/1 [00:06<00:00,  6.81s/it]100%|██████████| 1/1 [00:06<00:00,  6.81s/it]
+2026-10-26 12:14:32,841 INFO Processing audio with duration 00:07.520
+2026-10-26 12:14:32,855 DEBUG Processing segment at 00:00.000
+[72/100] clip 71 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.569 res=0.660 wer=0.00
+2026-10-26 12:14:33,175 INFO Processing audio with duration 00:03.000
+2026-10-26 12:14:33,188 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:14:33,978 INFO synthesis text And where did it lead right to this room ronicky stepped from among the smooth silks.
+2026-10-26 12:14:38,868 INFO yield speech len 6.08, rtf 0.804252648039868
+100%|██████████| 1/1 [00:05<00:00,  5.54s/it]100%|██████████| 1/1 [00:05<00:00,  5.54s/it]
+2026-10-26 12:14:39,212 INFO Processing audio with duration 00:06.080
+2026-10-26 12:14:39,234 DEBUG Processing segment at 00:00.000
+[73/100] clip 72 prompt 3 text unseen: acc_src=0.625 acc=0.812 traced=True far=True sim=0.311 res=0.731 wer=0.12
+2026-10-26 12:14:39,549 INFO Processing audio with duration 00:03.000
+2026-10-26 12:14:39,562 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:14:40,332 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-26 12:14:44,392 INFO yield speech len 5.04, rtf 0.805549631043086
+100%|██████████| 1/1 [00:04<00:00,  4.66s/it]100%|██████████| 1/1 [00:04<00:00,  4.66s/it]
+2026-10-26 12:14:44,700 INFO Processing audio with duration 00:05.040
+2026-10-26 12:14:44,710 DEBUG Processing segment at 00:00.000
+[74/100] clip 73 prompt 3 text unseen: acc_src=0.312 acc=0.438 traced=False far=True sim=0.323 res=0.608 wer=0.09
+2026-10-26 12:14:44,926 INFO Processing audio with duration 00:03.000
+2026-10-26 12:14:44,935 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:14:45,605 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-26 12:14:49,774 INFO yield speech len 5.12, rtf 0.8143383078277111
+100%|██████████| 1/1 [00:04<00:00,  4.72s/it]100%|██████████| 1/1 [00:04<00:00,  4.72s/it]
+2026-10-26 12:14:50,149 INFO Processing audio with duration 00:05.120
+2026-10-26 12:14:50,154 DEBUG Processing segment at 00:00.000
+[75/100] clip 74 prompt 3 text unseen: acc_src=0.688 acc=0.688 traced=False far=True sim=0.377 res=0.611 wer=0.14
+2026-10-26 12:14:50,534 INFO Processing audio with duration 00:03.000
+2026-10-26 12:14:50,549 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:14:51,189 INFO synthesis text How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+2026-10-26 12:14:56,902 INFO yield speech len 7.28, rtf 0.7848121635206453
+100%|██████████| 1/1 [00:06<00:00,  6.21s/it]100%|██████████| 1/1 [00:06<00:00,  6.21s/it]
+2026-10-26 12:14:57,230 INFO Processing audio with duration 00:07.280
+2026-10-26 12:14:57,236 DEBUG Processing segment at 00:00.000
+[76/100] clip 75 prompt 3 text unseen: acc_src=0.812 acc=0.938 traced=True far=False sim=0.441 res=0.902 wer=0.06
+2026-10-26 12:14:57,455 INFO Processing audio with duration 00:03.000
+2026-10-26 12:14:57,459 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:14:58,109 INFO synthesis text It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+2026-10-26 12:15:03,643 INFO yield speech len 6.8, rtf 0.8137224001042983
+100%|██████████| 1/1 [00:06<00:00,  6.06s/it]100%|██████████| 1/1 [00:06<00:00,  6.06s/it]
+2026-10-26 12:15:04,029 INFO Processing audio with duration 00:06.800
+2026-10-26 12:15:04,047 DEBUG Processing segment at 00:00.000
+[77/100] clip 76 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.603 res=0.913 wer=0.11
+2026-10-26 12:15:04,251 INFO Processing audio with duration 00:03.000
+2026-10-26 12:15:04,263 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:15:04,936 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-26 12:15:09,358 INFO yield speech len 5.28, rtf 0.8375734993905731
+100%|██████████| 1/1 [00:04<00:00,  4.94s/it]100%|██████████| 1/1 [00:04<00:00,  4.94s/it]
+2026-10-26 12:15:09,632 INFO Processing audio with duration 00:05.280
+2026-10-26 12:15:09,645 DEBUG Processing segment at 00:00.000
+[78/100] clip 77 prompt 3 text unseen: acc_src=0.875 acc=0.875 traced=True far=False sim=0.283 res=0.861 wer=0.00
+2026-10-26 12:15:09,841 INFO Processing audio with duration 00:03.000
+2026-10-26 12:15:09,845 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:15:10,491 INFO synthesis text And the second to benjamin tipton.
+2026-10-26 12:15:12,615 INFO yield speech len 2.12, rtf 1.0019221395816442
+100%|██████████| 1/1 [00:02<00:00,  2.65s/it]100%|██████████| 1/1 [00:02<00:00,  2.65s/it]
+2026-10-26 12:15:12,841 INFO Processing audio with duration 00:02.120
+2026-10-26 12:15:12,852 DEBUG Processing segment at 00:00.000
+[79/100] clip 78 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.431 res=0.831 wer=0.00
+2026-10-26 12:15:13,030 INFO Processing audio with duration 00:03.000
+2026-10-26 12:15:13,043 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:15:13,753 INFO synthesis text Her residence on the piazzi barberini being considered an insecure abode.
+2026-10-26 12:15:19,701 INFO yield speech len 7.28, rtf 0.817094759626703
+100%|██████████| 1/1 [00:06<00:00,  6.53s/it]100%|██████████| 1/1 [00:06<00:00,  6.53s/it]
+2026-10-26 12:15:20,106 INFO Processing audio with duration 00:07.280
+2026-10-26 12:15:20,117 DEBUG Processing segment at 00:00.000
+[80/100] clip 79 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.370 res=0.850 wer=0.00
+2026-10-26 12:15:20,474 INFO Processing audio with duration 00:03.000
+2026-10-26 12:15:20,486 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]max value is  tensor(1.0136)
+2026-10-26 12:15:21,198 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-26 12:15:25,917 INFO yield speech len 5.68, rtf 0.8307189169064374
+100%|██████████| 1/1 [00:05<00:00,  5.32s/it]100%|██████████| 1/1 [00:05<00:00,  5.32s/it]
+2026-10-26 12:15:26,233 INFO Processing audio with duration 00:05.680
+2026-10-26 12:15:26,244 DEBUG Processing segment at 00:00.000
+[81/100] clip 80 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.192 res=0.676 wer=0.00
+2026-10-26 12:15:26,489 INFO Processing audio with duration 00:03.000
+2026-10-26 12:15:26,503 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:15:27,266 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-26 12:15:31,833 INFO yield speech len 5.48, rtf 0.8333587298428055
+100%|██████████| 1/1 [00:05<00:00,  5.15s/it]100%|██████████| 1/1 [00:05<00:00,  5.16s/it]
+2026-10-26 12:15:32,145 INFO Processing audio with duration 00:05.480
+2026-10-26 12:15:32,157 DEBUG Processing segment at 00:00.000
+[82/100] clip 81 prompt 3 text unseen: acc_src=0.938 acc=0.625 traced=False far=True sim=0.597 res=0.869 wer=0.18
+2026-10-26 12:15:32,372 INFO Processing audio with duration 00:03.000
+2026-10-26 12:15:32,385 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:15:33,129 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-26 12:15:37,967 INFO yield speech len 5.84, rtf 0.8283726564825398
+100%|██████████| 1/1 [00:05<00:00,  5.43s/it]100%|██████████| 1/1 [00:05<00:00,  5.43s/it]
+2026-10-26 12:15:38,248 INFO Processing audio with duration 00:05.840
+2026-10-26 12:15:38,259 DEBUG Processing segment at 00:00.000
+[83/100] clip 82 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.529 res=0.843 wer=0.00
+2026-10-26 12:15:38,450 INFO Processing audio with duration 00:02.880
+2026-10-26 12:15:38,454 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:15:39,181 INFO synthesis text And there they told me they had buried it.
+2026-10-26 12:15:42,579 INFO yield speech len 3.76, rtf 0.9038446431464338
+100%|██████████| 1/1 [00:03<00:00,  3.97s/it]100%|██████████| 1/1 [00:03<00:00,  3.97s/it]
+2026-10-26 12:15:42,793 INFO Processing audio with duration 00:03.760
+2026-10-26 12:15:42,804 DEBUG Processing segment at 00:00.000
+[84/100] clip 83 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.513 res=0.713 wer=0.00
+2026-10-26 12:15:43,035 INFO Processing audio with duration 00:03.000
+2026-10-26 12:15:43,047 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:15:43,779 INFO synthesis text Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+2026-10-26 12:15:50,461 INFO yield speech len 8.24, rtf 0.8109500107255954
+100%|██████████| 1/1 [00:07<00:00,  7.23s/it]100%|██████████| 1/1 [00:07<00:00,  7.23s/it]
+2026-10-26 12:15:50,916 INFO Processing audio with duration 00:08.240
+2026-10-26 12:15:50,937 DEBUG Processing segment at 00:00.000
+[85/100] clip 84 prompt 3 text unseen: acc_src=0.812 acc=1.000 traced=True far=False sim=0.551 res=0.773 wer=0.00
+2026-10-26 12:15:51,291 INFO Processing audio with duration 00:03.000
+2026-10-26 12:15:51,340 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:15:52,024 INFO synthesis text Her residence on the piazzi barberini being considered an insecure abode.
+2026-10-26 12:15:56,215 INFO yield speech len 5.12, rtf 0.8185779675841331
+100%|██████████| 1/1 [00:04<00:00,  4.70s/it]100%|██████████| 1/1 [00:04<00:00,  4.70s/it]
+2026-10-26 12:15:56,490 INFO Processing audio with duration 00:05.120
+2026-10-26 12:15:56,502 DEBUG Processing segment at 00:00.000
+[86/100] clip 85 prompt 3 text unseen: acc_src=0.875 acc=0.812 traced=True far=True sim=0.326 res=0.773 wer=0.09
+2026-10-26 12:15:56,690 INFO Processing audio with duration 00:03.000
+2026-10-26 12:15:56,702 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:15:57,472 INFO synthesis text How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+2026-10-26 12:16:02,702 INFO yield speech len 6.52, rtf 0.8020921718854847
+100%|██████████| 1/1 [00:05<00:00,  5.83s/it]100%|██████████| 1/1 [00:05<00:00,  5.83s/it]
+2026-10-26 12:16:02,928 INFO Processing audio with duration 00:06.520
+2026-10-26 12:16:02,934 DEBUG Processing segment at 00:00.000
+[87/100] clip 86 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.315 res=0.782 wer=0.11
+2026-10-26 12:16:03,174 INFO Processing audio with duration 00:03.000
+2026-10-26 12:16:03,178 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:16:03,797 INFO synthesis text It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+2026-10-26 12:16:09,696 INFO yield speech len 7.16, rtf 0.8240022472829126
+100%|██████████| 1/1 [00:06<00:00,  6.39s/it]100%|██████████| 1/1 [00:06<00:00,  6.39s/it]
+2026-10-26 12:16:10,101 INFO Processing audio with duration 00:07.160
+2026-10-26 12:16:10,112 DEBUG Processing segment at 00:00.000
+[88/100] clip 87 prompt 3 text unseen: acc_src=0.562 acc=0.625 traced=False far=True sim=0.311 res=0.751 wer=0.00
+2026-10-26 12:16:10,367 INFO Processing audio with duration 00:03.000
+2026-10-26 12:16:10,381 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:16:11,157 INFO synthesis text And where did it lead right to this room ronicky stepped from among the smooth silks.
+2026-10-26 12:16:15,967 INFO yield speech len 5.88, rtf 0.8179792741528985
+100%|██████████| 1/1 [00:05<00:00,  5.42s/it]100%|██████████| 1/1 [00:05<00:00,  5.42s/it]
+2026-10-26 12:16:16,319 INFO Processing audio with duration 00:05.880
+2026-10-26 12:16:16,330 DEBUG Processing segment at 00:00.000
+[89/100] clip 88 prompt 3 text unseen: acc_src=0.562 acc=0.750 traced=False far=True sim=0.245 res=0.837 wer=0.25
+2026-10-26 12:16:16,615 INFO Processing audio with duration 00:03.000
+2026-10-26 12:16:16,628 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:16:17,359 INFO synthesis text But civil you can speak and shall george merry you may lay to that.
+2026-10-26 12:16:23,202 INFO yield speech len 7.2, rtf 0.8115856846173604
+100%|██████████| 1/1 [00:06<00:00,  6.41s/it]100%|██████████| 1/1 [00:06<00:00,  6.42s/it]
+2026-10-26 12:16:23,589 INFO Processing audio with duration 00:07.200
+2026-10-26 12:16:23,601 DEBUG Processing segment at 00:00.000
+[90/100] clip 89 prompt 3 text unseen: acc_src=0.750 acc=0.812 traced=True far=True sim=0.160 res=0.848 wer=0.07
+2026-10-26 12:16:23,945 INFO Processing audio with duration 00:03.000
+2026-10-26 12:16:23,958 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:16:24,137 WARNING synthesis text And the second to benjamin tipton. too short than prompt text towards the beginning of the eighteenth century, the past times of the, this may lead to bad performance
+2026-10-26 12:16:24,722 INFO synthesis text And the second to benjamin tipton.
+2026-10-26 12:16:26,816 INFO yield speech len 2.08, rtf 1.0065168142318726
+100%|██████████| 1/1 [00:02<00:00,  2.69s/it]100%|██████████| 1/1 [00:02<00:00,  2.69s/it]
+2026-10-26 12:16:26,996 INFO Processing audio with duration 00:02.080
+2026-10-26 12:16:27,006 DEBUG Processing segment at 00:00.000
+[91/100] clip 90 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.382 res=0.799 wer=0.00
+2026-10-26 12:16:27,197 INFO Processing audio with duration 00:03.000
+2026-10-26 12:16:27,209 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:16:27,878 INFO synthesis text Her residence on the piazzi barberini being considered an insecure abode.
+2026-10-26 12:16:32,646 INFO yield speech len 5.6, rtf 0.8514334900038584
+100%|██████████| 1/1 [00:05<00:00,  5.28s/it]100%|██████████| 1/1 [00:05<00:00,  5.28s/it]
+2026-10-26 12:16:32,955 INFO Processing audio with duration 00:05.600
+2026-10-26 12:16:32,967 DEBUG Processing segment at 00:00.000
+[92/100] clip 91 prompt 3 text unseen: acc_src=0.938 acc=0.688 traced=False far=True sim=0.419 res=0.853 wer=0.18
+2026-10-26 12:16:33,187 INFO Processing audio with duration 00:03.000
+2026-10-26 12:16:33,199 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:16:33,930 INFO synthesis text But civil you can speak and shall george merry you may lay to that.
+2026-10-26 12:16:37,762 INFO yield speech len 4.64, rtf 0.8258178316313646
+100%|██████████| 1/1 [00:04<00:00,  4.42s/it]100%|██████████| 1/1 [00:04<00:00,  4.42s/it]
+2026-10-26 12:16:38,022 INFO Processing audio with duration 00:04.640
+2026-10-26 12:16:38,034 DEBUG Processing segment at 00:00.000
+[93/100] clip 92 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.381 res=0.677 wer=0.14
+2026-10-26 12:16:38,248 INFO Processing audio with duration 00:03.000
+2026-10-26 12:16:38,261 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:16:38,932 INFO synthesis text And always had an odd inquiring look.
+2026-10-26 12:16:42,296 INFO yield speech len 3.52, rtf 0.9554591368545186
+100%|██████████| 1/1 [00:03<00:00,  3.87s/it]100%|██████████| 1/1 [00:03<00:00,  3.87s/it]
+2026-10-26 12:16:42,529 INFO Processing audio with duration 00:03.520
+2026-10-26 12:16:42,541 DEBUG Processing segment at 00:00.000
+[94/100] clip 93 prompt 3 text unseen: acc_src=0.750 acc=0.812 traced=True far=True sim=0.403 res=0.758 wer=0.00
+2026-10-26 12:16:42,724 INFO Processing audio with duration 00:03.000
+2026-10-26 12:16:42,736 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:16:43,411 INFO synthesis text And there they told me they had buried it.
+2026-10-26 12:16:46,182 INFO yield speech len 3.4, rtf 0.8147683564354392
+100%|██████████| 1/1 [00:03<00:00,  3.28s/it]100%|██████████| 1/1 [00:03<00:00,  3.28s/it]
+2026-10-26 12:16:46,434 INFO Processing audio with duration 00:03.400
+2026-10-26 12:16:46,444 DEBUG Processing segment at 00:00.000
+[95/100] clip 94 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.536 res=0.812 wer=0.00
+2026-10-26 12:16:46,734 INFO Processing audio with duration 00:03.000
+2026-10-26 12:16:46,749 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]min value is  tensor(-1.0264)
+max value is  tensor(1.1952)
+2026-10-26 12:16:47,520 INFO synthesis text Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+2026-10-26 12:16:55,017 INFO yield speech len 9.2, rtf 0.81481264985126
+100%|██████████| 1/1 [00:08<00:00,  8.10s/it]100%|██████████| 1/1 [00:08<00:00,  8.10s/it]
+2026-10-26 12:16:55,330 INFO Processing audio with duration 00:09.200
+2026-10-26 12:16:55,342 DEBUG Processing segment at 00:00.000
+[96/100] clip 95 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.387 res=0.799 wer=0.06
+2026-10-26 12:16:55,633 INFO Processing audio with duration 00:03.000
+2026-10-26 12:16:55,637 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:16:56,351 INFO synthesis text Her residence on the piazzi barberini being considered an insecure abode.
+2026-10-26 12:17:01,577 INFO yield speech len 6.36, rtf 0.8216982367653517
+100%|██████████| 1/1 [00:05<00:00,  5.81s/it]100%|██████████| 1/1 [00:05<00:00,  5.81s/it]
+2026-10-26 12:17:01,919 INFO Processing audio with duration 00:06.360
+2026-10-26 12:17:01,938 DEBUG Processing segment at 00:00.000
+[97/100] clip 96 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.423 res=0.810 wer=0.00
+2026-10-26 12:17:02,184 INFO Processing audio with duration 00:03.000
+2026-10-26 12:17:02,188 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:17:02,884 INFO synthesis text How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+2026-10-26 12:17:07,928 INFO yield speech len 6.28, rtf 0.8031761190693849
+100%|██████████| 1/1 [00:05<00:00,  5.61s/it]100%|██████████| 1/1 [00:05<00:00,  5.61s/it]
+2026-10-26 12:17:08,248 INFO Processing audio with duration 00:06.280
+2026-10-26 12:17:08,260 DEBUG Processing segment at 00:00.000
+[98/100] clip 97 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.494 res=0.808 wer=0.00
+2026-10-26 12:17:08,519 INFO Processing audio with duration 00:03.000
+2026-10-26 12:17:08,523 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:17:09,159 INFO synthesis text It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+2026-10-26 12:17:14,353 INFO yield speech len 6.32, rtf 0.8217936075186427
+100%|██████████| 1/1 [00:05<00:00,  5.71s/it]100%|██████████| 1/1 [00:05<00:00,  5.71s/it]
+2026-10-26 12:17:14,668 INFO Processing audio with duration 00:06.320
+2026-10-26 12:17:14,681 DEBUG Processing segment at 00:00.000
+2026-10-26 12:17:14,842 DEBUG Processing segment at 00:06.240
+2026-10-26 12:17:15,500 DEBUG Compression ratio threshold is not met with temperature 0.0 (27.823529 > 2.400000)
+2026-10-26 12:17:15,561 DEBUG Log probability threshold is not met with temperature 0.2 (-1.814331 < -1.000000)
+2026-10-26 12:17:15,561 DEBUG No speech threshold is met (0.962402 > 0.600000)
+[99/100] clip 98 prompt 3 text unseen: acc_src=0.875 acc=0.625 traced=False far=True sim=0.379 res=0.812 wer=0.00
+2026-10-26 12:17:15,643 INFO Processing audio with duration 00:03.000
+2026-10-26 12:17:15,655 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-26 12:17:16,119 INFO synthesis text And where did it lead right to this room ronicky stepped from among the smooth silks.
+2026-10-26 12:17:20,237 INFO yield speech len 5.0, rtf 0.8236327171325684
+100%|██████████| 1/1 [00:04<00:00,  4.42s/it]100%|██████████| 1/1 [00:04<00:00,  4.42s/it]
+2026-10-26 12:17:20,523 INFO Processing audio with duration 00:05.000
+2026-10-26 12:17:20,535 DEBUG Processing segment at 00:00.000
+[100/100] clip 99 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.359 res=0.783 wer=0.00
+
+=== summary (prompt|text) ===
+3|unseen {'n_ok': 100, 'n_failed': 0, 'acc_source_mean': 0.8894, 'acc_mean': 0.8137, 'traced_rate': 0.61, 'far_rate': 0.5, 'sim_ecapa_mean': 0.431, 'wer_mean': 0.0652, 'sim_resemblyzer_mean': 0.7922, 'gate_pass': True}
+saved results/ce_ac_cosyvoice_RQA_rs.json
