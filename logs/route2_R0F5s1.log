@@ -1,0 +1,97 @@
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 900 utterances (train split, speaker-disjoint from the other split).
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+[main] clone text: sampled per step from 60 training transcripts (6-14 words); pool saved to checkpoints/route2_vmaug_R0F5s1/clone_text_pool.json
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[build] Loaded LoRA weights from checkpoints/stage1_vmaug/stage1_epoch29.pt (epoch 29, train-time avg_acc=0.9508333333333333)
+[build] Trainable: ['detector', 'msg_processor'] LoRA only -- 64 tensors, 294,912 params
+[build] e.g. msg_processor.transformer_decoder.layers.0.self_attn.in_proj_lora.A
+[main] Loading F5-TTS surrogate (the in-loop cloner; frozen, differentiable rollout)...
+Download Vocos from huggingface charactr/vocos-mel-24khz
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+vocab :  /usr/local/lib/python3.13/dist-packages/f5_tts/infer/examples/vocab.txt
+token :  custom
+model :  /root/.cache/huggingface/hub/models--SWivid--F5-TTS/snapshots/84e5a410d9cead4de2f847e7c9369a6440bdfaca/F5TTS_v1_Base/model_1250000.safetensors 
+
+
+======================================================================
+ROUTE 2: clone-aware detector training
+  trainable      : detector + msg_processor (LoRA)
+  in-loop cloner : f5tts (differentiable=True)
+  held-out eval  : XTTS, baseline to beat = 0.5587-0.5687 (noise floor ~0.02)
+  loss           : 1.0 * Ldec(clean) + 1.0 * Ldec(clone)
+  clone term on  : from epoch 2
+======================================================================
+
+[epoch -1  PRE-TRAINING] clean_acc=0.9906  clone_acc=0.9219
+  [e0 s0] loss=0.0345 Ldec_clean=0.0345  (clone term off -- warmup)
+  [e0 s20] loss=0.0301 Ldec_clean=0.0301  (clone term off -- warmup)
+  [e0 s40] loss=0.0010 Ldec_clean=0.0010  (clone term off -- warmup)
+  [e0 s60] loss=0.0021 Ldec_clean=0.0021  (clone term off -- warmup)
+  [e0 s80] loss=0.0005 Ldec_clean=0.0005  (clone term off -- warmup)
+  [e0 s100] loss=0.0050 Ldec_clean=0.0050  (clone term off -- warmup)
+  [e0 s120] loss=0.0076 Ldec_clean=0.0076  (clone term off -- warmup)
+  [e0 s140] loss=0.0034 Ldec_clean=0.0034  (clone term off -- warmup)
+  [e0 s160] loss=0.0131 Ldec_clean=0.0131  (clone term off -- warmup)
+  [e0 s180] loss=0.0002 Ldec_clean=0.0002  (clone term off -- warmup)
+  [e0 s200] loss=0.0002 Ldec_clean=0.0002  (clone term off -- warmup)
+  [e0 s220] loss=0.0008 Ldec_clean=0.0008  (clone term off -- warmup)
+  [e0 s240] loss=0.0003 Ldec_clean=0.0003  (clone term off -- warmup)
+  [e0 s260] loss=0.0001 Ldec_clean=0.0001  (clone term off -- warmup)
+  [e0 s280] loss=0.0000 Ldec_clean=0.0000  (clone term off -- warmup)
+  [e0 s300] loss=0.0000 Ldec_clean=0.0000  (clone term off -- warmup)
+  [e0 s320] loss=0.0009 Ldec_clean=0.0009  (clone term off -- warmup)
+  [e0 s340] loss=0.0165 Ldec_clean=0.0165  (clone term off -- warmup)
+  [e0 s360] loss=0.0037 Ldec_clean=0.0037  (clone term off -- warmup)
+  [e0 s380] loss=0.0002 Ldec_clean=0.0002  (clone term off -- warmup)
+  [e0 s400] loss=0.0003 Ldec_clean=0.0003  (clone term off -- warmup)
+  [e0 s420] loss=0.0011 Ldec_clean=0.0011  (clone term off -- warmup)
+  [e0 s440] loss=0.0015 Ldec_clean=0.0015  (clone term off -- warmup)
+
+[epoch 0] clean_acc=1.0000  clone_acc=0.9656  (pre-training was 0.9906 / 0.9219)
+
+  [e1 s0] loss=0.0003 Ldec_clean=0.0003  (clone term off -- warmup)
+  [e1 s20] loss=0.0000 Ldec_clean=0.0000  (clone term off -- warmup)
+  [e1 s40] loss=0.0001 Ldec_clean=0.0001  (clone term off -- warmup)
+  [e1 s60] loss=0.0008 Ldec_clean=0.0008  (clone term off -- warmup)
+  [e1 s80] loss=0.0648 Ldec_clean=0.0648  (clone term off -- warmup)
+  [e1 s100] loss=0.0011 Ldec_clean=0.0011  (clone term off -- warmup)
+  [e1 s120] loss=0.0002 Ldec_clean=0.0002  (clone term off -- warmup)
+  [e1 s140] loss=0.0000 Ldec_clean=0.0000  (clone term off -- warmup)
+  [e1 s160] loss=0.0000 Ldec_clean=0.0000  (clone term off -- warmup)
+  [e1 s180] loss=0.0002 Ldec_clean=0.0002  (clone term off -- warmup)
+  [e1 s200] loss=0.0004 Ldec_clean=0.0004  (clone term off -- warmup)
+  [e1 s220] loss=0.0029 Ldec_clean=0.0029  (clone term off -- warmup)
+  [e1 s240] loss=0.0006 Ldec_clean=0.0006  (clone term off -- warmup)
+  [e1 s260] loss=0.0007 Ldec_clean=0.0007  (clone term off -- warmup)
+  [e1 s280] loss=0.0745 Ldec_clean=0.0745  (clone term off -- warmup)
+  [e1 s300] loss=0.0013 Ldec_clean=0.0013  (clone term off -- warmup)
+  [e1 s320] loss=0.0007 Ldec_clean=0.0007  (clone term off -- warmup)
+  [e1 s340] loss=0.0003 Ldec_clean=0.0003  (clone term off -- warmup)
+  [e1 s360] loss=0.0001 Ldec_clean=0.0001  (clone term off -- warmup)
+  [e1 s380] loss=0.0000 Ldec_clean=0.0000  (clone term off -- warmup)
+  [e1 s400] loss=0.0000 Ldec_clean=0.0000  (clone term off -- warmup)
+  [e1 s420] loss=0.0002 Ldec_clean=0.0002  (clone term off -- warmup)
+  [e1 s440] loss=0.0000 Ldec_clean=0.0000  (clone term off -- warmup)
+
+[epoch 1] clean_acc=1.0000  clone_acc=0.9875  (pre-training was 0.9906 / 0.9219)
+
+  [e2 s0] loss=0.1724 Ldec_clean=0.0000 Ldec_clone=0.1724
+  [e2 s20] loss=nan Ldec_clean=nan Ldec_clone=nan
+  [e2 s40] loss=nan Ldec_clean=nan Ldec_clone=nan
+  [e2 s60] loss=nan Ldec_clean=nan Ldec_clone=nan
+  [e2 s80] loss=nan Ldec_clean=nan Ldec_clone=nan
+  [e2 s100] loss=nan Ldec_clean=nan Ldec_clone=nan
+  [e2 s120] loss=nan Ldec_clean=nan Ldec_clone=nan
