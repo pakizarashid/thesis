@@ -233,15 +233,7 @@ def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilo
         if use_ct:
             ct_loss = content_fn(wave, f5a.sr)                                       # recognition loss of the clone: to be RAISED
             g_dis = torch.autograd.grad(dis_loss, delta, retain_graph=True, create_graph=False)[0]
-            if ct_loss.requires_grad:
-                g_ct = torch.autograd.grad(-ct_loss, delta, retain_graph=False, create_graph=False)[0]
-            else:                                                                    # content term not defined for this rollout
-                g_ct = torch.zeros_like(delta)
-            if not torch.isfinite(g_ct).all():                                       # never let the content term void a Q2 step
-                g_ct = torch.zeros_like(delta)
-                diag["ct_nonfinite"] = diag.get("ct_nonfinite", 0) + 1
-            elif float(g_ct.abs().max()) == 0.0:                                     # e.g. rollout too short for the sentence
-                diag["ct_zero"] = diag.get("ct_zero", 0) + 1
+            g_ct = torch.autograd.grad(-ct_loss, delta, retain_graph=False, create_graph=False)[0]
             diag.setdefault("ct_loss", []).append(float(ct_loss.item()))
         else:
             g_dis = torch.autograd.grad(dis_loss, delta, retain_graph=False, create_graph=False)[0]
@@ -256,18 +248,9 @@ def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilo
             wm_loss = compute_ldec(chunk_logits, message)
         g_wm = torch.autograd.grad(wm_loss, delta, retain_graph=False, create_graph=False)[0]
 
-        if use_ct:
-            # q2c only (Q2 itself is unchanged): a non-finite speaker or content gradient drops that term for this step
-            # instead of voiding the step; only a non-finite watermark gradient still skips it. Counted per clip.
-            if not torch.isfinite(g_dis).all():
-                g_dis = torch.zeros_like(g_dis)
-                diag["dis_nonfinite"] = diag.get("dis_nonfinite", 0) + 1
-                print(f"  [whitebox step {step}] non-finite speaker gradient: term dropped for this step")
-            if not torch.isfinite(g_wm).all():
-                print(f"  [whitebox step {step}] non-finite WATERMARK gradient")
         gn_dis, gn_wm = g_dis.norm().item(), g_wm.norm().item()
         grad = lambda_wm * g_wm + dis_to_wm_ratio * (gn_wm / max(gn_dis, 1e-12)) * g_dis
-        if use_ct and float(g_ct.abs().max()) > 0.0:
+        if use_ct:
             grad = grad + content_weight * (gn_wm / max(g_ct.norm().item(), 1e-12)) * g_ct
         diag["dis_loss"].append(float(dis_loss.item())); diag["wm_loss"].append(float(wm_loss.item()))
         diag["gn_dis"].append(gn_dis); diag["gn_wm"].append(gn_wm)
