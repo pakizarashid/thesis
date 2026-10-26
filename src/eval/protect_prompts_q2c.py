@@ -52,6 +52,11 @@ class CtcContentLoss:
         self.blank = self.proc.tokenizer.pad_token_id
         assert self.target.numel() > 0, "empty CTC target"
 
+        # frames a CTC alignment of the target needs: one per label plus a blank between repeated labels
+        t = self.target[0].tolist()
+        self.min_frames = len(t) + sum(1 for a, b in zip(t, t[1:]) if a == b)
+        self.n_short = 0
+
     def __call__(self, wave, sr):
         x = wave.reshape(1, -1).float()
         if sr != 16000:
@@ -59,8 +64,14 @@ class CtcContentLoss:
         x = (x - x.mean()) / torch.sqrt(x.var(unbiased=False) + 1e-7)
         logp = F.log_softmax(self.model(x).logits.float(), dim=-1).transpose(0, 1)    # [T, 1, V]
         T = logp.shape[0]
-        return F.ctc_loss(logp, self.target, torch.tensor([T], device=x.device), torch.tensor([self.target.shape[1]], device=x.device),
-                          blank=self.blank, reduction="mean", zero_infinity=True)
+        if T < self.min_frames:
+            # rollout too short for any alignment of the target: CTC is +inf (its CUDA backward gave NaN, 2026-10-26).
+            # No content term on this step (whitebox_pgd then takes the plain Q2 step and counts it).
+            self.n_short += 1
+            return torch.zeros((), device=x.device)
+        # CTC in float64 on the CPU: the CPU kernel's zero_infinity handling is exact; the gradient returns to the GPU
+        return F.ctc_loss(logp.double().cpu(), self.target.cpu(), torch.tensor([T]), torch.tensor([self.target.shape[1]]),
+                          blank=self.blank, reduction="mean", zero_infinity=True).to(x.device).float()
 
 
 def main():
@@ -106,6 +117,8 @@ def main():
         missing = sorted(set(range(n_clips)) - {r["index"] for r in recs})
         summ = {k: float(np.mean([r["q2c"][k] for r in recs])) for k in ("acc_source", "pesq", "stoi", "si_snr", "snr_db")} if recs else {}
         summ["clips_over_10_skipped"] = [r["index"] for r in recs if r["diag"]["skipped"] > 10]
+        summ["clips_content_unusable_over_half"] = [r["index"] for r in recs
+                                                    if r["diag"].get("ct_nonfinite_steps", 0) + r["diag"].get("ct_zero_steps", 0) > 20]
         out = {"script": "protect_prompts_q2c", "settings": {**{k: v for k, v in vars(args).items() if k not in ("start", "stop", "merge", "diagnostic")},
                                                               "q2_settings": {k: q2[k] for k in ("epsilon", "shape_alpha", "shape_floor", "n_steps", "step_size",
                                                                                                   "dis_to_wm_ratio", "lambda_wm", "f5_steps", "f5_cfg", "pgd_text")}},
@@ -126,7 +139,7 @@ def main():
     content = CtcContentLoss(device, q2["pgd_text"])
     transcribe = Transcriber(device)
 
-    lo, hi = (0, 1) if args.diagnostic else (args.start, min(args.stop if args.stop is not None else n_clips, n_clips))
+    lo, hi = (50, 51) if args.diagnostic else (args.start, min(args.stop if args.stop is not None else n_clips, n_clips))
     if not args.diagnostic:
         os.makedirs(rec_dir, exist_ok=True)
     t0, n_new = time.time(), 0
@@ -157,10 +170,14 @@ def main():
         rec = {"index": i, "utterance_id": base[i]["utterance_id"], "clean_sha": base[i]["clean_sha"], "pgd_seconds": round(sec, 1),
                "q2c": {"acc_source": float((dec == np.array(msg[0].tolist())).mean()), **quality(clean, back)},
                "diag": {"skipped": diag["skipped"], "dis_loss_first": diag["dis_loss"][0], "dis_loss_last": diag["dis_loss"][-1],
-                        "ct_loss_first": cts[0] if cts else None, "ct_loss_last": cts[-1] if cts else None}}
+                        "ct_loss_first": cts[0] if cts else None, "ct_loss_last": cts[-1] if cts else None,
+                        "ct_nonfinite_steps": diag.get("ct_nonfinite", 0), "ct_zero_steps": diag.get("ct_zero", 0)}}
         if args.diagnostic:
             print(json.dumps(rec, indent=1))
             assert cts, "the content term was not used"
+            assert diag["skipped"] <= 10, f"{diag['skipped']} of {q2['n_steps']} PGD steps skipped: send the output above to Claude"
+            assert diag.get("ct_nonfinite", 0) + diag.get("ct_zero", 0) < q2["n_steps"] // 2, \
+                "the content gradient was unusable on most steps: send the output above to Claude"
             if not cts[-1] > cts[0]:
                 print("WARNING: the CTC loss of the rollout did not rise on this clip (one clip; see the step log)")
             print("DIAGNOSTIC OK")

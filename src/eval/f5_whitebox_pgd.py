@@ -233,7 +233,15 @@ def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilo
         if use_ct:
             ct_loss = content_fn(wave, f5a.sr)                                       # recognition loss of the clone: to be RAISED
             g_dis = torch.autograd.grad(dis_loss, delta, retain_graph=True, create_graph=False)[0]
-            g_ct = torch.autograd.grad(-ct_loss, delta, retain_graph=False, create_graph=False)[0]
+            if ct_loss.requires_grad:
+                g_ct = torch.autograd.grad(-ct_loss, delta, retain_graph=False, create_graph=False)[0]
+            else:                                                                    # content term not defined for this rollout
+                g_ct = torch.zeros_like(delta)
+            if not torch.isfinite(g_ct).all():                                       # never let the content term void a Q2 step
+                g_ct = torch.zeros_like(delta)
+                diag["ct_nonfinite"] = diag.get("ct_nonfinite", 0) + 1
+            if float(g_ct.abs().max()) == 0.0:
+                diag["ct_zero"] = diag.get("ct_zero", 0) + 1
             diag.setdefault("ct_loss", []).append(float(ct_loss.item()))
         else:
             g_dis = torch.autograd.grad(dis_loss, delta, retain_graph=False, create_graph=False)[0]
@@ -250,7 +258,7 @@ def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilo
 
         gn_dis, gn_wm = g_dis.norm().item(), g_wm.norm().item()
         grad = lambda_wm * g_wm + dis_to_wm_ratio * (gn_wm / max(gn_dis, 1e-12)) * g_dis
-        if use_ct:
+        if use_ct and float(g_ct.abs().max()) > 0.0:
             grad = grad + content_weight * (gn_wm / max(g_ct.norm().item(), 1e-12)) * g_ct
         diag["dis_loss"].append(float(dis_loss.item())); diag["wm_loss"].append(float(wm_loss.item()))
         diag["gn_dis"].append(gn_dis); diag["gn_wm"].append(gn_wm)
