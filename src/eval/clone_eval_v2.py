@@ -240,6 +240,40 @@ class Ecapa:
         return float(torch.nn.functional.cosine_similarity(ea, eb, dim=0))
 
 
+class Resem:
+    """Resemblyzer GE2E (held-out verifier: in no loss of the watermark or of the perturbation)."""
+    def __init__(self, device):
+        from resemblyzer import VoiceEncoder
+        self.enc = VoiceEncoder(device=device, verbose=False)
+        self._cache = {}
+
+    def embed(self, wav, key=None):
+        if key is not None and key in self._cache:
+            return self._cache[key]
+        from resemblyzer import preprocess_wav
+        x = wav.detach().cpu().reshape(-1).numpy().astype(np.float32)
+        e = self.enc.embed_utterance(preprocess_wav(x, source_sr=SR))
+        if key is not None:
+            self._cache[key] = e
+        return e
+
+    def __call__(self, clone, clean, clean_key):
+        a, b = self.embed(clone), self.embed(clean, clean_key)
+        return float(np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b) + 1e-12))
+
+
+def wav_sha(x):
+    a = np.ascontiguousarray(x.detach().cpu().reshape(-1).numpy().astype(np.float32))
+    return hashlib.sha256(a.tobytes()).hexdigest()
+
+
+def read_prompt(path, device):
+    import soundfile as sf
+    x, sr = sf.read(path, dtype="float32")
+    assert sr == SR, (path, sr)
+    return torch.from_numpy(np.asarray(x, dtype=np.float32)).to(device).reshape(1, 1, -1)
+
+
 class Asr:
     def __init__(self, device, size="base.en"):
         from faster_whisper import WhisperModel
@@ -316,6 +350,11 @@ def summarise(records):
                                                     for r in ok if r.get("sim_ecapa") is not None]))
             if wers:
                 s["wer_mean"] = float(np.mean(wers))
+            res = [r["sim_resemblyzer"] for r in ok if r.get("sim_resemblyzer") is not None]
+            if res:
+                s["sim_resemblyzer_mean"] = float(np.mean(res))
+                s["sim_resemblyzer_ci_speaker"] = speaker_bootstrap(
+                    res, [r["speaker"] for r in ok if r.get("sim_resemblyzer") is not None])
             if sims and wers:
                 s["gate_pass"] = bool(np.mean(sims) > 0.30 and np.mean(wers) < 0.20)
         out[f"{key[0]}|{key[1]}"] = s
@@ -366,6 +405,10 @@ def main():
     p.add_argument("--amphion_root", default=None)
     p.add_argument("--fish_url", default="http://127.0.0.1:8080")
     p.add_argument("--diagnostic", action="store_true", help="2 clips, all conditions, no output file.")
+    p.add_argument("--prompt_dir", default=None,
+                   help="Clone these prompt files (protect_prompts_v2.py output, e.g. .../prompts/RQA/q2) instead of "
+                        "watermarking in-loop. Checked per clip against the clean prompt hash and the checkpoint hash.")
+    p.add_argument("--resemblyzer", action="store_true", help="Resemblyzer SIM of clone vs clean utterance (held-out verifier).")
     args = p.parse_args()
 
     cwe.preflight()
@@ -405,6 +448,18 @@ def main():
         meta.append((str(it2["speaker_id"]), it2.get("transcript", "")))
     unseen, unseen_src = build_unseen_texts(meta, args.unseen_min_words, args.unseen_max_words)
     unseen, unseen_src = unseen[:len(items)], unseen_src[:len(items)]
+    prompt_recs = None
+    if args.prompt_dir:
+        man_path = os.path.join(os.path.dirname(os.path.normpath(args.prompt_dir)), "manifest.json")
+        man = json.load(open(man_path))
+        assert man.get("complete"), f"{man_path} is not complete (missing {man.get('missing', [])[:10]})"
+        assert man["settings"]["checkpoint_sha256"] == prov["checkpoint_sha256"], \
+            "prompt files were made with another watermark checkpoint than --checkpoint"
+        assert prompts == [str(man["settings"]["prompt_seconds"])], f"--prompts must be {man['settings']['prompt_seconds']}"
+        assert man["settings"]["dataset"] == args.dataset and man["n_clips"] >= n_clips
+        prompt_recs = {r["index"]: r for r in man["records"]}
+        prov.update(prompt_dir=os.path.normpath(args.prompt_dir), prompt_arm=os.path.basename(os.path.normpath(args.prompt_dir)),
+                    prompt_manifest_sha256=sha256(man_path))
     overlap = None
     if args.train_text_pool:
         train_pool = {normalize_text(t) for t in json.load(open(args.train_text_pool))}
@@ -418,7 +473,8 @@ def main():
     if os.path.exists(args.output) and not args.diagnostic:
         old = json.load(open(args.output))
         if old.get("cloner") == args.cloner and old.get("provenance", {}).get("checkpoint_sha256") == prov["checkpoint_sha256"] \
-                and old.get("args", {}).get("dataset") == args.dataset:
+                and old.get("args", {}).get("dataset") == args.dataset \
+                and old.get("args", {}).get("prompt_dir") == args.prompt_dir:
             records = [r for r in old.get("records", []) if r["status"] == "ok"]
             done = {(r["index"], r["prompt"], r["text_mode"]) for r in records}
             print(f"[resume] {len(records)} completed records kept from {args.output}")
@@ -454,6 +510,7 @@ def main():
     transcribe = cwe.Transcriber(args.whisper_size, device) if args.cloner in NEEDS_PROMPT_TEXT else None
     ecapa = Ecapa(device) if args.ecapa else None
     asr = Asr(device, args.whisper_size) if args.wer else None
+    resem = Resem(device) if args.resemblyzer else None
     os.makedirs(args.tmp_dir, exist_ok=True)
 
     cache = {}  # (index, prompt) -> (recon_wm, msg, prompt_seconds, acc_source, ref_text)
@@ -463,8 +520,19 @@ def main():
         true_bits = msg[0].tolist()
         if (i, spec) not in cache:
             prompt = make_prompt(it["full"], spec, args.max_full_seconds).to(device).reshape(1, 1, -1)
-            with torch.no_grad():
-                recon_wm = backbone.forward_full(prompt, msg)["recon_wm"]
+            if prompt_recs is not None:
+                pr = prompt_recs[i]
+                assert pr["utterance_id"] == it["utterance_id"], f"clip {i}: prompt file does not belong to this clip"
+                if pr["clean_sha"] != wav_sha(prompt):
+                    # another environment may decode the audio with a last-bit difference: compare with the stored clean prompt
+                    ref = read_prompt(os.path.join(os.path.dirname(os.path.normpath(args.prompt_dir)), "clean", f"{i}.flac"), device)
+                    assert ref.shape == prompt.shape and float((ref - prompt).abs().max()) < 2e-4, \
+                        f"clip {i}: clean prompt differs from the one the protected prompt was made from"
+                recon_wm = read_prompt(os.path.join(args.prompt_dir, f"{i}.flac"), device)
+                assert recon_wm.shape[-1] == prompt.shape[-1]
+            else:
+                with torch.no_grad():
+                    recon_wm = backbone.forward_full(prompt, msg)["recon_wm"]
             src_bits = decode_bits(backbone, recon_wm)
             acc_src = float(np.mean(np.array(src_bits) == np.array(true_bits)))
             ref_text = ""
@@ -487,6 +555,11 @@ def main():
                        clone_seconds=round(cloned.shape[-1] / SR, 3))
             if ecapa is not None:
                 rec["sim_ecapa"] = ecapa(cloned.reshape(-1), it["full"].to(device))
+            if resem is not None:
+                try:
+                    rec["sim_resemblyzer"] = resem(cloned, it["full"], i)
+                except Exception as e_res:   # e.g. a clone that is silence after Resemblyzer's VAD trim
+                    rec["sim_resemblyzer"], rec["resemblyzer_error"] = None, f"{type(e_res).__name__}: {str(e_res)[:200]}"
             if asr is not None:
                 hyp = asr(cloned)
                 rec["asr_text"], rec["wer"] = hyp, wer(gen_text, hyp)
@@ -502,6 +575,7 @@ def main():
         line = (f"[{k + 1}/{len(todo)}] clip {i} prompt {spec} text {mode}: "
                 + (f"acc_src={acc_src:.3f} acc={rec['acc_clone']:.3f} traced={rec['traced']} far={rec['far_false']}"
                    + (f" sim={rec['sim_ecapa']:.3f}" if rec.get("sim_ecapa") is not None else "")
+                   + (f" res={rec['sim_resemblyzer']:.3f}" if rec.get("sim_resemblyzer") is not None else "")
                    + (f" wer={rec['wer']:.2f}" if rec.get("wer") is not None else "")
                    if rec["status"] == "ok" else f"FAILED {rec['error']}"))
         print(line, flush=True)
@@ -515,7 +589,7 @@ def main():
     for key, s in summarise(records).items():
         print(key, {k: (round(v, 4) if isinstance(v, float) else v) for k, v in s.items()
                     if k in ("n_ok", "n_failed", "acc_source_mean", "acc_mean", "traced_rate", "far_rate",
-                             "sim_ecapa_mean", "wer_mean", "gate_pass")})
+                             "sim_ecapa_mean", "sim_resemblyzer_mean", "wer_mean", "gate_pass")})
     if not args.diagnostic:
         print(f"saved {args.output}")
 
