@@ -171,11 +171,16 @@ def main():
                "q2c": {"acc_source": float((dec == np.array(msg[0].tolist())).mean()), **quality(clean, back)},
                "diag": {"skipped": diag["skipped"], "dis_loss_first": diag["dis_loss"][0], "dis_loss_last": diag["dis_loss"][-1],
                         "ct_loss_first": cts[0] if cts else None, "ct_loss_last": cts[-1] if cts else None,
-                        "ct_nonfinite_steps": diag.get("ct_nonfinite", 0), "ct_zero_steps": diag.get("ct_zero", 0)}}
+                        "ct_nonfinite_steps": diag.get("ct_nonfinite", 0), "ct_zero_steps": diag.get("ct_zero", 0),
+                        "dis_nonfinite_steps": diag.get("dis_nonfinite", 0), "ct_short_rollouts": content.n_short}}
+        content.n_short = 0
         if args.diagnostic:
             print(json.dumps(rec, indent=1))
             assert cts, "the content term was not used"
+            print(f"steps: skipped {diag['skipped']}, speaker term dropped {diag.get('dis_nonfinite', 0)}, "
+                  f"content term non-finite {diag.get('ct_nonfinite', 0)}, content term zero {diag.get('ct_zero', 0)} of {q2['n_steps']}")
             assert diag["skipped"] <= 10, f"{diag['skipped']} of {q2['n_steps']} PGD steps skipped: send the output above to Claude"
+            assert diag.get("dis_nonfinite", 0) <= 10, "the speaker gradient was non-finite on more than 10 steps: send the output above to Claude"
             assert diag.get("ct_nonfinite", 0) + diag.get("ct_zero", 0) < q2["n_steps"] // 2, \
                 "the content gradient was unusable on most steps: send the output above to Claude"
             if not cts[-1] > cts[0]:
