@@ -17,22 +17,21 @@
 ./models/tts/maskgct/g2p/sources/g2p_chinese_model/poly_bert_model.onnx
 /usr/local/lib/python3.13/dist-packages/onnxruntime/capi/onnxruntime_inference_collection.py:197: UserWarning: Specified provider 'CUDAExecutionProvider' is not in available provider names.Available providers: 'AzureExecutionProvider, CPUExecutionProvider'
   warnings.warn(
-Traceback (most recent call last):
-  File "/kaggle/working/thesis/src/eval/clone_eval_v2.py", line 524, in <module>
-    main()
-    ~~~~^^
-  File "/kaggle/working/thesis/src/eval/clone_eval_v2.py", line 453, in main
-    model = load_fn(device, args)
-  File "/kaggle/working/thesis/src/eval/cloner_watermark_eval.py", line 432, in load_maskgct
-    from models.tts.maskgct.maskgct_utils import (
-    ...<2 lines>...
-    )
-  File "/kaggle/working/Amphion/models/tts/maskgct/maskgct_utils.py", line 20, in <module>
-    from models.tts.maskgct.g2p.g2p_generation import g2p, chn_eng_g2p
-  File "/kaggle/working/Amphion/models/tts/maskgct/g2p/g2p_generation.py", line 9, in <module>
-    from models.tts.maskgct.g2p.g2p import PhonemeBpeTokenizer
-  File "/kaggle/working/Amphion/models/tts/maskgct/g2p/g2p/__init__.py", line 9, in <module>
-    import LangSegment
-  File "/usr/local/lib/python3.13/dist-packages/LangSegment/__init__.py", line 1, in <module>
-    from .LangSegment import LangSegment,getTexts,classify,getCounts,printList,setLangfilters,getLangfilters,setfilters,getfilters
-ImportError: cannot import name 'setLangfilters' from 'LangSegment.LangSegment' (/usr/local/lib/python3.13/dist-packages/LangSegment/LangSegment.py)
+/kaggle/working/Amphion/models/tts/maskgct/maskgct_utils.py:50: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  stat_mean_var = torch.load("./models/tts/maskgct/ckpt/wav2vec2bert_stats.pt")
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+[maskgct] pipeline built
+INFO:speechbrain.utils.fetching:Fetch hyperparams.yaml: Using symlink found at '/tmp/ecapa_model/hyperparams.yaml'
+INFO:speechbrain.utils.fetching:Fetch embedding_model.ckpt: Using symlink found at '/tmp/ecapa_model/embedding_model.ckpt'
+INFO:speechbrain.utils.fetching:Fetch mean_var_norm_emb.ckpt: Using symlink found at '/tmp/ecapa_model/mean_var_norm_emb.ckpt'
+INFO:speechbrain.utils.fetching:Fetch classifier.ckpt: Using symlink found at '/tmp/ecapa_model/classifier.ckpt'
+INFO:speechbrain.utils.fetching:Fetch label_encoder.txt: Using symlink found at '/tmp/ecapa_model/label_encoder.ckpt'
+INFO:speechbrain.utils.parameter_transfer:Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+/usr/local/lib/python3.13/dist-packages/speechbrain/utils/checkpoints.py:202: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  state_dict = torch.load(path, map_location=device)
+/usr/local/lib/python3.13/dist-packages/speechbrain/processing/features.py:1550: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  stats = torch.load(path, map_location=self.device)
+WARNING:speechbrain.inference.interfaces:Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+[transcribe] loading faster-whisper base.en (float16)
+predict semantic shape torch.Size([1, 270])
