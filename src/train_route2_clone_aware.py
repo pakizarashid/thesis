@@ -115,12 +115,12 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "eval"))
 
 from backbone import VoiceMarkBackbone
 from adapters import apply_lora_adapters
-from surrogate_vc import load_yourtts_surrogate
 from librispeech import LibriSpeechSubset, collate_librispeech
 from voicemark_losses import (compute_ldec, compute_lcos, compute_lvad,
                               MultiScaleMelLoss, compute_ladv_generator)
 from augment_voicemark import add_augmentation_args, build_augmenter, samples_to_frames
-from disruption_pgd import random_message, detect_acc
+# coqui-free copies of the same two helpers (identical code), so an F5-TTS run needs no coqui-tts install
+from cloner_watermark_eval import random_message, detect_acc
 
 
 def build_trainable_backbone(checkpoint_path, lora_r, lora_alpha, train_msg_processor, msgproc_lora_r=None):
@@ -357,6 +357,15 @@ def main():
                    help="One batch, verbose, with gradient-flow verification. Always run first.")
 
     p.add_argument("--epochs", type=int, default=20)
+    p.add_argument("--cloner", choices=("yourtts", "f5tts"), default="yourtts",
+                   help="In-loop differentiable cloner. yourtts = every run before 2026-10-26; f5tts = src/models/f5_surrogate.py.")
+    p.add_argument("--f5_steps", type=int, default=6)
+    p.add_argument("--f5_cfg", type=float, default=2.0)
+    p.add_argument("--grad_accum", type=int, default=1,
+                   help="Optimizer step every N batches (loss / N). 1 = unchanged behaviour. Use --batch_size 1 "
+                        "--grad_accum 2 if batch 2 does not fit in memory (same samples per step).")
+    p.add_argument("--resume", action="store_true",
+                   help="Continue from the last route2_epoch*.pt in --checkpoint_dir (weights + optimizer).")
     p.add_argument("--lr", type=float, default=5e-5, help="Matches the paper's stated Adam lr.")
     p.add_argument("--batch_size", type=int, default=2)
     p.add_argument("--lambda_clean", type=float, default=1.0,
@@ -475,8 +484,14 @@ def main():
         print("[main] WARNING: quality losses have no effect without --train_msg_processor "
               "(the detector does not change the audio).")
 
-    print("[main] Loading YourTTS surrogate (the in-loop cloner; frozen)...")
-    surrogate = load_yourtts_surrogate(device=device)
+    if args.cloner == "f5tts":
+        from f5_surrogate import F5Surrogate
+        print("[main] Loading F5-TTS surrogate (the in-loop cloner; frozen, differentiable rollout)...")
+        surrogate = F5Surrogate(device=device, steps=args.f5_steps, cfg=args.f5_cfg)
+    else:
+        from surrogate_vc import load_yourtts_surrogate
+        print("[main] Loading YourTTS surrogate (the in-loop cloner; frozen)...")
+        surrogate = load_yourtts_surrogate(device=device)
 
     # ---------------- diagnostic ----------------
     if args.diagnostic:
@@ -510,8 +525,14 @@ def main():
         if extra_terms:
             print("  extra terms: " + "  ".join(f"{k}={v.item():.4f}" for k, v in extra_terms.items()))
 
+        import time as _time
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
         optimizer.zero_grad()
         loss.backward()
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+            print(f"  peak GPU memory after forward+backward: {torch.cuda.max_memory_allocated() / 1e9:.1f} GB")
         n_with_grad = sum(1 for prm in trainable if prm.grad is not None and prm.grad.abs().sum() > 0)
         total_gn = sum(prm.grad.norm().item() for prm in trainable if prm.grad is not None)
         print(f"\n--- 4. Gradient flow (the silent-failure check) ---")
@@ -522,6 +543,17 @@ def main():
                   "for hours and change nothing. Fix this before any real run. ***")
         else:
             print("  -> gradients are flowing; training will actually update the detector.")
+
+        _t0 = _time.time()
+        for _ in range(2):   # two full steps (forward, clone, backward): the cost per training step
+            out_t = backbone.forward_full(clean_audio, message)
+            cl_t = make_clone(surrogate, out_t["recon_wm"], diag_text, differentiable_clone)
+            l_t = compute_ldec(decode_logits(backbone, out_t["recon_wm"]), message) + compute_ldec(decode_logits(backbone, cl_t), message)
+            optimizer.zero_grad(); l_t.backward()
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+        print(f"  time per training step (batch {clean_audio.shape[0]}, clone on): {(_time.time() - _t0) / 2:.2f} s")
+        optimizer.zero_grad()
 
         print("\n[main] Diagnostic complete. If gradients flowed and the baseline numbers look "
               "right, drop --diagnostic and start a real run.")
@@ -534,7 +566,7 @@ def main():
     print(f"\n{'=' * 70}")
     print(f"ROUTE 2: clone-aware detector training")
     print(f"  trainable      : detector{' + msg_processor' if args.train_msg_processor else ''} (LoRA)")
-    print(f"  in-loop cloner : YourTTS (differentiable={differentiable_clone})")
+    print(f"  in-loop cloner : {args.cloner} (differentiable={differentiable_clone})")
     print(f"  held-out eval  : XTTS, baseline to beat = 0.5587-0.5687 (noise floor ~0.02)")
     print(f"  loss           : {args.lambda_clean} * Ldec(clean) + {args.lambda_clone} * Ldec(clone)"
           + (f" + mel {args.lambda_mel} + cos {args.lambda_cos} + adv {args.lambda_adv}"
@@ -542,11 +574,35 @@ def main():
     print(f"  clone term on  : from epoch {args.clone_warmup_epochs}")
     print(f"{'=' * 70}")
 
-    acc_clean0, acc_clone0 = evaluate(backbone, surrogate, eval_loader, device,
-                                      args.surrogate_text, args.eval_batches)
+    start_epoch = 0
+    if args.resume:
+        import glob as _glob
+        done_ep = sorted(int(os.path.basename(f)[len("route2_epoch"):-3])
+                         for f in _glob.glob(os.path.join(args.checkpoint_dir, "route2_epoch*.pt")))
+        if done_ep:
+            ck = torch.load(os.path.join(args.checkpoint_dir, f"route2_epoch{done_ep[-1]}.pt"), map_location=device,
+                            weights_only=False)
+            backbone.model.load_state_dict(ck["lora_state_dict"], strict=False)
+            optimizer.load_state_dict(ck["optimizer_state_dict"])
+            start_epoch = done_ep[-1] + 1
+            for _ in range(start_epoch):          # replay the loader so data order and crops match an uninterrupted run
+                for _b in train_loader:
+                    pass
+            if args.output and os.path.exists(args.output):
+                old = json.load(open(args.output))
+                history = old.get("history", [])[:start_epoch]
+            print(f"[resume] continuing from epoch {start_epoch} ({len(history)} epochs of history kept)")
+    if start_epoch and args.output and os.path.exists(args.output):
+        pre = json.load(open(args.output))["pre_training"]
+        acc_clean0, acc_clone0 = pre["clean_acc"], pre["clone_acc"]
+    else:
+        acc_clean0, acc_clone0 = evaluate(backbone, surrogate, eval_loader, device,
+                                          args.surrogate_text, args.eval_batches)
     print(f"\n[epoch -1  PRE-TRAINING] clean_acc={acc_clean0:.4f}  clone_acc={acc_clone0:.4f}")
+    if start_epoch >= args.epochs:
+        print("[resume] all epochs already done"); return
 
-    for epoch in range(args.epochs):
+    for epoch in range(start_epoch, args.epochs):
         backbone.model.train()
         clone_on = epoch >= args.clone_warmup_epochs
         sums = {"loss": 0.0, "clean": 0.0, "clone": 0.0, "n": 0}
@@ -577,9 +633,11 @@ def main():
                 for k, v in extra_terms.items():
                     extra_sums[k] = extra_sums.get(k, 0.0) + v.item()
 
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
+            if step % args.grad_accum == 0:
+                optimizer.zero_grad()
+            (loss / args.grad_accum).backward()
+            if (step + 1) % args.grad_accum == 0:
+                optimizer.step()
 
             sums["loss"] += loss.item()
             sums["clean"] += loss_clean.item()
