@@ -1,0 +1,4505 @@
+{
+ "script": "protect_prompts_v2",
+ "settings": {
+  "checkpoint": "checkpoints/route2_vmaug_R0/route2_epoch19.pt",
+  "out_dir": "results/anticlone/prompts/R0",
+  "lora_r": 8,
+  "lora_alpha": 16,
+  "msgproc_lora_r": null,
+  "epsilon": 0.015,
+  "shape_alpha": 1.0,
+  "shape_floor": 0.003,
+  "n_steps": 40,
+  "step_size": 0.0015,
+  "dis_to_wm_ratio": 1.732,
+  "lambda_wm": 1.0,
+  "f5_steps": 6,
+  "f5_cfg": 2.0,
+  "pgd_text": "This is a test sentence for voice cloning.",
+  "noise_seed_base": 5000,
+  "f5_seed_base": 7000,
+  "message_seed_base": 123,
+  "prompt_seconds": "3",
+  "dataset": "librispeech",
+  "data_root": "/tmp/data/librispeech",
+  "libri_subset": "train-clean-100",
+  "vctk_root": null,
+  "n_speakers": 60,
+  "utterances_per_speaker": 15,
+  "n_eval_speakers": 20,
+  "eval_utterances_per_speaker": 5,
+  "max_full_seconds": 20.0,
+  "n_utterances": 100,
+  "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+  "git": {
+   "commit": "82143f40f4a9e69c4072ebbf2add0d7007598907",
+   "branch": "voicemark-faithful-augmentation",
+   "dirty_files": [
+    "M external/voicemark",
+    "?? results/anticlone/prompts/R0/.gen_0_50.done",
+    "?? results/anticlone/prompts/R0/.gen_50_100.done",
+    "?? results/anticlone/prompts/RQA/.gen_0_50.done",
+    "?? results/anticlone/prompts/RQA/.gen_50_100.done",
+    "?? results/anticlone/prompts/RQA/manifest.json",
+    "?? results/anticlone/prompts/pretrained/.gen_0_50.done",
+    "?? results/anticlone/prompts/pretrained/.gen_50_100.done",
+    "?? results/anticlone/prompts/pretrained/manifest.json"
+   ]
+  },
+  "packages": {
+   "torch": "2.11.0+cu128",
+   "torchaudio": "2.11.0+cu128",
+   "transformers": "5.16.1",
+   "f5-tts": "1.1.22",
+   "speechtokenizer": "1.0.1",
+   "encodec": "0.1.1",
+   "numpy": "2.1.3",
+   "faster-whisper": "1.2.1",
+   "speechbrain": "1.1.2",
+   "huggingface-hub": "1.29.0",
+   "python": "3.13.15"
+  },
+  "arms": {
+   "wm": "watermark only",
+   "rs": "random sign noise at Q2's bound (Q2's own start, signed)",
+   "q2": "Q2 white-box PGD (wens), as registered"
+  }
+ },
+ "n_clips": 100,
+ "n_done": 100,
+ "missing": [],
+ "complete": true,
+ "summary": {
+  "wm": {
+   "acc_source": 0.998125,
+   "pesq": 2.0614850342273714,
+   "stoi": 0.8846022362897326,
+   "si_snr": -0.030138564295090268,
+   "snr_db": 3.1443206637934487,
+   "traced_source": 1.0
+  },
+  "rs": {
+   "acc_source": 0.883125,
+   "pesq": 1.5207094275951385,
+   "stoi": 0.8614377943683071,
+   "si_snr": -0.1549242433089716,
+   "snr_db": 3.0547279887524974,
+   "traced_source": 0.79
+  },
+  "q2": {
+   "acc_source": 1.0,
+   "pesq": 1.6744861793518067,
+   "stoi": 0.8633335838766218,
+   "si_snr": -0.07585855582055377,
+   "snr_db": 3.111574639028467,
+   "traced_source": 1.0
+  },
+  "q2_skipped_steps_total": 28,
+  "q2_clips_over_10_skipped": [
+   2,
+   5
+  ]
+ },
+ "records": [
+  {
+   "index": 0,
+   "utterance_id": "2518-154825-0032",
+   "speaker": "2518",
+   "clean_sha": "e15e25eb0bb1554c1a85625dd688a40b7cedcaa5b1efb6ce454a4638e9773b16",
+   "n_samples": 48000,
+   "ref_text_pgd": "hands and knees, but have a",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 78.1,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.8477213382720947,
+     "stoi": 0.7933460479487863,
+     "si_snr": 3.7740919867473677,
+     "snr_db": 5.2396182679572085,
+     "noise_linf": 0.370147705078125
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.4138872623443604,
+     "stoi": 0.7316539898282717,
+     "si_snr": 3.5696250073281197,
+     "snr_db": 5.076747324920237,
+     "noise_linf": 0.358184814453125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.5865955352783203,
+     "stoi": 0.7376086510025122,
+     "si_snr": 3.680572830606726,
+     "snr_db": 5.166553199524505,
+     "noise_linf": 0.378570556640625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6946820616722107,
+    "dis_loss_last": 0.43476447463035583,
+    "wm_loss_last": 4.7683701609457785e-07,
+    "mean_bound": 0.0023633050732314587,
+    "share_at_bound": 0.08431249856948853
+   }
+  },
+  {
+   "index": 1,
+   "utterance_id": "2518-154825-0005",
+   "speaker": "2518",
+   "clean_sha": "e58f8a5fece3e6ce5b25f5eeb98935e5e4cf22d4a426d0906ea6e3675353c47b",
+   "n_samples": 48000,
+   "ref_text_pgd": "of the shot. They have broke the",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 62.1,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.9223400354385376,
+     "stoi": 0.8665076631720209,
+     "si_snr": 4.223339785160979,
+     "snr_db": 5.615508754524083,
+     "noise_linf": 0.222076416015625
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.4810572862625122,
+     "stoi": 0.8568139534703038,
+     "si_snr": 4.012055415721939,
+     "snr_db": 5.45925172518936,
+     "noise_linf": 0.2252197265625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.6106005907058716,
+     "stoi": 0.8530865476406034,
+     "si_snr": 4.157012369880336,
+     "snr_db": 5.566585334324598,
+     "noise_linf": 0.22027587890625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7517037391662598,
+    "dis_loss_last": 0.44214388728141785,
+    "wm_loss_last": 1.013278392747452e-06,
+    "mean_bound": 0.0018985188798978925,
+    "share_at_bound": 0.11041666567325592
+   }
+  },
+  {
+   "index": 2,
+   "utterance_id": "2518-154825-0025",
+   "speaker": "2518",
+   "clean_sha": "2acb9ae4dea555c593bd33741f265839cfc9090ce81e714a54da7f1d5524fdec",
+   "n_samples": 48000,
+   "ref_text_pgd": "But if we fall...",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 93.2,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.356715202331543,
+     "stoi": 0.8702634712937746,
+     "si_snr": 3.969973399366214,
+     "snr_db": 4.789764300468624,
+     "noise_linf": 0.239105224609375
+    },
+    "rs": {
+     "acc_source": 0.8125,
+     "pesq": 2.0318713188171387,
+     "stoi": 0.7859729128738469,
+     "si_snr": 3.857911046755423,
+     "snr_db": 4.684529710966039,
+     "noise_linf": 0.252593994140625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 2.1648499965667725,
+     "stoi": 0.8109309713577615,
+     "si_snr": 3.9303483386691456,
+     "snr_db": 4.747738449578712,
+     "noise_linf": 0.237213134765625
+    }
+   },
+   "q2_diag": {
+    "skipped": 11,
+    "dis_loss_first": 0.7467387914657593,
+    "dis_loss_last": 0.5434362888336182,
+    "wm_loss_last": 1.2516961760411505e-06,
+    "mean_bound": 0.0022054887376725674,
+    "share_at_bound": 0.08974999934434891
+   }
+  },
+  {
+   "index": 3,
+   "utterance_id": "2518-154826-0031",
+   "speaker": "2518",
+   "clean_sha": "ce4766fe41659a1573c4e9e20bd89729231c99b183a0f7bec41cb5bcdcf802a7",
+   "n_samples": 48000,
+   "ref_text_pgd": "So if I sell you a following piece, maybe I",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.4,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.250356435775757,
+     "stoi": 0.9015341230358455,
+     "si_snr": 0.6092129080049834,
+     "snr_db": 2.8367194737152652,
+     "noise_linf": 0.531005859375
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.7679247856140137,
+     "stoi": 0.8940134581550611,
+     "si_snr": 0.5543175222773093,
+     "snr_db": 2.7917040003973677,
+     "noise_linf": 0.54205322265625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.92898690700531,
+     "stoi": 0.8868620707845609,
+     "si_snr": 0.5860236821652463,
+     "snr_db": 2.8180690925521503,
+     "noise_linf": 0.533782958984375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6962806582450867,
+    "dis_loss_last": 0.44681715965270996,
+    "wm_loss_last": 1.3113010481902165e-06,
+    "mean_bound": 0.003062460571527481,
+    "share_at_bound": 0.12964583933353424
+   }
+  },
+  {
+   "index": 4,
+   "utterance_id": "2518-154825-0026",
+   "speaker": "2518",
+   "clean_sha": "a205d9dbea0a126328fbb55aa753b067d8a15ce4e83b10143645bfc6c6d2ffe7",
+   "n_samples": 48000,
+   "ref_text_pgd": "He cut me up again, and I shut my eyes for a...",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.3,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.0941379070281982,
+     "stoi": 0.9141586278522188,
+     "si_snr": 1.5120278781218468,
+     "snr_db": 3.4316984673494098,
+     "noise_linf": 0.303863525390625
+    },
+    "rs": {
+     "acc_source": 0.9375,
+     "pesq": 1.3475661277770996,
+     "stoi": 0.8900057367558647,
+     "si_snr": 1.2624061683058039,
+     "snr_db": 3.2225923860260046,
+     "noise_linf": 0.3128662109375
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.5505239963531494,
+     "stoi": 0.8896246813062446,
+     "si_snr": 1.4174439751520702,
+     "snr_db": 3.349492608642892,
+     "noise_linf": 0.3101806640625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6945838928222656,
+    "dis_loss_last": 0.4455433487892151,
+    "wm_loss_last": 7.748598136458895e-07,
+    "mean_bound": 0.004394363146275282,
+    "share_at_bound": 0.1054791659116745
+   }
+  },
+  {
+   "index": 5,
+   "utterance_id": "8098-278278-0021",
+   "speaker": "8098",
+   "clean_sha": "c3d31202660d69e4a6a8dcda74070da584cd8c22659c7da3fe50642265f74724",
+   "n_samples": 48000,
+   "ref_text_pgd": "entomologists, that the stump is millions of you.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.5,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.322078227996826,
+     "stoi": 0.9103606748515762,
+     "si_snr": 4.237614141619035,
+     "snr_db": 5.385108532097952,
+     "noise_linf": 0.51348876953125
+    },
+    "rs": {
+     "acc_source": 0.8125,
+     "pesq": 1.4442453384399414,
+     "stoi": 0.8900003274630357,
+     "si_snr": 4.126491800360158,
+     "snr_db": 5.286610043923147,
+     "noise_linf": 0.499755859375
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.704275131225586,
+     "stoi": 0.897412687677452,
+     "si_snr": 4.201345153019539,
+     "snr_db": 5.352815011952155,
+     "noise_linf": 0.50799560546875
+    }
+   },
+   "q2_diag": {
+    "skipped": 17,
+    "dis_loss_first": 0.7383999824523926,
+    "dis_loss_last": 0.575753927230835,
+    "wm_loss_last": 1.072882923836005e-06,
+    "mean_bound": 0.004559905268251896,
+    "share_at_bound": 0.0768958330154419
+   }
+  },
+  {
+   "index": 6,
+   "utterance_id": "8098-278252-0000",
+   "speaker": "8098",
+   "clean_sha": "88251dd19fb623fd59a1be6bb9f3570453f11e54662046f4e1a15ceb01f473bf",
+   "n_samples": 48000,
+   "ref_text_pgd": "Cleveland, my route through the beautiful city.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.1,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.9409165382385254,
+     "stoi": 0.9028190432490714,
+     "si_snr": 6.1994717484102395,
+     "snr_db": 7.1147443590632875,
+     "noise_linf": 0.2825927734375
+    },
+    "rs": {
+     "acc_source": 0.625,
+     "pesq": 1.2673561573028564,
+     "stoi": 0.8533181064899915,
+     "si_snr": 6.004572298883563,
+     "snr_db": 6.967303604539819,
+     "noise_linf": 0.277587890625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.4688091278076172,
+     "stoi": 0.8664473254738737,
+     "si_snr": 6.126433449156962,
+     "snr_db": 7.05896186179718,
+     "noise_linf": 0.276458740234375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.675304114818573,
+    "dis_loss_last": 0.5246022343635559,
+    "wm_loss_last": 1.2516966307885014e-06,
+    "mean_bound": 0.004225108772516251,
+    "share_at_bound": 0.08670832961797714
+   }
+  },
+  {
+   "index": 7,
+   "utterance_id": "8098-278278-0029",
+   "speaker": "8098",
+   "clean_sha": "e93384933b7d211b89ecf86c933c42bda9e0d9d06ea94bacfddf42db5227685d",
+   "n_samples": 48000,
+   "ref_text_pgd": "Then Koon skin went fishing.  He said he had a...",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.0,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.2553064823150635,
+     "stoi": 0.9219862825133623,
+     "si_snr": 6.905452560013518,
+     "snr_db": 7.7109598722091635,
+     "noise_linf": 0.333526611328125
+    },
+    "rs": {
+     "acc_source": 0.625,
+     "pesq": 1.4519851207733154,
+     "stoi": 0.8948980066440533,
+     "si_snr": 6.793009012004918,
+     "snr_db": 7.618122114389342,
+     "noise_linf": 0.342437744140625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.7086198329925537,
+     "stoi": 0.8992106868071509,
+     "si_snr": 6.867519508148678,
+     "snr_db": 7.6797080809298714,
+     "noise_linf": 0.341552734375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7021888494491577,
+    "dis_loss_last": 0.4602331519126892,
+    "wm_loss_last": 9.536737479720614e-07,
+    "mean_bound": 0.0033284949604421854,
+    "share_at_bound": 0.10070833563804626
+   }
+  },
+  {
+   "index": 8,
+   "utterance_id": "8098-278252-0009",
+   "speaker": "8098",
+   "clean_sha": "b5a7021a00c969afc2eb7c3f7241536be34e241e10237a883aa2dc35e7d1ea30",
+   "n_samples": 48000,
+   "ref_text_pgd": "wind, then retraced my steps and called to",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.7,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.2706730365753174,
+     "stoi": 0.92869949457771,
+     "si_snr": 5.047168774020796,
+     "snr_db": 5.970056991711673,
+     "noise_linf": 0.369659423828125
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.3823347091674805,
+     "stoi": 0.8832802737213603,
+     "si_snr": 4.899683172394756,
+     "snr_db": 5.832807189216539,
+     "noise_linf": 0.354736328125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.6242077350616455,
+     "stoi": 0.8974568496937589,
+     "si_snr": 4.995562508930756,
+     "snr_db": 5.921568465290543,
+     "noise_linf": 0.3646240234375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7794458270072937,
+    "dis_loss_last": 0.49870747327804565,
+    "wm_loss_last": 1.1324875686113955e-06,
+    "mean_bound": 0.004723069723695517,
+    "share_at_bound": 0.08543749898672104
+   }
+  },
+  {
+   "index": 9,
+   "utterance_id": "8098-275181-0033",
+   "speaker": "8098",
+   "clean_sha": "4f00652067d9ac866b75db13e7fac714020430f18a3461fef28c81a7c3a1d63c",
+   "n_samples": 48000,
+   "ref_text_pgd": "Wiles that fox got the turkeys out of the hive.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.9,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.1592607498168945,
+     "stoi": 0.9134916155257617,
+     "si_snr": 4.891704469621044,
+     "snr_db": 5.9875610410074405,
+     "noise_linf": 0.378021240234375
+    },
+    "rs": {
+     "acc_source": 0.875,
+     "pesq": 1.3638496398925781,
+     "stoi": 0.8916891348504012,
+     "si_snr": 4.771438121075191,
+     "snr_db": 5.878183245718491,
+     "noise_linf": 0.36865234375
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.5502943992614746,
+     "stoi": 0.8932731058660124,
+     "si_snr": 4.844489748220264,
+     "snr_db": 5.943636657851563,
+     "noise_linf": 0.377410888671875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7870979309082031,
+    "dis_loss_last": 0.5862277746200562,
+    "wm_loss_last": 1.0132782790606143e-06,
+    "mean_bound": 0.004971598275005817,
+    "share_at_bound": 0.10714583098888397
+   }
+  },
+  {
+   "index": 10,
+   "utterance_id": "4441-76250-0011",
+   "speaker": "4441",
+   "clean_sha": "e7182685d33b82fd1daa3de76f155ee2f009aa421eb1cba062524555b77048d1",
+   "n_samples": 48000,
+   "ref_text_pgd": "How's your association getting on?  What did you call it?  //  //",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 53.4,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.6150739192962646,
+     "stoi": 0.9115847766016664,
+     "si_snr": 1.9223537166640972,
+     "snr_db": 4.033998045033482,
+     "noise_linf": 0.609222412109375
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.7264113426208496,
+     "stoi": 0.9050313776301093,
+     "si_snr": 1.8720347052466768,
+     "snr_db": 3.9986197171121933,
+     "noise_linf": 0.620880126953125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.9628905057907104,
+     "stoi": 0.9043472221769999,
+     "si_snr": 1.9090900847271035,
+     "snr_db": 4.024114033146063,
+     "noise_linf": 0.616485595703125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7328532934188843,
+    "dis_loss_last": 0.4450380206108093,
+    "wm_loss_last": 1.2516966307885014e-06,
+    "mean_bound": 0.0042801303789019585,
+    "share_at_bound": 0.09285416454076767
+   }
+  },
+  {
+   "index": 11,
+   "utterance_id": "4441-76263-0015",
+   "speaker": "4441",
+   "clean_sha": "fef7ba2ae428482a55026a3ebb052fe3724ba42b0021304b69e849609faff194",
+   "n_samples": 48000,
+   "ref_text_pgd": "I had no overcoat and I felt ashamed.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 58.3,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.2793798446655273,
+     "stoi": 0.900073796347586,
+     "si_snr": 1.4906014155377436,
+     "snr_db": 3.754961164400754,
+     "noise_linf": 0.436279296875
+    },
+    "rs": {
+     "acc_source": 0.9375,
+     "pesq": 1.5777381658554077,
+     "stoi": 0.866574532877175,
+     "si_snr": 1.3917917354361689,
+     "snr_db": 3.683747799707176,
+     "noise_linf": 0.4271240234375
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.7678803205490112,
+     "stoi": 0.8746553188631886,
+     "si_snr": 1.4555064005668152,
+     "snr_db": 3.7299582195655274,
+     "noise_linf": 0.433319091796875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7020524740219116,
+    "dis_loss_last": 0.3868612051010132,
+    "wm_loss_last": 3.993502105004154e-06,
+    "mean_bound": 0.003248515073210001,
+    "share_at_bound": 0.0885416641831398
+   }
+  },
+  {
+   "index": 12,
+   "utterance_id": "4441-76263-0033",
+   "speaker": "4441",
+   "clean_sha": "72af4ce3ba7a49bf95ef552fc841b5afc1ec05a26ae1b7547d0f2c22255e5fd2",
+   "n_samples": 48000,
+   "ref_text_pgd": "Anem, in two installments, said Levin properly.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.9,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.072380542755127,
+     "stoi": 0.9321251880429716,
+     "si_snr": 2.1193033368661665,
+     "snr_db": 4.155334067690902,
+     "noise_linf": 0.602874755859375
+    },
+    "rs": {
+     "acc_source": 0.8125,
+     "pesq": 1.4112861156463623,
+     "stoi": 0.9119289634529367,
+     "si_snr": 2.02512113994338,
+     "snr_db": 4.088179581176673,
+     "noise_linf": 0.58831787109375
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.5856633186340332,
+     "stoi": 0.9119637588291079,
+     "si_snr": 2.0834040412906942,
+     "snr_db": 4.129584897130965,
+     "noise_linf": 0.58831787109375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6660354137420654,
+    "dis_loss_last": 0.4622701406478882,
+    "wm_loss_last": 3.010027057825937e-06,
+    "mean_bound": 0.0036652209237217903,
+    "share_at_bound": 0.10324999690055847
+   }
+  },
+  {
+   "index": 13,
+   "utterance_id": "4441-76262-0002",
+   "speaker": "4441",
+   "clean_sha": "f3004f072cd07235c215c29c09e07d1af733b6c929cedbcf4c0b73c19494df13",
+   "n_samples": 48000,
+   "ref_text_pgd": "to think of something pleasant of his happiness.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.8,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.3447482585906982,
+     "stoi": 0.9144567639357737,
+     "si_snr": 4.65661518106423,
+     "snr_db": 5.854508174429633,
+     "noise_linf": 0.432525634765625
+    },
+    "rs": {
+     "acc_source": 0.625,
+     "pesq": 1.4296777248382568,
+     "stoi": 0.8832297337139484,
+     "si_snr": 4.488889352710296,
+     "snr_db": 5.748810659092079,
+     "noise_linf": 0.422882080078125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.6323139667510986,
+     "stoi": 0.8855091379644053,
+     "si_snr": 4.58353367933818,
+     "snr_db": 5.808301592488412,
+     "noise_linf": 0.432525634765625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.761873185634613,
+    "dis_loss_last": 0.33557748794555664,
+    "wm_loss_last": 1.4007080153533025e-06,
+    "mean_bound": 0.0036532569210976362,
+    "share_at_bound": 0.10479166358709335
+   }
+  },
+  {
+   "index": 14,
+   "utterance_id": "4441-76262-0020",
+   "speaker": "4441",
+   "clean_sha": "d5ca2cffed8d1c8dec48466f80d1a87a481a20aecc90ac9fa9900c2ad2796401",
+   "n_samples": 48000,
+   "ref_text_pgd": "A Regnae Matan Chagrin, said Philander.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 57.2,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.452381134033203,
+     "stoi": 0.930277118337547,
+     "si_snr": 2.1779862840203417,
+     "snr_db": 4.222983772999025,
+     "noise_linf": 0.63824462890625
+    },
+    "rs": {
+     "acc_source": 0.875,
+     "pesq": 1.9057879447937012,
+     "stoi": 0.9287855227870049,
+     "si_snr": 2.148270134905613,
+     "snr_db": 4.20299464813813,
+     "noise_linf": 0.630401611328125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 2.043400526046753,
+     "stoi": 0.9278824304966155,
+     "si_snr": 2.1658495414285954,
+     "snr_db": 4.214901194324345,
+     "noise_linf": 0.63092041015625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7166953086853027,
+    "dis_loss_last": 0.5272457599639893,
+    "wm_loss_last": 1.4007079016664647e-06,
+    "mean_bound": 0.003764510853216052,
+    "share_at_bound": 0.10835416615009308
+   }
+  },
+  {
+   "index": 15,
+   "utterance_id": "4406-16882-0033",
+   "speaker": "4406",
+   "clean_sha": "a7eaec200013010a41d341c56e7f72bb7e398284fa9ff44e2c6f20802ff27e27",
+   "n_samples": 40640,
+   "ref_text_pgd": "And there they told me they had buried it.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 50.7,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.3672268390655518,
+     "stoi": 0.9031823299082956,
+     "si_snr": 1.0479428782252205,
+     "snr_db": 3.541751570434161,
+     "noise_linf": 0.55029296875
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.9903266429901123,
+     "stoi": 0.8850558191628392,
+     "si_snr": 0.9479352820117999,
+     "snr_db": 3.476918957932357,
+     "noise_linf": 0.5616455078125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 2.114710807800293,
+     "stoi": 0.8880264326341054,
+     "si_snr": 1.0072976108530753,
+     "snr_db": 3.5155670231254503,
+     "noise_linf": 0.551116943359375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7070314884185791,
+    "dis_loss_last": 0.4848993718624115,
+    "wm_loss_last": 5.662439548359544e-07,
+    "mean_bound": 0.0037331986241042614,
+    "share_at_bound": 0.11744586378335953
+   }
+  },
+  {
+   "index": 16,
+   "utterance_id": "4406-16882-0065",
+   "speaker": "4406",
+   "clean_sha": "e745aef0ea4974dec2be1d36f8d90805d447b1d83c314c37225e02840e32cccb",
+   "n_samples": 48000,
+   "ref_text_pgd": "broke with ice on it. Some waited through it.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.0,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.3514926433563232,
+     "stoi": 0.913112640041352,
+     "si_snr": 1.3494328190808405,
+     "snr_db": 3.5312379075852265,
+     "noise_linf": 0.346160888671875
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.7060991525650024,
+     "stoi": 0.9018659960627357,
+     "si_snr": 1.2451354574061702,
+     "snr_db": 3.448909218923471,
+     "noise_linf": 0.357147216796875
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.914719581604004,
+     "stoi": 0.902696629978738,
+     "si_snr": 1.30102312813865,
+     "snr_db": 3.492403549535198,
+     "noise_linf": 0.35369873046875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7055606842041016,
+    "dis_loss_last": 0.36967381834983826,
+    "wm_loss_last": 3.8743010577491077e-07,
+    "mean_bound": 0.002808230696246028,
+    "share_at_bound": 0.09918750077486038
+   }
+  },
+  {
+   "index": 17,
+   "utterance_id": "4406-16882-0053",
+   "speaker": "4406",
+   "clean_sha": "9785b8b3afad626acbd1e4d0af30be34ffcd26d266ddaadd6c560b4af2b093d4",
+   "n_samples": 48000,
+   "ref_text_pgd": "and hungry and weary, and no refreshing for man...",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 53.8,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.352860689163208,
+     "stoi": 0.9132519134075797,
+     "si_snr": 1.555736963434138,
+     "snr_db": 3.6666770525297485,
+     "noise_linf": 0.508270263671875
+    },
+    "rs": {
+     "acc_source": 0.9375,
+     "pesq": 1.4967747926712036,
+     "stoi": 0.8931476059716891,
+     "si_snr": 1.4054300743157675,
+     "snr_db": 3.548041776416121,
+     "noise_linf": 0.499176025390625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.7559456825256348,
+     "stoi": 0.8983382957464867,
+     "si_snr": 1.5010049012856583,
+     "snr_db": 3.623437086084693,
+     "noise_linf": 0.50189208984375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7093033194541931,
+    "dis_loss_last": 0.4507102370262146,
+    "wm_loss_last": 1.2218941947139683e-06,
+    "mean_bound": 0.004798927344381809,
+    "share_at_bound": 0.11416666209697723
+   }
+  },
+  {
+   "index": 18,
+   "utterance_id": "4406-16883-0021",
+   "speaker": "4406",
+   "clean_sha": "593eae2b527b91624f2cdb651c7fb690dcbd2d196643f02695e1a17bef59f07d",
+   "n_samples": 48000,
+   "ref_text_pgd": "calling for my pay. At last, he told me...",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.8,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.2311789989471436,
+     "stoi": 0.9109203378171997,
+     "si_snr": 1.038446214157681,
+     "snr_db": 3.0186741819020173,
+     "noise_linf": 0.547088623046875
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.8350963592529297,
+     "stoi": 0.8981516241120652,
+     "si_snr": 0.9914441159085717,
+     "snr_db": 2.9736148222080616,
+     "noise_linf": 0.560577392578125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.9894587993621826,
+     "stoi": 0.9007042156373223,
+     "si_snr": 1.0237563276924906,
+     "snr_db": 3.0046151053552785,
+     "noise_linf": 0.559234619140625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.648066520690918,
+    "dis_loss_last": 0.36116480827331543,
+    "wm_loss_last": 1.966951003851136e-06,
+    "mean_bound": 0.002936866832897067,
+    "share_at_bound": 0.10916666686534882
+   }
+  },
+  {
+   "index": 19,
+   "utterance_id": "4406-16882-0061",
+   "speaker": "4406",
+   "clean_sha": "859e5c2c47401b80d068e07a0dccc8ce45444cc7c9d83276d1969a028cc59eba",
+   "n_samples": 48000,
+   "ref_text_pgd": "I found my stomach grow very faint for want of something.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 53.5,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.0904786586761475,
+     "stoi": 0.9207620239244276,
+     "si_snr": -0.27542644404326144,
+     "snr_db": 2.7127439897997285,
+     "noise_linf": 0.523223876953125
+    },
+    "rs": {
+     "acc_source": 0.875,
+     "pesq": 1.6063600778579712,
+     "stoi": 0.9162791951740908,
+     "si_snr": -0.3698203167774697,
+     "snr_db": 2.6492612248870535,
+     "noise_linf": 0.537872314453125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.7609801292419434,
+     "stoi": 0.9150792332852136,
+     "si_snr": -0.3172341999143644,
+     "snr_db": 2.6864993923138742,
+     "noise_linf": 0.535797119140625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7388424873352051,
+    "dis_loss_last": 0.376131534576416,
+    "wm_loss_last": 8.344645721081179e-07,
+    "mean_bound": 0.0032090828754007816,
+    "share_at_bound": 0.12722916901111603
+   }
+  },
+  {
+   "index": 20,
+   "utterance_id": "839-130898-0044",
+   "speaker": "839",
+   "clean_sha": "dad5e96ac6146f6bb3ba6bf1b5eb1d2f70629d085195f2174c43f468589d8275",
+   "n_samples": 48000,
+   "ref_text_pgd": "I hadn't alerted.  Miss took it at first for a gigantic s-  S-  S-  S-  S-  S-  S-  S-  S-  S-  S-  S-  S-  S-  S-  S-  S-  S-  S-  S-  S-  S-  S-  S-  S-  S-  S-",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 52.2,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.2349369525909424,
+     "stoi": 0.9088701908847225,
+     "si_snr": -0.9357310713025824,
+     "snr_db": 4.082575191816146,
+     "noise_linf": 0.6334228515625
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.342444658279419,
+     "stoi": 0.8936892049889228,
+     "si_snr": -1.0832899582048632,
+     "snr_db": 3.9978210636236904,
+     "noise_linf": 0.61907958984375
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.50583815574646,
+     "stoi": 0.8986340209185882,
+     "si_snr": -0.9967521397866018,
+     "snr_db": 4.0484127447819755,
+     "noise_linf": 0.620513916015625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.4813147485256195,
+    "dis_loss_last": 0.32375824451446533,
+    "wm_loss_last": 1.13248734123772e-06,
+    "mean_bound": 0.0057432944886386395,
+    "share_at_bound": 0.1028124988079071
+   }
+  },
+  {
+   "index": 21,
+   "utterance_id": "839-130898-0096",
+   "speaker": "839",
+   "clean_sha": "6724e5c250a8e6f76e8bbdfb574d908c758b8fe388d4607ab3e3247ec39dd10a",
+   "n_samples": 48000,
+   "ref_text_pgd": "ago to the day at this very",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 69.3,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.9995949268341064,
+     "stoi": 0.9119430575736175,
+     "si_snr": 2.238218490212419,
+     "snr_db": 6.741099298727587,
+     "noise_linf": 0.26080322265625
+    },
+    "rs": {
+     "acc_source": 0.5625,
+     "pesq": 1.172196865081787,
+     "stoi": 0.8720548019892784,
+     "si_snr": 1.7457851504696764,
+     "snr_db": 6.377783412787449,
+     "noise_linf": 0.250213623046875
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.2993838787078857,
+     "stoi": 0.8687515667119724,
+     "si_snr": 2.0522082868163842,
+     "snr_db": 6.6067151515293965,
+     "noise_linf": 0.257843017578125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6557909250259399,
+    "dis_loss_last": 0.2442084550857544,
+    "wm_loss_last": 6.556507514687837e-07,
+    "mean_bound": 0.006942072417587042,
+    "share_at_bound": 0.10387499630451202
+   }
+  },
+  {
+   "index": 22,
+   "utterance_id": "839-130898-0057",
+   "speaker": "839",
+   "clean_sha": "d6ecbcf794abc98bd6b692ddb310add4397a8833b39a487668c99acc4ef15e65",
+   "n_samples": 48000,
+   "ref_text_pgd": "through the mists on a twi-",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 68.8,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.7427308559417725,
+     "stoi": 0.6123614485743072,
+     "si_snr": -4.877165774901181,
+     "snr_db": 3.945979476946415,
+     "noise_linf": 0.611663818359375
+    },
+    "rs": {
+     "acc_source": 0.9375,
+     "pesq": 1.249102234840393,
+     "stoi": 0.5063545797533571,
+     "si_snr": -5.1315954981071155,
+     "snr_db": 3.808875545997297,
+     "noise_linf": 0.62603759765625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.3570001125335693,
+     "stoi": 0.5165894516006202,
+     "si_snr": -4.980525603620942,
+     "snr_db": 3.891057372325286,
+     "noise_linf": 0.606689453125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6758357882499695,
+    "dis_loss_last": 0.2749940752983093,
+    "wm_loss_last": 2.6822084464583895e-07,
+    "mean_bound": 0.005211974959820509,
+    "share_at_bound": 0.10302083194255829
+   }
+  },
+  {
+   "index": 23,
+   "utterance_id": "839-130898-0039",
+   "speaker": "839",
+   "clean_sha": "9725f7ea4584c52ae8ec86f77a6fb7356b0b83a5ebfdd8c798a08655f406b198",
+   "n_samples": 48000,
+   "ref_text_pgd": "that every boat dangled by the dozens.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 57.4,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.4713387489318848,
+     "stoi": 0.7406160971349169,
+     "si_snr": 0.32739690244801734,
+     "snr_db": 6.516809186476205,
+     "noise_linf": 0.2801513671875
+    },
+    "rs": {
+     "acc_source": 0.75,
+     "pesq": 1.1243653297424316,
+     "stoi": 0.6707566002815833,
+     "si_snr": -0.20156064338507154,
+     "snr_db": 6.170678302783545,
+     "noise_linf": 0.28851318359375
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.1920931339263916,
+     "stoi": 0.6750663857733044,
+     "si_snr": 0.13050312881397458,
+     "snr_db": 6.391651402170767,
+     "noise_linf": 0.285980224609375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7153131365776062,
+    "dis_loss_last": 0.3031914234161377,
+    "wm_loss_last": 2.0563577436405467e-06,
+    "mean_bound": 0.006283293943852186,
+    "share_at_bound": 0.09858333319425583
+   }
+  },
+  {
+   "index": 24,
+   "utterance_id": "839-130898-0008",
+   "speaker": "839",
+   "clean_sha": "631ade84251272253dc944f2272054147c4206514c2c1a53514420a6d0a5df00",
+   "n_samples": 48000,
+   "ref_text_pgd": "signs. Among these vessels have",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 66.6,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.1144602298736572,
+     "stoi": 0.6997507301242166,
+     "si_snr": -2.6424676553444066,
+     "snr_db": 5.543433187792144,
+     "noise_linf": 0.388671875
+    },
+    "rs": {
+     "acc_source": 0.6875,
+     "pesq": 1.2933874130249023,
+     "stoi": 0.5404516285673382,
+     "si_snr": -2.8711045891020097,
+     "snr_db": 5.3787907277402605,
+     "noise_linf": 0.374359130859375
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.4156330823898315,
+     "stoi": 0.5290608526672487,
+     "si_snr": -2.724590730924098,
+     "snr_db": 5.483031880248982,
+     "noise_linf": 0.39691162109375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6484910249710083,
+    "dis_loss_last": 0.2875044345855713,
+    "wm_loss_last": 8.046623065638414e-07,
+    "mean_bound": 0.0051575335673987865,
+    "share_at_bound": 0.09987499564886093
+   }
+  },
+  {
+   "index": 25,
+   "utterance_id": "1867-154071-0033",
+   "speaker": "1867",
+   "clean_sha": "d2f2ab6f39e56605923122e12ba607bc0a9b2ee71028ebd2b1b95d641483fe20",
+   "n_samples": 48000,
+   "ref_text_pgd": "You start out with the photograph of a girl.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.3,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.3002946376800537,
+     "stoi": 0.9342024977887016,
+     "si_snr": -4.721160306222865,
+     "snr_db": 0.711732247306665,
+     "noise_linf": 0.82684326171875
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.8436858654022217,
+     "stoi": 0.920099946389625,
+     "si_snr": -4.764628747181496,
+     "snr_db": 0.6754119863266803,
+     "noise_linf": 0.8150634765625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.9931368827819824,
+     "stoi": 0.9210190635698767,
+     "si_snr": -4.73849693403854,
+     "snr_db": 0.699273595915467,
+     "noise_linf": 0.816253662109375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.739402711391449,
+    "dis_loss_last": 0.41612452268600464,
+    "wm_loss_last": 7.152552825573366e-07,
+    "mean_bound": 0.0036279545165598392,
+    "share_at_bound": 0.11222916841506958
+   }
+  },
+  {
+   "index": 26,
+   "utterance_id": "1867-154075-0018",
+   "speaker": "1867",
+   "clean_sha": "4816814aa2bc63a2016cae836f78630f8c51afac8f594969a190f1ae5ed9c348",
+   "n_samples": 48000,
+   "ref_text_pgd": "wondering at the familiarity of the face of the man of this",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 53.8,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.9846868515014648,
+     "stoi": 0.8981381805525803,
+     "si_snr": -2.5771508844916813,
+     "snr_db": 1.532668881903136,
+     "noise_linf": 0.316741943359375
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.4724313020706177,
+     "stoi": 0.8855136827023001,
+     "si_snr": -2.692355898844122,
+     "snr_db": 1.4482840708139655,
+     "noise_linf": 0.3106689453125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.662687063217163,
+     "stoi": 0.886063605046001,
+     "si_snr": -2.616965450300219,
+     "snr_db": 1.5035896296072293,
+     "noise_linf": 0.3131103515625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6856222152709961,
+    "dis_loss_last": 0.4496324956417084,
+    "wm_loss_last": 1.8477401226846268e-06,
+    "mean_bound": 0.00442450400441885,
+    "share_at_bound": 0.09383333474397659
+   }
+  },
+  {
+   "index": 27,
+   "utterance_id": "1867-154071-0025",
+   "speaker": "1867",
+   "clean_sha": "d922c6cdd56766e463836da4b848517d32e90874e257c89a2a48f98ad1f477b5",
+   "n_samples": 48000,
+   "ref_text_pgd": "down.  Now his heels clumped out as slow.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.6,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.765063762664795,
+     "stoi": 0.9107141448451352,
+     "si_snr": -3.5474298130860653,
+     "snr_db": 0.9568969686301954,
+     "noise_linf": 0.561920166015625
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.4838252067565918,
+     "stoi": 0.9077097006144939,
+     "si_snr": -3.6556732946294943,
+     "snr_db": 0.885068966727373,
+     "noise_linf": 0.548858642578125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.5842149257659912,
+     "stoi": 0.9054087494325562,
+     "si_snr": -3.581107139793275,
+     "snr_db": 0.9341385767012733,
+     "noise_linf": 0.56036376953125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7347344756126404,
+    "dis_loss_last": 0.5150287747383118,
+    "wm_loss_last": 5.066393100605637e-07,
+    "mean_bound": 0.0036389478482306004,
+    "share_at_bound": 0.11895833164453506
+   }
+  },
+  {
+   "index": 28,
+   "utterance_id": "1867-148436-0008",
+   "speaker": "1867",
+   "clean_sha": "c990d55f6a1a5853987d9cf6f51c8760169287c78cdc79ca56bb45bd6c7dfb2e",
+   "n_samples": 48000,
+   "ref_text_pgd": "It don't logon over look this region",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 58.1,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.2692975997924805,
+     "stoi": 0.9314578446606532,
+     "si_snr": -2.6484473788729512,
+     "snr_db": 1.4083721193483456,
+     "noise_linf": 0.8385009765625
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 2.100255012512207,
+     "stoi": 0.9290347652623233,
+     "si_snr": -2.754030593888624,
+     "snr_db": 1.3446726777970395,
+     "noise_linf": 0.825469970703125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 2.1522369384765625,
+     "stoi": 0.9276651753072856,
+     "si_snr": -2.667178915255021,
+     "snr_db": 1.3911861805437375,
+     "noise_linf": 0.828277587890625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.694815993309021,
+    "dis_loss_last": 0.519050657749176,
+    "wm_loss_last": 1.8775435819406994e-06,
+    "mean_bound": 0.0022140664514154196,
+    "share_at_bound": 0.12037499994039536
+   }
+  },
+  {
+   "index": 29,
+   "utterance_id": "1867-154075-0003",
+   "speaker": "1867",
+   "clean_sha": "1a89f188c995a7da18e94499b1457777f7d3b89a3a225a11538598cfd2aafd7f",
+   "n_samples": 48000,
+   "ref_text_pgd": "Right to this room.  Ronicky, step...",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 57.6,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.2319061756134033,
+     "stoi": 0.9277579971121968,
+     "si_snr": -3.413738770064679,
+     "snr_db": 1.0102215677372648,
+     "noise_linf": 0.45013427734375
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.9060821533203125,
+     "stoi": 0.9226055106191545,
+     "si_snr": -3.4628160041879577,
+     "snr_db": 0.9710226807764153,
+     "noise_linf": 0.458404541015625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 2.0417354106903076,
+     "stoi": 0.9198856757719072,
+     "si_snr": -3.4376039950291015,
+     "snr_db": 0.9929169924095282,
+     "noise_linf": 0.4508056640625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.746761679649353,
+    "dis_loss_last": 0.5311237573623657,
+    "wm_loss_last": 6.854531875433167e-07,
+    "mean_bound": 0.002344032283872366,
+    "share_at_bound": 0.13774999976158142
+   }
+  },
+  {
+   "index": 30,
+   "utterance_id": "7312-92432-0007",
+   "speaker": "7312",
+   "clean_sha": "18c8c9c092468fa217675166be9aa8fe3a19460eef089cd16b4117b8f0677664",
+   "n_samples": 48000,
+   "ref_text_pgd": "Few days subsequently, I visited several of my countrymen",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 52.8,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.1807053089141846,
+     "stoi": 0.9230624315164251,
+     "si_snr": 3.5218787393931397,
+     "snr_db": 5.118706670659936,
+     "noise_linf": 0.516326904296875
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.6896488666534424,
+     "stoi": 0.9188373838719764,
+     "si_snr": 3.47534539143004,
+     "snr_db": 5.086132736355018,
+     "noise_linf": 0.5107421875
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.851146936416626,
+     "stoi": 0.9158677672319355,
+     "si_snr": 3.511308149842383,
+     "snr_db": 5.1112893607298835,
+     "noise_linf": 0.511871337890625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7386606931686401,
+    "dis_loss_last": 0.46243423223495483,
+    "wm_loss_last": 9.238714824277849e-07,
+    "mean_bound": 0.003424799768254161,
+    "share_at_bound": 0.12593749165534973
+   }
+  },
+  {
+   "index": 31,
+   "utterance_id": "7312-92432-0009",
+   "speaker": "7312",
+   "clean_sha": "8e577e86693ade3b0518d0ca35b5462db6136c1def9ca04b99b97f32d2cf56ef",
+   "n_samples": 48000,
+   "ref_text_pgd": "residents on the Piazza Babarini being considered an insecure-",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 52.3,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.0065720081329346,
+     "stoi": 0.9273547888696672,
+     "si_snr": 4.191950833688843,
+     "snr_db": 5.488295461121653,
+     "noise_linf": 0.438568115234375
+    },
+    "rs": {
+     "acc_source": 0.875,
+     "pesq": 1.420851469039917,
+     "stoi": 0.904155886489771,
+     "si_snr": 4.127190475554891,
+     "snr_db": 5.431621625967262,
+     "noise_linf": 0.44696044921875
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.6493655443191528,
+     "stoi": 0.907314644439199,
+     "si_snr": 4.161015305112136,
+     "snr_db": 5.461645262963085,
+     "noise_linf": 0.445281982421875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6861648559570312,
+    "dis_loss_last": 0.3640701174736023,
+    "wm_loss_last": 6.85453073856479e-07,
+    "mean_bound": 0.004841874353587627,
+    "share_at_bound": 0.10916666686534882
+   }
+  },
+  {
+   "index": 32,
+   "utterance_id": "7312-92432-0025",
+   "speaker": "7312",
+   "clean_sha": "76ffa355d9e240d8222fde8adfc5f88769e6c17cd1cd12c8ea7a4bd41f0ea981",
+   "n_samples": 48000,
+   "ref_text_pgd": "aware, some months at reality, once she removed to",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 52.8,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.6644484996795654,
+     "stoi": 0.9276357288700298,
+     "si_snr": 2.2937721937261886,
+     "snr_db": 4.2581024356339565,
+     "noise_linf": 0.751312255859375
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.4005956649780273,
+     "stoi": 0.9215831131991989,
+     "si_snr": 2.2510645971883365,
+     "snr_db": 4.226016825728932,
+     "noise_linf": 0.762237548828125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.5535796880722046,
+     "stoi": 0.9208619625893029,
+     "si_snr": 2.2723741368288017,
+     "snr_db": 4.242886130860851,
+     "noise_linf": 0.75177001953125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6661251783370972,
+    "dis_loss_last": 0.40252065658569336,
+    "wm_loss_last": 9.238714824277849e-07,
+    "mean_bound": 0.003976615611463785,
+    "share_at_bound": 0.11927083134651184
+   }
+  },
+  {
+   "index": 33,
+   "utterance_id": "7312-92432-0022",
+   "speaker": "7312",
+   "clean_sha": "327a8038fc0e54317039f3a215de15dd5fef44dd2cbcfab630851e5772754817",
+   "n_samples": 48000,
+   "ref_text_pgd": "She added he would come for her, and they would proceed together.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 52.7,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.9921574592590332,
+     "stoi": 0.922373483066257,
+     "si_snr": 4.075637062286385,
+     "snr_db": 5.501565751007133,
+     "noise_linf": 0.454925537109375
+    },
+    "rs": {
+     "acc_source": 0.8125,
+     "pesq": 1.3645143508911133,
+     "stoi": 0.8853076891409642,
+     "si_snr": 3.9390873326112636,
+     "snr_db": 5.408092781839184,
+     "noise_linf": 0.4495849609375
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.6021761894226074,
+     "stoi": 0.8895644182858365,
+     "si_snr": 4.023030374204196,
+     "snr_db": 5.4656690588306365,
+     "noise_linf": 0.453399658203125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.707778811454773,
+    "dis_loss_last": 0.37458285689353943,
+    "wm_loss_last": 8.046621360335848e-07,
+    "mean_bound": 0.004720456898212433,
+    "share_at_bound": 0.1028541624546051
+   }
+  },
+  {
+   "index": 34,
+   "utterance_id": "7312-92432-0018",
+   "speaker": "7312",
+   "clean_sha": "302c2912ec8592a4211e2c26b1609c163e405951b067aa4f52586a5a052d4ab3",
+   "n_samples": 48000,
+   "ref_text_pgd": "not often bestowed upon a foreigner, especially one of the  \u2588\u2588\u2588\u2588\u2588\u2588",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 52.3,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.3602428436279297,
+     "stoi": 0.9289224136625646,
+     "si_snr": 1.510338531338716,
+     "snr_db": 3.7161379226676097,
+     "noise_linf": 0.467559814453125
+    },
+    "rs": {
+     "acc_source": 0.9375,
+     "pesq": 1.3961058855056763,
+     "stoi": 0.8973829805926165,
+     "si_snr": 1.405772346991315,
+     "snr_db": 3.641667957860446,
+     "noise_linf": 0.475311279296875
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.662532091140747,
+     "stoi": 0.9007491347000238,
+     "si_snr": 1.4742222618212388,
+     "snr_db": 3.690507438679946,
+     "noise_linf": 0.47271728515625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6885144114494324,
+    "dis_loss_last": 0.443112850189209,
+    "wm_loss_last": 1.0430804877614719e-06,
+    "mean_bound": 0.004416395910084248,
+    "share_at_bound": 0.11412499845027924
+   }
+  },
+  {
+   "index": 35,
+   "utterance_id": "2159-179154-0007",
+   "speaker": "2159",
+   "clean_sha": "2cfecbd0be0b1c1f9486cd73775b93f7bf18d5355b6ba7942f8bd3d0d0d075c2",
+   "n_samples": 48000,
+   "ref_text_pgd": "to be doubted. As a rule, subjects in this",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 56.1,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.7240166664123535,
+     "stoi": 0.8883972103948671,
+     "si_snr": 0.3590561847472794,
+     "snr_db": 3.0167492823696667,
+     "noise_linf": 0.48785400390625
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.3452849388122559,
+     "stoi": 0.8722916740147885,
+     "si_snr": 0.24764636964112324,
+     "snr_db": 2.9380223583245035,
+     "noise_linf": 0.477020263671875
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.4997429847717285,
+     "stoi": 0.8733141191777903,
+     "si_snr": 0.30971036793780227,
+     "snr_db": 2.9836087001957834,
+     "noise_linf": 0.483642578125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7055195569992065,
+    "dis_loss_last": 0.38420766592025757,
+    "wm_loss_last": 6.85453073856479e-07,
+    "mean_bound": 0.0036462147254496813,
+    "share_at_bound": 0.08927083015441895
+   }
+  },
+  {
+   "index": 36,
+   "utterance_id": "2159-179156-0027",
+   "speaker": "2159",
+   "clean_sha": "1125997468c18b967288b2fb06727ea3237fe64b861bfaaba00de3bd72cf7d36",
+   "n_samples": 48000,
+   "ref_text_pgd": "repeated on other subjects in all cases.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 56.0,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.0607388019561768,
+     "stoi": 0.8849703688185799,
+     "si_snr": -0.3809020767808636,
+     "snr_db": 2.4543915698755265,
+     "noise_linf": 0.445465087890625
+    },
+    "rs": {
+     "acc_source": 0.9375,
+     "pesq": 1.520850658416748,
+     "stoi": 0.8704147595667314,
+     "si_snr": -0.5148612749767593,
+     "snr_db": 2.3500724287396264,
+     "noise_linf": 0.459503173828125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.6759103536605835,
+     "stoi": 0.8681190904920958,
+     "si_snr": -0.4265313635736986,
+     "snr_db": 2.4158936508744344,
+     "noise_linf": 0.456207275390625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.692233681678772,
+    "dis_loss_last": 0.553982138633728,
+    "wm_loss_last": 7.152553962441743e-07,
+    "mean_bound": 0.00437661400064826,
+    "share_at_bound": 0.12162499874830246
+   }
+  },
+  {
+   "index": 37,
+   "utterance_id": "2159-179154-0033",
+   "speaker": "2159",
+   "clean_sha": "f9813f7982276b25604d7728e2a7602d7a8d95096ab240070b664340cc074319",
+   "n_samples": 48000,
+   "ref_text_pgd": "But however, was deaf to all of the noise.  It was a...",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 52.6,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.079562187194824,
+     "stoi": 0.8977973702439509,
+     "si_snr": 0.5010706483781373,
+     "snr_db": 2.9926326595257184,
+     "noise_linf": 0.505462646484375
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.4670490026474,
+     "stoi": 0.8741090047491156,
+     "si_snr": 0.3869007518390861,
+     "snr_db": 2.899881160341563,
+     "noise_linf": 0.519683837890625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.6247787475585938,
+     "stoi": 0.8746699938897837,
+     "si_snr": 0.4556386707616915,
+     "snr_db": 2.957064322053777,
+     "noise_linf": 0.491241455078125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6876391172409058,
+    "dis_loss_last": 0.43396419286727905,
+    "wm_loss_last": 8.046623065638414e-07,
+    "mean_bound": 0.005321917589753866,
+    "share_at_bound": 0.11629166454076767
+   }
+  },
+  {
+   "index": 38,
+   "utterance_id": "2159-179154-0039",
+   "speaker": "2159",
+   "clean_sha": "590e22c427947bcdf2b7fca214d4e4fb9a5b0f9dde38a078b523078b3e057b69",
+   "n_samples": 48000,
+   "ref_text_pgd": "vanity of the young fellows with their girls.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.0,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.171316623687744,
+     "stoi": 0.9053080671683216,
+     "si_snr": 1.883092410775662,
+     "snr_db": 3.7502280582674836,
+     "noise_linf": 0.457000732421875
+    },
+    "rs": {
+     "acc_source": 0.9375,
+     "pesq": 1.4144586324691772,
+     "stoi": 0.8728916420565266,
+     "si_snr": 1.7061656277230242,
+     "snr_db": 3.6009459993054014,
+     "noise_linf": 0.44488525390625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.6108993291854858,
+     "stoi": 0.8749385452730634,
+     "si_snr": 1.8142592257729624,
+     "snr_db": 3.693830198717137,
+     "noise_linf": 0.4501953125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6702202558517456,
+    "dis_loss_last": 0.4175894260406494,
+    "wm_loss_last": 1.0430803740746342e-06,
+    "mean_bound": 0.005885415244847536,
+    "share_at_bound": 0.0885833352804184
+   }
+  },
+  {
+   "index": 39,
+   "utterance_id": "2159-179154-0024",
+   "speaker": "2159",
+   "clean_sha": "0159e14c47a0f3636527c6f6f1894cd734c974c4591a2b0ddeb3048cb1c2bbfa",
+   "n_samples": 48000,
+   "ref_text_pgd": "a news boy went about crying his addition in a loud...",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 52.8,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.079850435256958,
+     "stoi": 0.9034510177521479,
+     "si_snr": 0.7409706189822941,
+     "snr_db": 2.8507957828991177,
+     "noise_linf": 0.629180908203125
+    },
+    "rs": {
+     "acc_source": 0.75,
+     "pesq": 1.3180983066558838,
+     "stoi": 0.891543495043902,
+     "si_snr": 0.6082910311866273,
+     "snr_db": 2.7375953396916812,
+     "noise_linf": 0.64117431640625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.5381391048431396,
+     "stoi": 0.897227113457567,
+     "si_snr": 0.6874016326301715,
+     "snr_db": 2.8073233709946703,
+     "noise_linf": 0.637481689453125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7250583171844482,
+    "dis_loss_last": 0.42359408736228943,
+    "wm_loss_last": 5.215382770984434e-06,
+    "mean_bound": 0.0060081263072788715,
+    "share_at_bound": 0.10037499666213989
+   }
+  },
+  {
+   "index": 40,
+   "utterance_id": "587-54108-0043",
+   "speaker": "587",
+   "clean_sha": "c579ba48aae123a39e6c218b557d483ae35d2685fdb90ab8f2f5b2f4029bc074",
+   "n_samples": 48000,
+   "ref_text_pgd": "voice was singing the sweet old love song Juanita.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.1,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.9510409832000732,
+     "stoi": 0.8822058475476254,
+     "si_snr": -8.03243493034762,
+     "snr_db": -0.41842481799002196,
+     "noise_linf": 0.22662353515625
+    },
+    "rs": {
+     "acc_source": 0.6875,
+     "pesq": 1.1257649660110474,
+     "stoi": 0.8064487286196,
+     "si_snr": -8.384268007590707,
+     "snr_db": -0.6410407099284455,
+     "noise_linf": 0.223907470703125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.2479212284088135,
+     "stoi": 0.813755807748694,
+     "si_snr": -8.143228725891706,
+     "snr_db": -0.4906630128689615,
+     "noise_linf": 0.222747802734375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6747872233390808,
+    "dis_loss_last": 0.3624573349952698,
+    "wm_loss_last": 6.854531875433167e-07,
+    "mean_bound": 0.004401221871376038,
+    "share_at_bound": 0.08995833247900009
+   }
+  },
+  {
+   "index": 41,
+   "utterance_id": "587-41619-0009",
+   "speaker": "587",
+   "clean_sha": "f1f12714200cedd15c61cc1b7f1d4d09260973af609451bdd19415c36f4b3827",
+   "n_samples": 48000,
+   "ref_text_pgd": "Ms. Tibbs spied her standing between Grace and Nora.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 53.2,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.7255198955535889,
+     "stoi": 0.9151528893664893,
+     "si_snr": -6.263054760602465,
+     "snr_db": 0.2811480824474989,
+     "noise_linf": 0.37322998046875
+    },
+    "rs": {
+     "acc_source": 0.875,
+     "pesq": 1.2415810823440552,
+     "stoi": 0.8991089228163226,
+     "si_snr": -6.5784378750410735,
+     "snr_db": 0.11111844907042605,
+     "noise_linf": 0.383544921875
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.3905057907104492,
+     "stoi": 0.9031420158552601,
+     "si_snr": -6.423862885839057,
+     "snr_db": 0.20248985327362573,
+     "noise_linf": 0.38250732421875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.648654580116272,
+    "dis_loss_last": 0.5616805553436279,
+    "wm_loss_last": 9.536736911286425e-07,
+    "mean_bound": 0.004897009581327438,
+    "share_at_bound": 0.10095833241939545
+   }
+  },
+  {
+   "index": 42,
+   "utterance_id": "587-54108-0017",
+   "speaker": "587",
+   "clean_sha": "c362d651cf8cb1b75077da9bdb03fb70349e2ddee110ecbf3fe48bf7403fbbfa",
+   "n_samples": 48000,
+   "ref_text_pgd": "Just like to show my prowess to you, Miss Levis.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.0,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.1783483028411865,
+     "stoi": 0.9197017227789402,
+     "si_snr": -7.198680666222081,
+     "snr_db": -0.13808942645164124,
+     "noise_linf": 0.47821044921875
+    },
+    "rs": {
+     "acc_source": 0.9375,
+     "pesq": 1.44264554977417,
+     "stoi": 0.8985400602721237,
+     "si_snr": -7.347056537278332,
+     "snr_db": -0.21658597210433145,
+     "noise_linf": 0.46417236328125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.6678762435913086,
+     "stoi": 0.9047431770271908,
+     "si_snr": -7.256256693217292,
+     "snr_db": -0.16583604029623267,
+     "noise_linf": 0.47119140625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6919281482696533,
+    "dis_loss_last": 0.44700002670288086,
+    "wm_loss_last": 1.6689285757820471e-06,
+    "mean_bound": 0.003120108274742961,
+    "share_at_bound": 0.10854166746139526
+   }
+  },
+  {
+   "index": 43,
+   "utterance_id": "587-54108-0007",
+   "speaker": "587",
+   "clean_sha": "a74bf86960024eecab743eaa103815815213eccee32a1dbdfa6e3d9e489473ee",
+   "n_samples": 48000,
+   "ref_text_pgd": "that the dummy was not included.  The short afternoon",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 52.9,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.8899006843566895,
+     "stoi": 0.9203704555349925,
+     "si_snr": -11.744257435903826,
+     "snr_db": -0.6800242046075313,
+     "noise_linf": 0.677398681640625
+    },
+    "rs": {
+     "acc_source": 0.875,
+     "pesq": 1.4825009107589722,
+     "stoi": 0.903123219238807,
+     "si_snr": -11.904333116363881,
+     "snr_db": -0.7424686209591267,
+     "noise_linf": 0.692047119140625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.5815083980560303,
+     "stoi": 0.9043489236119944,
+     "si_snr": -11.758704906463251,
+     "snr_db": -0.6886603932928521,
+     "noise_linf": 0.690582275390625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7038697600364685,
+    "dis_loss_last": 0.3606199622154236,
+    "wm_loss_last": 1.2814989531761967e-06,
+    "mean_bound": 0.0021580508910119534,
+    "share_at_bound": 0.11545833200216293
+   }
+  },
+  {
+   "index": 44,
+   "utterance_id": "587-54108-0057",
+   "speaker": "587",
+   "clean_sha": "e85c3adb3987844964e1135b2df8adece8c1f0a3f7cf64f2b0b5688c69cc9ddb",
+   "n_samples": 48000,
+   "ref_text_pgd": "felt when the king raised her. She wondered",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.9,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.7118582725524902,
+     "stoi": 0.9219122145442127,
+     "si_snr": -11.314073463162773,
+     "snr_db": -0.5626033455439644,
+     "noise_linf": 0.5078125
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.2441723346710205,
+     "stoi": 0.8966172457573343,
+     "si_snr": -11.586460233165383,
+     "snr_db": -0.6458202209433002,
+     "noise_linf": 0.522247314453125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.3408269882202148,
+     "stoi": 0.8921370495318717,
+     "si_snr": -11.403494475332064,
+     "snr_db": -0.5874387605939249,
+     "noise_linf": 0.51123046875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6984628438949585,
+    "dis_loss_last": 0.34450024366378784,
+    "wm_loss_last": 2.0265554212528514e-06,
+    "mean_bound": 0.0024481131695210934,
+    "share_at_bound": 0.10854166746139526
+   }
+  },
+  {
+   "index": 45,
+   "utterance_id": "1040-133433-0038",
+   "speaker": "1040",
+   "clean_sha": "97b8c0605aa9d072b63117870cf3827f53b75b56af09cf603d10e77725fc6049",
+   "n_samples": 38720,
+   "ref_text_pgd": "and always had an odd, inquiring look.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 50.5,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.9163587093353271,
+     "stoi": 0.8753191613736983,
+     "si_snr": 0.7512614939544998,
+     "snr_db": 3.062523349407768,
+     "noise_linf": 0.238037109375
+    },
+    "rs": {
+     "acc_source": 0.8125,
+     "pesq": 1.541382074356079,
+     "stoi": 0.831336710825867,
+     "si_snr": 0.663749538745235,
+     "snr_db": 2.9956832429470355,
+     "noise_linf": 0.22906494140625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.6978967189788818,
+     "stoi": 0.82683395366536,
+     "si_snr": 0.7150744810606159,
+     "snr_db": 3.036262308183124,
+     "noise_linf": 0.230255126953125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.523579478263855,
+    "dis_loss_last": 0.395916223526001,
+    "wm_loss_last": 1.2516966307885014e-06,
+    "mean_bound": 0.0018310504965484142,
+    "share_at_bound": 0.09850206971168518
+   }
+  },
+  {
+   "index": 46,
+   "utterance_id": "1040-133433-0046",
+   "speaker": "1040",
+   "clean_sha": "93a5604f9f657cfdc1eb6fa2844346b29162281a9932e727d721442d5fa4396c",
+   "n_samples": 48000,
+   "ref_text_pgd": "and heartless who can fly.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 71.6,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.5749993324279785,
+     "stoi": 0.859261561140371,
+     "si_snr": 5.390101137483592,
+     "snr_db": 5.551135771219123,
+     "noise_linf": 0.25457763671875
+    },
+    "rs": {
+     "acc_source": 0.875,
+     "pesq": 2.0746028423309326,
+     "stoi": 0.8285369287111747,
+     "si_snr": 5.324435485094292,
+     "snr_db": 5.501790809686849,
+     "noise_linf": 0.24591064453125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 2.2830886840820312,
+     "stoi": 0.8432674796601349,
+     "si_snr": 5.363763613182877,
+     "snr_db": 5.526743604965101,
+     "noise_linf": 0.252471923828125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7647966742515564,
+    "dis_loss_last": 0.47503897547721863,
+    "wm_loss_last": 1.4305103377409978e-06,
+    "mean_bound": 0.0008165874169208109,
+    "share_at_bound": 0.11318749934434891
+   }
+  },
+  {
+   "index": 47,
+   "utterance_id": "1040-133433-0039",
+   "speaker": "1040",
+   "clean_sha": "0afee6c77ecc4a65843c36318b670da5dc6cb1d118499e3304d24030c1a60f49",
+   "n_samples": 48000,
+   "ref_text_pgd": "She loved to hear of Peter and Wendy told her",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.1,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.292149782180786,
+     "stoi": 0.8951249923514829,
+     "si_snr": 1.82198985933385,
+     "snr_db": 3.5686576126230856,
+     "noise_linf": 0.35687255859375
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.762387990951538,
+     "stoi": 0.8853183638010881,
+     "si_snr": 1.7531695426274703,
+     "snr_db": 3.506208275762992,
+     "noise_linf": 0.366851806640625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.9082834720611572,
+     "stoi": 0.8833805864426421,
+     "si_snr": 1.798967747402735,
+     "snr_db": 3.546712291954978,
+     "noise_linf": 0.3648681640625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.5996495485305786,
+    "dis_loss_last": 0.31039100885391235,
+    "wm_loss_last": 7.152554530875932e-07,
+    "mean_bound": 0.0017952899215742946,
+    "share_at_bound": 0.13091666996479034
+   }
+  },
+  {
+   "index": 48,
+   "utterance_id": "1040-133433-0062",
+   "speaker": "1040",
+   "clean_sha": "f2cefd5a82321eeba835f5e44b05529ab395d49c1e1692731b478cf437ada59b",
+   "n_samples": 48000,
+   "ref_text_pgd": "Of course, that is why I have come.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 57.8,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.2606828212738037,
+     "stoi": 0.902222553209105,
+     "si_snr": -0.12158338747184139,
+     "snr_db": 2.743526957627557,
+     "noise_linf": 0.40460205078125
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.763728141784668,
+     "stoi": 0.8883733428709166,
+     "si_snr": -0.186537295342958,
+     "snr_db": 2.7021009872694672,
+     "noise_linf": 0.3951416015625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.9364655017852783,
+     "stoi": 0.8907485985768004,
+     "si_snr": -0.1361288412611711,
+     "snr_db": 2.7341408875171553,
+     "noise_linf": 0.4073486328125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6017171144485474,
+    "dis_loss_last": 0.3561975955963135,
+    "wm_loss_last": 1.2814986121156835e-06,
+    "mean_bound": 0.002060970524325967,
+    "share_at_bound": 0.15718749165534973
+   }
+  },
+  {
+   "index": 49,
+   "utterance_id": "1040-133433-0026",
+   "speaker": "1040",
+   "clean_sha": "1ab4f9953499a7640fcfc2d9f36f41d004fb4c6921bacdd408fa277b65b7c50d",
+   "n_samples": 48000,
+   "ref_text_pgd": "She had woven from the leaves and berries in the Neverland.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 52.5,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.2128849029541016,
+     "stoi": 0.8511253006418151,
+     "si_snr": 1.4137872577459882,
+     "snr_db": 3.613058843133609,
+     "noise_linf": 0.191619873046875
+    },
+    "rs": {
+     "acc_source": 0.6875,
+     "pesq": 1.2398624420166016,
+     "stoi": 0.7795162973539053,
+     "si_snr": 0.975290038421497,
+     "snr_db": 3.284627594536427,
+     "noise_linf": 0.1939697265625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.4482110738754272,
+     "stoi": 0.8003374568066084,
+     "si_snr": 1.2653686986202688,
+     "snr_db": 3.5002350584347406,
+     "noise_linf": 0.186737060546875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6457625031471252,
+    "dis_loss_last": 0.354452908039093,
+    "wm_loss_last": 6.854531306998979e-07,
+    "mean_bound": 0.0031284235883504152,
+    "share_at_bound": 0.11024999618530273
+   }
+  },
+  {
+   "index": 50,
+   "utterance_id": "5678-43301-0010",
+   "speaker": "5678",
+   "clean_sha": "3376316010614eb2f74ded170a77f530e0ebd702d05fb8289ca8a7a48e96f911",
+   "n_samples": 48000,
+   "ref_text_pgd": "sound of the platform by noon.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 73.5,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.7891387939453125,
+     "stoi": 0.8927677409042463,
+     "si_snr": -1.467700914153777,
+     "snr_db": 1.9671523103100788,
+     "noise_linf": 0.724395751953125
+    },
+    "rs": {
+     "acc_source": 0.9375,
+     "pesq": 1.383739948272705,
+     "stoi": 0.8854918189894014,
+     "si_snr": -1.5220874814800223,
+     "snr_db": 1.9286237693599668,
+     "noise_linf": 0.709686279296875
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.5056383609771729,
+     "stoi": 0.8863360642460816,
+     "si_snr": -1.4811694555447663,
+     "snr_db": 1.9563743290901003,
+     "noise_linf": 0.731536865234375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6703603267669678,
+    "dis_loss_last": 0.5178088545799255,
+    "wm_loss_last": 9.83475956672919e-07,
+    "mean_bound": 0.002909071044996381,
+    "share_at_bound": 0.09535416215658188
+   }
+  },
+  {
+   "index": 51,
+   "utterance_id": "5678-43303-0011",
+   "speaker": "5678",
+   "clean_sha": "268c89a2ebf41929bb7081433281d0ae26f00435a262bd0c36fb014dab1b2fc4",
+   "n_samples": 48000,
+   "ref_text_pgd": "Death was an ending, not a beginning, it was a...",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.7,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.9243965148925781,
+     "stoi": 0.9161517030108045,
+     "si_snr": 3.3302527257111034,
+     "snr_db": 4.98655707689741,
+     "noise_linf": 1.154022216796875
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.389509677886963,
+     "stoi": 0.9089399561839054,
+     "si_snr": 3.2991575763374144,
+     "snr_db": 4.964909720705818,
+     "noise_linf": 1.1431884765625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.5325508117675781,
+     "stoi": 0.9091894450190284,
+     "si_snr": 3.325160165076382,
+     "snr_db": 4.982945122135847,
+     "noise_linf": 1.15887451171875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6689037084579468,
+    "dis_loss_last": 0.4550732970237732,
+    "wm_loss_last": 2.324577963008778e-06,
+    "mean_bound": 0.0032088418956846,
+    "share_at_bound": 0.13112500309944153
+   }
+  },
+  {
+   "index": 52,
+   "utterance_id": "5678-43301-0006",
+   "speaker": "5678",
+   "clean_sha": "8c18a1bc53f2460b5b50f5e68af783adf2f80b4367c37bc6426ffcd5c2fe8a61",
+   "n_samples": 48000,
+   "ref_text_pgd": "The windows on every side were packed with",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 58.0,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.0911386013031006,
+     "stoi": 0.9064984039915716,
+     "si_snr": 3.3290612069933605,
+     "snr_db": 4.806929302271149,
+     "noise_linf": 0.610748291015625
+    },
+    "rs": {
+     "acc_source": 0.875,
+     "pesq": 1.622359037399292,
+     "stoi": 0.902726870427275,
+     "si_snr": 3.2558455039714596,
+     "snr_db": 4.745509984089823,
+     "noise_linf": 0.61480712890625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.784688115119934,
+     "stoi": 0.8942014508207232,
+     "si_snr": 3.296655552200422,
+     "snr_db": 4.780391892490527,
+     "noise_linf": 0.614410400390625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6914381980895996,
+    "dis_loss_last": 0.3826671540737152,
+    "wm_loss_last": 1.6391262533943518e-06,
+    "mean_bound": 0.0032997557427734137,
+    "share_at_bound": 0.10304166376590729
+   }
+  },
+  {
+   "index": 53,
+   "utterance_id": "5678-43302-0006",
+   "speaker": "5678",
+   "clean_sha": "8369b8197a5596930c7d9530bf2e51eaa44439e03df62beef40b837e245f8422",
+   "n_samples": 48000,
+   "ref_text_pgd": "and all his saints put together.  He was aware of the",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.4,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.0622448921203613,
+     "stoi": 0.9067866368383137,
+     "si_snr": 0.011943960526777077,
+     "snr_db": 2.8229224680537306,
+     "noise_linf": 0.61944580078125
+    },
+    "rs": {
+     "acc_source": 0.875,
+     "pesq": 1.4143364429473877,
+     "stoi": 0.8958996731745542,
+     "si_snr": -0.08619649238630235,
+     "snr_db": 2.7553956351891418,
+     "noise_linf": 0.6112060546875
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.5997123718261719,
+     "stoi": 0.8977604068404638,
+     "si_snr": -0.036032847727082755,
+     "snr_db": 2.7919188003383093,
+     "noise_linf": 0.61285400390625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6805164217948914,
+    "dis_loss_last": 0.45364245772361755,
+    "wm_loss_last": 7.152553962441743e-07,
+    "mean_bound": 0.0034036445431411266,
+    "share_at_bound": 0.09549999982118607
+   }
+  },
+  {
+   "index": 54,
+   "utterance_id": "5678-43303-0013",
+   "speaker": "5678",
+   "clean_sha": "6b4264f38c0182469ca2f6c6c11c1c72423170d0475839aa590db7d909bd82f8",
+   "n_samples": 48000,
+   "ref_text_pgd": "Those same notes would be struck again, were being f***ing f***ed.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.2,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.0658737421035767,
+     "stoi": 0.9130654867329817,
+     "si_snr": 2.4570744129619935,
+     "snr_db": 4.3977451339728555,
+     "noise_linf": 0.708160400390625
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.0471824407577515,
+     "stoi": 0.9063038095586866,
+     "si_snr": 2.4143208984758107,
+     "snr_db": 4.36899008729281,
+     "noise_linf": 0.712738037109375
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.0555394887924194,
+     "stoi": 0.9084795037179692,
+     "si_snr": 2.4424969910908407,
+     "snr_db": 4.3880757412094065,
+     "noise_linf": 0.711822509765625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7177340388298035,
+    "dis_loss_last": 0.5862516760826111,
+    "wm_loss_last": 1.1324874549245578e-06,
+    "mean_bound": 0.0023070070892572403,
+    "share_at_bound": 0.10358333587646484
+   }
+  },
+  {
+   "index": 55,
+   "utterance_id": "5652-39938-0040",
+   "speaker": "5652",
+   "clean_sha": "857649ae8ca81b35f7982114ed2d6c6b363b0862bad6b194b0cbccad785ca0b3",
+   "n_samples": 48000,
+   "ref_text_pgd": "by the commercialism of our time,  the hard and the.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.9,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.3930320739746094,
+     "stoi": 0.9381517764840704,
+     "si_snr": -0.13505027110168202,
+     "snr_db": 2.322222099489265,
+     "noise_linf": 0.721893310546875
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.998032808303833,
+     "stoi": 0.938025237034911,
+     "si_snr": -0.14245538774031108,
+     "snr_db": 2.3117505095721844,
+     "noise_linf": 0.713043212890625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 2.072782039642334,
+     "stoi": 0.9367553189675057,
+     "si_snr": -0.13580086281688078,
+     "snr_db": 2.3192391031640245,
+     "noise_linf": 0.713043212890625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7105296850204468,
+    "dis_loss_last": 0.5012382864952087,
+    "wm_loss_last": 7.152553962441743e-07,
+    "mean_bound": 0.002703373320400715,
+    "share_at_bound": 0.14087499678134918
+   }
+  },
+  {
+   "index": 56,
+   "utterance_id": "5652-19215-0031",
+   "speaker": "5652",
+   "clean_sha": "57e5b388a97b0013aef83c01519c5f2408ff951d9e40cbc593d7a12870c19620",
+   "n_samples": 48000,
+   "ref_text_pgd": "way make way see you come little chin is",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 57.0,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.7877492904663086,
+     "stoi": 0.8878359501978291,
+     "si_snr": -2.5282826810229424,
+     "snr_db": 1.2739856647228902,
+     "noise_linf": 0.48419189453125
+    },
+    "rs": {
+     "acc_source": 0.875,
+     "pesq": 1.4573620557785034,
+     "stoi": 0.8784850391451533,
+     "si_snr": -2.6020261160461224,
+     "snr_db": 1.2264238191622632,
+     "noise_linf": 0.493438720703125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.5893661975860596,
+     "stoi": 0.8789250088251968,
+     "si_snr": -2.5552032056912015,
+     "snr_db": 1.2545226252412587,
+     "noise_linf": 0.478759765625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7327119708061218,
+    "dis_loss_last": 0.4137502610683441,
+    "wm_loss_last": 5.960462203802308e-07,
+    "mean_bound": 0.005753551609814167,
+    "share_at_bound": 0.11170833557844162
+   }
+  },
+  {
+   "index": 57,
+   "utterance_id": "5652-39938-0056",
+   "speaker": "5652",
+   "clean_sha": "5482a3d2e076e7d0bc4b1187156fda33e32f3a001791048b6453758abad9dff5",
+   "n_samples": 48000,
+   "ref_text_pgd": "of time, but a continuation of the life for which adjustment",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.6,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.101962089538574,
+     "stoi": 0.9272698960268093,
+     "si_snr": 1.3366023446979143,
+     "snr_db": 3.6031413901955025,
+     "noise_linf": 0.344512939453125
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.4219458103179932,
+     "stoi": 0.9168407363431219,
+     "si_snr": 1.2097782851388907,
+     "snr_db": 3.506189749094974,
+     "noise_linf": 0.35699462890625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.6416990756988525,
+     "stoi": 0.9211670733764866,
+     "si_snr": 1.2942241471941003,
+     "snr_db": 3.5706003671949076,
+     "noise_linf": 0.347869873046875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.8115024566650391,
+    "dis_loss_last": 0.46723634004592896,
+    "wm_loss_last": 3.576278118089249e-07,
+    "mean_bound": 0.0044045583344995975,
+    "share_at_bound": 0.1003541648387909
+   }
+  },
+  {
+   "index": 58,
+   "utterance_id": "5652-19215-0057",
+   "speaker": "5652",
+   "clean_sha": "1c51d9e0e5f3a47f8d9c851941daaea8ce99b29aba78ac85f07190ba6f249b02",
+   "n_samples": 48000,
+   "ref_text_pgd": "or painful. With the exception of earthquake",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 56.2,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.040118455886841,
+     "stoi": 0.9041769325197709,
+     "si_snr": 1.4293288541289184,
+     "snr_db": 3.560644563939899,
+     "noise_linf": 0.403533935546875
+    },
+    "rs": {
+     "acc_source": 0.625,
+     "pesq": 1.5165319442749023,
+     "stoi": 0.8857105591586457,
+     "si_snr": 1.3593199353946417,
+     "snr_db": 3.5006199758892746,
+     "noise_linf": 0.41131591796875
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.6984808444976807,
+     "stoi": 0.8919836446942919,
+     "si_snr": 1.4108772066561805,
+     "snr_db": 3.544818473615154,
+     "noise_linf": 0.408447265625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.8120996952056885,
+    "dis_loss_last": 0.5497004985809326,
+    "wm_loss_last": 7.152554530875932e-07,
+    "mean_bound": 0.0027939127758145332,
+    "share_at_bound": 0.10875000059604645
+   }
+  },
+  {
+   "index": 59,
+   "utterance_id": "5652-19215-0049",
+   "speaker": "5652",
+   "clean_sha": "273c46837e183a705029ab7c10de37f48f15639484562c3e4bbc78a06048bef1",
+   "n_samples": 48000,
+   "ref_text_pgd": "being too low in the neck.  Alas.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 60.8,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.0806376934051514,
+     "stoi": 0.8724879888204021,
+     "si_snr": -3.4197909928472328,
+     "snr_db": 0.6846300187744063,
+     "noise_linf": 0.586578369140625
+    },
+    "rs": {
+     "acc_source": 0.875,
+     "pesq": 1.769943118095398,
+     "stoi": 0.8644408459021018,
+     "si_snr": -3.436998111823483,
+     "snr_db": 0.6643087920056091,
+     "noise_linf": 0.578887939453125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.8921219110488892,
+     "stoi": 0.8656728070371319,
+     "si_snr": -3.426734024271765,
+     "snr_db": 0.677819980982199,
+     "noise_linf": 0.592132568359375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6525142192840576,
+    "dis_loss_last": 0.411670446395874,
+    "wm_loss_last": 9.238714255843661e-07,
+    "mean_bound": 0.0026869322173297405,
+    "share_at_bound": 0.09829166531562805
+   }
+  },
+  {
+   "index": 60,
+   "utterance_id": "332-128985-0080",
+   "speaker": "332",
+   "clean_sha": "098dfe2c43c623cbdd716d2b638194601d9a647622ee280cd34eba69e8d0611b",
+   "n_samples": 48000,
+   "ref_text_pgd": "directed, to be called upon to record that his great hero",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.4,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.0249648094177246,
+     "stoi": 0.9314972890654722,
+     "si_snr": -1.2531206046333363,
+     "snr_db": 2.2095883329267005,
+     "noise_linf": 0.465118408203125
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.6562862396240234,
+     "stoi": 0.9254147215041328,
+     "si_snr": -1.3488534597733794,
+     "snr_db": 2.144146198774214,
+     "noise_linf": 0.451202392578125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.7755870819091797,
+     "stoi": 0.9268458287539408,
+     "si_snr": -1.2967115150465696,
+     "snr_db": 2.179933274450384,
+     "noise_linf": 0.459442138671875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6690508723258972,
+    "dis_loss_last": 0.5273971557617188,
+    "wm_loss_last": 2.74180911219446e-06,
+    "mean_bound": 0.005088564939796925,
+    "share_at_bound": 0.09327083081007004
+   }
+  },
+  {
+   "index": 61,
+   "utterance_id": "332-128985-0040",
+   "speaker": "332",
+   "clean_sha": "18760e8290c242e3af7236e81faa65e7261bfc508b601157ceb7b087399a5ea4",
+   "n_samples": 48000,
+   "ref_text_pgd": "to play a trick upon the governor.  He promised the",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.9,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.8843448162078857,
+     "stoi": 0.7690022151651986,
+     "si_snr": -3.8678090829271987,
+     "snr_db": 0.986983860893544,
+     "noise_linf": 0.5177001953125
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.6575453281402588,
+     "stoi": 0.756502174665039,
+     "si_snr": -3.9180751523391595,
+     "snr_db": 0.9495309012067956,
+     "noise_linf": 0.5042724609375
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.7223823070526123,
+     "stoi": 0.7647539002797056,
+     "si_snr": -3.8865391563365486,
+     "snr_db": 0.9742683925458729,
+     "noise_linf": 0.5042724609375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6896014213562012,
+    "dis_loss_last": 0.49866363406181335,
+    "wm_loss_last": 3.6656765587395057e-06,
+    "mean_bound": 0.002672595204785466,
+    "share_at_bound": 0.10318750143051147
+   }
+  },
+  {
+   "index": 62,
+   "utterance_id": "332-128985-0051",
+   "speaker": "332",
+   "clean_sha": "23fa137c721b553bc8b65134b69d5a05adecab3d0ec7cf157dd34ad3a0c79f85",
+   "n_samples": 48000,
+   "ref_text_pgd": "and he did not like friendships anyway.  The town?",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.9,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.8953046798706055,
+     "stoi": 0.8342414909807394,
+     "si_snr": -2.6423294110770756,
+     "snr_db": 1.5602250619298599,
+     "noise_linf": 0.5037841796875
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.658689022064209,
+     "stoi": 0.8251004446878493,
+     "si_snr": -2.6976220922484067,
+     "snr_db": 1.525636654035767,
+     "noise_linf": 0.495208740234375
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.7147955894470215,
+     "stoi": 0.8209655148515448,
+     "si_snr": -2.6537621017391273,
+     "snr_db": 1.5520445486647996,
+     "noise_linf": 0.49810791015625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6677253246307373,
+    "dis_loss_last": 0.43051499128341675,
+    "wm_loss_last": 3.4868651255237637e-06,
+    "mean_bound": 0.003457647282630205,
+    "share_at_bound": 0.11016666889190674
+   }
+  },
+  {
+   "index": 63,
+   "utterance_id": "332-128985-0063",
+   "speaker": "332",
+   "clean_sha": "20f6a6fe7b34fed88fd6d0247b0f3fac8181fda98bbf92984290539269a60074",
+   "n_samples": 48000,
+   "ref_text_pgd": "Not only could he murder and rob, but he knew how to turn...",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.9,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.9582414627075195,
+     "stoi": 0.8849335157247983,
+     "si_snr": -2.6640713800460385,
+     "snr_db": 1.2239484613812757,
+     "noise_linf": 0.538116455078125
+    },
+    "rs": {
+     "acc_source": 0.875,
+     "pesq": 1.6562336683273315,
+     "stoi": 0.8804787864386588,
+     "si_snr": -2.751150791828954,
+     "snr_db": 1.1632116520989364,
+     "noise_linf": 0.5511474609375
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.729637861251831,
+     "stoi": 0.8790845717201243,
+     "si_snr": -2.700040156908148,
+     "snr_db": 1.1999796224683543,
+     "noise_linf": 0.5433349609375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.66789710521698,
+    "dis_loss_last": 0.41185468435287476,
+    "wm_loss_last": 1.1026850188500248e-06,
+    "mean_bound": 0.005646039266139269,
+    "share_at_bound": 0.09754166752099991
+   }
+  },
+  {
+   "index": 64,
+   "utterance_id": "332-128985-0055",
+   "speaker": "332",
+   "clean_sha": "ce392dc29ddf506d77153777a300b794ade0bf9636f1ad0c8114cd07ddc82a8c",
+   "n_samples": 48000,
+   "ref_text_pgd": "would be the inclination of a man so situal.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 56.9,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.7756110429763794,
+     "stoi": 0.8907161781197291,
+     "si_snr": -1.4195540103875595,
+     "snr_db": 1.874631535246004,
+     "noise_linf": 0.513397216796875
+    },
+    "rs": {
+     "acc_source": 0.9375,
+     "pesq": 1.580414056777954,
+     "stoi": 0.8874570650868294,
+     "si_snr": -1.4518677428387285,
+     "snr_db": 1.8480676877120785,
+     "noise_linf": 0.502227783203125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.6593410968780518,
+     "stoi": 0.8886479120334789,
+     "si_snr": -1.4271951457779841,
+     "snr_db": 1.8649004327316108,
+     "noise_linf": 0.508575439453125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7327899932861328,
+    "dis_loss_last": 0.5511648654937744,
+    "wm_loss_last": 1.5497193999181036e-06,
+    "mean_bound": 0.004595278296619654,
+    "share_at_bound": 0.11572916805744171
+   }
+  },
+  {
+   "index": 65,
+   "utterance_id": "8051-295385-0012",
+   "speaker": "8051",
+   "clean_sha": "328a948832dabf7a7921098c9749917c326914d7d6935c75f29f42127987591d",
+   "n_samples": 48000,
+   "ref_text_pgd": "chivalric port of Peter the Headstrong.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 57.8,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.9301841259002686,
+     "stoi": 0.9002080913895029,
+     "si_snr": 1.6453866537429995,
+     "snr_db": 3.744683850795499,
+     "noise_linf": 0.264007568359375
+    },
+    "rs": {
+     "acc_source": 0.875,
+     "pesq": 1.2686702013015747,
+     "stoi": 0.86919765953885,
+     "si_snr": 1.551935168458312,
+     "snr_db": 3.672173551364158,
+     "noise_linf": 0.27252197265625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.4129345417022705,
+     "stoi": 0.8759087573184089,
+     "si_snr": 1.6128567561306109,
+     "snr_db": 3.719562965210899,
+     "noise_linf": 0.261871337890625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7371408343315125,
+    "dis_loss_last": 0.5594980716705322,
+    "wm_loss_last": 1.1920920996999484e-06,
+    "mean_bound": 0.002758616115897894,
+    "share_at_bound": 0.0950625017285347
+   }
+  },
+  {
+   "index": 66,
+   "utterance_id": "8051-119902-0031",
+   "speaker": "8051",
+   "clean_sha": "7257944f00ffea1cb0708fda20422ebfe3fd74dad95e8137bad2e0b8cbe7fec5",
+   "n_samples": 48000,
+   "ref_text_pgd": "and unoccupied women, and lower-",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 61.9,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.1492550373077393,
+     "stoi": 0.8631193965636061,
+     "si_snr": 1.5564306691982415,
+     "snr_db": 3.777433819213622,
+     "noise_linf": 0.3634033203125
+    },
+    "rs": {
+     "acc_source": 0.625,
+     "pesq": 1.7816085815429688,
+     "stoi": 0.829788391013035,
+     "si_snr": 1.5128588553148405,
+     "snr_db": 3.74456157924015,
+     "noise_linf": 0.37237548828125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.9221937656402588,
+     "stoi": 0.8432980898503423,
+     "si_snr": 1.5428138807021183,
+     "snr_db": 3.766210701986321,
+     "noise_linf": 0.3687744140625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7336065173149109,
+    "dis_loss_last": 0.5128905177116394,
+    "wm_loss_last": 5.960462203802308e-07,
+    "mean_bound": 0.0034220910165458918,
+    "share_at_bound": 0.1132291629910469
+   }
+  },
+  {
+   "index": 67,
+   "utterance_id": "8051-295385-0028",
+   "speaker": "8051",
+   "clean_sha": "a216123d86a28003744663af81a797545030b90245d64b9bc9d523aa1714b2e5",
+   "n_samples": 48000,
+   "ref_text_pgd": "lower down the river, all the Dutch vessels...",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.7,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.0385165214538574,
+     "stoi": 0.8867135421263671,
+     "si_snr": 3.0836913582751273,
+     "snr_db": 4.805049608958441,
+     "noise_linf": 0.4443359375
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.658897876739502,
+     "stoi": 0.8683761946194711,
+     "si_snr": 3.022242687959889,
+     "snr_db": 4.761452682310466,
+     "noise_linf": 0.4498291015625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.7889761924743652,
+     "stoi": 0.8664431699851105,
+     "si_snr": 3.0627961459662574,
+     "snr_db": 4.790213733089864,
+     "noise_linf": 0.442169189453125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6187429428100586,
+    "dis_loss_last": 0.4663486182689667,
+    "wm_loss_last": 4.172323713191872e-07,
+    "mean_bound": 0.002877253806218505,
+    "share_at_bound": 0.09660416841506958
+   }
+  },
+  {
+   "index": 68,
+   "utterance_id": "8051-118101-0000",
+   "speaker": "8051",
+   "clean_sha": "f1313795b886e80f3cbea70c84344deb3b2c3a6e048ce06f7de2317e499670da",
+   "n_samples": 48000,
+   "ref_text_pgd": "possible, it seems expedient where a",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 59.0,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.119809865951538,
+     "stoi": 0.8998245019592555,
+     "si_snr": 3.398830170935883,
+     "snr_db": 5.03387785046746,
+     "noise_linf": 0.271728515625
+    },
+    "rs": {
+     "acc_source": 0.6875,
+     "pesq": 1.2812565565109253,
+     "stoi": 0.8547930595678153,
+     "si_snr": 3.189836449426261,
+     "snr_db": 4.888159776127594,
+     "noise_linf": 0.26153564453125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.5101301670074463,
+     "stoi": 0.8576538176694352,
+     "si_snr": 3.3209545602474826,
+     "snr_db": 4.97996604700316,
+     "noise_linf": 0.2667236328125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7512508630752563,
+    "dis_loss_last": 0.5728322863578796,
+    "wm_loss_last": 1.251696403414826e-06,
+    "mean_bound": 0.0030743000097572803,
+    "share_at_bound": 0.11295833438634872
+   }
+  },
+  {
+   "index": 69,
+   "utterance_id": "8051-119902-0026",
+   "speaker": "8051",
+   "clean_sha": "a9be957e173d9470a0acb689d7146e3341ef912358893f066e82f26703e4fd55",
+   "n_samples": 48000,
+   "ref_text_pgd": "delectable pastries and cakes which have long been the delight",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.0,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.039604663848877,
+     "stoi": 0.8721800829860409,
+     "si_snr": 3.3958471601515243,
+     "snr_db": 5.0296696171458795,
+     "noise_linf": 0.429962158203125
+    },
+    "rs": {
+     "acc_source": 0.875,
+     "pesq": 1.5872619152069092,
+     "stoi": 0.8598397528886301,
+     "si_snr": 3.3392684513962054,
+     "snr_db": 4.989665161799926,
+     "noise_linf": 0.436187744140625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.7233343124389648,
+     "stoi": 0.862122013207855,
+     "si_snr": 3.3703050932855003,
+     "snr_db": 5.011675647775976,
+     "noise_linf": 0.433074951171875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7452318072319031,
+    "dis_loss_last": 0.4874550700187683,
+    "wm_loss_last": 8.940692168835085e-07,
+    "mean_bound": 0.0031448618974536657,
+    "share_at_bound": 0.10770833492279053
+   }
+  },
+  {
+   "index": 70,
+   "utterance_id": "5463-39174-0012",
+   "speaker": "5463",
+   "clean_sha": "3bb10598c04480e836770b77dcd67d209d77a1a476f386694827d933f69cf4f7",
+   "n_samples": 48000,
+   "ref_text_pgd": "engaged with Mrs. Crawley on nursery matters.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 56.2,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.7219642400741577,
+     "stoi": 0.7281661239509095,
+     "si_snr": -4.73329575893907,
+     "snr_db": 0.7022981911618722,
+     "noise_linf": 0.19354248046875
+    },
+    "rs": {
+     "acc_source": 0.625,
+     "pesq": 1.0678130388259888,
+     "stoi": 0.6528827319464325,
+     "si_snr": -5.543554913664074,
+     "snr_db": 0.15982282963384437,
+     "noise_linf": 0.19232177734375
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.101032018661499,
+     "stoi": 0.6523642978789003,
+     "si_snr": -5.08154118229151,
+     "snr_db": 0.4894392706388697,
+     "noise_linf": 0.190460205078125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.5858778357505798,
+    "dis_loss_last": 0.3110780715942383,
+    "wm_loss_last": 5.274991053738631e-06,
+    "mean_bound": 0.0035769150126725435,
+    "share_at_bound": 0.09674999862909317
+   }
+  },
+  {
+   "index": 71,
+   "utterance_id": "5463-39173-0011",
+   "speaker": "5463",
+   "clean_sha": "211138aba44f7d11ce70f6f44f906950d4a1991273a4b381cdc05e86fea09a80",
+   "n_samples": 48000,
+   "ref_text_pgd": "Don't frighten yourselves. I shall take lodgings and but-",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.0,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.8243215084075928,
+     "stoi": 0.9042132584590732,
+     "si_snr": -1.063832321455748,
+     "snr_db": 2.212468563371591,
+     "noise_linf": 0.576507568359375
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.3776113986968994,
+     "stoi": 0.8880003731398857,
+     "si_snr": -1.170809397135266,
+     "snr_db": 2.139139150013415,
+     "noise_linf": 0.586456298828125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.544196605682373,
+     "stoi": 0.8873721770650355,
+     "si_snr": -1.085050510227298,
+     "snr_db": 2.1944158072723,
+     "noise_linf": 0.585479736328125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7303981781005859,
+    "dis_loss_last": 0.39833104610443115,
+    "wm_loss_last": 9.834761840465944e-07,
+    "mean_bound": 0.0029958984814584255,
+    "share_at_bound": 0.09856250137090683
+   }
+  },
+  {
+   "index": 72,
+   "utterance_id": "5463-39173-0000",
+   "speaker": "5463",
+   "clean_sha": "e715b42296bbf04f7131142a3a8a98b420fc0651f5832ae7da1c92b64db4052c",
+   "n_samples": 48000,
+   "ref_text_pgd": "Mark Roebard's returned.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 75.3,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.117755889892578,
+     "stoi": 0.6924361925546081,
+     "si_snr": 1.1265464972345216,
+     "snr_db": 3.49115649327615,
+     "noise_linf": 0.43487548828125
+    },
+    "rs": {
+     "acc_source": 0.8125,
+     "pesq": 1.6309776306152344,
+     "stoi": 0.6754712514630762,
+     "si_snr": 1.0712877393456373,
+     "snr_db": 3.4505459456960335,
+     "noise_linf": 0.446685791015625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.757697343826294,
+     "stoi": 0.6799109587932866,
+     "si_snr": 1.099640539986063,
+     "snr_db": 3.471745283213823,
+     "noise_linf": 0.430877685546875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.5904706716537476,
+    "dis_loss_last": 0.4559658169746399,
+    "wm_loss_last": 1.1026850188500248e-06,
+    "mean_bound": 0.002044561319053173,
+    "share_at_bound": 0.10081250220537186
+   }
+  },
+  {
+   "index": 73,
+   "utterance_id": "5463-39173-0055",
+   "speaker": "5463",
+   "clean_sha": "26041fc499dd0881c743b475da254c12bdc9825e136c580f98599b2ab9b475fb",
+   "n_samples": 48000,
+   "ref_text_pgd": "bringing her back to the world, in which she had lived in a soft",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 53.4,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.0569450855255127,
+     "stoi": 0.8810079090395039,
+     "si_snr": 0.6594376366410821,
+     "snr_db": 2.7670646556636407,
+     "noise_linf": 0.217437744140625
+    },
+    "rs": {
+     "acc_source": 0.75,
+     "pesq": 1.1237632036209106,
+     "stoi": 0.8351535447445747,
+     "si_snr": 0.37956745274756004,
+     "snr_db": 2.5268245860762013,
+     "noise_linf": 0.219970703125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.261340856552124,
+     "stoi": 0.8324012737795353,
+     "si_snr": 0.536588476931316,
+     "snr_db": 2.6681960999849776,
+     "noise_linf": 0.219970703125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6091324090957642,
+    "dis_loss_last": 0.24517342448234558,
+    "wm_loss_last": 9.238714824277849e-07,
+    "mean_bound": 0.004594834521412849,
+    "share_at_bound": 0.10785416513681412
+   }
+  },
+  {
+   "index": 74,
+   "utterance_id": "5463-39173-0026",
+   "speaker": "5463",
+   "clean_sha": "cf358ed9453cba35673d4bb31159ebbbf7169f9e3a685aac66236e19c2366a71",
+   "n_samples": 48000,
+   "ref_text_pgd": "worthy of women's love?  What would the",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 57.9,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.0029852390289307,
+     "stoi": 0.727490835712109,
+     "si_snr": 1.2899815843787075,
+     "snr_db": 2.6263223118226837,
+     "noise_linf": 0.22979736328125
+    },
+    "rs": {
+     "acc_source": 0.6875,
+     "pesq": 1.2550115585327148,
+     "stoi": 0.653491017269249,
+     "si_snr": 1.0052968746228754,
+     "snr_db": 2.349839368641083,
+     "noise_linf": 0.2388916015625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.4348888397216797,
+     "stoi": 0.6534306749733052,
+     "si_snr": 1.18337080308727,
+     "snr_db": 2.525299104117722,
+     "noise_linf": 0.234344482421875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6632603406906128,
+    "dis_loss_last": 0.3372567892074585,
+    "wm_loss_last": 1.2814987258025212e-06,
+    "mean_bound": 0.003032759064808488,
+    "share_at_bound": 0.09237499535083771
+   }
+  },
+  {
+   "index": 75,
+   "utterance_id": "7148-82991-0021",
+   "speaker": "7148",
+   "clean_sha": "71461274a44e8d346d43b85f9abc11928ad4e8be4f48692e93f4957fcf7eaf22",
+   "n_samples": 48000,
+   "ref_text_pgd": "I can no longer uphold you.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 70.6,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.2904837131500244,
+     "stoi": 0.7932011858762615,
+     "si_snr": 1.3560576849038384,
+     "snr_db": 3.658088036046838,
+     "noise_linf": 0.66485595703125
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.7608222961425781,
+     "stoi": 0.7835104339621456,
+     "si_snr": 1.2940095392710915,
+     "snr_db": 3.615452405371558,
+     "noise_linf": 0.672607421875
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.9023970365524292,
+     "stoi": 0.7755170502994243,
+     "si_snr": 1.3396564004900209,
+     "snr_db": 3.6463386750729176,
+     "noise_linf": 0.6702880859375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7168889045715332,
+    "dis_loss_last": 0.49154365062713623,
+    "wm_loss_last": 2.5033900783455465e-06,
+    "mean_bound": 0.003085408126935363,
+    "share_at_bound": 0.11702083051204681
+   }
+  },
+  {
+   "index": 76,
+   "utterance_id": "7148-7763-0011",
+   "speaker": "7148",
+   "clean_sha": "994d28540441854f62a2d2a7f61be3dea7caa0766ef73ea75d058cb844083b56",
+   "n_samples": 48000,
+   "ref_text_pgd": "snowfulness and greatness from which I had always",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 57.0,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.701451301574707,
+     "stoi": 0.8661601189695761,
+     "si_snr": -2.259695971717441,
+     "snr_db": 1.4926022054321644,
+     "noise_linf": 0.471954345703125
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.3218876123428345,
+     "stoi": 0.8576881656889818,
+     "si_snr": -2.3897480184866877,
+     "snr_db": 1.4031383890985332,
+     "noise_linf": 0.478973388671875
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.4653711318969727,
+     "stoi": 0.8586614307218884,
+     "si_snr": -2.297555967201261,
+     "snr_db": 1.465832509299684,
+     "noise_linf": 0.47686767578125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.737215518951416,
+    "dis_loss_last": 0.4236641526222229,
+    "wm_loss_last": 2.235168267361587e-06,
+    "mean_bound": 0.004761244636029005,
+    "share_at_bound": 0.1042083352804184
+   }
+  },
+  {
+   "index": 77,
+   "utterance_id": "7148-59157-0000",
+   "speaker": "7148",
+   "clean_sha": "5857dc672c07f502dee4cbb57655d266df33e9e85cfc20295e84e3891edd100a",
+   "n_samples": 48000,
+   "ref_text_pgd": "the glad and sad and mad and bad hours.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 57.4,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.027540445327759,
+     "stoi": 0.8935107141895064,
+     "si_snr": -0.2423228431361998,
+     "snr_db": 2.183931217958352,
+     "noise_linf": 0.74212646484375
+    },
+    "rs": {
+     "acc_source": 0.875,
+     "pesq": 1.667614221572876,
+     "stoi": 0.8910683012063761,
+     "si_snr": -0.34676370110483035,
+     "snr_db": 2.1040667871474454,
+     "noise_linf": 0.7567138671875
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.8017582893371582,
+     "stoi": 0.8902149918879858,
+     "si_snr": -0.2841694561762808,
+     "snr_db": 2.1558670538436004,
+     "noise_linf": 0.735198974609375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7137582302093506,
+    "dis_loss_last": 0.42925262451171875,
+    "wm_loss_last": 4.082904524693731e-06,
+    "mean_bound": 0.006180462893098593,
+    "share_at_bound": 0.09279166907072067
+   }
+  },
+  {
+   "index": 78,
+   "utterance_id": "7148-7763-0027",
+   "speaker": "7148",
+   "clean_sha": "860538668c7c7ebd1c5fd8de3c6d908c673e53051ebaa06265c179d7552923ae",
+   "n_samples": 48000,
+   "ref_text_pgd": "the real connections between things not",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 57.8,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.8051952123641968,
+     "stoi": 0.8969684549269201,
+     "si_snr": -2.962822153904657,
+     "snr_db": 1.1989876374342145,
+     "noise_linf": 0.574951171875
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.5212849378585815,
+     "stoi": 0.8937578703794987,
+     "si_snr": -3.055276077154372,
+     "snr_db": 1.138795062821525,
+     "noise_linf": 0.5845947265625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.5892114639282227,
+     "stoi": 0.8902063797759188,
+     "si_snr": -2.985872616114303,
+     "snr_db": 1.1833682343172944,
+     "noise_linf": 0.572418212890625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7523620128631592,
+    "dis_loss_last": 0.4921087920665741,
+    "wm_loss_last": 4.4703472212859197e-07,
+    "mean_bound": 0.0033534506801515818,
+    "share_at_bound": 0.11220832914113998
+   }
+  },
+  {
+   "index": 79,
+   "utterance_id": "7148-7763-0007",
+   "speaker": "7148",
+   "clean_sha": "3ba06086ca6db99c7117335097b7002c83864113a0d26209372f23f3bfe93fed",
+   "n_samples": 48000,
+   "ref_text_pgd": "Those that all your objects in life were real life.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.5,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.183431386947632,
+     "stoi": 0.916005767534872,
+     "si_snr": -1.866001591693129,
+     "snr_db": 1.8083584189677706,
+     "noise_linf": 0.484466552734375
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.7375411987304688,
+     "stoi": 0.9129237899725859,
+     "si_snr": -1.9346680894519115,
+     "snr_db": 1.7592913448214718,
+     "noise_linf": 0.4951171875
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.897872805595398,
+     "stoi": 0.9108338766297085,
+     "si_snr": -1.8862495458665869,
+     "snr_db": 1.7927895225685084,
+     "noise_linf": 0.4906005859375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6784136295318604,
+    "dis_loss_last": 0.49285945296287537,
+    "wm_loss_last": 2.8908191325172083e-06,
+    "mean_bound": 0.004297330975532532,
+    "share_at_bound": 0.08706250041723251
+   }
+  },
+  {
+   "index": 80,
+   "utterance_id": "2182-181173-0036",
+   "speaker": "2182",
+   "clean_sha": "19a445876686bb8c97e71bd9a0700695f6582d16d22983f9cdd7bbd8cb1fe23c",
+   "n_samples": 48000,
+   "ref_text_pgd": "Oh, goodbye, goodbye.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 80.5,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.5677032470703125,
+     "stoi": 0.8228102727123603,
+     "si_snr": -14.243701115336517,
+     "snr_db": -0.9631426770039708,
+     "noise_linf": 1.69000244140625
+    },
+    "rs": {
+     "acc_source": 0.8125,
+     "pesq": 1.5454820394515991,
+     "stoi": 0.8249848266153196,
+     "si_snr": -14.257027961278144,
+     "snr_db": -0.9643575716641011,
+     "noise_linf": 1.67620849609375
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.5485234260559082,
+     "stoi": 0.8243130408358178,
+     "si_snr": -14.25341390099443,
+     "snr_db": -0.964055912343986,
+     "noise_linf": 1.687103271484375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.639311671257019,
+    "dis_loss_last": 0.5963884592056274,
+    "wm_loss_last": 1.221894308400806e-06,
+    "mean_bound": 0.002110810251906514,
+    "share_at_bound": 0.10604166239500046
+   }
+  },
+  {
+   "index": 81,
+   "utterance_id": "2182-150130-0037",
+   "speaker": "2182",
+   "clean_sha": "1ccd934d2d24198ec670bb5f04c142347c2f3338ce25f1443c78608a2dba1508",
+   "n_samples": 48000,
+   "ref_text_pgd": "green moss, and it flashed through his mind as he hung the",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 53.3,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.1702895164489746,
+     "stoi": 0.8351324142593712,
+     "si_snr": 2.3229177096494245,
+     "snr_db": 3.8034843075795304,
+     "noise_linf": 0.35498046875
+    },
+    "rs": {
+     "acc_source": 0.9375,
+     "pesq": 1.5225474834442139,
+     "stoi": 0.824460598525399,
+     "si_snr": 2.2637849868844526,
+     "snr_db": 3.7349132835140204,
+     "noise_linf": 0.36505126953125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.7058230638504028,
+     "stoi": 0.8215053879063673,
+     "si_snr": 2.3003271657842586,
+     "snr_db": 3.7803794448517776,
+     "noise_linf": 0.35736083984375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.656762957572937,
+    "dis_loss_last": 0.19571733474731445,
+    "wm_loss_last": 5.364416892916779e-07,
+    "mean_bound": 0.002666974440217018,
+    "share_at_bound": 0.12287499755620956
+   }
+  },
+  {
+   "index": 82,
+   "utterance_id": "2182-181173-0021",
+   "speaker": "2182",
+   "clean_sha": "6f302ae72beff95ee791cb00248c1c08759ac20c1c7fdeeb201024ad4ac04dcf",
+   "n_samples": 48000,
+   "ref_text_pgd": "as dick had spoken. Or don't you go",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 59.3,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.001434326171875,
+     "stoi": 0.918950798411165,
+     "si_snr": -0.018399832984556625,
+     "snr_db": 2.356276881205476,
+     "noise_linf": 0.3992919921875
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.6630911827087402,
+     "stoi": 0.9064475683265167,
+     "si_snr": -0.05264420177354082,
+     "snr_db": 2.3250045043546503,
+     "noise_linf": 0.412353515625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.7969481945037842,
+     "stoi": 0.9100455094989176,
+     "si_snr": -0.02137413648423583,
+     "snr_db": 2.3494906463621152,
+     "noise_linf": 0.400665283203125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7378276586532593,
+    "dis_loss_last": 0.47773489356040955,
+    "wm_loss_last": 6.25848599611345e-07,
+    "mean_bound": 0.002121484838426113,
+    "share_at_bound": 0.1041458323597908
+   }
+  },
+  {
+   "index": 83,
+   "utterance_id": "2182-181183-0036",
+   "speaker": "2182",
+   "clean_sha": "6644f45a970428683f4f079831bbd4ba4a684d08cdf9c305b1efbe54b26484f2",
+   "n_samples": 46080,
+   "ref_text_pgd": "and the second to Benjamin Tipton.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 59.7,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.9800441265106201,
+     "stoi": 0.9095093143848924,
+     "si_snr": 0.20432776651024476,
+     "snr_db": 2.647521620977946,
+     "noise_linf": 0.3201904296875
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.5279312133789062,
+     "stoi": 0.9016086624987026,
+     "si_snr": 0.08355786331510691,
+     "snr_db": 2.5595639219608657,
+     "noise_linf": 0.334503173828125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.680640697479248,
+     "stoi": 0.9031829252981757,
+     "si_snr": 0.14046825533582452,
+     "snr_db": 2.6043444069475696,
+     "noise_linf": 0.31854248046875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6914230585098267,
+    "dis_loss_last": 0.4689561724662781,
+    "wm_loss_last": 2.622597548906924e-06,
+    "mean_bound": 0.0025006053037941456,
+    "share_at_bound": 0.1012369841337204
+   }
+  },
+  {
+   "index": 84,
+   "utterance_id": "2182-150130-0033",
+   "speaker": "2182",
+   "clean_sha": "c3c83673781403e3f66610070466229dbc7a2401047d28410920d45b3d35949c",
+   "n_samples": 48000,
+   "ref_text_pgd": "They grew a pear tree. Some of the branches",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 56.9,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.8701798915863037,
+     "stoi": 0.8876891562970747,
+     "si_snr": 0.8919115083601596,
+     "snr_db": 3.3327726821900243,
+     "noise_linf": 0.3916015625
+    },
+    "rs": {
+     "acc_source": 0.9375,
+     "pesq": 1.3915050029754639,
+     "stoi": 0.8776158439350745,
+     "si_snr": 0.7173753739254694,
+     "snr_db": 3.2096701300785657,
+     "noise_linf": 0.40203857421875
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.5558643341064453,
+     "stoi": 0.8815894328696338,
+     "si_snr": 0.8264150256384627,
+     "snr_db": 3.287213272930848,
+     "noise_linf": 0.39080810546875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6372000575065613,
+    "dis_loss_last": 0.4112732410430908,
+    "wm_loss_last": 6.854529601696413e-07,
+    "mean_bound": 0.0034647835418581963,
+    "share_at_bound": 0.09264583140611649
+   }
+  },
+  {
+   "index": 85,
+   "utterance_id": "4214-7146-0001",
+   "speaker": "4214",
+   "clean_sha": "91df33896c7c4bc811af3881454c1769f70c97eff18df4dd827bfe5b6f820282",
+   "n_samples": 48000,
+   "ref_text_pgd": "crimson, and the wild cherry trees along the lane put on the l-",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.3,
+   "arms": {
+    "wm": {
+     "acc_source": 0.8125,
+     "pesq": 2.1515843868255615,
+     "stoi": 0.8969916680565039,
+     "si_snr": 2.1195172613816347,
+     "snr_db": 3.9066443157443524,
+     "noise_linf": 0.447113037109375
+    },
+    "rs": {
+     "acc_source": 0.9375,
+     "pesq": 1.4747735261917114,
+     "stoi": 0.8582355202429299,
+     "si_snr": 2.0172335919874635,
+     "snr_db": 3.8214160215549233,
+     "noise_linf": 0.45941162109375
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.6638305187225342,
+     "stoi": 0.8604866547098406,
+     "si_snr": 2.081308868128652,
+     "snr_db": 3.873909010597391,
+     "noise_linf": 0.456939697265625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.5921737551689148,
+    "dis_loss_last": 0.2598874270915985,
+    "wm_loss_last": 1.2814989531761967e-06,
+    "mean_bound": 0.0034462171606719494,
+    "share_at_bound": 0.11120833456516266
+   }
+  },
+  {
+   "index": 86,
+   "utterance_id": "4214-7146-0040",
+   "speaker": "4214",
+   "clean_sha": "0e74b41b7f42f746870a45fadf9becc46b60807f1e75bd8122783c1ac465645a",
+   "n_samples": 48000,
+   "ref_text_pgd": "They are very stylish people, especially Ms. Chester.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 53.9,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.0490572452545166,
+     "stoi": 0.9026956487438347,
+     "si_snr": 1.3980200357393677,
+     "snr_db": 3.5393602291533934,
+     "noise_linf": 0.56854248046875
+    },
+    "rs": {
+     "acc_source": 0.9375,
+     "pesq": 1.4409211874008179,
+     "stoi": 0.8721080626181199,
+     "si_snr": 1.3432342412370644,
+     "snr_db": 3.4939441242454787,
+     "noise_linf": 0.57867431640625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.6192545890808105,
+     "stoi": 0.88060415390172,
+     "si_snr": 1.3819478673393657,
+     "snr_db": 3.5245385872227586,
+     "noise_linf": 0.57562255859375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.5059624314308167,
+    "dis_loss_last": 0.3095312714576721,
+    "wm_loss_last": 7.152553962441743e-07,
+    "mean_bound": 0.003126225434243679,
+    "share_at_bound": 0.10750000178813934
+   }
+  },
+  {
+   "index": 87,
+   "utterance_id": "4214-7146-0037",
+   "speaker": "4214",
+   "clean_sha": "07fa7dbfdddbf99165be5f74bad2ab733f6e3934002111266ccacb0f47b49872",
+   "n_samples": 48000,
+   "ref_text_pgd": "And I forgot all about covering the pudding sauce.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.3,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.442448377609253,
+     "stoi": 0.9110020852088307,
+     "si_snr": -0.9087330532805376,
+     "snr_db": 2.345039423969369,
+     "noise_linf": 0.618255615234375
+    },
+    "rs": {
+     "acc_source": 0.5,
+     "pesq": 1.6856498718261719,
+     "stoi": 0.8408918286280552,
+     "si_snr": -0.959126937344934,
+     "snr_db": 2.3107455280357323,
+     "noise_linf": 0.606201171875
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.8245331048965454,
+     "stoi": 0.846106721737822,
+     "si_snr": -0.9276664799349915,
+     "snr_db": 2.332155814478075,
+     "noise_linf": 0.606597900390625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6767767667770386,
+    "dis_loss_last": 0.2673725187778473,
+    "wm_loss_last": 1.7881357052829117e-06,
+    "mean_bound": 0.003260450903326273,
+    "share_at_bound": 0.09722916781902313
+   }
+  },
+  {
+   "index": 88,
+   "utterance_id": "4214-7146-0015",
+   "speaker": "4214",
+   "clean_sha": "b1c4a724b0ace776efc01d2ba072dafb87928f4237d4302b95f990649dfe228d",
+   "n_samples": 48000,
+   "ref_text_pgd": "As a result, just after Marilla had driven off to car...",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.6,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.2915732860565186,
+     "stoi": 0.8913594896279664,
+     "si_snr": 0.5383698610653287,
+     "snr_db": 3.1101035767416505,
+     "noise_linf": 0.655487060546875
+    },
+    "rs": {
+     "acc_source": 0.5625,
+     "pesq": 1.6226551532745361,
+     "stoi": 0.8504937304182052,
+     "si_snr": 0.4760587674745759,
+     "snr_db": 3.064101762853817,
+     "noise_linf": 0.669342041015625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.8338818550109863,
+     "stoi": 0.8571320977868909,
+     "si_snr": 0.5176426385249789,
+     "snr_db": 3.0947030772792123,
+     "noise_linf": 0.656707763671875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6664280891418457,
+    "dis_loss_last": 0.25815266370773315,
+    "wm_loss_last": 7.450574912581942e-07,
+    "mean_bound": 0.0030661020427942276,
+    "share_at_bound": 0.09552083164453506
+   }
+  },
+  {
+   "index": 89,
+   "utterance_id": "4214-7146-0072",
+   "speaker": "4214",
+   "clean_sha": "06a3a5a16a222721524f445a56ac20242e1728b6f2244cb0be38267293af12f7",
+   "n_samples": 48000,
+   "ref_text_pgd": "she was honestly anxious to preserve her little daughter from the cont-",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.0,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.245504379272461,
+     "stoi": 0.8882571638279594,
+     "si_snr": -2.1045279261199696,
+     "snr_db": 1.411936329217176,
+     "noise_linf": 1.0416259765625
+    },
+    "rs": {
+     "acc_source": 0.75,
+     "pesq": 1.6412389278411865,
+     "stoi": 0.8620994165672308,
+     "si_snr": -2.1139537177541237,
+     "snr_db": 1.4040844676276654,
+     "noise_linf": 1.02667236328125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.837902545928955,
+     "stoi": 0.8653457422747219,
+     "si_snr": -2.105702600083897,
+     "snr_db": 1.4103969481600551,
+     "noise_linf": 1.044281005859375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.5976240634918213,
+    "dis_loss_last": 0.2728630304336548,
+    "wm_loss_last": 8.046622497204226e-07,
+    "mean_bound": 0.0034694483038038015,
+    "share_at_bound": 0.1027916669845581
+   }
+  },
+  {
+   "index": 90,
+   "utterance_id": "6147-34606-0020",
+   "speaker": "6147",
+   "clean_sha": "6b807e87951611c180d59b7cb1435b551d80cc427755f22aad6bf9fb7822ae1e",
+   "n_samples": 48000,
+   "ref_text_pgd": "towards the beginning of the 18th century, the past times of the",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.0,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.9934797286987305,
+     "stoi": 0.9196290238804536,
+     "si_snr": -1.8366619366347927,
+     "snr_db": 1.8864813308364154,
+     "noise_linf": 0.470611572265625
+    },
+    "rs": {
+     "acc_source": 0.6875,
+     "pesq": 1.4609887599945068,
+     "stoi": 0.9128598700927248,
+     "si_snr": -1.8931326598492324,
+     "snr_db": 1.8428025403290935,
+     "noise_linf": 0.479766845703125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.588188648223877,
+     "stoi": 0.9116232349059011,
+     "si_snr": -1.8418469180448342,
+     "snr_db": 1.8781835642750413,
+     "noise_linf": 0.473876953125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.640681266784668,
+    "dis_loss_last": 0.4070224165916443,
+    "wm_loss_last": 1.6093231351987924e-06,
+    "mean_bound": 0.002752130152657628,
+    "share_at_bound": 0.1002916619181633
+   }
+  },
+  {
+   "index": 91,
+   "utterance_id": "6147-34606-0027",
+   "speaker": "6147",
+   "clean_sha": "dd252ec7f8420a2eb7aef86d9fe3b83380a6140ba1f89ca06b34bcc8fed8ff32",
+   "n_samples": 48000,
+   "ref_text_pgd": "ease of better in society when he was",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 59.2,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.9857752323150635,
+     "stoi": 0.902586997995429,
+     "si_snr": 0.8319383416451437,
+     "snr_db": 3.3227980566789697,
+     "noise_linf": 0.2437744140625
+    },
+    "rs": {
+     "acc_source": 0.9375,
+     "pesq": 1.5114178657531738,
+     "stoi": 0.8929559077427669,
+     "si_snr": 0.6736760815147971,
+     "snr_db": 3.2138518629800843,
+     "noise_linf": 0.24200439453125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.6569344997406006,
+     "stoi": 0.8900585530134271,
+     "si_snr": 0.7747705447106732,
+     "snr_db": 3.282866343682835,
+     "noise_linf": 0.25311279296875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.5592743158340454,
+    "dis_loss_last": 0.362101286649704,
+    "wm_loss_last": 9.536737479720614e-07,
+    "mean_bound": 0.0020649984944611788,
+    "share_at_bound": 0.10085416585206985
+   }
+  },
+  {
+   "index": 92,
+   "utterance_id": "6147-34606-0016",
+   "speaker": "6147",
+   "clean_sha": "36a9c9c2d09ba74020a63ca19604f5ab7d893f01c225d3bbff1b10b278822744",
+   "n_samples": 48000,
+   "ref_text_pgd": "best part of the joke. Those matters have not all together.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.1,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.3279497623443604,
+     "stoi": 0.9101118765901965,
+     "si_snr": -0.8971351873285659,
+     "snr_db": 2.1137124075675042,
+     "noise_linf": 0.57000732421875
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.580241322517395,
+     "stoi": 0.9021993421795347,
+     "si_snr": -0.9684724491641135,
+     "snr_db": 2.0626286705766206,
+     "noise_linf": 0.579742431640625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.7874016761779785,
+     "stoi": 0.90111412944352,
+     "si_snr": -0.923257815031935,
+     "snr_db": 2.0958052295165244,
+     "noise_linf": 0.577789306640625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.5335530638694763,
+    "dis_loss_last": 0.2838074862957001,
+    "wm_loss_last": 6.258485427679261e-07,
+    "mean_bound": 0.0034367823973298073,
+    "share_at_bound": 0.11481250077486038
+   }
+  },
+  {
+   "index": 93,
+   "utterance_id": "6147-34607-0021",
+   "speaker": "6147",
+   "clean_sha": "20771ba6cf34fe1c8a4f65ea48f64345c036aa7716a33a0d8e3b961287e37db7",
+   "n_samples": 48000,
+   "ref_text_pgd": "Dorian's Elizabeth and body's grandeur and good.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 55.7,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.258141040802002,
+     "stoi": 0.92260888936991,
+     "si_snr": -2.8187989313023323,
+     "snr_db": 1.403398745385518,
+     "noise_linf": 0.39825439453125
+    },
+    "rs": {
+     "acc_source": 0.4375,
+     "pesq": 1.3424756526947021,
+     "stoi": 0.9090123354259328,
+     "si_snr": -3.003534100277409,
+     "snr_db": 1.2761329778356503,
+     "noise_linf": 0.407135009765625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.5178613662719727,
+     "stoi": 0.9131164916327326,
+     "si_snr": -2.873023496969852,
+     "snr_db": 1.3634491091473242,
+     "noise_linf": 0.401275634765625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6330461502075195,
+    "dis_loss_last": 0.2819271683692932,
+    "wm_loss_last": 4.470347505503014e-07,
+    "mean_bound": 0.004679132252931595,
+    "share_at_bound": 0.10300000011920929
+   }
+  },
+  {
+   "index": 94,
+   "utterance_id": "6147-34605-0025",
+   "speaker": "6147",
+   "clean_sha": "8615393d622d1bb2fd58b2b005322e8c77d912b8cc3fdc396b07afa30f20ea1b",
+   "n_samples": 48000,
+   "ref_text_pgd": "on.  Gallantry found its convenience in a certain-  //  //",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 53.9,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.2858283519744873,
+     "stoi": 0.919901114780325,
+     "si_snr": -0.9382034960974639,
+     "snr_db": 2.2417853801740377,
+     "noise_linf": 0.565704345703125
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.8117167949676514,
+     "stoi": 0.9164781033237758,
+     "si_snr": -0.9769201252335347,
+     "snr_db": 2.211608731801652,
+     "noise_linf": 0.560455322265625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.969719648361206,
+     "stoi": 0.9124509756862444,
+     "si_snr": -0.946892581443997,
+     "snr_db": 2.234884934066464,
+     "noise_linf": 0.56298828125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6977543830871582,
+    "dis_loss_last": 0.4202173948287964,
+    "wm_loss_last": 2.890820496759261e-06,
+    "mean_bound": 0.002089496236294508,
+    "share_at_bound": 0.10710416734218597
+   }
+  },
+  {
+   "index": 95,
+   "utterance_id": "307-127535-0035",
+   "speaker": "307",
+   "clean_sha": "55d42b87724ab18d2181fe45792d6ccb14d7db5aae8eb128a4c85cc271a16d71",
+   "n_samples": 48000,
+   "ref_text_pgd": "you can speak and shout George Mary you may later that",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 54.2,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.7808740139007568,
+     "stoi": 0.8840547656086142,
+     "si_snr": -5.777621093971202,
+     "snr_db": 0.5529441514012537,
+     "noise_linf": 1.792877197265625
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.712364912033081,
+     "stoi": 0.8831242689126767,
+     "si_snr": -5.784208535543673,
+     "snr_db": 0.5498570143882563,
+     "noise_linf": 1.782867431640625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.743605375289917,
+     "stoi": 0.8839032482318215,
+     "si_snr": -5.780346067929303,
+     "snr_db": 0.5503483678611444,
+     "noise_linf": 1.791473388671875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.7122957110404968,
+    "dis_loss_last": 0.6089351177215576,
+    "wm_loss_last": 8.940691600400896e-07,
+    "mean_bound": 0.0029338649474084377,
+    "share_at_bound": 0.13622917234897614
+   }
+  },
+  {
+   "index": 96,
+   "utterance_id": "307-127540-0032",
+   "speaker": "307",
+   "clean_sha": "9aa21e07d5b6feb76451088e09156f4ddd9b329389fa5352bb3444bf09fc2939",
+   "n_samples": 48000,
+   "ref_text_pgd": "That formidable seafaring man with one leg",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 56.4,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.176892042160034,
+     "stoi": 0.8947059721913901,
+     "si_snr": 2.4575163343860402,
+     "snr_db": 4.390602076007996,
+     "noise_linf": 0.461517333984375
+    },
+    "rs": {
+     "acc_source": 0.9375,
+     "pesq": 1.454945683479309,
+     "stoi": 0.8793091938132863,
+     "si_snr": 2.3679382361355836,
+     "snr_db": 4.327995185742482,
+     "noise_linf": 0.473602294921875
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.6542963981628418,
+     "stoi": 0.8832929865841596,
+     "si_snr": 2.4333571711515614,
+     "snr_db": 4.373475437636072,
+     "noise_linf": 0.47119140625
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6689913272857666,
+    "dis_loss_last": 0.394138902425766,
+    "wm_loss_last": 4.4703469370688254e-07,
+    "mean_bound": 0.005338630639016628,
+    "share_at_bound": 0.10610416531562805
+   }
+  },
+  {
+   "index": 97,
+   "utterance_id": "307-127540-0023",
+   "speaker": "307",
+   "clean_sha": "dfbc0c456d1e8d650099620a8b80f71e0c43af1bae2c6fb5d65ea943c394b946",
+   "n_samples": 48000,
+   "ref_text_pgd": "made a most charming contrast to our dark and b-",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 56.4,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 1.8490688800811768,
+     "stoi": 0.8848786625020895,
+     "si_snr": 0.7875333627241417,
+     "snr_db": 3.35139720682722,
+     "noise_linf": 0.440673828125
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.40050208568573,
+     "stoi": 0.8767382409996016,
+     "si_snr": 0.6720619629409559,
+     "snr_db": 3.2768859033833104,
+     "noise_linf": 0.435943603515625
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.554316759109497,
+     "stoi": 0.8757156110637464,
+     "si_snr": 0.7538191597043197,
+     "snr_db": 3.329241686605454,
+     "noise_linf": 0.437835693359375
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.6239359378814697,
+    "dis_loss_last": 0.4111979603767395,
+    "wm_loss_last": 9.536737479720614e-07,
+    "mean_bound": 0.004273392725735903,
+    "share_at_bound": 0.1223541647195816
+   }
+  },
+  {
+   "index": 98,
+   "utterance_id": "307-127540-0020",
+   "speaker": "307",
+   "clean_sha": "7cb0419827b3e47facf13543af117188b5066b20fe93ca5bb35a5607a0663ffb",
+   "n_samples": 48000,
+   "ref_text_pgd": "had sunk into the blue round of sea.",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 59.1,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.004987955093384,
+     "stoi": 0.7745162999653831,
+     "si_snr": 2.2669632216069098,
+     "snr_db": 4.192482135278375,
+     "noise_linf": 0.331024169921875
+    },
+    "rs": {
+     "acc_source": 0.5625,
+     "pesq": 1.3214643001556396,
+     "stoi": 0.7493351450890219,
+     "si_snr": 2.15278649445115,
+     "snr_db": 4.104570804750088,
+     "noise_linf": 0.337860107421875
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.4946389198303223,
+     "stoi": 0.7497847707183498,
+     "si_snr": 2.2254324320958077,
+     "snr_db": 4.160096019049798,
+     "noise_linf": 0.32489013671875
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.682612419128418,
+    "dis_loss_last": 0.43321093916893005,
+    "wm_loss_last": 2.056355924651143e-06,
+    "mean_bound": 0.0033373869955539703,
+    "share_at_bound": 0.09279166907072067
+   }
+  },
+  {
+   "index": 99,
+   "utterance_id": "307-127539-0020",
+   "speaker": "307",
+   "clean_sha": "66d7ca40d5294ebd74b7587e5a7a41ffeb3a00f824bdb60c038fcf2a892007f5",
+   "n_samples": 48000,
+   "ref_text_pgd": "his embarrassment and he added",
+   "checkpoint_sha256": "d9bdf9148d8e7b11b35ded605868b2ff6f5177371e255fd6189147c09095ba33",
+   "pgd_seconds": 68.6,
+   "arms": {
+    "wm": {
+     "acc_source": 1.0,
+     "pesq": 2.107111692428589,
+     "stoi": 0.885646933251531,
+     "si_snr": -3.2251761967707413,
+     "snr_db": 1.4802559112056057,
+     "noise_linf": 1.2677001953125
+    },
+    "rs": {
+     "acc_source": 1.0,
+     "pesq": 1.8053977489471436,
+     "stoi": 0.8836565538170716,
+     "si_snr": -3.2463089933521427,
+     "snr_db": 1.4701130188028702,
+     "noise_linf": 1.25323486328125
+    },
+    "q2": {
+     "acc_source": 1.0,
+     "pesq": 1.9262522459030151,
+     "stoi": 0.8802966700579434,
+     "si_snr": -3.2299900426978767,
+     "snr_db": 1.4770968788770091,
+     "noise_linf": 1.278564453125
+    }
+   },
+   "q2_diag": {
+    "skipped": 0,
+    "dis_loss_first": 0.5913664102554321,
+    "dis_loss_last": 0.4836089611053467,
+    "wm_loss_last": 4.470347505503014e-07,
+    "mean_bound": 0.0031767047476023436,
+    "share_at_bound": 0.11537499725818634
+   }
+  }
+ ]
+}
