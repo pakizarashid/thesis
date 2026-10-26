@@ -72,3 +72,31 @@ A cloner is decisive if it is F5-TTS, MaskGCT or CosyVoice and its RQA `wm` clon
 - Resemblyzer is a relative measure: values near 0.6 do not mean "same person".
 - No perceptual claim.
 - Q2's PGD sentence is fixed, so unseen-text protection was 60-70% of fixed-text protection in earlier work.
+
+## Addendum (2026-10-26, written after the F5-TTS wm / rs / q2 results were seen and before any A0 data): surrogate comparison
+- **New arm:** A0, the earlier control, built with YourTTS as the surrogate. It is exactly as registered before: flat L-inf 0.002, 10 steps, step 0.0005, lambda_wm 1, YourTTS similarity loss only, seed 5000 + i, the fixed PGD sentence.
+- **Scope:** made on RQA only (`src/eval/protect_prompts_a0.py`), with the same clips and the same clean-prompt hash check as the other arms. It is cloned by all five cloners.
+- **Question:** at about equal prompt quality (A0 had PESQ about 1.75 in earlier runs, Q2 has 1.79 here), does the F5-TTS surrogate transfer better than the YourTTS surrogate?
+- **Test:** HELD(RQA-a0) - HELD(RQA-q2) > 0, one-sided Wilcoxon p < 0.05, speaker-CI lower end > 0. The verdict is F5 SURROGATE TRANSFERS BETTER, otherwise NO DIFFERENCE SHOWN, per cloner.
+- **Also reported:** HELD(wm) - HELD(a0) (does A0 protect at all), ACC and traced of both arms, and PESQ(q2) - PESQ(a0).
+- **Predictions:**
+  - Q2 better on F5-TTS (its own surrogate): about 90%.
+  - Q2 better on MaskGCT: about 60%. On CosyVoice: about 50%.
+  - On YourTTS (A0's own surrogate), A0 drops similarity more than Q2: about 60%.
+  - A0 keeps the watermark at least as well as Q2 on every cloner (smaller budget): about 70%.
+- **Status:** this addendum is not part of the original decision rules H1-H5, which are unchanged.
+
+## Addendum 2 (2026-10-26, written before any q2c data): intelligibility term
+- **Why:** Q2 lowered held-out similarity on F5-TTS but left the clones intelligible (WER 4.5% -> 6.9%).
+- **New arm q2c:** Q2 unchanged, plus a term that maximises the CTC loss of wav2vec2-base-960h on the F5-TTS rollout, against the PGD sentence. It is weighted like the speaker term: gradient rescaled to 1.732 x the norm of the watermark gradient. Same bound, steps, seeds and transcripts as Q2. Made on RQA only (`src/eval/protect_prompts_q2c.py`).
+- **Scoring:** WER is scored by faster-whisper base.en, which is not the recogniser in the loss.
+- **Cloners:** F5-TTS (the surrogate), MaskGCT and CosyVoice decide. XTTS-v2 and YourTTS are descriptive, if run.
+- **Test (per cloner, unseen text; fixed text reported):** WER(q2c) - WER(q2), paired, one-sided Wilcoxon. The verdict is RAISES WER if the mean difference is >= +0.10 (10 points), p < 0.05 and the speaker-CI lower end > 0. Otherwise NO WER GAIN SHOWN.
+- **Also reported:** share of clones with WER > 0.5 (unusable), held-out similarity of q2c vs q2, ACC and traced, and PESQ(q2c) - PESQ(q2).
+- **Predictions:**
+  - RAISES WER on F5-TTS: about 55%. Expected gain +0.05 to +0.20, with the fixed (PGD) sentence gaining more than unseen text.
+  - RAISES WER on MaskGCT or CosyVoice: about 25% each, because a recognition loss on F5-TTS's rollout may not transfer.
+  - PESQ within 0.05 of Q2 (same bound): about 85%.
+  - Held-out similarity drop not worse than Q2's by more than 0.015: about 70%.
+  - Traced >= 0.80 on F5-TTS: about 70%.
+- **Status:** H1-H5 and Addendum 1 are unchanged.

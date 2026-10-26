@@ -187,8 +187,11 @@ def envelope_bound(ref, epsilon, alpha, floor, win=321):
 
 def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilon, step_size, n_steps, arm,
                  lambda_wm=1.0, dis_to_wm_ratio=1.0, ecapa_model=None, noise_seed=None, f5_seed=7000, verbose=False, verifiers=None,
-                 shape_alpha=0.0, shape_floor=0.03):
-    """Returns (recon_wm, perturbed_final, delta, diag). arm in {"wmel", "wspk", "wens"}.  wens: mean cosine similarity over several verifiers (list of (name, fn))."""
+                 shape_alpha=0.0, shape_floor=0.03, content_fn=None, content_weight=0.0):
+    """Returns (recon_wm, perturbed_final, delta, diag). arm in {"wmel", "wspk", "wens"}.  wens: mean cosine similarity over several verifiers (list of (name, fn)).
+    content_fn (2026-10-26, arm wens only): fn(wave, sample_rate) -> a recognition loss of the rollout (e.g. wav2vec2 CTC of the target
+    text) that the attack MAXIMISES, so the clone becomes harder to understand. Its gradient is rescaled to
+    content_weight * ||grad_wm||, like the disruption gradient. content_fn None or content_weight 0 = unchanged behaviour."""
     from voicemark_losses import compute_ldec
     from safespeech_losses import compute_sim_disruption_loss
     assert arm in ("wmel", "wspk", "wens")
@@ -226,7 +229,14 @@ def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilo
             sims = [F.cosine_similarity(ec, fn(wave, f5a.sr)).mean() for ec, (_n, fn) in zip(embs_clean, verifiers)]
             dis_loss = torch.stack(sims).mean()                                      # mean cosine similarity of the rollout to the clean voice, three verifiers
             diag.setdefault("parts", []).append({n_: float(v.item()) for (n_, _f), v in zip(verifiers, sims)})
-        g_dis = torch.autograd.grad(dis_loss, delta, retain_graph=False, create_graph=False)[0]
+        use_ct = arm == "wens" and content_fn is not None and content_weight > 0
+        if use_ct:
+            ct_loss = content_fn(wave, f5a.sr)                                       # recognition loss of the clone: to be RAISED
+            g_dis = torch.autograd.grad(dis_loss, delta, retain_graph=True, create_graph=False)[0]
+            g_ct = torch.autograd.grad(-ct_loss, delta, retain_graph=False, create_graph=False)[0]
+            diag.setdefault("ct_loss", []).append(float(ct_loss.item()))
+        else:
+            g_dis = torch.autograd.grad(dis_loss, delta, retain_graph=False, create_graph=False)[0]
         del y_p
 
         # The first autograd.grad freed the saved buffers of `perturbed` (the clamp node), so the watermark branch needs its own copy of that node
@@ -240,6 +250,8 @@ def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilo
 
         gn_dis, gn_wm = g_dis.norm().item(), g_wm.norm().item()
         grad = lambda_wm * g_wm + dis_to_wm_ratio * (gn_wm / max(gn_dis, 1e-12)) * g_dis
+        if use_ct:
+            grad = grad + content_weight * (gn_wm / max(g_ct.norm().item(), 1e-12)) * g_ct
         diag["dis_loss"].append(float(dis_loss.item())); diag["wm_loss"].append(float(wm_loss.item()))
         diag["gn_dis"].append(gn_dis); diag["gn_wm"].append(gn_wm)
         if not torch.isfinite(grad).all():
