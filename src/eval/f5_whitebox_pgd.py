@@ -187,11 +187,14 @@ def envelope_bound(ref, epsilon, alpha, floor, win=321):
 
 def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilon, step_size, n_steps, arm,
                  lambda_wm=1.0, dis_to_wm_ratio=1.0, ecapa_model=None, noise_seed=None, f5_seed=7000, verbose=False, verifiers=None,
-                 shape_alpha=0.0, shape_floor=0.03, content_fn=None, content_weight=0.0):
+                 shape_alpha=0.0, shape_floor=0.03, content_fn=None, content_weight=0.0, prompt_fn=None, prompt_weight=0.0):
     """Returns (recon_wm, perturbed_final, delta, diag). arm in {"wmel", "wspk", "wens"}.  wens: mean cosine similarity over several verifiers (list of (name, fn)).
     content_fn (2026-10-26, arm wens only): fn(wave, sample_rate) -> a recognition loss of the rollout (e.g. wav2vec2 CTC of the target
     text) that the attack MAXIMISES, so the clone becomes harder to understand. Its gradient is rescaled to
-    content_weight * ||grad_wm||, like the disruption gradient. content_fn None or content_weight 0 = unchanged behaviour."""
+    content_weight * ||grad_wm||, like the disruption gradient. content_fn None or content_weight 0 = unchanged behaviour.
+    prompt_fn (2026-10-26, arm q2t): fn(perturbed_prompt_16k [1, 1, T]) -> a loss on the PROMPT ITSELF that the attack MINIMISES
+    (targeted ASR loss: the attacker's transcription of the prompt is pushed towards a wrong sentence, E2E-VGuard-style).
+    Its gradient is rescaled to prompt_weight * ||grad_wm||. prompt_fn None or prompt_weight 0 = unchanged behaviour."""
     from voicemark_losses import compute_ldec
     from safespeech_losses import compute_sim_disruption_loss
     assert arm in ("wmel", "wspk", "wens")
@@ -233,7 +236,15 @@ def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilo
         if use_ct:
             ct_loss = content_fn(wave, f5a.sr)                                       # recognition loss of the clone: to be RAISED
             g_dis = torch.autograd.grad(dis_loss, delta, retain_graph=True, create_graph=False)[0]
-            g_ct = torch.autograd.grad(-ct_loss, delta, retain_graph=False, create_graph=False)[0]
+            if ct_loss.requires_grad:
+                g_ct = torch.autograd.grad(-ct_loss, delta, retain_graph=False, create_graph=False)[0]
+            else:                                                                    # content term not defined for this rollout
+                g_ct = torch.zeros_like(delta)
+            if not torch.isfinite(g_ct).all():                                       # never let the content term void a Q2 step
+                g_ct = torch.zeros_like(delta)
+                diag["ct_nonfinite"] = diag.get("ct_nonfinite", 0) + 1
+            elif float(g_ct.abs().max()) == 0.0:                                     # e.g. rollout too short for the sentence
+                diag["ct_zero"] = diag.get("ct_zero", 0) + 1
             diag.setdefault("ct_loss", []).append(float(ct_loss.item()))
         else:
             g_dis = torch.autograd.grad(dis_loss, delta, retain_graph=False, create_graph=False)[0]
@@ -248,10 +259,35 @@ def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilo
             wm_loss = compute_ldec(chunk_logits, message)
         g_wm = torch.autograd.grad(wm_loss, delta, retain_graph=False, create_graph=False)[0]
 
+        use_pt = prompt_fn is not None and prompt_weight > 0
+        if use_pt:
+            # q2t only: the ASR term acts on the prompt the attacker downloads, not on the F5 rollout
+            perturbed = torch.clamp(recon_wm + delta, -1.0, 1.0)
+            pt_loss = prompt_fn(perturbed)
+            g_pt = torch.autograd.grad(pt_loss, delta, retain_graph=False, create_graph=False)[0]
+            if not torch.isfinite(g_pt).all():
+                g_pt = torch.zeros_like(delta)
+                diag["pt_nonfinite"] = diag.get("pt_nonfinite", 0) + 1
+            diag.setdefault("pt_loss", []).append(float(pt_loss.item()))
+            if not torch.isfinite(g_dis).all():                                      # same rule as q2c: drop the term, keep the step
+                g_dis = torch.zeros_like(g_dis)
+                diag["dis_nonfinite"] = diag.get("dis_nonfinite", 0) + 1
+
+        if use_ct:
+            # q2c only (Q2 itself is unchanged): a non-finite speaker or content gradient drops that term for this step
+            # instead of voiding the step; only a non-finite watermark gradient still skips it. Counted per clip.
+            if not torch.isfinite(g_dis).all():
+                g_dis = torch.zeros_like(g_dis)
+                diag["dis_nonfinite"] = diag.get("dis_nonfinite", 0) + 1
+                print(f"  [whitebox step {step}] non-finite speaker gradient: term dropped for this step")
+            if not torch.isfinite(g_wm).all():
+                print(f"  [whitebox step {step}] non-finite WATERMARK gradient")
         gn_dis, gn_wm = g_dis.norm().item(), g_wm.norm().item()
         grad = lambda_wm * g_wm + dis_to_wm_ratio * (gn_wm / max(gn_dis, 1e-12)) * g_dis
-        if use_ct:
+        if use_ct and float(g_ct.abs().max()) > 0.0:
             grad = grad + content_weight * (gn_wm / max(g_ct.norm().item(), 1e-12)) * g_ct
+        if use_pt and float(g_pt.abs().max()) > 0.0:
+            grad = grad + prompt_weight * (gn_wm / max(g_pt.norm().item(), 1e-12)) * g_pt
         diag["dis_loss"].append(float(dis_loss.item())); diag["wm_loss"].append(float(wm_loss.item()))
         diag["gn_dis"].append(gn_dis); diag["gn_wm"].append(gn_wm)
         if not torch.isfinite(grad).all():

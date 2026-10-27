@@ -409,6 +409,11 @@ def main():
                    help="Clone these prompt files (protect_prompts_v2.py output, e.g. .../prompts/RQA/q2) instead of "
                         "watermarking in-loop. Checked per clip against the clean prompt hash and the checkpoint hash.")
     p.add_argument("--resemblyzer", action="store_true", help="Resemblyzer SIM of clone vs clean utterance (held-out verifier).")
+    p.add_argument("--prompt_whisper_size", default=None,
+                   help="faster-whisper model that transcribes the PROMPT for cloners that need its text (MaskGCT, CosyVoice); "
+                        "default = --whisper_size. 2026-10-26 (q2t): large-v3-turbo = an ASR held out from the attack.")
+    p.add_argument("--only_indices", default=None,
+                   help="Comma list of clip indices to clone (listening set). Texts and messages are those of the full run.")
     args = p.parse_args()
 
     cwe.preflight()
@@ -474,7 +479,9 @@ def main():
         old = json.load(open(args.output))
         if old.get("cloner") == args.cloner and old.get("provenance", {}).get("checkpoint_sha256") == prov["checkpoint_sha256"] \
                 and old.get("args", {}).get("dataset") == args.dataset \
-                and old.get("args", {}).get("prompt_dir") == args.prompt_dir:
+                and old.get("args", {}).get("prompt_dir") == args.prompt_dir \
+                and old.get("args", {}).get("prompt_whisper_size") == args.prompt_whisper_size \
+                and old.get("args", {}).get("only_indices") == args.only_indices:
             records = [r for r in old.get("records", []) if r["status"] == "ok"]
             done = {(r["index"], r["prompt"], r["text_mode"]) for r in records}
             print(f"[resume] {len(records)} completed records kept from {args.output}")
@@ -496,7 +503,9 @@ def main():
             json.dump(out, f, indent=1)
         os.replace(tmp, args.output)
 
-    todo = [(it, sp, tm) for it in items for sp in prompts for tm in texts if (it["index"], sp, tm) not in done]
+    keep = None if not args.only_indices else {int(x) for x in args.only_indices.split(",") if x.strip()}
+    todo = [(it, sp, tm) for it in items for sp in prompts for tm in texts
+            if (it["index"], sp, tm) not in done and (keep is None or it["index"] in keep)]
     print(f"[plan] cloner={args.cloner} clips={n_clips} prompts={prompts} texts={texts} -> {len(todo)} clones to run")
     if not todo:
         dump(final=True)
@@ -507,7 +516,7 @@ def main():
     backbone.model.to(device)
     load_fn, clone_fn, mechanism, published = BACKENDS[args.cloner]
     model = load_fn(device, args)
-    transcribe = cwe.Transcriber(args.whisper_size, device) if args.cloner in NEEDS_PROMPT_TEXT else None
+    transcribe = cwe.Transcriber(args.prompt_whisper_size or args.whisper_size, device) if args.cloner in NEEDS_PROMPT_TEXT else None
     ecapa = Ecapa(device) if args.ecapa else None
     asr = Asr(device, args.whisper_size) if args.wer else None
     resem = Resem(device) if args.resemblyzer else None
