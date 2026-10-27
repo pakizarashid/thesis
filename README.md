@@ -1,25 +1,165 @@
 # Dual-Defense Audio Protection
 
-**Watermarking (traceability) + adversarial perturbation (anti-cloning) against zero-shot voice cloning.**
+**One published recording that carries a watermark which survives voice cloning, and a protective perturbation that makes the clone less like the speaker.**
 
-This project combines a VoiceMark-style traceable watermark with a SafeSpeech-style
-adversarial perturbation, and asks whether one system can do both jobs at once: make a voice
-clone of a protected recording unconvincing, and still let the source be traced if a clone
-partly works.
-
-*Final update 2026-10-23. The experimental programme is closed. Since 2026-10-20: band-limited noise (H-BAND-PGD),
-a masking-shaped noise (H-MASK), a speaker-level re-analysis (H-CLUSTER), a test on other sentences (H-TEXT),
-two attempts to remove that sentence dependence (H-TEXTPGD, H-REFTEXT), an audit of the pipeline (H-AUDIT), and an
-external replication on a second dataset (VCTK) for F5-TTS and MaskGCT (H-EXTERNAL). The effect replicates; the
-negative results are reported as limits and future work (§5.22-5.29). The claim "Both" (clean to humans AND clone no
-longer like the speaker) is **not made**. Sections 5.1-5.12 are unchanged except where marked "(status 2026-10-23)".*
-
-> **Scope of the final claim.** F5-TTS is the white-box target and MaskGCT the valid transfer test; both pass the
-> cloner-works gate. XTTS-v2 and FishSpeech fail the gate and are descriptive only. Speaker similarity is judged on a
-> verifier (Resemblyzer) that was in no loss. Operating point: the shaped white-box perturbation "Q2" on top of a
-> clone-aware watermark. All effect sizes are relative to a flat-noise control and are small; no perceptual claim is made.
+*Final results, 2026-10-27.* §0 is the final state of the thesis. Everything after §0 is the development history (earlier watermark checkpoints and earlier perturbation variants). It is kept for provenance, and where it differs from §0, §0 wins.
 
 ---
+
+## 0. Final results
+
+### 0.1 The system in one paragraph
+
+A 16-bit message is embedded with a VoiceMark-style codec watermark. Its message encoder and detector are fine-tuned (LoRA) with a **differentiable cloner in the training loop**, so the detector learns to read what survives cloning (*clone-aware watermark*). The *quality-tuned* version adds VoiceMark's perceptual losses and augmentation and voice-activity terms. On top of the watermarked clip, a **protective perturbation** is computed per clip by projected gradient descent through F5-TTS, used as a **stand-in (surrogate) cloner**:
+- it pushes the clone's voice away from the speaker on three speaker verifiers;
+- a second term keeps the message readable;
+- its size follows the speech loudness envelope (peak 0.015, floor 0.003), with 40 steps of 0.0015.
+
+The attacker then clones the published clip with a zero-shot cloner. Every clip is judged three ways:
+- **sound quality:** PESQ and STOI against the original;
+- **identity:** the share of clones that a held-out verifier, Resemblyzer, accepts as the speaker at a calibrated threshold;
+- **traceability:** traced means at least 13 of 16 bits read from the clone.
+
+### 0.2 Baseline reproduced
+
+Official VoiceMark (Hugging Face release, hash-checked), in the paper's setting: LibriSpeech test-clean, full prompt, unseen text, 200 clips from 40 speakers.
+
+| Cloner | Paper ACC | Our run | Gap |
+|---|---:|---:|---:|
+| F5-TTS | 0.979 | 0.965 | 0.014 |
+| MaskGCT | 0.957 | 0.938 | 0.019 |
+| CosyVoice 2 | 0.964 | 0.960 | 0.004 |
+
+### 0.3 Watermark: clone-aware training beats VoiceMark
+
+**In VoiceMark's own setting** (same 200 clips, paired):
+
+| Cloner | VoiceMark | Clone-aware | Difference | p (Wilcoxon) | Traced |
+|---|---:|---:|---:|---:|---|
+| F5-TTS | 0.965 | 0.985 | +0.020 | 4e-4 | 98.5% → 99% |
+| MaskGCT | 0.938 | 0.973 | +0.036 | 3e-5 | 93% → 97.5% |
+| CosyVoice 2 | 0.960 | 0.983 | +0.023 | 3e-4 | 94.5% → 98% |
+
+**Across 15 combinations** (5 cloners × 3 test sets: LibriSpeech split, test-clean, VCTK; 3 s prompts, unseen text):
+- **Clone-aware:** higher than VoiceMark in all 15, every one significant after Holm correction.
+- **Largest gains** are on the voice-regenerating cloners, where VoiceMark is near chance (test-clean):
+  - XTTS-v2: 0.617 → 0.696, traced 16% → 30%;
+  - YourTTS: 0.563 → 0.642, traced 8% → 20%.
+- **Control:** the same fine-tuning without the cloner in the loss is never significantly better than VoiceMark, so the gain comes from the clone-aware objective.
+- **Training noise:** the seed repeat and the fixed-text control stay within 0.02 of the clone-aware result.
+
+**Quality-tuned watermark (the final watermark):**
+- **Sound quality:** PESQ 2.222 against VoiceMark's 2.126 (p 3e-10) and 2.055 for clone-aware alone. The codec ceiling is 2.524.
+- **Robustness to edits:** it matches or beats VoiceMark on every edit (message accuracy, no cloning):
+
+  | Edit | VoiceMark | Quality-tuned |
+  |---|---:|---:|
+  | Masking | 0.991 | 0.999 |
+  | Shuffling | 0.973 | 1.000 |
+  | Token replacement | 0.986 | 0.991 |
+  | EnCodec | 0.881 | 0.901 |
+  | Small perturbation | 0.853 | 0.907 |
+
+- **Survival under cloning:** within the pre-registered tolerance of clone-aware (−0.008, −0.004 and −0.013 on F5-TTS, MaskGCT and CosyVoice), so its verdict is PRESERVES. Against VoiceMark it is higher in all 15 combinations: 12 nominally significant, 4 after Holm.
+
+### 0.4 Protection: judged by a held-out verifier at a calibrated threshold
+
+**Why a held-out verifier.** Verifiers inside the loss get fooled. On F5-TTS clones, ECAPA (in the loss) falls from 0.475 to 0.105, while Resemblyzer (in no loss) moves only from 0.800 to 0.735. Only Resemblyzer counts as evidence.
+
+**Calibration** (`src/eval/sv_threshold_calibration.py`, `results/sv_calibration_resemblyzer.json`):
+- **Setup:** real same-speaker and different-speaker pairs, with probes cut to clone lengths.
+- **Threshold choice:** made on 40 LibriSpeech test-clean speakers, then frozen. Development EER is 2.8%, at a threshold of **0.687**.
+- **On the 20 evaluation speakers:**
+
+  | Threshold | Value | Wrong person accepted | Right person rejected |
+  |---|---:|---:|---:|
+  | EER (primary) | 0.687 | 4.0% [2.9, 5.2] | 3.5% [0.2, 9.8] |
+  | 1% FAR (strict) | 0.721 | 1.6% | 4.9% |
+  | De-AntiFake (0.697) | 0.697 | 3.1% | 4.1% |
+
+  A strict threshold rejects more clones, so it flatters protection; the primary result uses the EER threshold.
+
+**Final system** (quality-tuned watermark + perturbation): 100 clips, 20 unseen speakers, 3 s prompts, unseen text (`results/ce_ac_{cloner}_RQA_{wm,rs,q2}.json`, `results/summary_anticlone.json`, `results/summary_q2t.json`).
+
+| Cloner | Accepted as speaker: watermark only / random noise / protected | Similarity drop [95% CI] | Traced (protected) | Clone WER, wm → protected |
+|---|---|---|---:|---|
+| F5-TTS (stand-in) | 95% / 90% / **81%** | +0.065 [0.053, 0.078] | 89% | 4.5% → 6.9% |
+| MaskGCT (transfer) | 93% / 76% / **73%** | +0.044 [0.034, 0.055] | 76% | 12.7% → 18.3% |
+| CosyVoice 2 (transfer) | 93% / 92% / **84%** | +0.035 [0.025, 0.046] | 80% | 7.0% → 7.7% |
+
+- **Acceptance falls** on all three strong cloners (exact McNemar p 1e-4, 2e-6, 4e-3).
+- **Beyond random noise of the same size:** better on F5-TTS and CosyVoice 2 (p 0.035, 0.008), but not on MaskGCT (p 0.58).
+- **Similarity drop:** the 95% CIs are above zero on all five cloners and all three watermarks.
+- **Traceability:** the perturbation's message term keeps 76–89% of clones traced, against 49–62% for random noise.
+- **Clone-aware vs VoiceMark under protection:** watermark accuracy is better on MaskGCT (+0.043, Holm p 0.001) and CosyVoice 2 (+0.070, p 1e-4).
+- **Which stand-in:** the F5-TTS stand-in transfers better than a YourTTS stand-in on F5-TTS, MaskGCT and CosyVoice 2.
+
+**Operating points:**
+
+| Published recording | PESQ | Accepted as speaker (F5 / MaskGCT / Cosy) | Traced (F5 / MaskGCT / Cosy) |
+|---|---:|---|---|
+| VoiceMark watermark only | 2.13 | 95 / 89 / 95 | 92 / 81 / 94 |
+| Quality-tuned watermark only | 2.23 | 95 / 93 / 93 | 100 / 90 / 97 |
+| **Final: quality-tuned watermark + perturbation** | **1.79** | **81 / 73 / 84** | **89 / 76 / 80** |
+| Stronger: clone-aware watermark + perturbation | 1.67 | 57 / 52 / 74 | 85 / 88 / 87 |
+
+- **The stronger point is below the 1.70 quality bar.** Part of its extra effect comes from that watermark changing the voice by itself: watermark-only acceptance is 83 / 70 / 86.
+- **Listening:** two listeners rated this perturbation 2.12 for noisiness, against 1.25 for watermark only (1 = clean, 5 = degraded). It is audible as a faint hiss.
+
+### 0.5 What is claimed, and what is not
+
+**Claimed:**
+1. Clone-aware training makes the watermark survive cloning better than VoiceMark on every cloner and test set tested. The quality-tuned version also sounds better than VoiceMark.
+2. The protective perturbation lowers the share of clones accepted as the speaker on F5-TTS, MaskGCT and CosyVoice 2. It transfers beyond its stand-in, and most clones stay traceable.
+3. The trade-off between quality, identity protection and tracing is measured in one recording, with a calibrated held-out judge.
+
+**Not claimed:**
+- Full prevention: 73–84% of protected clones are still accepted.
+- Inaudible protection.
+- Full tracing on XTTS-v2 and YourTTS (20–30% traced).
+- Superiority over SafeSpeech, E2E-VGuard or CloneShield, which were not run under matched conditions.
+- Results beyond the 5 cloners, 2 datasets and sample sizes tested (100–200 clips, 20 test speakers, one training corpus, LoRA fine-tuning).
+
+**Tried without gain (pre-registered):**
+- An intelligibility term on the stand-in's output: WER did not rise (F5-TTS 4.0% vs 6.9%, MaskGCT 15.4% vs 18.3%).
+- A YourTTS stand-in: weaker transfer.
+- Optimising over several sentences, and using the cloner's own transcript: below the bar.
+
+**Extension running (notebook 28):** a targeted attack on the transcription of the prompt, after E2E-VGuard (`src/eval/protect_prompts_q2t.py`, `docs/preregistration_q2t_2026-10-26.md`). It will be reported as an extension and does not change the conclusions above.
+
+### 0.6 Reproduce the final results
+
+| Plain name in the thesis | Checkpoint |
+|---|---|
+| VoiceMark (official) | `external/voicemark/voicemark.pth` (no LoRA) |
+| Clone-aware watermark | `checkpoints/route2_vmaug_R0/route2_epoch19.pt` (seed repeat `route2_vmaug_R0s1`) |
+| Clone-aware, quality-tuned (final watermark) | `checkpoints/route2_vmaug_RQA/route2_epoch19.pt` |
+| Fine-tuning without the cloner (control) | `checkpoints/stage1_vmaug/stage1_epoch29.pt` |
+
+Final-phase notebooks (Kaggle; notebook 28 also runs on Colab). They are numbered separately from the history notebooks of the same numbers.
+
+| Notebook | What it does | Main outputs |
+|---|---|---|
+| Combined summary runs | Watermark comparison, quality and robustness | `results/ce_{libri,ltc,vctk}_*.json`, `results/results_quality_paired_route2_vmaug_v3.json` |
+| `26_anticlone_composability` | Protected prompts for 3 watermarks × arms; cloning with 5 cloners | `results/anticlone/prompts/`, `results/ce_ac_*.json`, `results/summary_anticlone.json` |
+| `27_f5_in_loop` | F5-TTS instead of YourTTS inside watermark training (restarting with a non-finite-gradient guard) | `checkpoints/route2_vmaug_R0F5*`, `results/summary_f5loop.json` |
+| `28_q2t_transcription_attack` | Threshold calibration, prompt-transcription attack, listening set | `results/sv_calibration_resemblyzer.json`, `results/summary_q2t.json`, `results/listen/` |
+
+Key scripts:
+- `src/eval/clone_eval_v2.py`: one harness for every cloner and checkpoint.
+- `src/eval/protect_prompts_v2.py`: the watermark-only, random-noise and protected arms.
+- `src/eval/f5_whitebox_pgd.py`: the differentiable F5-TTS stand-in.
+- `src/eval/summarise_anticlone.py` and `src/eval/summarise_q2t.py`: every verdict.
+
+Pre-registrations are in `docs/preregistration_*_2026-10-2*.md`.
+
+---
+
+# Development history (earlier checkpoints; superseded where §0 differs)
+
+> **Read with care.** The sections below use earlier watermark checkpoints (rank-2 and rank-8 LoRA on an older Stage-1 checkpoint) and the notebook numbering of that phase.
+> - **CosyVoice 2.** Its exclusion below was an environment problem. It was fixed (transformers 4.51.3, Qwen2 in float32), and CosyVoice 2 is a valid cloner in §0.
+> - **Superseded measures.** Thresholds such as "ECAPA SIM > 0.25" and the borrowed 0.0449 bar are replaced in §0 by the calibrated Resemblyzer threshold 0.687.
 
 ## Plain-language glossary
 

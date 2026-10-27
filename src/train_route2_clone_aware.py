@@ -582,6 +582,8 @@ def main():
         if done_ep:
             ck = torch.load(os.path.join(args.checkpoint_dir, f"route2_epoch{done_ep[-1]}.pt"), map_location=device,
                             weights_only=False)
+            assert all(torch.isfinite(v).all() for v in ck["lora_state_dict"].values()), \
+                f"route2_epoch{done_ep[-1]}.pt holds non-finite weights: delete it and resume from the epoch before"
             backbone.model.load_state_dict(ck["lora_state_dict"], strict=False)
             optimizer.load_state_dict(ck["optimizer_state_dict"])
             start_epoch = done_ep[-1] + 1
@@ -635,9 +637,32 @@ def main():
 
             if step % args.grad_accum == 0:
                 optimizer.zero_grad()
-            (loss / args.grad_accum).backward()
+                bad_window = False
+            # 2026-10-26 (notebook 27): one non-finite gradient from the F5-TTS rollout turned every LoRA weight into NaN.
+            # A non-finite loss or gradient now voids the whole accumulation window (no optimiser step), and is counted.
+            # With finite values nothing changes, so R0 / RQA training is unaffected.
+            if torch.isfinite(loss):
+                (loss / args.grad_accum).backward()
+            else:
+                bad_window = True
             if (step + 1) % args.grad_accum == 0:
-                optimizer.step()
+                if not bad_window:
+                    bad_window = any(p_.grad is not None and not torch.isfinite(p_.grad).all()
+                                     for g_ in optimizer.param_groups for p_ in g_["params"])
+                if bad_window:
+                    optimizer.zero_grad()
+                    sums["skipped"] = sums.get("skipped", 0) + 1
+                    run_bad = sums.get("run_bad", 0) + 1; sums["run_bad"] = run_bad
+                    print(f"  [e{epoch} s{step}] non-finite loss or gradient: optimiser step skipped "
+                          f"({sums['skipped']} this epoch)", flush=True)
+                    if run_bad >= 25:
+                        raise SystemExit("25 optimiser steps in a row were non-finite: stopping (send the log to Claude)")
+                else:
+                    optimizer.step()
+                    sums["run_bad"] = 0
+            if not torch.isfinite(loss):
+                sums["n_nonfinite_loss"] = sums.get("n_nonfinite_loss", 0) + 1
+                continue
 
             sums["loss"] += loss.item()
             sums["clean"] += loss_clean.item()
@@ -668,6 +693,8 @@ def main():
             "eval_clean_acc": acc_clean,
             "eval_clone_acc": acc_clone,
             "mean_extra_terms": {k: v / n for k, v in extra_sums.items()},
+            "skipped_optimizer_steps": sums.get("skipped", 0),
+            "nonfinite_loss_steps": sums.get("n_nonfinite_loss", 0),
         }
         history.append(rec)
 
@@ -680,6 +707,7 @@ def main():
 
         # Save every epoch -- a Kaggle timeout or crash must never cost a run.
         lora_state = {k: v for k, v in backbone.model.state_dict().items() if "_lora." in k}
+        assert all(torch.isfinite(v).all() for v in lora_state.values()), "non-finite LoRA weights at the end of the epoch: not saved"
         ckpt_path = os.path.join(args.checkpoint_dir, f"route2_epoch{epoch}.pt")
         torch.save({
             "epoch": epoch, "lora_state_dict": lora_state,

@@ -43,6 +43,8 @@ class F5Surrogate:
 
     def transcribe(self, wav16k):
         x = np.ascontiguousarray(wav16k.detach().float().cpu().reshape(-1).numpy())
+        if not np.isfinite(x).all():       # never hand Whisper a non-finite signal (it stalled on one, 2026-10-26)
+            return "the quick brown fox jumps over the lazy dog"
         segs, _ = self.asr.transcribe(x, language="en", beam_size=5)
         t = " ".join(s.text for s in segs).strip()
         return t if t else "the quick brown fox jumps over the lazy dog"

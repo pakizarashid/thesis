@@ -48,3 +48,14 @@ R0 was trained with YourTTS as the differentiable cloner in the loop. It improve
 - R0 settings only (no quality terms), so this is a comparison of in-loop cloners, not a new operating point.
 - One training corpus, 100 evaluation clips and 20 speakers.
 - A Kaggle session limit may force a resume. The loader is replayed so data order and crops match, but the F5 noise counter and the text sampler restart. Any resume is recorded.
+
+## Addendum 1 (2026-10-26, after the first run failed; before any evaluation)
+**What happened.** Both arms trained normally through the two warm-up epochs: clean ACC 1.00, clone ACC 0.96–0.99. Within 20 steps of the clone term switching on (epoch 2), loss, Ldec(clean) and Ldec(clone) all became NaN in both seeds. Clean and clone ACC then sat at 0.472 for epochs 2–3. A single non-finite gradient from the F5-TTS rollout had been applied, which made every LoRA weight NaN. The run then stalled, because Whisper was transcribing a NaN signal.
+
+**Change (training code only; R0's recipe is unchanged).**
+- **Skipped steps.** A non-finite loss or gradient voids that optimiser step, which is counted per epoch (`skipped_optimizer_steps`). Training stops if 25 steps in a row are non-finite. With finite values the code does exactly what it did before, so R0 and RQA are unaffected. This is the same rule Q2 uses for its PGD steps.
+- **Checkpoints.** A checkpoint with non-finite weights is never saved or resumed from.
+- **Transcript fallback.** The F5-TTS surrogate gives Whisper a fixed fallback transcript when the signal is non-finite.
+- **Restart.** The non-finite checkpoints were deleted. Training resumes from the last finite epoch, or starts again from scratch.
+
+**Added to the report.** Skipped optimiser steps per epoch, per arm. If more than 5% of the clone-on steps of any arm are skipped, that arm's result is reported as "trained with frequent non-finite gradients", next to its verdict.
