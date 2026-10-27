@@ -8,6 +8,12 @@ Scoring is the evaluation's own: clone_eval_v2.Resem (same VoiceEncoder, same pr
 enrolment is the whole trimmed utterance (clone_eval_v2: trim_padding of the item, crop 20 s), exactly what a clone
 is compared with. The probe is a DIFFERENT real recording, cut to a clone-like length:
 
+--verifier ecapa runs the IDENTICAL protocol on clone_eval_v2.Ecapa (the same speechbrain encoder, the same
+encode_batch on the same trimmed utterance, the same cosine), so its threshold is on the scale of the sim_ecapa
+values already stored in every results/ce_ac_*.json. ECAPA is one of the three verifiers INSIDE the perturbation
+loss, so its accept rate is reported only as the in-loop diagnostic that quantifies how much a self-graded
+evaluation inflates a protection result; the honest number stays Resemblyzer's, which is in no loss.
+
     genuine pair  : enrolment = utterance u of speaker s, probe = another utterance v of s
     impostor pair : enrolment = utterance u of speaker s, probe = an utterance of another speaker
     probe length  : drawn from the clone lengths of the three strong cloners (RQA, watermark only, unseen text,
@@ -25,7 +31,8 @@ Rules (fixed before any score is seen):
     reference           : 0.697 (De-AntiFake, ICML 2025: EER on LibriSpeech test-clean, 25 speakers x 5 utterances)
 Reported on the test speakers at each threshold: FAR, FRR (speaker-bootstrap 95 % CIs, 10000 resamples), the test EER.
 
-    python src/eval/sv_threshold_calibration.py --data_root DATA --out results/sv_calibration_resemblyzer.json
+    python src/eval/sv_threshold_calibration.py --data_root DATA
+    python src/eval/sv_threshold_calibration.py --data_root DATA --verifier ecapa
 """
 import argparse
 import json
@@ -88,6 +95,28 @@ def probe_crops(utts, lengths, k, rng):
                 seg = x[s0:s0 + n]
             out.append((p, c, seg))
     return out
+
+
+class EcapaEmbedder:
+    """clone_eval_v2.Ecapa as an embedder: the same model and the same encode_batch that produced sim_ecapa."""
+
+    def __init__(self, device):
+        self.e = ce.Ecapa(device)
+        self.device = device
+        self._cache = {}
+
+    def embed(self, wav, key=None):
+        if key is not None and key in self._cache:
+            return self._cache[key]
+        with torch.no_grad():
+            v = self.e.m.encode_batch(wav.reshape(1, -1).to(self.device)).reshape(-1).float().cpu().numpy()
+        if key is not None:
+            self._cache[key] = v
+        return v
+
+
+def make_verifier(name, device):
+    return ce.Resem(device) if name == "resemblyzer" else EcapaEmbedder(device)
 
 
 def score_matrix(resem, utts, crops, tag):
@@ -156,13 +185,16 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--data_root", required=True)
     p.add_argument("--results_dir", default="results")
-    p.add_argument("--out", default="results/sv_calibration_resemblyzer.json")
+    p.add_argument("--verifier", choices=("resemblyzer", "ecapa"), default="resemblyzer")
+    p.add_argument("--out", default=None, help="default: results/sv_calibration_{verifier}.json")
     p.add_argument("--k_crops", type=int, default=3)
     p.add_argument("--seed", type=int, default=20261027)
     p.add_argument("--listen_indices", default="23,1,87,31,12,54",
                    help="test clips whose genuine and impostor reference crops are saved for the listening page")
     p.add_argument("--listen_dir", default="results/listen/reference")
     a = p.parse_args()
+    if a.out is None:
+        a.out = f"results/sv_calibration_{a.verifier}.json"
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     t0 = time.time()
@@ -178,9 +210,11 @@ def main():
     print(f"probe lengths from {len(lengths)} clones: median {np.median(lengths):.2f} s, 5-95 % "
           f"{np.percentile(lengths, 5):.2f}-{np.percentile(lengths, 95):.2f} s", flush=True)
 
-    resem = ce.Resem(device)
+    resem = make_verifier(a.verifier, device)
     rng = np.random.default_rng(a.seed)
-    res = {"script": "sv_threshold_calibration", "settings": vars(a), "verifier": "resemblyzer (clone_eval_v2.Resem)",
+    res = {"script": "sv_threshold_calibration", "settings": vars(a), "verifier": a.verifier,
+           "verifier_impl": {"resemblyzer": "clone_eval_v2.Resem", "ecapa": "clone_eval_v2.Ecapa"}[a.verifier],
+           "in_loss": a.verifier == "ecapa",
            "device": device, "probe_length_seconds": {"median": float(np.median(lengths)), "n_clones": int(len(lengths))}}
     sets = {}
     for name, utts in (("development", dev), ("test", test)):
@@ -196,7 +230,13 @@ def main():
               f"impostor mean {res[name]['impostor_mean']:.3f} | EER {e:.3f} at {t_eer:.3f}", flush=True)
 
     _u, _c, _S, dg, di = sets["development"]
-    thr = {"eer_dev": res["development"]["eer_threshold"], "far1_dev": thr_at_far(di, 0.01), "deantifake_0697": 0.697}
+    thr = {"eer_dev": res["development"]["eer_threshold"], "far1_dev": thr_at_far(di, 0.01)}
+    if a.verifier == "resemblyzer":
+        thr["deantifake_0697"] = 0.697          # De-AntiFake (ICML 2025): Resemblyzer EER, LibriSpeech test-clean
+    else:
+        thr["safespeech_025"] = 0.25            # SafeSpeech (USENIX Sec. 2025): ECAPA SIM > 0.25 counts as the
+        #                                         same speaker. Published criterion, not calibrated on our data,
+        #                                         and used there on fine-tuned-model output: a reference, not our rule.
     res["thresholds"] = thr
     res["primary"], res["secondary"] = "eer_dev", "far1_dev"
     _u, _c, _S, tg, ti = sets["test"]
@@ -210,7 +250,7 @@ def main():
               f"FRR {fr:.3f} [{cr[0]:.3f},{cr[1]:.3f}]", flush=True)
 
     # reference crops for the listening page: for each listening clip, the genuine and impostor crop of the median score
-    keep = [int(x) for x in a.listen_indices.split(",") if x.strip()]
+    keep = [int(x) for x in a.listen_indices.split(",") if x.strip()] if a.verifier == "resemblyzer" else []
     if keep:
         import soundfile as sf
         os.makedirs(a.listen_dir, exist_ok=True)
