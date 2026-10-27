@@ -1,0 +1,126 @@
+[preflight] omegaconf 2.3.1 ok; numpy/torch ok
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+[plan] cloner=cosyvoice clips=100 prompts=['3'] texts=['unseen'] -> 6 clones to run
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[backbone] loaded checkpoints/route2_vmaug_RQA/route2_epoch19.pt (epoch 19)
+2026-10-27 10:24:26,100 INFO NumExpr defaulting to 4 threads.
+2026-10-27 10:24:26,926 DEBUG Skipping import of cpp extensions: Could not load this library: /usr/local/lib/python3.13/dist-packages/torchao/_C.abi3.so
+2026-10-27 10:24:29,560 DEBUG Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2026-10-27 10:24:29,726 DEBUG Creating converter from 7 to 5
+2026-10-27 10:24:29,726 DEBUG Creating converter from 5 to 7
+2026-10-27 10:24:29,726 DEBUG Creating converter from 7 to 5
+2026-10-27 10:24:29,726 DEBUG Creating converter from 5 to 7
+2026-10-27 10:24:30,045 DEBUG etils.epath found. Using etils.epath for file I/O.
+[cosyvoice] using CosyVoice2 from cosyvoice.cli.cosyvoice
+Sliding Window Attention is enabled but not implemented for `sdpa`; unexpected results may be encountered.
+/usr/local/lib/python3.13/dist-packages/diffusers/models/lora.py:391: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+2026-10-27 10:24:37,569 INFO input frame rate=25
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/usr/local/lib/python3.13/dist-packages/pyworld/__init__.py:13: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+[1;31m2026-10-27 10:24:40.072150892 [E:onnxruntime:Default, provider_bridge_ort.cc:2458 operator()] /onnxruntime_src/onnxruntime/core/session/provider_bridge_ort.cc:2043 onnxruntime::Provider& onnxruntime::ProviderLibrary::Get() [ONNXRuntimeError] : 1 : FAIL : Failed to load library /usr/local/lib/python3.13/dist-packages/onnxruntime/capi/libonnxruntime_providers_cuda.so with error: libcublasLt.so.13: cannot open shared object file: No such file or directory
+[m
+[0;93m2026-10-27 10:24:40.072194934 [W:onnxruntime:Default, onnxruntime_pybind_state.cc:1295 CreateExecutionProviderFactoryInstance] Failed to create CUDAExecutionProvider. Require cuDNN 9.* and CUDA 13.*. Please install all dependencies as mentioned in the GPU requirements page (https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html#requirements), make sure they're in the PATH, and that your GPU is supported.[m
+2026-10-27 10:24:41,234 INFO use wetext frontend
+[cosyvoice] loaded /kaggle/working/CosyVoice/pretrained_models/CosyVoice2-0.5B; sample_rate=24000
+2026-10-27 10:24:44,637 INFO Applied quirks (see `speechbrain.utils.quirks`): [allow_tf32, disable_jit_profiling]
+2026-10-27 10:24:44,638 INFO Excluded quirks specified by the `SB_DISABLE_QUIRKS` environment (comma-separated list): []
+2026-10-27 10:24:44,652 INFO Fetch hyperparams.yaml: Using symlink found at '/tmp/ecapa_model/hyperparams.yaml'
+2026-10-27 10:24:44,823 INFO Fetch embedding_model.ckpt: Using symlink found at '/tmp/ecapa_model/embedding_model.ckpt'
+2026-10-27 10:24:44,823 INFO Fetch mean_var_norm_emb.ckpt: Using symlink found at '/tmp/ecapa_model/mean_var_norm_emb.ckpt'
+2026-10-27 10:24:44,823 INFO Fetch classifier.ckpt: Using symlink found at '/tmp/ecapa_model/classifier.ckpt'
+2026-10-27 10:24:44,824 INFO Fetch label_encoder.txt: Using symlink found at '/tmp/ecapa_model/label_encoder.ckpt'
+2026-10-27 10:24:44,824 INFO Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+/usr/local/lib/python3.13/dist-packages/speechbrain/utils/checkpoints.py:202: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  state_dict = torch.load(path, map_location=device)
+/usr/local/lib/python3.13/dist-packages/speechbrain/processing/features.py:1550: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  stats = torch.load(path, map_location=self.device)
+2026-10-27 10:24:44,930 WARNING Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+2026-10-27 10:24:45,073 DEBUG Starting new HTTPS connection (1): huggingface.co:443
+2026-10-27 10:24:45,250 DEBUG https://huggingface.co:443 "GET /api/models/Systran/faster-whisper-base.en/revision/main HTTP/1.1" 200 None
+/usr/local/lib/python3.13/dist-packages/resemblyzer/voice_encoder.py:43: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  checkpoint = torch.load(weights_fpath, map_location="cpu")
+[transcribe] loading faster-whisper base.en (float16)
+2026-10-27 10:24:45,824 DEBUG https://huggingface.co:443 "GET /api/models/Systran/faster-whisper-base.en/revision/main HTTP/1.1" 200 None
+2026-10-27 10:24:46,003 INFO Processing audio with duration 00:03.000
+2026-10-27 10:24:46,009 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]/usr/local/lib/python3.13/dist-packages/torchaudio/__init__.py:86: UserWarning: The 'backend' parameter is not used by TorchCodec AudioDecoder.
+  return load_with_torchcodec(
+2026-10-27 10:24:46,929 INFO synthesis text You know they are very stylish people especially missus chester ross.
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:103: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with self.llm_context, torch.cuda.amp.autocast(self.fp16 is True and hasattr(self.llm, 'vllm') is False):
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:293: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast(self.fp16):
+2026-10-27 10:24:51,652 INFO yield speech len 5.44, rtf 0.8681644411648021
+100%|██████████| 1/1 [00:05<00:00,  5.31s/it]100%|██████████| 1/1 [00:05<00:00,  5.31s/it]
+2026-10-27 10:24:52,671 INFO Processing audio with duration 00:05.440
+2026-10-27 10:24:52,676 DEBUG Processing segment at 00:00.000
+[1/6] clip 1 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.395 res=0.760 wer=0.27
+2026-10-27 10:24:52,883 INFO Processing audio with duration 00:03.000
+2026-10-27 10:24:52,887 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]/usr/local/lib/python3.13/dist-packages/torchaudio/__init__.py:86: UserWarning: The 'backend' parameter is not used by TorchCodec AudioDecoder.
+  return load_with_torchcodec(
+2026-10-27 10:24:53,337 INFO synthesis text And where did it lead right to this room ronicky stepped from among the smooth silks.
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:103: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with self.llm_context, torch.cuda.amp.autocast(self.fp16 is True and hasattr(self.llm, 'vllm') is False):
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:293: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast(self.fp16):
+2026-10-27 10:24:58,022 INFO yield speech len 5.92, rtf 0.7913378444877831
+100%|██████████| 1/1 [00:05<00:00,  5.01s/it]100%|██████████| 1/1 [00:05<00:00,  5.01s/it]
+2026-10-27 10:24:58,303 INFO Processing audio with duration 00:05.920
+2026-10-27 10:24:58,313 DEBUG Processing segment at 00:00.000
+[2/6] clip 12 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.222 res=0.785 wer=0.19
+2026-10-27 10:24:58,557 INFO Processing audio with duration 00:03.000
+2026-10-27 10:24:58,561 DEBUG Processing segment at 00:00.000
+2026-10-27 10:24:58,664 DEBUG Log probability threshold is not met with temperature 0.0 (-1.041667 < -1.000000)
+2026-10-27 10:24:58,731 DEBUG Log probability threshold is not met with temperature 0.2 (-1.042023 < -1.000000)
+2026-10-27 10:24:58,788 DEBUG Log probability threshold is not met with temperature 0.4 (-1.166234 < -1.000000)
+2026-10-27 10:24:58,846 DEBUG Log probability threshold is not met with temperature 0.6 (-1.331169 < -1.000000)
+2026-10-27 10:24:58,908 DEBUG Log probability threshold is not met with temperature 0.8 (-1.214328 < -1.000000)
+2026-10-27 10:24:58,984 DEBUG Log probability threshold is not met with temperature 1.0 (-2.260264 < -1.000000)
+2026-10-27 10:24:58,984 DEBUG Reset prompt. prompt_reset_on_temperature threshold is met 1.000000 > 0.500000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:24:59,299 INFO synthesis text But civil you can speak and shall george merry you may lay to that.
+2026-10-27 10:25:03,690 INFO yield speech len 5.44, rtf 0.8071692550883574
+100%|██████████| 1/1 [00:04<00:00,  4.70s/it]100%|██████████| 1/1 [00:04<00:00,  4.70s/it]
+2026-10-27 10:25:03,930 INFO Processing audio with duration 00:05.440
+2026-10-27 10:25:03,934 DEBUG Processing segment at 00:00.000
+[3/6] clip 23 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.139 res=0.700 wer=0.07
+2026-10-27 10:25:04,152 INFO Processing audio with duration 00:03.000
+2026-10-27 10:25:04,156 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:25:04,636 INFO synthesis text How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+2026-10-27 10:25:08,299 INFO yield speech len 4.44, rtf 0.825016401909493
+100%|██████████| 1/1 [00:03<00:00,  3.99s/it]100%|██████████| 1/1 [00:03<00:00,  3.99s/it]
+2026-10-27 10:25:08,490 INFO Processing audio with duration 00:04.440
+2026-10-27 10:25:08,495 DEBUG Processing segment at 00:00.000
+[4/6] clip 31 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.476 res=0.829 wer=0.11
+2026-10-27 10:25:08,741 INFO Processing audio with duration 00:03.000
+2026-10-27 10:25:08,744 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:25:09,168 INFO synthesis text And the second to benjamin tipton.
+2026-10-27 10:25:11,413 INFO yield speech len 2.56, rtf 0.8768514730036259
+100%|██████████| 1/1 [00:02<00:00,  2.54s/it]100%|██████████| 1/1 [00:02<00:00,  2.54s/it]
+2026-10-27 10:25:11,618 INFO Processing audio with duration 00:02.560
+2026-10-27 10:25:11,622 DEBUG Processing segment at 00:00.000
+[5/6] clip 54 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.134 res=0.755 wer=0.00
+2026-10-27 10:25:11,889 INFO Processing audio with duration 00:03.000
+2026-10-27 10:25:11,893 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:25:12,340 INFO synthesis text It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+2026-10-27 10:25:17,992 INFO yield speech len 7.24, rtf 0.7806850072428666
+100%|██████████| 1/1 [00:05<00:00,  5.97s/it]100%|██████████| 1/1 [00:05<00:00,  5.97s/it]
+2026-10-27 10:25:18,283 INFO Processing audio with duration 00:07.240
+2026-10-27 10:25:18,293 DEBUG Processing segment at 00:00.000
+[6/6] clip 87 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.064 res=0.710 wer=0.00
+
+=== summary (prompt|text) ===
+3|unseen {'n_ok': 6, 'n_failed': 0, 'acc_source_mean': 1.0, 'acc_mean': 0.9688, 'traced_rate': 1.0, 'far_rate': 0.0, 'sim_ecapa_mean': 0.2384, 'wer_mean': 0.1071, 'sim_resemblyzer_mean': 0.7562, 'gate_pass': False}
+saved results/listen/ce_listen_cosyvoice_q2t.json
