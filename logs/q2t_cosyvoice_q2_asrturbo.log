@@ -1,0 +1,1042 @@
+[preflight] omegaconf 2.3.1 ok; numpy/torch ok
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+[plan] cloner=cosyvoice clips=100 prompts=['3'] texts=['unseen'] -> 100 clones to run
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[backbone] loaded checkpoints/route2_vmaug_RQA/route2_epoch19.pt (epoch 19)
+2026-10-27 10:09:09,656 INFO NumExpr defaulting to 4 threads.
+2026-10-27 10:09:10,502 DEBUG Skipping import of cpp extensions: Could not load this library: /usr/local/lib/python3.13/dist-packages/torchao/_C.abi3.so
+2026-10-27 10:09:13,216 DEBUG Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2026-10-27 10:09:13,386 DEBUG Creating converter from 7 to 5
+2026-10-27 10:09:13,386 DEBUG Creating converter from 5 to 7
+2026-10-27 10:09:13,386 DEBUG Creating converter from 7 to 5
+2026-10-27 10:09:13,386 DEBUG Creating converter from 5 to 7
+2026-10-27 10:09:13,710 DEBUG etils.epath found. Using etils.epath for file I/O.
+[cosyvoice] using CosyVoice2 from cosyvoice.cli.cosyvoice
+Sliding Window Attention is enabled but not implemented for `sdpa`; unexpected results may be encountered.
+/usr/local/lib/python3.13/dist-packages/diffusers/models/lora.py:391: FutureWarning: `LoRACompatibleLinear` is deprecated and will be removed in version 1.0.0. Use of `LoRACompatibleLinear` is deprecated. Please switch to PEFT backend by installing PEFT: `pip install peft`.
+  deprecate("LoRACompatibleLinear", "1.0.0", deprecation_message)
+2026-10-27 10:09:22,127 INFO input frame rate=25
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/usr/local/lib/python3.13/dist-packages/pyworld/__init__.py:13: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+[1;31m2026-10-27 10:09:24.816289050 [E:onnxruntime:Default, provider_bridge_ort.cc:2458 operator()] /onnxruntime_src/onnxruntime/core/session/provider_bridge_ort.cc:2043 onnxruntime::Provider& onnxruntime::ProviderLibrary::Get() [ONNXRuntimeError] : 1 : FAIL : Failed to load library /usr/local/lib/python3.13/dist-packages/onnxruntime/capi/libonnxruntime_providers_cuda.so with error: libcublasLt.so.13: cannot open shared object file: No such file or directory
+[m
+[0;93m2026-10-27 10:09:24.816330092 [W:onnxruntime:Default, onnxruntime_pybind_state.cc:1295 CreateExecutionProviderFactoryInstance] Failed to create CUDAExecutionProvider. Require cuDNN 9.* and CUDA 13.*. Please install all dependencies as mentioned in the GPU requirements page (https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html#requirements), make sure they're in the PATH, and that your GPU is supported.[m
+2026-10-27 10:09:26,025 INFO use wetext frontend
+[cosyvoice] loaded /kaggle/working/CosyVoice/pretrained_models/CosyVoice2-0.5B; sample_rate=24000
+2026-10-27 10:09:29,550 INFO Applied quirks (see `speechbrain.utils.quirks`): [allow_tf32, disable_jit_profiling]
+2026-10-27 10:09:29,550 INFO Excluded quirks specified by the `SB_DISABLE_QUIRKS` environment (comma-separated list): []
+2026-10-27 10:09:29,565 INFO Fetch hyperparams.yaml: Using symlink found at '/tmp/ecapa_model/hyperparams.yaml'
+2026-10-27 10:09:29,751 INFO Fetch embedding_model.ckpt: Using symlink found at '/tmp/ecapa_model/embedding_model.ckpt'
+2026-10-27 10:09:29,751 INFO Fetch mean_var_norm_emb.ckpt: Using symlink found at '/tmp/ecapa_model/mean_var_norm_emb.ckpt'
+2026-10-27 10:09:29,751 INFO Fetch classifier.ckpt: Using symlink found at '/tmp/ecapa_model/classifier.ckpt'
+2026-10-27 10:09:29,751 INFO Fetch label_encoder.txt: Using symlink found at '/tmp/ecapa_model/label_encoder.ckpt'
+2026-10-27 10:09:29,751 INFO Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+/usr/local/lib/python3.13/dist-packages/speechbrain/utils/checkpoints.py:202: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  state_dict = torch.load(path, map_location=device)
+/usr/local/lib/python3.13/dist-packages/speechbrain/processing/features.py:1550: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  stats = torch.load(path, map_location=self.device)
+2026-10-27 10:09:29,870 WARNING Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+2026-10-27 10:09:30,019 DEBUG Starting new HTTPS connection (1): huggingface.co:443
+2026-10-27 10:09:30,193 DEBUG https://huggingface.co:443 "GET /api/models/Systran/faster-whisper-base.en/revision/main HTTP/1.1" 200 None
+/usr/local/lib/python3.13/dist-packages/resemblyzer/voice_encoder.py:43: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  checkpoint = torch.load(weights_fpath, map_location="cpu")
+[transcribe] loading faster-whisper large-v3-turbo (float16)
+2026-10-27 10:09:30,825 DEBUG https://huggingface.co:443 "GET /api/models/mobiuslabsgmbh/faster-whisper-large-v3-turbo/revision/main HTTP/1.1" 307 103
+2026-10-27 10:09:30,898 DEBUG https://huggingface.co:443 "GET /api/models/dropbox-dash/faster-whisper-large-v3-turbo/revision/main HTTP/1.1" 200 None
+2026-10-27 10:09:30,905 DEBUG Starting new HTTPS connection (1): huggingface.co:443
+2026-10-27 10:09:30,907 DEBUG Starting new HTTPS connection (1): huggingface.co:443
+2026-10-27 10:09:30,915 DEBUG Starting new HTTPS connection (1): huggingface.co:443
+2026-10-27 10:09:30,921 DEBUG Starting new HTTPS connection (1): huggingface.co:443
+2026-10-27 10:09:30,921 DEBUG Starting new HTTPS connection (1): huggingface.co:443
+2026-10-27 10:09:31,125 DEBUG https://huggingface.co:443 "HEAD /mobiuslabsgmbh/faster-whisper-large-v3-turbo/resolve/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/model.bin HTTP/1.1" 307 0
+2026-10-27 10:09:31,128 DEBUG https://huggingface.co:443 "HEAD /mobiuslabsgmbh/faster-whisper-large-v3-turbo/resolve/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/config.json HTTP/1.1" 307 0
+2026-10-27 10:09:31,132 DEBUG https://huggingface.co:443 "HEAD /mobiuslabsgmbh/faster-whisper-large-v3-turbo/resolve/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/tokenizer.json HTTP/1.1" 307 0
+2026-10-27 10:09:31,145 DEBUG https://huggingface.co:443 "HEAD /mobiuslabsgmbh/faster-whisper-large-v3-turbo/resolve/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/preprocessor_config.json HTTP/1.1" 307 0
+2026-10-27 10:09:31,157 DEBUG https://huggingface.co:443 "HEAD /mobiuslabsgmbh/faster-whisper-large-v3-turbo/resolve/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/vocabulary.json HTTP/1.1" 307 0
+2026-10-27 10:09:31,196 DEBUG https://huggingface.co:443 "HEAD /dropbox-dash/faster-whisper-large-v3-turbo/resolve/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/model.bin HTTP/1.1" 302 0
+2026-10-27 10:09:31,198 DEBUG https://huggingface.co:443 "HEAD /dropbox-dash/faster-whisper-large-v3-turbo/resolve/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/config.json HTTP/1.1" 307 0
+2026-10-27 10:09:31,200 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:31,200 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:31,203 DEBUG https://huggingface.co:443 "HEAD /dropbox-dash/faster-whisper-large-v3-turbo/resolve/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/tokenizer.json HTTP/1.1" 307 0
+2026-10-27 10:09:31,213 DEBUG https://huggingface.co:443 "HEAD /dropbox-dash/faster-whisper-large-v3-turbo/resolve/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/preprocessor_config.json HTTP/1.1" 307 0
+2026-10-27 10:09:31,226 DEBUG https://huggingface.co:443 "HEAD /api/resolve-cache/models/dropbox-dash/faster-whisper-large-v3-turbo/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/config.json HTTP/1.1" 200 0
+2026-10-27 10:09:31,227 DEBUG https://huggingface.co:443 "HEAD /dropbox-dash/faster-whisper-large-v3-turbo/resolve/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/vocabulary.json HTTP/1.1" 307 0
+2026-10-27 10:09:31,231 DEBUG https://huggingface.co:443 "HEAD /api/resolve-cache/models/dropbox-dash/faster-whisper-large-v3-turbo/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/tokenizer.json HTTP/1.1" 200 0
+2026-10-27 10:09:31,232 DEBUG Attempting to acquire lock 138662540918864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/17456db595adc78a973f97d69d8cb50bc87c0b1c.lock
+2026-10-27 10:09:31,232 DEBUG Lock 138662540918864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/17456db595adc78a973f97d69d8cb50bc87c0b1c.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:31,241 DEBUG https://huggingface.co:443 "HEAD /api/resolve-cache/models/dropbox-dash/faster-whisper-large-v3-turbo/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/preprocessor_config.json HTTP/1.1" 200 0
+2026-10-27 10:09:31,250 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:31,250 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:31,255 DEBUG https://huggingface.co:443 "HEAD /api/resolve-cache/models/dropbox-dash/faster-whisper-large-v3-turbo/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/vocabulary.json HTTP/1.1" 200 0
+2026-10-27 10:09:31,283 DEBUG Attempting to acquire lock 138662540918864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/17456db595adc78a973f97d69d8cb50bc87c0b1c.lock
+2026-10-27 10:09:31,283 DEBUG Lock 138662540918864 acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/17456db595adc78a973f97d69d8cb50bc87c0b1c.lock
+2026-10-27 10:09:31,283 DEBUG Attempting to release lock 138662540918864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/17456db595adc78a973f97d69d8cb50bc87c0b1c.lock
+2026-10-27 10:09:31,283 DEBUG Lock 138662540918864 released on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/17456db595adc78a973f97d69d8cb50bc87c0b1c.lock
+2026-10-27 10:09:31,301 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:31,301 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:31,351 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:31,351 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:31,402 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:31,402 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:31,452 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:31,453 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:31,503 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:31,503 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:31,554 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:31,554 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:31,604 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:31,604 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:31,654 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:31,655 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:31,705 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:31,706 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:31,756 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:31,756 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:31,806 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:31,807 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:31,857 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:31,857 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:31,907 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:31,908 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:31,958 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:31,958 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,008 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,009 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,059 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,059 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,109 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,110 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,160 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,160 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,211 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,211 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,261 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,262 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,312 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,312 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,363 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,363 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,413 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,413 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,464 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,464 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,514 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,514 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,565 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,565 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,615 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,616 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,666 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,666 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,716 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,717 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,767 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,767 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,817 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,818 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,868 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,868 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,918 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,919 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:32,969 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:32,970 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,020 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,021 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,071 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,071 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,122 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,122 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,172 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,173 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,224 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,224 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,274 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,274 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,325 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,325 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,376 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,376 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,427 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,429 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,481 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,482 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,532 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,533 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,583 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,583 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,634 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,634 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,684 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,685 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,735 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,735 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,786 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,786 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,837 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,837 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,887 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,888 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,938 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,938 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:33,989 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:33,990 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,040 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,041 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,091 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,091 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,141 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,142 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,193 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,193 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,244 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,244 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,295 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,295 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,345 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,346 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,397 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,398 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,449 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,449 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,499 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,500 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,550 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,550 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,601 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,601 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,651 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,652 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,702 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,703 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,754 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,754 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,805 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,806 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,856 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,857 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,907 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,907 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:34,958 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:34,958 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,008 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,009 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,059 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,059 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,110 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,110 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,160 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,161 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,211 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,212 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,262 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,262 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,313 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,314 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,364 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,365 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,415 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,416 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,466 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,469 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,519 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,520 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,570 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,571 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,621 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,622 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,672 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,672 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,723 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,723 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,774 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,774 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,824 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,825 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,876 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,877 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,928 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,929 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:35,979 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:35,979 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,030 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,030 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,080 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,081 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,131 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,131 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,182 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,182 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,232 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,233 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,283 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,283 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,334 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,334 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,384 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,384 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,435 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,435 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,485 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,485 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,535 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,536 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,586 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,587 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,637 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,638 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,688 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,689 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,739 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,740 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,790 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,791 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,841 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,841 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,891 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,892 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,942 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,942 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:36,992 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:36,993 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:37,043 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:37,043 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:37,094 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:37,094 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:37,144 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:37,144 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:37,195 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:37,195 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:37,245 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:37,245 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:37,296 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:37,296 DEBUG Lock 138662519786864 not acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock, waiting 0.05 seconds ...
+2026-10-27 10:09:37,346 DEBUG Attempting to acquire lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:37,347 DEBUG Lock 138662519786864 acquired on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:37,347 DEBUG Attempting to release lock 138662519786864 on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:37,347 DEBUG Lock 138662519786864 released on /root/.cache/huggingface/hub/.locks/models--mobiuslabsgmbh--faster-whisper-large-v3-turbo/e76620f83d5f5b69efd3d87e3dc180c1bd21df9fbebacfd4335e5e1efcc018da.lock
+2026-10-27 10:09:38,673 INFO Processing audio with duration 00:03.000
+2026-10-27 10:09:38,696 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]/usr/local/lib/python3.13/dist-packages/torchaudio/__init__.py:86: UserWarning: The 'backend' parameter is not used by TorchCodec AudioDecoder.
+  return load_with_torchcodec(
+2026-10-27 10:09:44,900 INFO synthesis text And where did it lead right to this room ronicky stepped from among the smooth silks.
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:103: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with self.llm_context, torch.cuda.amp.autocast(self.fp16 is True and hasattr(self.llm, 'vllm') is False):
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:293: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast(self.fp16):
+2026-10-27 10:09:50,179 INFO yield speech len 6.08, rtf 0.8681107116372961
+100%|██████████| 1/1 [00:06<00:00,  6.27s/it]100%|██████████| 1/1 [00:06<00:00,  6.27s/it]
+2026-10-27 10:09:51,242 INFO Processing audio with duration 00:06.080
+2026-10-27 10:09:51,248 DEBUG Processing segment at 00:00.000
+[1/100] clip 0 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.070 res=0.665 wer=0.12
+2026-10-27 10:09:51,501 INFO Processing audio with duration 00:03.000
+2026-10-27 10:09:51,513 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]/usr/local/lib/python3.13/dist-packages/torchaudio/__init__.py:86: UserWarning: The 'backend' parameter is not used by TorchCodec AudioDecoder.
+  return load_with_torchcodec(
+2026-10-27 10:09:52,590 INFO synthesis text You know they are very stylish people especially missus chester ross.
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:103: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with self.llm_context, torch.cuda.amp.autocast(self.fp16 is True and hasattr(self.llm, 'vllm') is False):
+/kaggle/working/CosyVoice/cosyvoice/cli/model.py:293: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast(self.fp16):
+2026-10-27 10:09:57,209 INFO yield speech len 5.8, rtf 0.7964501298707107
+100%|██████████| 1/1 [00:05<00:00,  5.34s/it]100%|██████████| 1/1 [00:05<00:00,  5.34s/it]
+2026-10-27 10:09:57,532 INFO Processing audio with duration 00:05.800
+2026-10-27 10:09:57,544 DEBUG Processing segment at 00:00.000
+[2/100] clip 1 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.164 res=0.654 wer=0.45
+2026-10-27 10:09:57,786 INFO Processing audio with duration 00:03.000
+2026-10-27 10:09:57,801 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:09:58,736 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-27 10:10:02,861 INFO yield speech len 5.0, rtf 0.8251607894897461
+100%|██████████| 1/1 [00:04<00:00,  4.64s/it]100%|██████████| 1/1 [00:04<00:00,  4.64s/it]
+2026-10-27 10:10:03,145 INFO Processing audio with duration 00:05.000
+2026-10-27 10:10:03,156 DEBUG Processing segment at 00:00.000
+[3/100] clip 2 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.134 res=0.736 wer=0.00
+2026-10-27 10:10:03,357 INFO Processing audio with duration 00:03.000
+2026-10-27 10:10:03,370 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:10:04,494 INFO synthesis text How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+2026-10-27 10:10:08,857 INFO yield speech len 5.2, rtf 0.8390859915659977
+100%|██████████| 1/1 [00:05<00:00,  5.06s/it]100%|██████████| 1/1 [00:05<00:00,  5.06s/it]
+2026-10-27 10:10:09,169 INFO Processing audio with duration 00:05.200
+2026-10-27 10:10:09,180 DEBUG Processing segment at 00:00.000
+[4/100] clip 3 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.335 res=0.847 wer=0.06
+2026-10-27 10:10:09,418 INFO Processing audio with duration 00:03.000
+2026-10-27 10:10:09,423 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:10:10,326 INFO synthesis text It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+2026-10-27 10:10:16,515 INFO yield speech len 7.32, rtf 0.8455042956305332
+100%|██████████| 1/1 [00:06<00:00,  6.72s/it]100%|██████████| 1/1 [00:06<00:00,  6.72s/it]
+2026-10-27 10:10:16,871 INFO Processing audio with duration 00:07.320
+2026-10-27 10:10:16,883 DEBUG Processing segment at 00:00.000
+[5/100] clip 4 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.175 res=0.619 wer=0.00
+2026-10-27 10:10:17,155 INFO Processing audio with duration 00:03.000
+2026-10-27 10:10:17,168 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:10:18,026 INFO synthesis text And always had an odd inquiring look.
+2026-10-27 10:10:21,135 INFO yield speech len 3.4, rtf 0.9144686250125661
+100%|██████████| 1/1 [00:03<00:00,  3.60s/it]100%|██████████| 1/1 [00:03<00:00,  3.60s/it]
+2026-10-27 10:10:21,396 INFO Processing audio with duration 00:03.400
+2026-10-27 10:10:21,408 DEBUG Processing segment at 00:00.000
+[6/100] clip 5 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.546 res=0.793 wer=0.14
+2026-10-27 10:10:21,641 INFO Processing audio with duration 00:03.000
+2026-10-27 10:10:21,660 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:10:22,615 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-27 10:10:27,317 INFO yield speech len 5.56, rtf 0.8457996433587384
+100%|██████████| 1/1 [00:05<00:00,  5.26s/it]100%|██████████| 1/1 [00:05<00:00,  5.26s/it]
+2026-10-27 10:10:27,640 INFO Processing audio with duration 00:05.560
+2026-10-27 10:10:27,652 DEBUG Processing segment at 00:00.000
+[7/100] clip 6 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.172 res=0.698 wer=0.15
+2026-10-27 10:10:27,910 INFO Processing audio with duration 00:03.000
+2026-10-27 10:10:27,915 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:10:28,929 INFO synthesis text And the second to benjamin tipton.
+2026-10-27 10:10:31,430 INFO yield speech len 2.6, rtf 0.9621265301337608
+100%|██████████| 1/1 [00:03<00:00,  3.11s/it]100%|██████████| 1/1 [00:03<00:00,  3.11s/it]
+2026-10-27 10:10:31,646 INFO Processing audio with duration 00:02.600
+2026-10-27 10:10:31,657 DEBUG Processing segment at 00:00.000
+[8/100] clip 7 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.258 res=0.770 wer=0.17
+2026-10-27 10:10:31,891 INFO Processing audio with duration 00:03.000
+2026-10-27 10:10:31,903 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:10:32,991 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-27 10:10:38,148 INFO yield speech len 6.24, rtf 0.8264618806349925
+100%|██████████| 1/1 [00:05<00:00,  5.86s/it]100%|██████████| 1/1 [00:05<00:00,  5.86s/it]
+2026-10-27 10:10:38,442 INFO Processing audio with duration 00:06.240
+2026-10-27 10:10:38,449 DEBUG Processing segment at 00:00.000
+[9/100] clip 8 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.486 res=0.863 wer=0.07
+2026-10-27 10:10:38,663 INFO Processing audio with duration 00:03.000
+2026-10-27 10:10:38,675 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:10:39,718 INFO synthesis text And there they told me they had buried it.
+2026-10-27 10:10:42,128 INFO yield speech len 2.68, rtf 0.8993187947059744
+100%|██████████| 1/1 [00:03<00:00,  3.06s/it]100%|██████████| 1/1 [00:03<00:00,  3.06s/it]
+2026-10-27 10:10:42,315 INFO Processing audio with duration 00:02.680
+2026-10-27 10:10:42,325 DEBUG Processing segment at 00:00.000
+[10/100] clip 9 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.400 res=0.756 wer=0.00
+2026-10-27 10:10:42,604 INFO Processing audio with duration 00:03.000
+2026-10-27 10:10:42,616 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:10:43,625 INFO synthesis text And there they told me they had buried it.
+2026-10-27 10:10:45,915 INFO yield speech len 2.4, rtf 0.9542015194892883
+100%|██████████| 1/1 [00:02<00:00,  2.90s/it]100%|██████████| 1/1 [00:02<00:00,  2.90s/it]
+2026-10-27 10:10:46,164 INFO Processing audio with duration 00:02.400
+2026-10-27 10:10:46,171 DEBUG Processing segment at 00:00.000
+[11/100] clip 10 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.349 res=0.807 wer=0.11
+2026-10-27 10:10:46,376 INFO Processing audio with duration 00:03.000
+2026-10-27 10:10:46,388 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:10:47,478 INFO synthesis text Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+2026-10-27 10:10:54,341 INFO yield speech len 8.28, rtf 0.828966570361225
+100%|██████████| 1/1 [00:07<00:00,  7.58s/it]100%|██████████| 1/1 [00:07<00:00,  7.58s/it]
+2026-10-27 10:10:54,741 INFO Processing audio with duration 00:08.280
+2026-10-27 10:10:54,756 DEBUG Processing segment at 00:00.000
+[12/100] clip 11 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=-0.016 res=0.731 wer=0.00
+2026-10-27 10:10:55,019 INFO Processing audio with duration 00:03.000
+2026-10-27 10:10:55,031 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:10:55,976 INFO synthesis text And where did it lead right to this room ronicky stepped from among the smooth silks.
+2026-10-27 10:11:00,777 INFO yield speech len 5.68, rtf 0.8453436720539147
+100%|██████████| 1/1 [00:05<00:00,  5.34s/it]100%|██████████| 1/1 [00:05<00:00,  5.34s/it]
+2026-10-27 10:11:01,115 INFO Processing audio with duration 00:05.680
+2026-10-27 10:11:01,120 DEBUG Processing segment at 00:00.000
+[13/100] clip 12 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=False sim=0.255 res=0.747 wer=0.06
+2026-10-27 10:11:01,436 INFO Processing audio with duration 00:03.000
+2026-10-27 10:11:01,440 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:11:02,447 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-27 10:11:06,693 INFO yield speech len 5.08, rtf 0.8357869358513299
+100%|██████████| 1/1 [00:04<00:00,  4.86s/it]100%|██████████| 1/1 [00:04<00:00,  4.86s/it]
+2026-10-27 10:11:07,002 INFO Processing audio with duration 00:05.080
+2026-10-27 10:11:07,015 DEBUG Processing segment at 00:00.000
+[14/100] clip 13 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.286 res=0.767 wer=0.18
+2026-10-27 10:11:07,250 INFO Processing audio with duration 00:03.000
+2026-10-27 10:11:07,254 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:11:08,159 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-27 10:11:12,603 INFO yield speech len 5.44, rtf 0.8169826777542338
+100%|██████████| 1/1 [00:04<00:00,  4.97s/it]100%|██████████| 1/1 [00:04<00:00,  4.97s/it]
+2026-10-27 10:11:12,985 INFO Processing audio with duration 00:05.440
+2026-10-27 10:11:12,989 DEBUG Processing segment at 00:00.000
+2026-10-27 10:11:13,156 DEBUG Processing segment at 00:05.280
+2026-10-27 10:11:13,828 DEBUG Compression ratio threshold is not met with temperature 0.0 (11.608696 > 2.400000)
+2026-10-27 10:11:14,445 DEBUG Compression ratio threshold is not met with temperature 0.2 (11.827586 > 2.400000)
+2026-10-27 10:11:14,634 DEBUG Compression ratio threshold is not met with temperature 0.4 (4.869048 > 2.400000)
+2026-10-27 10:11:14,927 DEBUG Log probability threshold is not met with temperature 0.6 (-2.142100 < -1.000000)
+2026-10-27 10:11:14,927 DEBUG No speech threshold is met (0.969727 > 0.600000)
+[15/100] clip 14 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.388 res=0.815 wer=0.00
+2026-10-27 10:11:15,086 INFO Processing audio with duration 00:02.540
+2026-10-27 10:11:15,098 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:11:15,734 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-27 10:11:20,017 INFO yield speech len 5.08, rtf 0.8431435100675567
+100%|██████████| 1/1 [00:04<00:00,  4.56s/it]100%|██████████| 1/1 [00:04<00:00,  4.56s/it]
+2026-10-27 10:11:20,225 INFO Processing audio with duration 00:05.080
+2026-10-27 10:11:20,237 DEBUG Processing segment at 00:00.000
+[16/100] clip 15 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.224 res=0.763 wer=0.09
+2026-10-27 10:11:20,475 INFO Processing audio with duration 00:03.000
+2026-10-27 10:11:20,488 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:11:21,208 INFO synthesis text And always had an odd inquiring look.
+2026-10-27 10:11:23,366 INFO yield speech len 2.08, rtf 1.0376208103620088
+100%|██████████| 1/1 [00:02<00:00,  2.47s/it]100%|██████████| 1/1 [00:02<00:00,  2.47s/it]
+2026-10-27 10:11:23,552 INFO Processing audio with duration 00:02.080
+2026-10-27 10:11:23,556 DEBUG Processing segment at 00:00.000
+[17/100] clip 16 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.214 res=0.757 wer=0.00
+2026-10-27 10:11:23,757 INFO Processing audio with duration 00:03.000
+2026-10-27 10:11:23,769 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:11:24,470 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-27 10:11:28,236 INFO yield speech len 4.52, rtf 0.8330516055621933
+100%|██████████| 1/1 [00:04<00:00,  4.09s/it]100%|██████████| 1/1 [00:04<00:00,  4.09s/it]
+2026-10-27 10:11:28,481 INFO Processing audio with duration 00:04.520
+2026-10-27 10:11:28,488 DEBUG Processing segment at 00:00.000
+[18/100] clip 17 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.445 res=0.767 wer=0.15
+2026-10-27 10:11:28,728 INFO Processing audio with duration 00:03.000
+2026-10-27 10:11:28,732 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:11:29,431 INFO synthesis text And the second to benjamin tipton.
+2026-10-27 10:11:31,501 INFO yield speech len 2.04, rtf 1.014642271341062
+100%|██████████| 1/1 [00:02<00:00,  2.39s/it]100%|██████████| 1/1 [00:02<00:00,  2.39s/it]
+2026-10-27 10:11:31,768 INFO Processing audio with duration 00:02.040
+2026-10-27 10:11:31,786 DEBUG Processing segment at 00:00.000
+[19/100] clip 18 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.056 res=0.557 wer=0.00
+2026-10-27 10:11:32,007 INFO Processing audio with duration 00:03.000
+2026-10-27 10:11:32,019 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:11:32,726 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-27 10:11:36,788 INFO yield speech len 5.0, rtf 0.8123349189758301
+100%|██████████| 1/1 [00:04<00:00,  4.38s/it]100%|██████████| 1/1 [00:04<00:00,  4.38s/it]
+2026-10-27 10:11:37,027 INFO Processing audio with duration 00:05.000
+2026-10-27 10:11:37,032 DEBUG Processing segment at 00:00.000
+[20/100] clip 19 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.260 res=0.751 wer=0.00
+2026-10-27 10:11:37,333 INFO Processing audio with duration 00:03.000
+2026-10-27 10:11:37,350 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:11:38,049 INFO synthesis text How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+2026-10-27 10:11:42,854 INFO yield speech len 5.8, rtf 0.8285034936049889
+100%|██████████| 1/1 [00:05<00:00,  5.12s/it]100%|██████████| 1/1 [00:05<00:00,  5.12s/it]
+2026-10-27 10:11:43,119 INFO Processing audio with duration 00:05.800
+2026-10-27 10:11:43,131 DEBUG Processing segment at 00:00.000
+[21/100] clip 20 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.101 res=0.762 wer=0.11
+2026-10-27 10:11:43,396 INFO Processing audio with duration 00:03.000
+2026-10-27 10:11:43,409 DEBUG Processing segment at 00:00.000
+[cosyvoice] prompt transcript cleaned for the text normaliser (c21_3_unseen)
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:11:44,109 INFO synthesis text Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+2026-10-27 10:11:52,673 INFO yield speech len 10.6, rtf 0.8078874057193972
+100%|██████████| 1/1 [00:08<00:00,  8.88s/it]100%|██████████| 1/1 [00:08<00:00,  8.88s/it]
+2026-10-27 10:11:53,047 INFO Processing audio with duration 00:10.600
+2026-10-27 10:11:53,068 DEBUG Processing segment at 00:00.000
+2026-10-27 10:11:53,293 DEBUG Processing segment at 00:06.520
+[22/100] clip 21 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.143 res=0.835 wer=0.00
+2026-10-27 10:11:53,448 INFO Processing audio with duration 00:03.000
+2026-10-27 10:11:53,459 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:11:54,140 INFO synthesis text Her residence on the piazzi barberini being considered an insecure abode.
+2026-10-27 10:12:00,025 INFO yield speech len 7.16, rtf 0.8220123179132046
+100%|██████████| 1/1 [00:06<00:00,  6.20s/it]100%|██████████| 1/1 [00:06<00:00,  6.20s/it]
+2026-10-27 10:12:00,345 INFO Processing audio with duration 00:07.160
+2026-10-27 10:12:00,359 DEBUG Processing segment at 00:00.000
+[23/100] clip 22 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.098 res=0.718 wer=0.27
+2026-10-27 10:12:00,615 INFO Processing audio with duration 00:03.000
+2026-10-27 10:12:00,628 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:12:01,328 INFO synthesis text But civil you can speak and shall george merry you may lay to that.
+2026-10-27 10:12:06,654 INFO yield speech len 6.4, rtf 0.8322116360068321
+100%|██████████| 1/1 [00:05<00:00,  5.65s/it]100%|██████████| 1/1 [00:05<00:00,  5.65s/it]
+2026-10-27 10:12:07,028 INFO Processing audio with duration 00:06.400
+2026-10-27 10:12:07,046 DEBUG Processing segment at 00:00.000
+[24/100] clip 23 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.050 res=0.715 wer=0.07
+2026-10-27 10:12:07,290 INFO Processing audio with duration 00:03.000
+2026-10-27 10:12:07,303 DEBUG Processing segment at 00:00.000
+2026-10-27 10:12:07,661 DEBUG Log probability threshold is not met with temperature 0.0 (-1.042969 < -1.000000)
+2026-10-27 10:12:07,704 DEBUG Log probability threshold is not met with temperature 0.2 (-1.127808 < -1.000000)
+2026-10-27 10:12:07,759 DEBUG Log probability threshold is not met with temperature 0.4 (-1.178516 < -1.000000)
+2026-10-27 10:12:07,816 DEBUG Log probability threshold is not met with temperature 0.6 (-1.246724 < -1.000000)
+2026-10-27 10:12:07,887 DEBUG Log probability threshold is not met with temperature 0.8 (-1.719320 < -1.000000)
+2026-10-27 10:12:07,952 DEBUG Log probability threshold is not met with temperature 1.0 (-1.110807 < -1.000000)
+2026-10-27 10:12:07,952 DEBUG Reset prompt. prompt_reset_on_temperature threshold is met 1.000000 > 0.500000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:12:08,340 INFO synthesis text It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+2026-10-27 10:12:13,392 INFO yield speech len 6.04, rtf 0.8363017972731432
+100%|██████████| 1/1 [00:05<00:00,  5.43s/it]100%|██████████| 1/1 [00:05<00:00,  5.43s/it]
+2026-10-27 10:12:13,672 INFO Processing audio with duration 00:06.040
+2026-10-27 10:12:13,677 DEBUG Processing segment at 00:00.000
+[25/100] clip 24 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.119 res=0.708 wer=0.16
+2026-10-27 10:12:14,007 INFO Processing audio with duration 00:03.000
+2026-10-27 10:12:14,020 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:12:14,711 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-27 10:12:18,919 INFO yield speech len 4.96, rtf 0.8482539846051124
+100%|██████████| 1/1 [00:04<00:00,  4.52s/it]100%|██████████| 1/1 [00:04<00:00,  4.52s/it]
+2026-10-27 10:12:19,142 INFO Processing audio with duration 00:04.960
+2026-10-27 10:12:19,155 DEBUG Processing segment at 00:00.000
+[26/100] clip 25 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.379 res=0.779 wer=0.15
+2026-10-27 10:12:19,364 INFO Processing audio with duration 00:03.000
+2026-10-27 10:12:19,368 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:12:20,091 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-27 10:12:24,628 INFO yield speech len 5.56, rtf 0.8158755817001673
+100%|██████████| 1/1 [00:04<00:00,  4.85s/it]100%|██████████| 1/1 [00:04<00:00,  4.85s/it]
+2026-10-27 10:12:24,933 INFO Processing audio with duration 00:05.560
+2026-10-27 10:12:24,951 DEBUG Processing segment at 00:00.000
+[27/100] clip 26 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.618 res=0.898 wer=0.18
+2026-10-27 10:12:25,190 INFO Processing audio with duration 00:03.000
+2026-10-27 10:12:25,202 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:12:25,907 INFO synthesis text And always had an odd inquiring look.
+2026-10-27 10:12:28,230 INFO yield speech len 2.68, rtf 0.8667158546732432
+100%|██████████| 1/1 [00:02<00:00,  2.64s/it]100%|██████████| 1/1 [00:02<00:00,  2.64s/it]
+2026-10-27 10:12:28,450 INFO Processing audio with duration 00:02.680
+2026-10-27 10:12:28,462 DEBUG Processing segment at 00:00.000
+[28/100] clip 27 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.221 res=0.721 wer=0.00
+2026-10-27 10:12:28,693 INFO Processing audio with duration 00:03.000
+2026-10-27 10:12:28,717 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:12:29,402 INFO synthesis text And there they told me they had buried it.
+2026-10-27 10:12:31,874 INFO yield speech len 2.84, rtf 0.8706464733875974
+100%|██████████| 1/1 [00:02<00:00,  2.79s/it]100%|██████████| 1/1 [00:02<00:00,  2.79s/it]
+2026-10-27 10:12:32,148 INFO Processing audio with duration 00:02.840
+2026-10-27 10:12:32,167 DEBUG Processing segment at 00:00.000
+[29/100] clip 28 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.395 res=0.859 wer=0.00
+2026-10-27 10:12:32,439 INFO Processing audio with duration 00:03.000
+2026-10-27 10:12:32,450 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:12:33,165 INFO synthesis text And the second to benjamin tipton.
+2026-10-27 10:12:35,369 INFO yield speech len 2.6, rtf 0.847548796580388
+100%|██████████| 1/1 [00:02<00:00,  2.53s/it]100%|██████████| 1/1 [00:02<00:00,  2.53s/it]
+2026-10-27 10:12:35,525 INFO Processing audio with duration 00:02.600
+2026-10-27 10:12:35,528 DEBUG Processing segment at 00:00.000
+[30/100] clip 29 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.268 res=0.802 wer=0.00
+2026-10-27 10:12:35,854 INFO Processing audio with duration 00:03.000
+2026-10-27 10:12:35,872 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:12:36,611 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-27 10:12:40,788 INFO yield speech len 4.92, rtf 0.8489817623200455
+100%|██████████| 1/1 [00:04<00:00,  4.52s/it]100%|██████████| 1/1 [00:04<00:00,  4.52s/it]
+2026-10-27 10:12:41,059 INFO Processing audio with duration 00:04.920
+2026-10-27 10:12:41,068 DEBUG Processing segment at 00:00.000
+[31/100] clip 30 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.405 res=0.816 wer=0.00
+2026-10-27 10:12:41,315 INFO Processing audio with duration 00:03.000
+2026-10-27 10:12:41,328 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:12:42,152 INFO synthesis text How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+2026-10-27 10:12:47,262 INFO yield speech len 6.24, rtf 0.8189466519233508
+100%|██████████| 1/1 [00:05<00:00,  5.51s/it]100%|██████████| 1/1 [00:05<00:00,  5.51s/it]
+2026-10-27 10:12:47,523 INFO Processing audio with duration 00:06.240
+2026-10-27 10:12:47,541 DEBUG Processing segment at 00:00.000
+[32/100] clip 31 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.408 res=0.810 wer=0.11
+2026-10-27 10:12:47,799 INFO Processing audio with duration 00:03.000
+2026-10-27 10:12:47,803 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:12:48,636 INFO synthesis text Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+2026-10-27 10:12:55,289 INFO yield speech len 8.44, rtf 0.7882520768314741
+100%|██████████| 1/1 [00:07<00:00,  7.02s/it]100%|██████████| 1/1 [00:07<00:00,  7.02s/it]
+2026-10-27 10:12:55,626 INFO Processing audio with duration 00:08.440
+2026-10-27 10:12:55,638 DEBUG Processing segment at 00:00.000
+[33/100] clip 32 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.390 res=0.750 wer=0.06
+2026-10-27 10:12:56,508 INFO Processing audio with duration 00:03.000
+2026-10-27 10:12:56,511 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:12:57,257 INFO synthesis text And where did it lead right to this room ronicky stepped from among the smooth silks.
+2026-10-27 10:13:02,774 INFO yield speech len 6.84, rtf 0.8066236972808838
+100%|██████████| 1/1 [00:05<00:00,  5.88s/it]100%|██████████| 1/1 [00:05<00:00,  5.88s/it]
+2026-10-27 10:13:03,110 INFO Processing audio with duration 00:06.840
+2026-10-27 10:13:03,116 DEBUG Processing segment at 00:00.000
+[34/100] clip 33 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.252 res=0.758 wer=0.00
+2026-10-27 10:13:03,352 INFO Processing audio with duration 00:03.000
+2026-10-27 10:13:03,361 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:13:04,073 INFO synthesis text But civil you can speak and shall george merry you may lay to that.
+2026-10-27 10:13:07,633 INFO yield speech len 4.28, rtf 0.8318996875085563
+100%|██████████| 1/1 [00:03<00:00,  3.88s/it]100%|██████████| 1/1 [00:03<00:00,  3.88s/it]
+2026-10-27 10:13:07,905 INFO Processing audio with duration 00:04.280
+2026-10-27 10:13:07,918 DEBUG Processing segment at 00:00.000
+[35/100] clip 34 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.227 res=0.757 wer=0.07
+2026-10-27 10:13:08,287 INFO Processing audio with duration 00:03.000
+2026-10-27 10:13:08,315 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:13:09,117 INFO synthesis text It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+2026-10-27 10:13:14,910 INFO yield speech len 7.16, rtf 0.8090111796416384
+100%|██████████| 1/1 [00:06<00:00,  6.14s/it]100%|██████████| 1/1 [00:06<00:00,  6.14s/it]
+2026-10-27 10:13:15,194 INFO Processing audio with duration 00:07.160
+2026-10-27 10:13:15,206 DEBUG Processing segment at 00:00.000
+[36/100] clip 35 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.192 res=0.791 wer=0.00
+2026-10-27 10:13:15,441 INFO Processing audio with duration 00:03.000
+2026-10-27 10:13:15,467 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:13:16,227 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-27 10:13:19,668 INFO yield speech len 3.96, rtf 0.8688834580508146
+100%|██████████| 1/1 [00:03<00:00,  3.80s/it]100%|██████████| 1/1 [00:03<00:00,  3.80s/it]
+2026-10-27 10:13:19,863 INFO Processing audio with duration 00:03.960
+2026-10-27 10:13:19,867 DEBUG Processing segment at 00:00.000
+[37/100] clip 36 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.135 res=0.826 wer=0.15
+2026-10-27 10:13:20,067 INFO Processing audio with duration 00:03.000
+2026-10-27 10:13:20,079 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:13:20,929 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-27 10:13:24,771 INFO yield speech len 4.68, rtf 0.8209287610828367
+100%|██████████| 1/1 [00:04<00:00,  4.31s/it]100%|██████████| 1/1 [00:04<00:00,  4.31s/it]
+2026-10-27 10:13:25,022 INFO Processing audio with duration 00:04.680
+2026-10-27 10:13:25,034 DEBUG Processing segment at 00:00.000
+[38/100] clip 37 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.067 res=0.765 wer=0.09
+2026-10-27 10:13:25,248 INFO Processing audio with duration 00:03.000
+2026-10-27 10:13:25,260 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:13:26,103 INFO synthesis text And always had an odd inquiring look.
+2026-10-27 10:13:29,235 INFO yield speech len 3.48, rtf 0.8999747106398659
+100%|██████████| 1/1 [00:03<00:00,  3.53s/it]100%|██████████| 1/1 [00:03<00:00,  3.53s/it]
+2026-10-27 10:13:29,514 INFO Processing audio with duration 00:03.480
+2026-10-27 10:13:29,525 DEBUG Processing segment at 00:00.000
+[39/100] clip 38 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.150 res=0.820 wer=0.00
+2026-10-27 10:13:29,778 INFO Processing audio with duration 00:03.000
+2026-10-27 10:13:29,798 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:13:30,541 INFO synthesis text And there they told me they had buried it.
+2026-10-27 10:13:32,624 INFO yield speech len 2.24, rtf 0.9298966399260928
+100%|██████████| 1/1 [00:02<00:00,  2.44s/it]100%|██████████| 1/1 [00:02<00:00,  2.44s/it]
+2026-10-27 10:13:32,813 INFO Processing audio with duration 00:02.240
+2026-10-27 10:13:32,819 DEBUG Processing segment at 00:00.000
+[40/100] clip 39 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.180 res=0.786 wer=0.00
+2026-10-27 10:13:33,141 INFO Processing audio with duration 00:03.000
+2026-10-27 10:13:33,145 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:13:33,867 INFO synthesis text It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+2026-10-27 10:13:39,552 INFO yield speech len 6.64, rtf 0.8561678679592638
+100%|██████████| 1/1 [00:06<00:00,  6.02s/it]100%|██████████| 1/1 [00:06<00:00,  6.02s/it]
+2026-10-27 10:13:39,863 INFO Processing audio with duration 00:06.640
+2026-10-27 10:13:39,872 DEBUG Processing segment at 00:00.000
+[41/100] clip 40 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.117 res=0.850 wer=0.00
+2026-10-27 10:13:40,092 INFO Processing audio with duration 00:03.000
+2026-10-27 10:13:40,107 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:13:40,818 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-27 10:13:44,742 INFO yield speech len 4.44, rtf 0.8837003965635557
+100%|██████████| 1/1 [00:04<00:00,  4.25s/it]100%|██████████| 1/1 [00:04<00:00,  4.25s/it]
+2026-10-27 10:13:45,065 INFO Processing audio with duration 00:04.440
+2026-10-27 10:13:45,077 DEBUG Processing segment at 00:00.000
+[42/100] clip 41 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.264 res=0.836 wer=0.15
+2026-10-27 10:13:45,293 INFO Processing audio with duration 00:03.000
+2026-10-27 10:13:45,306 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:13:46,014 INFO synthesis text And the second to benjamin tipton.
+2026-10-27 10:13:48,249 INFO yield speech len 2.2, rtf 1.0159540176391602
+100%|██████████| 1/1 [00:02<00:00,  2.55s/it]100%|██████████| 1/1 [00:02<00:00,  2.55s/it]
+2026-10-27 10:13:48,457 INFO Processing audio with duration 00:02.200
+2026-10-27 10:13:48,475 DEBUG Processing segment at 00:00.000
+[43/100] clip 42 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=True sim=0.137 res=0.764 wer=0.00
+2026-10-27 10:13:48,693 INFO Processing audio with duration 00:03.000
+2026-10-27 10:13:48,705 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:13:49,442 INFO synthesis text Her residence on the piazzi barberini being considered an insecure abode.
+2026-10-27 10:13:53,281 INFO yield speech len 4.16, rtf 0.922630326105998
+100%|██████████| 1/1 [00:04<00:00,  4.18s/it]100%|██████████| 1/1 [00:04<00:00,  4.18s/it]
+2026-10-27 10:13:53,515 INFO Processing audio with duration 00:04.160
+2026-10-27 10:13:53,520 DEBUG Processing segment at 00:00.000
+[44/100] clip 43 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=-0.047 res=0.776 wer=0.00
+2026-10-27 10:13:53,738 INFO Processing audio with duration 00:03.000
+2026-10-27 10:13:53,749 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:13:54,486 INFO synthesis text But civil you can speak and shall george merry you may lay to that.
+2026-10-27 10:13:59,362 INFO yield speech len 5.6, rtf 0.8705900822366988
+100%|██████████| 1/1 [00:05<00:00,  5.23s/it]100%|██████████| 1/1 [00:05<00:00,  5.23s/it]
+2026-10-27 10:13:59,721 INFO Processing audio with duration 00:05.600
+2026-10-27 10:13:59,734 DEBUG Processing segment at 00:00.000
+[45/100] clip 44 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.111 res=0.850 wer=0.14
+2026-10-27 10:14:00,043 INFO Processing audio with duration 00:02.420
+2026-10-27 10:14:00,048 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:14:00,696 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-27 10:14:04,381 INFO yield speech len 4.08, rtf 0.9030672849393359
+100%|██████████| 1/1 [00:03<00:00,  3.97s/it]100%|██████████| 1/1 [00:03<00:00,  3.97s/it]
+2026-10-27 10:14:04,590 INFO Processing audio with duration 00:04.080
+2026-10-27 10:14:04,608 DEBUG Processing segment at 00:00.000
+[46/100] clip 45 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.132 res=0.535 wer=0.09
+2026-10-27 10:14:04,846 INFO Processing audio with duration 00:03.000
+2026-10-27 10:14:04,860 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:14:05,562 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-27 10:14:09,802 INFO yield speech len 4.76, rtf 0.890804989999082
+100%|██████████| 1/1 [00:04<00:00,  4.56s/it]100%|██████████| 1/1 [00:04<00:00,  4.56s/it]
+2026-10-27 10:14:10,013 INFO Processing audio with duration 00:04.760
+2026-10-27 10:14:10,017 DEBUG Processing segment at 00:00.000
+[47/100] clip 46 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.300 res=0.762 wer=0.00
+2026-10-27 10:14:10,276 INFO Processing audio with duration 00:03.000
+2026-10-27 10:14:10,289 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:14:11,006 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-27 10:14:14,606 INFO yield speech len 3.84, rtf 0.9374604249993961
+100%|██████████| 1/1 [00:03<00:00,  3.93s/it]100%|██████████| 1/1 [00:03<00:00,  3.93s/it]
+2026-10-27 10:14:14,884 INFO Processing audio with duration 00:03.840
+2026-10-27 10:14:14,896 DEBUG Processing segment at 00:00.000
+[48/100] clip 47 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.185 res=0.730 wer=0.15
+2026-10-27 10:14:15,128 INFO Processing audio with duration 00:03.000
+2026-10-27 10:14:15,134 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:14:15,853 INFO synthesis text But civil you can speak and shall george merry you may lay to that.
+2026-10-27 10:14:20,721 INFO yield speech len 5.68, rtf 0.8571728854112223
+100%|██████████| 1/1 [00:05<00:00,  5.21s/it]100%|██████████| 1/1 [00:05<00:00,  5.21s/it]
+2026-10-27 10:14:20,983 INFO Processing audio with duration 00:05.680
+2026-10-27 10:14:20,995 DEBUG Processing segment at 00:00.000
+[49/100] clip 48 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.072 res=0.789 wer=0.07
+2026-10-27 10:14:21,263 INFO Processing audio with duration 00:03.000
+2026-10-27 10:14:21,277 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:14:22,004 INFO synthesis text Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+2026-10-27 10:14:29,404 INFO yield speech len 8.92, rtf 0.8296453899332226
+100%|██████████| 1/1 [00:07<00:00,  7.74s/it]100%|██████████| 1/1 [00:07<00:00,  7.74s/it]
+2026-10-27 10:14:29,776 INFO Processing audio with duration 00:08.920
+2026-10-27 10:14:29,783 DEBUG Processing segment at 00:00.000
+[50/100] clip 49 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.118 res=0.632 wer=0.11
+2026-10-27 10:14:30,114 INFO Processing audio with duration 00:03.000
+2026-10-27 10:14:30,126 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:14:30,941 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-27 10:14:35,149 INFO yield speech len 4.72, rtf 0.8915239471500204
+100%|██████████| 1/1 [00:04<00:00,  4.60s/it]100%|██████████| 1/1 [00:04<00:00,  4.60s/it]
+2026-10-27 10:14:35,423 INFO Processing audio with duration 00:04.720
+2026-10-27 10:14:35,435 DEBUG Processing segment at 00:00.000
+[51/100] clip 50 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.092 res=0.810 wer=0.00
+2026-10-27 10:14:35,674 INFO Processing audio with duration 00:03.000
+2026-10-27 10:14:35,687 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:14:36,419 INFO synthesis text How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+2026-10-27 10:14:42,409 INFO yield speech len 6.96, rtf 0.8605838507071308
+100%|██████████| 1/1 [00:06<00:00,  6.32s/it]100%|██████████| 1/1 [00:06<00:00,  6.32s/it]
+2026-10-27 10:14:42,715 INFO Processing audio with duration 00:06.960
+2026-10-27 10:14:42,721 DEBUG Processing segment at 00:00.000
+[52/100] clip 51 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.177 res=0.802 wer=0.00
+2026-10-27 10:14:42,964 INFO Processing audio with duration 00:03.000
+2026-10-27 10:14:42,976 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:14:43,702 INFO synthesis text It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+2026-10-27 10:14:49,327 INFO yield speech len 6.48, rtf 0.8680695368919843
+100%|██████████| 1/1 [00:05<00:00,  5.99s/it]100%|██████████| 1/1 [00:05<00:00,  5.99s/it]
+2026-10-27 10:14:49,629 INFO Processing audio with duration 00:06.480
+2026-10-27 10:14:49,641 DEBUG Processing segment at 00:00.000
+[53/100] clip 52 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=-0.027 res=0.748 wer=0.00
+2026-10-27 10:14:49,887 INFO Processing audio with duration 00:03.000
+2026-10-27 10:14:49,892 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:14:50,693 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-27 10:14:55,668 INFO yield speech len 5.68, rtf 0.8759137190563578
+100%|██████████| 1/1 [00:05<00:00,  5.33s/it]100%|██████████| 1/1 [00:05<00:00,  5.33s/it]
+2026-10-27 10:14:55,938 INFO Processing audio with duration 00:05.680
+2026-10-27 10:14:55,950 DEBUG Processing segment at 00:00.000
+[54/100] clip 53 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.178 res=0.807 wer=0.15
+2026-10-27 10:14:56,195 INFO Processing audio with duration 00:03.000
+2026-10-27 10:14:56,210 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:14:56,900 INFO synthesis text And the second to benjamin tipton.
+2026-10-27 10:14:59,090 INFO yield speech len 2.12, rtf 1.0329561413459059
+100%|██████████| 1/1 [00:02<00:00,  2.52s/it]100%|██████████| 1/1 [00:02<00:00,  2.52s/it]
+2026-10-27 10:14:59,299 INFO Processing audio with duration 00:02.120
+2026-10-27 10:14:59,302 DEBUG Processing segment at 00:00.000
+[55/100] clip 54 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.014 res=0.714 wer=0.00
+2026-10-27 10:14:59,614 INFO Processing audio with duration 00:03.000
+2026-10-27 10:14:59,627 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:15:00,396 INFO synthesis text And where did it lead right to this room ronicky stepped from among the smooth silks.
+2026-10-27 10:15:05,116 INFO yield speech len 5.36, rtf 0.8805601899303607
+100%|██████████| 1/1 [00:05<00:00,  5.08s/it]100%|██████████| 1/1 [00:05<00:00,  5.08s/it]
+2026-10-27 10:15:05,380 INFO Processing audio with duration 00:05.360
+2026-10-27 10:15:05,392 DEBUG Processing segment at 00:00.000
+2026-10-27 10:15:05,562 DEBUG Processing segment at 00:02.560
+[56/100] clip 55 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.276 res=0.862 wer=0.31
+2026-10-27 10:15:05,727 INFO Processing audio with duration 00:03.000
+2026-10-27 10:15:05,731 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:15:06,481 INFO synthesis text But civil you can speak and shall george merry you may lay to that.
+2026-10-27 10:15:11,625 INFO yield speech len 5.72, rtf 0.8993108372588258
+100%|██████████| 1/1 [00:05<00:00,  5.48s/it]100%|██████████| 1/1 [00:05<00:00,  5.48s/it]
+2026-10-27 10:15:11,952 INFO Processing audio with duration 00:05.720
+2026-10-27 10:15:11,970 DEBUG Processing segment at 00:00.000
+[57/100] clip 56 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.252 res=0.761 wer=0.14
+2026-10-27 10:15:12,230 INFO Processing audio with duration 00:03.000
+2026-10-27 10:15:12,242 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:15:12,970 INFO synthesis text And always had an odd inquiring look.
+2026-10-27 10:15:15,627 INFO yield speech len 2.88, rtf 0.9225237700674269
+100%|██████████| 1/1 [00:03<00:00,  3.01s/it]100%|██████████| 1/1 [00:03<00:00,  3.01s/it]
+2026-10-27 10:15:15,898 INFO Processing audio with duration 00:02.880
+2026-10-27 10:15:15,910 DEBUG Processing segment at 00:00.000
+[58/100] clip 57 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.194 res=0.659 wer=0.00
+2026-10-27 10:15:16,102 INFO Processing audio with duration 00:03.000
+2026-10-27 10:15:16,106 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:15:16,831 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-27 10:15:20,759 INFO yield speech len 4.32, rtf 0.9092338107250354
+100%|██████████| 1/1 [00:04<00:00,  4.25s/it]100%|██████████| 1/1 [00:04<00:00,  4.25s/it]
+2026-10-27 10:15:20,996 INFO Processing audio with duration 00:04.320
+2026-10-27 10:15:21,009 DEBUG Processing segment at 00:00.000
+[59/100] clip 58 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.352 res=0.835 wer=0.15
+2026-10-27 10:15:21,212 INFO Processing audio with duration 00:03.000
+2026-10-27 10:15:21,217 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:15:21,964 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-27 10:15:26,329 INFO yield speech len 5.16, rtf 0.8458781612011813
+100%|██████████| 1/1 [00:04<00:00,  4.72s/it]100%|██████████| 1/1 [00:04<00:00,  4.72s/it]
+2026-10-27 10:15:26,628 INFO Processing audio with duration 00:05.160
+2026-10-27 10:15:26,641 DEBUG Processing segment at 00:00.000
+[60/100] clip 59 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.135 res=0.636 wer=0.09
+2026-10-27 10:15:26,967 INFO Processing audio with duration 00:03.000
+2026-10-27 10:15:26,982 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:15:27,696 INFO synthesis text And where did it lead right to this room ronicky stepped from among the smooth silks.
+2026-10-27 10:15:32,390 INFO yield speech len 5.64, rtf 0.8322093503695008
+100%|██████████| 1/1 [00:05<00:00,  5.03s/it]100%|██████████| 1/1 [00:05<00:00,  5.03s/it]
+2026-10-27 10:15:32,746 INFO Processing audio with duration 00:05.640
+2026-10-27 10:15:32,758 DEBUG Processing segment at 00:00.000
+[61/100] clip 60 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.485 res=0.854 wer=0.06
+2026-10-27 10:15:33,045 INFO Processing audio with duration 00:03.000
+2026-10-27 10:15:33,049 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:15:33,793 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-27 10:15:38,484 INFO yield speech len 5.6, rtf 0.8377479229654585
+100%|██████████| 1/1 [00:05<00:00,  5.05s/it]100%|██████████| 1/1 [00:05<00:00,  5.05s/it]
+2026-10-27 10:15:38,793 INFO Processing audio with duration 00:05.600
+2026-10-27 10:15:38,800 DEBUG Processing segment at 00:00.000
+[62/100] clip 61 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.407 res=0.831 wer=0.09
+2026-10-27 10:15:39,067 INFO Processing audio with duration 00:03.000
+2026-10-27 10:15:39,071 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:15:39,851 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-27 10:15:43,680 INFO yield speech len 4.4, rtf 0.8700403842059048
+100%|██████████| 1/1 [00:04<00:00,  4.18s/it]100%|██████████| 1/1 [00:04<00:00,  4.18s/it]
+2026-10-27 10:15:44,058 INFO Processing audio with duration 00:04.400
+2026-10-27 10:15:44,069 DEBUG Processing segment at 00:00.000
+[63/100] clip 62 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.373 res=0.816 wer=0.00
+2026-10-27 10:15:44,284 INFO Processing audio with duration 00:03.000
+2026-10-27 10:15:44,296 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:15:45,058 INFO synthesis text How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+2026-10-27 10:15:50,190 INFO yield speech len 6.08, rtf 0.8440246707514713
+100%|██████████| 1/1 [00:05<00:00,  5.48s/it]100%|██████████| 1/1 [00:05<00:00,  5.49s/it]
+2026-10-27 10:15:50,489 INFO Processing audio with duration 00:06.080
+2026-10-27 10:15:50,501 DEBUG Processing segment at 00:00.000
+2026-10-27 10:15:50,678 DEBUG Processing segment at 00:04.480
+[64/100] clip 63 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.315 res=0.779 wer=0.06
+2026-10-27 10:15:50,853 INFO Processing audio with duration 00:03.000
+2026-10-27 10:15:50,866 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:15:51,593 INFO synthesis text It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+2026-10-27 10:15:57,284 INFO yield speech len 6.48, rtf 0.8781532446543375
+100%|██████████| 1/1 [00:06<00:00,  6.04s/it]100%|██████████| 1/1 [00:06<00:00,  6.04s/it]
+2026-10-27 10:15:57,582 INFO Processing audio with duration 00:06.480
+2026-10-27 10:15:57,593 DEBUG Processing segment at 00:00.000
+[65/100] clip 64 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.289 res=0.853 wer=0.00
+2026-10-27 10:15:57,957 INFO Processing audio with duration 00:03.000
+2026-10-27 10:15:57,970 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:15:58,697 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-27 10:16:02,445 INFO yield speech len 4.48, rtf 0.8364854114396231
+100%|██████████| 1/1 [00:04<00:00,  4.08s/it]100%|██████████| 1/1 [00:04<00:00,  4.08s/it]
+2026-10-27 10:16:02,699 INFO Processing audio with duration 00:04.480
+2026-10-27 10:16:02,711 DEBUG Processing segment at 00:00.000
+[66/100] clip 65 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.289 res=0.851 wer=0.00
+2026-10-27 10:16:02,916 INFO Processing audio with duration 00:03.000
+2026-10-27 10:16:02,926 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:16:03,608 INFO synthesis text And the second to benjamin tipton.
+2026-10-27 10:16:06,861 INFO yield speech len 3.44, rtf 0.9458307610001675
+100%|██████████| 1/1 [00:03<00:00,  3.58s/it]100%|██████████| 1/1 [00:03<00:00,  3.58s/it]
+2026-10-27 10:16:07,091 INFO Processing audio with duration 00:03.440
+2026-10-27 10:16:07,103 DEBUG Processing segment at 00:00.000
+[67/100] clip 66 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.444 res=0.873 wer=0.00
+2026-10-27 10:16:07,323 INFO Processing audio with duration 00:03.000
+2026-10-27 10:16:07,334 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:16:08,083 INFO synthesis text Her residence on the piazzi barberini being considered an insecure abode.
+2026-10-27 10:16:13,106 INFO yield speech len 5.8, rtf 0.8661308370787523
+100%|██████████| 1/1 [00:05<00:00,  5.40s/it]100%|██████████| 1/1 [00:05<00:00,  5.40s/it]
+2026-10-27 10:16:13,354 INFO Processing audio with duration 00:05.800
+2026-10-27 10:16:13,359 DEBUG Processing segment at 00:00.000
+[68/100] clip 67 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.297 res=0.782 wer=0.36
+2026-10-27 10:16:13,581 INFO Processing audio with duration 00:03.000
+2026-10-27 10:16:13,593 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:16:14,290 INFO synthesis text But civil you can speak and shall george merry you may lay to that.
+2026-10-27 10:16:18,849 INFO yield speech len 5.4, rtf 0.8443261075902868
+100%|██████████| 1/1 [00:04<00:00,  4.89s/it]100%|██████████| 1/1 [00:04<00:00,  4.90s/it]
+2026-10-27 10:16:19,133 INFO Processing audio with duration 00:05.400
+2026-10-27 10:16:19,145 DEBUG Processing segment at 00:00.000
+[69/100] clip 68 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.191 res=0.812 wer=0.07
+2026-10-27 10:16:19,356 INFO Processing audio with duration 00:03.000
+2026-10-27 10:16:19,369 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:16:20,077 INFO synthesis text And always had an odd inquiring look.
+2026-10-27 10:16:22,908 INFO yield speech len 3.12, rtf 0.90733269850413
+100%|██████████| 1/1 [00:03<00:00,  3.16s/it]100%|██████████| 1/1 [00:03<00:00,  3.16s/it]
+2026-10-27 10:16:23,129 INFO Processing audio with duration 00:03.120
+2026-10-27 10:16:23,140 DEBUG Processing segment at 00:00.000
+[70/100] clip 69 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.415 res=0.833 wer=0.00
+2026-10-27 10:16:23,470 INFO Processing audio with duration 00:03.000
+2026-10-27 10:16:23,480 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:16:24,208 INFO synthesis text And there they told me they had buried it.
+2026-10-27 10:16:26,219 INFO yield speech len 2.08, rtf 0.9672058316377493
+100%|██████████| 1/1 [00:02<00:00,  2.36s/it]100%|██████████| 1/1 [00:02<00:00,  2.36s/it]
+2026-10-27 10:16:26,389 INFO Processing audio with duration 00:02.080
+2026-10-27 10:16:26,400 DEBUG Processing segment at 00:00.000
+[71/100] clip 70 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=-0.143 res=0.521 wer=0.00
+2026-10-27 10:16:26,589 INFO Processing audio with duration 00:03.000
+2026-10-27 10:16:26,601 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:16:27,312 INFO synthesis text Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+2026-10-27 10:16:34,142 INFO yield speech len 8.0, rtf 0.8538455069065094
+100%|██████████| 1/1 [00:07<00:00,  7.15s/it]100%|██████████| 1/1 [00:07<00:00,  7.15s/it]
+2026-10-27 10:16:34,549 INFO Processing audio with duration 00:08.000
+2026-10-27 10:16:34,568 DEBUG Processing segment at 00:00.000
+2026-10-27 10:16:34,809 DEBUG Processing segment at 00:07.240
+[72/100] clip 71 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.285 res=0.604 wer=0.22
+2026-10-27 10:16:34,989 INFO Processing audio with duration 00:03.000
+2026-10-27 10:16:35,002 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:16:35,683 INFO synthesis text And where did it lead right to this room ronicky stepped from among the smooth silks.
+2026-10-27 10:16:42,419 INFO yield speech len 8.0, rtf 0.8421029448509216
+100%|██████████| 1/1 [00:07<00:00,  7.06s/it]100%|██████████| 1/1 [00:07<00:00,  7.06s/it]
+2026-10-27 10:16:42,785 INFO Processing audio with duration 00:08.000
+2026-10-27 10:16:42,798 DEBUG Processing segment at 00:00.000
+2026-10-27 10:16:42,961 DEBUG Processing segment at 00:05.000
+[73/100] clip 72 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.078 res=0.592 wer=0.06
+2026-10-27 10:16:43,129 INFO Processing audio with duration 00:03.000
+2026-10-27 10:16:43,143 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:16:43,872 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-27 10:16:50,854 INFO yield speech len 8.4, rtf 0.8312203202928815
+100%|██████████| 1/1 [00:07<00:00,  7.33s/it]100%|██████████| 1/1 [00:07<00:00,  7.33s/it]
+2026-10-27 10:16:51,234 INFO Processing audio with duration 00:08.400
+2026-10-27 10:16:51,248 DEBUG Processing segment at 00:00.000
+[74/100] clip 73 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.098 res=0.652 wer=0.09
+2026-10-27 10:16:51,511 INFO Processing audio with duration 00:03.000
+2026-10-27 10:16:51,515 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:16:52,201 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-27 10:16:57,402 INFO yield speech len 6.16, rtf 0.8442210299628121
+100%|██████████| 1/1 [00:05<00:00,  5.53s/it]100%|██████████| 1/1 [00:05<00:00,  5.53s/it]
+2026-10-27 10:16:57,725 INFO Processing audio with duration 00:06.160
+2026-10-27 10:16:57,736 DEBUG Processing segment at 00:00.000
+[75/100] clip 74 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=-0.013 res=0.620 wer=0.07
+2026-10-27 10:16:58,062 INFO Processing audio with duration 00:03.000
+2026-10-27 10:16:58,067 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:16:58,782 INFO synthesis text How or by what wiles that fox got the turkeys out of the high butternut is a secret.
+2026-10-27 10:17:04,732 INFO yield speech len 7.12, rtf 0.8357461583748292
+100%|██████████| 1/1 [00:06<00:00,  6.30s/it]100%|██████████| 1/1 [00:06<00:00,  6.30s/it]
+2026-10-27 10:17:05,042 INFO Processing audio with duration 00:07.120
+2026-10-27 10:17:05,048 DEBUG Processing segment at 00:00.000
+[76/100] clip 75 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.178 res=0.847 wer=0.06
+2026-10-27 10:17:05,263 INFO Processing audio with duration 00:03.000
+2026-10-27 10:17:05,279 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:17:05,973 INFO synthesis text It is only the gay and innocent and heartless who can fly what is gay and innocent and heartless.
+2026-10-27 10:17:12,162 INFO yield speech len 7.52, rtf 0.8229971249052819
+100%|██████████| 1/1 [00:06<00:00,  6.51s/it]100%|██████████| 1/1 [00:06<00:00,  6.51s/it]
+2026-10-27 10:17:12,559 INFO Processing audio with duration 00:07.520
+2026-10-27 10:17:12,565 DEBUG Processing segment at 00:00.000
+[77/100] clip 76 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.398 res=0.873 wer=0.11
+2026-10-27 10:17:12,817 INFO Processing audio with duration 00:03.000
+2026-10-27 10:17:12,831 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:17:13,538 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-27 10:17:17,030 INFO yield speech len 4.12, rtf 0.8475730141389717
+100%|██████████| 1/1 [00:03<00:00,  3.82s/it]100%|██████████| 1/1 [00:03<00:00,  3.82s/it]
+2026-10-27 10:17:17,298 INFO Processing audio with duration 00:04.120
+2026-10-27 10:17:17,310 DEBUG Processing segment at 00:00.000
+[78/100] clip 77 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.037 res=0.837 wer=0.23
+2026-10-27 10:17:17,556 INFO Processing audio with duration 00:03.000
+2026-10-27 10:17:17,560 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:17:18,292 INFO synthesis text And the second to benjamin tipton.
+2026-10-27 10:17:21,574 INFO yield speech len 3.48, rtf 0.9430596198158703
+100%|██████████| 1/1 [00:03<00:00,  3.64s/it]100%|██████████| 1/1 [00:03<00:00,  3.64s/it]
+2026-10-27 10:17:21,809 INFO Processing audio with duration 00:03.480
+2026-10-27 10:17:21,823 DEBUG Processing segment at 00:00.000
+[79/100] clip 78 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.300 res=0.848 wer=0.00
+2026-10-27 10:17:22,041 INFO Processing audio with duration 00:03.000
+2026-10-27 10:17:22,053 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:17:22,765 INFO synthesis text Her residence on the piazzi barberini being considered an insecure abode.
+2026-10-27 10:17:27,728 INFO yield speech len 5.84, rtf 0.8498282056965241
+100%|██████████| 1/1 [00:05<00:00,  5.29s/it]100%|██████████| 1/1 [00:05<00:00,  5.29s/it]
+2026-10-27 10:17:28,102 INFO Processing audio with duration 00:05.840
+2026-10-27 10:17:28,120 DEBUG Processing segment at 00:00.000
+[80/100] clip 79 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.199 res=0.785 wer=0.00
+2026-10-27 10:17:28,474 INFO Processing audio with duration 00:03.000
+2026-10-27 10:17:28,487 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]max value is  tensor(1.0101)
+2026-10-27 10:17:29,181 INFO synthesis text Seventy four years ago to the day at this very spot in latitude.
+2026-10-27 10:17:34,002 INFO yield speech len 5.68, rtf 0.8488133339814737
+100%|██████████| 1/1 [00:05<00:00,  5.14s/it]100%|██████████| 1/1 [00:05<00:00,  5.14s/it]
+2026-10-27 10:17:34,249 INFO Processing audio with duration 00:05.680
+2026-10-27 10:17:34,256 DEBUG Processing segment at 00:00.000
+[81/100] clip 80 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.170 res=0.671 wer=0.00
+2026-10-27 10:17:34,470 INFO Processing audio with duration 00:03.000
+2026-10-27 10:17:34,482 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:17:35,209 INFO synthesis text You know they are very stylish people especially missus chester ross.
+2026-10-27 10:17:40,154 INFO yield speech len 5.96, rtf 0.8296409309310401
+100%|██████████| 1/1 [00:05<00:00,  5.28s/it]100%|██████████| 1/1 [00:05<00:00,  5.28s/it]
+2026-10-27 10:17:40,450 INFO Processing audio with duration 00:05.960
+2026-10-27 10:17:40,463 DEBUG Processing segment at 00:00.000
+[82/100] clip 81 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.281 res=0.798 wer=0.09
+2026-10-27 10:17:40,666 INFO Processing audio with duration 00:03.000
+2026-10-27 10:17:40,681 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:17:41,419 INFO synthesis text The experiment was repeated on other subjects in all cases with the same result.
+2026-10-27 10:17:45,528 INFO yield speech len 4.8, rtf 0.8560360471407573
+100%|██████████| 1/1 [00:04<00:00,  4.44s/it]100%|██████████| 1/1 [00:04<00:00,  4.44s/it]
+2026-10-27 10:17:45,782 INFO Processing audio with duration 00:04.800
+2026-10-27 10:17:45,795 DEBUG Processing segment at 00:00.000
+[83/100] clip 82 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.256 res=0.785 wer=0.00
+2026-10-27 10:17:45,988 INFO Processing audio with duration 00:02.880
+2026-10-27 10:17:46,003 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:17:46,702 INFO synthesis text And there they told me they had buried it.
+2026-10-27 10:17:49,224 INFO yield speech len 2.76, rtf 0.9139258792434914
+100%|██████████| 1/1 [00:02<00:00,  2.83s/it]100%|██████████| 1/1 [00:02<00:00,  2.83s/it]
+2026-10-27 10:17:49,375 INFO Processing audio with duration 00:02.760
+2026-10-27 10:17:49,380 DEBUG Processing segment at 00:00.000
+[84/100] clip 83 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=True sim=0.244 res=0.721 wer=0.00
+2026-10-27 10:17:49,555 INFO Processing audio with duration 00:03.000
+2026-10-27 10:17:49,568 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:17:50,305 INFO synthesis text Receives no impressions either human or pleasant or painful with the exception of earthquakes and catastrophes this devotion.
+2026-10-27 10:17:57,520 INFO yield speech len 8.64, rtf 0.8350840045346154
+100%|██████████| 1/1 [00:07<00:00,  7.58s/it]100%|██████████| 1/1 [00:07<00:00,  7.58s/it]
+2026-10-27 10:17:57,942 INFO Processing audio with duration 00:08.640
+2026-10-27 10:17:57,965 DEBUG Processing segment at 00:00.000
+[85/100] clip 84 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.179 res=0.711 wer=0.00
+2026-10-27 10:17:58,435 INFO Processing audio with duration 00:03.000
+2026-10-27 10:17:58,448 DEBUG Processing segment at 00:00.000
+  0%|          | 0/1 [00:00<?, ?it/s]2026-10-27 10:17:59,197 INFO synthesis text Her residence on the piazzi barberini being considered an insecure abode.
