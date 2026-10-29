@@ -170,7 +170,7 @@ def main():
     p.add_argument("--div_shift_ms", type=float, default=0.0, help="max input-diversity time shift, ms")
     p.add_argument("--div_gain", type=float, default=0.0, help="input-diversity gain jitter, fraction")
     p.add_argument("--verifiers", default=None,
-                   help="comma-separated in-loop verifier set, e.g. 'ecapa' or 'ecapa,wavlm,xvec,resnet,wavlmbase'. "
+                   help="comma-separated in-loop verifier set, e.g. 'ecapa' or 'ecapa,wavlm,xvec,resnet,wavlmbase,unispeech'. "
                         "Default = the registered three. Resemblyzer is never allowed here.")
     p.add_argument("--only_arm", default=None,
                    help="write just the protected arm under this name (the T1/T2 arms); wm and rs are not rewritten")
@@ -209,7 +209,8 @@ def main():
         wb.load_wavlm_sv_differentiable(device) if {"wavlm"} & need else None,
         spec=spec,
         resnet=wb.load_resnet(device) if "resnet" in need else None,
-        wavlm_base=wb.load_wavlm_base_sv(device) if "wavlmbase" in need else None)
+        wavlm_base=wb.load_wavlm_base_sv(device) if "wavlmbase" in need else None,
+        unispeech=wb.load_unispeech_sat(device) if "unispeech" in need else None)
     print("in-loop verifiers:", [n for n, _f in verifiers], flush=True)
     assert len(verifiers) >= 1
     transcribe = Transcriber(device)

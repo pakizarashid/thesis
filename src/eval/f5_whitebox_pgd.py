@@ -81,15 +81,24 @@ def load_wavlm_base_sv(device):
     return m
 
 
+def load_unispeech_sat(device):
+    """A sixth in-loop verifier with a different self-supervised front end (UniSpeech-SAT, not WavLM, not VoxCeleb-TDNN)."""
+    from transformers import UniSpeechSatForXVector
+    m = UniSpeechSatForXVector.from_pretrained("microsoft/unispeech-sat-base-plus-sv").to(device).eval()
+    for q in m.parameters():
+        q.requires_grad_(False)
+    return m
+
+
 # every in-loop verifier this code can build. Resemblyzer is NOT here and never may be: it is the held-out judge.
-VERIFIER_NAMES = ("ecapa", "wavlm", "xvec", "resnet", "wavlmbase")
+VERIFIER_NAMES = ("ecapa", "wavlm", "xvec", "resnet", "wavlmbase", "unispeech")
 DEFAULT_VERIFIERS = ("ecapa", "wavlm", "xvec")                 # the registered Q2 set, unchanged
 
 
-def make_verifiers(ecapa, xvec, wavlm, spec=None, resnet=None, wavlm_base=None):
+def make_verifiers(ecapa, xvec, wavlm, spec=None, resnet=None, wavlm_base=None, unispeech=None):
     """In-loop verifiers of arm wens: list of (name, fn(wave, sample_rate) -> embedding [B, D]). Equal weights, no tuning.
 
-    spec: an ordered subset of VERIFIER_NAMES (default: the registered three). T2 (verifier count) passes 1 / 3 / 5
+    spec: an ordered subset of VERIFIER_NAMES (default: the registered three). T2 (verifier count) passes 1 / 3 / 6
     here and changes nothing else."""
     names = tuple(spec) if spec else DEFAULT_VERIFIERS
     bad = [n for n in names if n not in VERIFIER_NAMES]
@@ -102,6 +111,8 @@ def make_verifiers(ecapa, xvec, wavlm, spec=None, resnet=None, wavlm_base=None):
         built["resnet"] = lambda a, sr: ecapa_embed(resnet, a, sr)
     if wavlm_base is not None:
         built["wavlmbase"] = lambda a, sr: wavlm_embed(wavlm_base, a, sr)
+    if unispeech is not None:
+        built["unispeech"] = lambda a, sr: wavlm_embed(unispeech, a, sr)   # same XVector head API
     missing = [n for n in names if n not in built]
     assert not missing, f"verifier(s) {missing} requested but their model was not loaded"
     return [(n, built[n]) for n in names]
