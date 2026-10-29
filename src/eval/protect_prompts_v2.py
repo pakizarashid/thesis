@@ -164,6 +164,16 @@ def main():
     p.add_argument("--n_utterances", type=int, default=100)
     p.add_argument("--start", type=int, default=0)
     p.add_argument("--stop", type=int, default=None)
+    # --- T1 (transfer boosters) and T2 (verifier count), 2026-10-29. Defaults reproduce the registered Q2 exactly.
+    p.add_argument("--momentum", type=float, default=0.0, help="MI-FGSM decay; 0 = off (Q2)")
+    p.add_argument("--div_prob", type=float, default=0.0, help="input-diversity probability per step; 0 = off (Q2)")
+    p.add_argument("--div_shift_ms", type=float, default=0.0, help="max input-diversity time shift, ms")
+    p.add_argument("--div_gain", type=float, default=0.0, help="input-diversity gain jitter, fraction")
+    p.add_argument("--verifiers", default=None,
+                   help="comma-separated in-loop verifier set, e.g. 'ecapa' or 'ecapa,wavlm,xvec,resnet,wavlmbase'. "
+                        "Default = the registered three. Resemblyzer is never allowed here.")
+    p.add_argument("--only_arm", default=None,
+                   help="write just the protected arm under this name (the T1/T2 arms); wm and rs are not rewritten")
     p.add_argument("--merge", action="store_true")
     p.add_argument("--diagnostic", action="store_true")
     args = p.parse_args()
@@ -191,7 +201,17 @@ def main():
     backbone.model.to(device)
     f5a = wb.F5Attacker(F5TTS(device=device), steps=args.f5_steps, cfg=args.f5_cfg)
     ecapa = wb.load_ecapa_differentiable(device)
-    verifiers = wb.make_verifiers(ecapa, wb.load_xvector(device), wb.load_wavlm_sv_differentiable(device))
+    spec = tuple(x.strip() for x in args.verifiers.split(",") if x.strip()) if args.verifiers else None
+    need = set(spec) if spec else set(wb.DEFAULT_VERIFIERS)
+    verifiers = wb.make_verifiers(
+        ecapa,
+        wb.load_xvector(device) if {"xvec"} & need else None,
+        wb.load_wavlm_sv_differentiable(device) if {"wavlm"} & need else None,
+        spec=spec,
+        resnet=wb.load_resnet(device) if "resnet" in need else None,
+        wavlm_base=wb.load_wavlm_base_sv(device) if "wavlmbase" in need else None)
+    print("in-loop verifiers:", [n for n, _f in verifiers], flush=True)
+    assert len(verifiers) >= 1
     transcribe = Transcriber(device)
 
     lo, hi = (0, 1) if args.diagnostic else (args.start, min(args.stop if args.stop is not None else n_clips, n_clips))
@@ -199,7 +219,8 @@ def main():
     t0, n_new = time.time(), 0
     for i in range(lo, hi):
         rp = os.path.join(rec_dir, f"{i}.json") if rec_dir else None
-        if rp and os.path.exists(rp) and all(os.path.exists(os.path.join(args.out_dir, a, f"{i}.flac")) for a in ARMS):
+        want = (args.only_arm,) if args.only_arm else ARMS
+        if rp and os.path.exists(rp) and all(os.path.exists(os.path.join(args.out_dir, a, f"{i}.flac")) for a in want):
             old = json.load(open(rp))
             assert old["checkpoint_sha256"] == ck_sha, f"{rp} was made with another checkpoint"
             continue
@@ -215,7 +236,9 @@ def main():
             backbone, f5a, clean, msg, ref_text, args.pgd_text, args.epsilon, args.step_size, args.n_steps, "wens",
             lambda_wm=args.lambda_wm, dis_to_wm_ratio=args.dis_to_wm_ratio, ecapa_model=ecapa,
             noise_seed=args.noise_seed_base + i, f5_seed=args.f5_seed_base + i, verbose=args.diagnostic,
-            verifiers=verifiers, shape_alpha=args.shape_alpha, shape_floor=args.shape_floor)
+            verifiers=verifiers, shape_alpha=args.shape_alpha, shape_floor=args.shape_floor,
+            momentum=args.momentum, div_prob=args.div_prob,
+            div_shift=int(round(args.div_shift_ms * ce.SR / 1000.0)), div_gain=args.div_gain)
         pgd_sec = time.time() - _t
         with torch.no_grad():
             bound = wb.envelope_bound(recon_wm, args.epsilon, args.shape_alpha, args.shape_floor)
@@ -225,6 +248,10 @@ def main():
             at_bound = float(((q2 - recon_wm).abs() >= 0.99 * bound).float().mean())
 
         out = {"wm": recon_wm, "rs": rs, "q2": q2}
+        arms_here = ARMS
+        if args.only_arm:                                   # T1/T2: one protected arm, its own folder
+            out = {args.only_arm: q2}
+            arms_here = (args.only_arm,)
         rec = {"index": i, "utterance_id": ce.utterance_id(ds, i, it), "speaker": str(it["speaker_id"]),
                "clean_sha": wav_sha(clean), "n_samples": int(clean.shape[-1]), "ref_text_pgd": ref_text,
                "checkpoint_sha256": ck_sha, "pgd_seconds": round(pgd_sec, 1), "arms": {},
@@ -234,7 +261,7 @@ def main():
                            "mean_bound": diag["mean_bound"], "share_at_bound": at_bound}}
         if not args.diagnostic:
             write_flac(os.path.join(args.out_dir, "clean", f"{i}.flac"), clean)   # reference for the pairing check
-        for a in ARMS:
+        for a in arms_here:
             if args.diagnostic:
                 import tempfile
                 path = os.path.join(tempfile.mkdtemp(), f"{a}.flac")
@@ -249,7 +276,8 @@ def main():
             print(json.dumps(rec, indent=1))
             print(f"PGD time {pgd_sec:.1f} s for {args.n_steps} steps | peak GPU memory "
                   f"{torch.cuda.max_memory_allocated() / 1e9:.1f} GB" if torch.cuda.is_available() else "")
-            assert rec["arms"]["wm"]["acc_source"] >= 0.85, "watermark not readable on the wm prompt: wrong checkpoint/rank?"
+            if "wm" in rec["arms"]:
+                assert rec["arms"]["wm"]["acc_source"] >= 0.85, "watermark not readable on the wm prompt: wrong checkpoint/rank?"
             assert diag["gn_dis"] and diag["gn_dis"][0] > 0, "zero disruption gradient: the F5 path is broken"
             if not diag["dis_loss"][-1] < diag["dis_loss"][0]:
                 print("WARNING: PGD did not lower the in-loop similarity on this clip (one clip; look at the step log above)")
@@ -262,6 +290,9 @@ def main():
         n_new += 1
         el = time.time() - t0
         a = rec["arms"]
+        if args.only_arm:
+            print(f"[{i}] {args.only_arm}: acc {a[args.only_arm]['acc_source']:.3f} | {pgd_sec:.0f} s", flush=True)
+            continue
         print(f"[{i}] acc wm/rs/q2 {a['wm']['acc_source']:.3f}/{a['rs']['acc_source']:.3f}/{a['q2']['acc_source']:.3f} "
               f"pesq {a['wm']['pesq']:.2f}/{a['rs']['pesq']:.2f}/{a['q2']['pesq']:.2f} "
               f"dis {rec['q2_diag']['dis_loss_first']:.3f}->{rec['q2_diag']['dis_loss_last']:.3f} skip={diag['skipped']} "

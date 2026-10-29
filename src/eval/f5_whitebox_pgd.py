@@ -66,11 +66,45 @@ def wavlm_embed(model, audio, native_sr):
     return F.normalize(model(input_values=x.to(torch.float32)).embeddings, dim=-1)
 
 
-def make_verifiers(ecapa, xvec, wavlm):
-    """The three in-loop verifiers of arm wens: list of (name, fn(wave, sample_rate) -> embedding [B, D]). Equal weights, no tuning."""
-    return [("ecapa", lambda a, sr: ecapa_embed(ecapa, a, sr)),
-            ("wavlm", lambda a, sr: wavlm_embed(wavlm, a, sr)),
-            ("xvec", lambda a, sr: ecapa_embed(xvec, a, sr))]
+def load_resnet(device):
+    from speechbrain.inference.speaker import EncoderClassifier
+    return EncoderClassifier.from_hparams(source="speechbrain/spkrec-resnet-voxceleb",
+                                          savedir="pretrained_models/spkrec-resnet-voxceleb",
+                                          run_opts={"device": device})
+
+
+def load_wavlm_base_sv(device):
+    from transformers import WavLMForXVector
+    m = WavLMForXVector.from_pretrained("microsoft/wavlm-base-sv").to(device).eval()
+    for q in m.parameters():
+        q.requires_grad_(False)
+    return m
+
+
+# every in-loop verifier this code can build. Resemblyzer is NOT here and never may be: it is the held-out judge.
+VERIFIER_NAMES = ("ecapa", "wavlm", "xvec", "resnet", "wavlmbase")
+DEFAULT_VERIFIERS = ("ecapa", "wavlm", "xvec")                 # the registered Q2 set, unchanged
+
+
+def make_verifiers(ecapa, xvec, wavlm, spec=None, resnet=None, wavlm_base=None):
+    """In-loop verifiers of arm wens: list of (name, fn(wave, sample_rate) -> embedding [B, D]). Equal weights, no tuning.
+
+    spec: an ordered subset of VERIFIER_NAMES (default: the registered three). T2 (verifier count) passes 1 / 3 / 5
+    here and changes nothing else."""
+    names = tuple(spec) if spec else DEFAULT_VERIFIERS
+    bad = [n for n in names if n not in VERIFIER_NAMES]
+    assert not bad, f"unknown verifier(s) {bad}; known: {VERIFIER_NAMES}"
+    assert "resemblyzer" not in names, "Resemblyzer is the held-out judge and must never enter a loss"
+    built = {"ecapa": lambda a, sr: ecapa_embed(ecapa, a, sr),
+             "wavlm": lambda a, sr: wavlm_embed(wavlm, a, sr),
+             "xvec": lambda a, sr: ecapa_embed(xvec, a, sr)}
+    if resnet is not None:
+        built["resnet"] = lambda a, sr: ecapa_embed(resnet, a, sr)
+    if wavlm_base is not None:
+        built["wavlmbase"] = lambda a, sr: wavlm_embed(wavlm_base, a, sr)
+    missing = [n for n in names if n not in built]
+    assert not missing, f"verifier(s) {missing} requested but their model was not loaded"
+    return [(n, built[n]) for n in names]
 
 
 class F5Attacker:
@@ -185,9 +219,34 @@ def envelope_bound(ref, epsilon, alpha, floor, win=321):
     return (epsilon * m).reshape(shape)
 
 
+def _diversity(x, prob, shift, gain, gen):
+    """Input diversity for the surrogate rollout (DI, from transferable image attacks, adapted to audio).
+
+    With probability `prob` the candidate is shifted in time by up to +-`shift` samples (zero padded, length kept)
+    and scaled by a gain drawn from [1-gain, 1+gain]. Both are differentiable and length preserving, so the F5
+    duration setup is untouched. The WATERMARK branch never sees this: the message must stay readable in the file
+    an attacker actually downloads, not in a shifted copy of it."""
+    if prob <= 0.0 or (shift <= 0 and gain <= 0.0):
+        return x
+    if float(torch.rand((), generator=gen, device="cpu")) >= prob:
+        return x
+    y = x
+    if shift > 0:
+        k = int(torch.randint(-shift, shift + 1, (), generator=gen, device="cpu"))
+        if k > 0:
+            y = F.pad(y, (k, 0))[..., :x.shape[-1]]
+        elif k < 0:
+            y = F.pad(y, (0, -k))[..., -x.shape[-1]:]
+    if gain > 0.0:
+        g = 1.0 + gain * (2.0 * float(torch.rand((), generator=gen, device="cpu")) - 1.0)
+        y = y * g
+    return y
+
+
 def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilon, step_size, n_steps, arm,
                  lambda_wm=1.0, dis_to_wm_ratio=1.0, ecapa_model=None, noise_seed=None, f5_seed=7000, verbose=False, verifiers=None,
-                 shape_alpha=0.0, shape_floor=0.03, content_fn=None, content_weight=0.0, prompt_fn=None, prompt_weight=0.0):
+                 shape_alpha=0.0, shape_floor=0.03, content_fn=None, content_weight=0.0, prompt_fn=None, prompt_weight=0.0,
+                 momentum=0.0, div_prob=0.0, div_shift=0, div_gain=0.0):
     """Returns (recon_wm, perturbed_final, delta, diag). arm in {"wmel", "wspk", "wens"}.  wens: mean cosine similarity over several verifiers (list of (name, fn)).
     content_fn (2026-10-26, arm wens only): fn(wave, sample_rate) -> a recognition loss of the rollout (e.g. wav2vec2 CTC of the target
     text) that the attack MAXIMISES, so the clone becomes harder to understand. Its gradient is rescaled to
@@ -201,7 +260,7 @@ def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilo
     if arm == "wspk":
         assert ecapa_model is not None
     if arm == "wens":
-        assert verifiers and len(verifiers) >= 2, "arm wens needs the verifier list"
+        assert verifiers and len(verifiers) >= 1, "arm wens needs the verifier list"
 
     with torch.no_grad():
         recon_wm = backbone.forward_full(clean_audio, message)["recon_wm"].detach()
@@ -218,10 +277,17 @@ def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilo
     step_vec = step_size * (bound / epsilon) if shaped else step_size
     delta = _random_start(recon_wm, bound, noise_seed).detach().requires_grad_(True)
     diag = {"dis_loss": [], "wm_loss": [], "gn_dis": [], "gn_wm": [], "skipped": 0, "mean_bound": float(bound.mean().item()) if shaped else float(epsilon)}
+    # T1: momentum (MI-FGSM) and input diversity (DI). momentum 0 and div_prob 0 reproduce Q2 exactly.
+    g_acc = torch.zeros_like(delta) if momentum > 0 else None
+    div_gen = torch.Generator(device="cpu")
+    diag["t1"] = {"momentum": float(momentum), "div_prob": float(div_prob),
+                  "div_shift": int(div_shift), "div_gain": float(div_gain)}
 
     for step in range(n_steps):
         perturbed = torch.clamp(recon_wm + delta, -1.0, 1.0)
-        y_p = f5a.generate_mel(f5a.prompt_mel(perturbed), text_list, duration, seed=f5_seed)[:, n:]
+        div_gen.manual_seed(int((noise_seed if noise_seed is not None else 0)) * 1000 + step)
+        roll_in = _diversity(perturbed, div_prob, div_shift, div_gain, div_gen)
+        y_p = f5a.generate_mel(f5a.prompt_mel(roll_in), text_list, duration, seed=f5_seed)[:, n:]
         if arm == "wmel":
             dis_loss = -F.l1_loss(y_p, y_ref)                                        # minimising this MAXIMISES the divergence
         elif arm == "wspk":
@@ -300,6 +366,9 @@ def whitebox_pgd(backbone, f5a, clean_audio, message, ref_text, gen_text, epsilo
                   + (f" parts={ {k: round(v, 3) for k, v in diag['parts'][-1].items()} }" if arm == "wens" else ""))
         if step == 0 and gn_dis == 0.0:
             print("  [whitebox] WARNING: zero disruption gradient at step 0 -- the path waveform -> F5 -> loss is broken; do not trust a full run.")
+        if momentum > 0:
+            g_acc = momentum * g_acc + grad / max(float(grad.abs().sum()), 1e-12)   # MI-FGSM: L1-normalised accumulation
+            grad = g_acc
         with torch.no_grad():
             if shaped:
                 delta = torch.max(torch.min(delta - step_vec * grad.sign(), bound), -bound)
