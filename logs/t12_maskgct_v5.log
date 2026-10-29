@@ -1,0 +1,116 @@
+[preflight] omegaconf 2.4.0 ok; numpy/torch ok
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /content/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /content/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+[plan] cloner=maskgct clips=100 prompts=['3'] texts=['unseen'] -> 100 clones to run
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/content/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/content/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[backbone] loaded checkpoints/route2_vmaug_RQA/route2_epoch19.pt (epoch 19)
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1793301068.040725   29949 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1793301071.863248   29949 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+/usr/local/lib/python3.13/dist-packages/jieba/_compat.py:18: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+./models/tts/maskgct/g2p/sources/g2p_chinese_model/poly_bert_model.onnx
+/usr/local/lib/python3.13/dist-packages/onnxruntime/capi/onnxruntime_inference_collection.py:197: UserWarning: Specified provider 'CUDAExecutionProvider' is not in available provider names.Available providers: 'AzureExecutionProvider, CPUExecutionProvider'
+  warnings.warn(
+/content/Amphion/models/tts/maskgct/maskgct_utils.py:50: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  stat_mean_var = torch.load("./models/tts/maskgct/ckpt/wav2vec2bert_stats.pt")
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+[maskgct] pipeline built
+INFO:speechbrain.utils.fetching:Fetch hyperparams.yaml: Using symlink found at '/tmp/ecapa_model/hyperparams.yaml'
+INFO:speechbrain.utils.fetching:Fetch embedding_model.ckpt: Using symlink found at '/tmp/ecapa_model/embedding_model.ckpt'
+INFO:speechbrain.utils.fetching:Fetch mean_var_norm_emb.ckpt: Using symlink found at '/tmp/ecapa_model/mean_var_norm_emb.ckpt'
+INFO:speechbrain.utils.fetching:Fetch classifier.ckpt: Using symlink found at '/tmp/ecapa_model/classifier.ckpt'
+INFO:speechbrain.utils.fetching:Fetch label_encoder.txt: Using symlink found at '/tmp/ecapa_model/label_encoder.ckpt'
+INFO:speechbrain.utils.parameter_transfer:Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+/usr/local/lib/python3.13/dist-packages/speechbrain/utils/checkpoints.py:202: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  state_dict = torch.load(path, map_location=device)
+/usr/local/lib/python3.13/dist-packages/speechbrain/processing/features.py:1550: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  stats = torch.load(path, map_location=self.device)
+WARNING:speechbrain.inference.interfaces:Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+/usr/local/lib/python3.13/dist-packages/resemblyzer/voice_encoder.py:43: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  checkpoint = torch.load(weights_fpath, map_location="cpu")
+[transcribe] loading faster-whisper base.en (float16)
+predict semantic shape torch.Size([1, 807])
+[1/100] clip 0 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.141 res=0.683 wer=0.75
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 339])
+[2/100] clip 1 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.035 res=0.716 wer=0.09
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 591])
+[3/100] clip 2 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.287 res=0.763 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 300])
+[4/100] clip 3 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.224 res=0.714 wer=0.11
+predict semantic shape torch.Size([1, 323])
+[5/100] clip 4 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.157 res=0.649 wer=0.00
+predict semantic shape torch.Size([1, 120])
+[6/100] clip 5 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.345 res=0.720 wer=0.00
+predict semantic shape torch.Size([1, 233])
+[7/100] clip 6 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.187 res=0.657 wer=0.00
+predict semantic shape torch.Size([1, 133])
+[8/100] clip 7 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.174 res=0.746 wer=0.50
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 304])
+[9/100] clip 8 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.427 res=0.800 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 130])
+[10/100] clip 9 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.483 res=0.756 wer=0.00
+predict semantic shape torch.Size([1, 110])
+[11/100] clip 10 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=True sim=0.220 res=0.774 wer=0.11
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 463])
+[12/100] clip 11 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.110 res=0.747 wer=0.06
+predict semantic shape torch.Size([1, 276])
+[13/100] clip 12 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.140 res=0.753 wer=0.06
+predict semantic shape torch.Size([1, 190])
+[14/100] clip 13 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.104 res=0.647 wer=0.09
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 332])
+[15/100] clip 14 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.265 res=0.755 wer=0.00
+predict semantic shape torch.Size([1, 194])
+[16/100] clip 15 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.257 res=0.681 wer=0.18
+predict semantic shape torch.Size([1, 130])
+[17/100] clip 16 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.121 res=0.708 wer=0.00
+predict semantic shape torch.Size([1, 200])
+[18/100] clip 17 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.459 res=0.727 wer=0.15
+predict semantic shape torch.Size([1, 145])
+[19/100] clip 18 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.088 res=0.643 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 221])
+[20/100] clip 19 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.175 res=0.767 wer=0.00
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 210])
+[21/100] clip 20 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.187 res=0.634 wer=0.28
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 566])
+[22/100] clip 21 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.066 res=0.755 wer=0.39
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 590])
+[23/100] clip 22 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.100 res=0.735 wer=0.45
+predict semantic shape torch.Size([1, 245])
+[24/100] clip 23 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=-0.012 res=0.645 wer=0.29
+predict semantic shape torch.Size([1, 900])
+[25/100] clip 24 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=-0.002 res=0.634 wer=0.47
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 247])
+[26/100] clip 25 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.323 res=0.822 wer=0.38
+WARNING:phonemizer:words count mismatch on 100.0% of the lines (1/1)
+predict semantic shape torch.Size([1, 152])
+[27/100] clip 26 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.397 res=0.802 wer=0.09
+predict semantic shape torch.Size([1, 154])
+[28/100] clip 27 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.238 res=0.797 wer=0.00
+predict semantic shape torch.Size([1, 164])
+[29/100] clip 28 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.192 res=0.827 wer=0.00
+predict semantic shape torch.Size([1, 183])
