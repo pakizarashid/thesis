@@ -373,6 +373,15 @@ def main():
                         "clean ACC (~0.99) is a real capability and must not be traded away.")
     p.add_argument("--lambda_clone", type=float, default=1.0,
                    help="Weight on decoding from the CLONE. This is the new objective.")
+    # P1 (2026-11-02, docs/preregistration_protective_watermark_2026-11-02.md): train the watermark to protect.
+    # 0 = unchanged behaviour (R0/RQA); > 0 adds a speaker-disruption term on the IN-LOOP CLONE, so the embedded
+    # signal itself is pushed to damage the speaker identity a cloner reproduces. Needs --train_msg_processor:
+    # without it the clone is detached and no gradient reaches the message processor.
+    p.add_argument("--lambda_protect", type=float, default=0.0,
+                   help="weight of cos(spk(clean), spk(clone)) added to the loss; 0 = off (every run before P1)")
+    p.add_argument("--protect_verifier", choices=("ecapa",), default="ecapa",
+                   help="in-loop speaker model for the protective term. Resemblyzer is the held-out judge and "
+                        "may never be used here.")
     p.add_argument("--clone_warmup_epochs", type=int, default=2,
                    help="Epochs of clean-only training before the clone term switches on "
                         "(Dual Defense stages its decoder activation the same way).")
@@ -429,6 +438,24 @@ def main():
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     differentiable_clone = args.train_msg_processor
+
+    # P1: the in-loop speaker model for the protective term (frozen; gradients pass through it to the message
+    # processor, they do not train it).
+    protect_spk = None
+    if args.lambda_protect > 0:
+        assert args.train_msg_processor, \
+            "--lambda_protect needs --train_msg_processor: without it the in-loop clone is detached and the " \
+            "protective gradient cannot reach the embedded signal"
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "eval"))
+        import f5_whitebox_pgd as _wb
+        protect_spk = _wb.load_ecapa_differentiable(device)
+        try:                                                # frozen: gradients pass through it, they do not train it
+            for _q in protect_spk.mods.parameters():
+                _q.requires_grad_(False)
+        except AttributeError:
+            pass
+        print(f"[main] P1 protective term ON: lambda_protect={args.lambda_protect} "
+              f"verifier={args.protect_verifier} (held-out Resemblyzer is NOT used here)")
     if args.seed is not None:
         torch.manual_seed(args.seed)
         random.seed(args.seed)
@@ -568,6 +595,8 @@ def main():
     print(f"  trainable      : detector{' + msg_processor' if args.train_msg_processor else ''} (LoRA)")
     print(f"  in-loop cloner : {args.cloner} (differentiable={differentiable_clone})")
     print(f"  held-out eval  : XTTS, baseline to beat = 0.5587-0.5687 (noise floor ~0.02)")
+    if args.lambda_protect > 0:
+        print(f"  P1             : + {args.lambda_protect} * cos(spk(clean), spk(clone))  [{args.protect_verifier}]")
     print(f"  loss           : {args.lambda_clean} * Ldec(clean) + {args.lambda_clone} * Ldec(clone)"
           + (f" + mel {args.lambda_mel} + cos {args.lambda_cos} + adv {args.lambda_adv}"
              f" + aug {args.lambda_aug} + vad {args.lambda_vad}" if extra.active else ""))
@@ -622,11 +651,26 @@ def main():
             loss = args.lambda_clean * loss_clean
             loss_clone_val = float("nan")
 
+            loss_protect_val = float("nan")
             if clone_on:
                 cloned = make_clone(surrogate, recon_wm, step_text(), differentiable_clone)
                 loss_clone = compute_ldec(decode_logits(backbone, cloned), message)
                 loss = loss + args.lambda_clone * loss_clone
                 loss_clone_val = loss_clone.item()
+
+                if protect_spk is not None:
+                    # P1: push the clone's speaker embedding AWAY from the clean speaker. Minimising a cosine
+                    # similarity, exactly the quantity the perturbation minimises, but optimised into the
+                    # watermark instead of into a per-clip perturbation.
+                    import torch.nn.functional as _F
+                    e_clean = _wb.ecapa_embed(protect_spk, clean_audio, 16000)
+                    e_clone = _wb.ecapa_embed(protect_spk, cloned, 16000)
+                    loss_protect = _F.cosine_similarity(e_clean.detach(), e_clone, dim=-1).mean()
+                    if torch.isfinite(loss_protect):
+                        loss = loss + args.lambda_protect * loss_protect
+                        loss_protect_val = loss_protect.item()
+                    else:
+                        sums["protect_nonfinite"] = sums.get("protect_nonfinite", 0) + 1
 
             extra_terms = {}
             if extra.active:
@@ -668,6 +712,9 @@ def main():
             sums["clean"] += loss_clean.item()
             if clone_on:
                 sums["clone"] += loss_clone_val
+            if loss_protect_val == loss_protect_val:                       # not NaN
+                sums["protect"] = sums.get("protect", 0.0) + loss_protect_val
+                sums["protect_n"] = sums.get("protect_n", 0) + 1
             sums["n"] += 1
 
             if step % 20 == 0:
@@ -675,6 +722,8 @@ def main():
                        f"Ldec_clean={loss_clean.item():.4f}")
                 if clone_on:
                     msg += f" Ldec_clone={loss_clone_val:.4f}"
+                    if loss_protect_val == loss_protect_val:
+                        msg += f" SIM_clone={loss_protect_val:.4f}"
                 else:
                     msg += "  (clone term off -- warmup)"
                 if extra_terms:
@@ -690,6 +739,8 @@ def main():
             "mean_loss": sums["loss"] / n,
             "mean_ldec_clean": sums["clean"] / n,
             "mean_ldec_clone": (sums["clone"] / n) if clone_on else None,
+            "mean_sim_clone": (sums["protect"] / sums["protect_n"]) if sums.get("protect_n") else None,
+            "lambda_protect": args.lambda_protect,
             "eval_clean_acc": acc_clean,
             "eval_clone_acc": acc_clone,
             "mean_extra_terms": {k: v / n for k, v in extra_sums.items()},
@@ -732,6 +783,7 @@ def main():
                     "checkpoint_init": args.checkpoint,
                     "trained_msg_processor": args.train_msg_processor,
                     "lambda_clean": args.lambda_clean, "lambda_clone": args.lambda_clone,
+                   "lambda_protect": args.lambda_protect,
                     "train_args": vars(args),
                     "clone_warmup_epochs": args.clone_warmup_epochs,
                     "pre_training": {"clean_acc": acc_clean0, "clone_acc": acc_clone0},
