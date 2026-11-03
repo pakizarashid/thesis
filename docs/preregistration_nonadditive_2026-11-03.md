@@ -296,3 +296,59 @@ bins survive level normalisation and the energy floor, and bins 0–5 are exclud
 ("reconsider rather than patch a third time if a band edge is selected again") is treated as satisfied on this
 interpretation, and **the criterion is not modified again.** If `n1notch` fails, this interpretation is part of
 what failed and must be reported as such, not revised afterwards.
+
+## Amendment A3 (2026-11-03, the one permitted grid extension, before any N1 clip)
+
+The corrected sweep (A2) ran cleanly and both arms missed the target **in opposite directions**. The
+pre-registration permits one grid extension per arm; this is it, and the grids are fixed here before any clip.
+
+**What was seen.** Watermark-only PESQ against clean, no transform: **2.3890**. Frozen target: **1.8768**, so
+the transform has 0.51 PESQ of headroom to consume.
+
+| `n1notch` K | 8 | 16 | 32 | 64 | 128 |
+|---|---|---|---|---|---|
+| PESQ vs clean | 1.7773 | 1.8188 | 1.8185 | 1.8002 | 1.7413 |
+
+| `n1rir` L ms | 5 | 10 | 20 | 30 |
+|---|---|---|---|---|
+| PESQ vs clean | 2.4719 | 2.3439 | 2.1763 | 2.2371 |
+
+`n1notch` is **too strong everywhere**: even K = 8 sits 0.10 below the target. `n1rir` is **too weak
+everywhere**: even L = 30 ms sits 0.36 above it. Both were written `not calibratable`, the generate guard fired,
+and no clip was produced.
+
+**The extension.**
+
+- `n1notch`: K ∈ {1, 2, 4} added. The grid extends *downward* in strength, which is within the registered
+  mechanism and needs no further justification.
+- `n1rir`: L ∈ {40, 50, 60} ms added. This is a **departure from the borrowed constraint** and is flagged as
+  such: ClearMask uses ≤ 30 ms, and 60 ms begins to be audible as reverberation rather than as spectral
+  smearing. The arm is still reported, but any result from it carries this note, and the listening check matters
+  more for `n1rir` than for `n1notch`. If 60 ms still cannot reach the target, `n1rir` is reported dropped and
+  the grid is **not** extended again.
+
+**What the notch numbers already show, recorded before any clip.** Zeroing 8 of 1025 bins costs 0.61 PESQ
+(2.3890 → 1.7773). That is an enormous cost for 0.8 % of the spectrum, and it is explained by A1's selection:
+those bins sit in the fundamental-frequency range, so removing them degrades perceived pitch, which PESQ
+penalises heavily. ClearMask zeroes 12 bins and reports good quality, which implies its bins are not near F0.
+
+This suggests a tension worth stating as a candidate finding in its own right, independent of whether HN1
+passes: **the bins a verifier-independent discriminability criterion ranks highest are also the most
+perceptually load-bearing.** If so, the quality–protection trade-off that governs the six additive families
+reappears inside the non-additive mechanism, as a constraint on *which* bins may be touched rather than on how
+much signal may be added. The experiment as registered tests this: if `n1notch` at its calibrated K protects no
+better than Q2 at the same PESQ, that is the result.
+
+**Non-monotonicity, disclosed.** Both grids are non-monotonic (`n1notch` K = 8 below K = 16; `n1rir` L = 30
+above L = 20). On 20 calibration clips a 0.04 PESQ difference is within noise, but it means the interpolation is
+performed on a non-monotone curve: the implementation brackets the target with the nearest setting below and
+above it by PESQ, which is robust to local non-monotonicity but can bracket non-adjacent settings. The chosen
+setting and both bracketing points are recorded in `results/n1_calib.json`.
+
+**Nothing else changes.** Same arms, same primary arm, same frozen target, same hypotheses, thresholds, decision
+rules and predictions. The superseded sweep is kept as `results/n1_calib.json.pre_a3`.
+
+**Predictions, before the extended sweep.** P(`n1notch` calibratable within K ∈ {1, 2, 4, 8}) ≈ 80 % — the
+target lies between K = 4 and K = 8 on any plausible interpolation. P(`n1rir` calibratable within L ≤ 60 ms)
+≈ 45 %. P(`n1notch` at its calibrated K fails the WER condition) ≈ 45 %, revised up from 35 %: F0 removal is
+more damaging to intelligibility than the original estimate assumed.
