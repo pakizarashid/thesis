@@ -545,38 +545,6 @@ def main():
         loss_clean = compute_ldec(decode_logits(backbone, recon_wm), message)
         loss_clone = compute_ldec(decode_logits(backbone, cloned), message)
         loss = args.lambda_clean * loss_clean + args.lambda_clone * loss_clone
-        # P1 gradient audit: lambda scales the LOSS, not the GRADIENT. If the protective gradient is orders of
-        # magnitude smaller than the decoding ones, the term is effectively off whatever lambda says. The
-        # perturbation code rescales gradients for exactly this reason (f5_whitebox_pgd.whitebox_pgd); training
-        # does not, so the ratio has to be measured rather than assumed.
-        if protect_spk is not None:
-            import torch.nn.functional as _F
-            trainable = [q for q in backbone.model.parameters() if q.requires_grad]
-
-            def _gnorm(term):
-                g = torch.autograd.grad(term, trainable, retain_graph=True, allow_unused=True)
-                return float(torch.sqrt(sum((x ** 2).sum() for x in g if x is not None)))
-
-            out2 = backbone.forward_full(clean_audio, message)
-            rw2 = out2["recon_wm"]
-            cl2 = make_clone(surrogate, rw2, diag_text, differentiable_clone)
-            l_clean2 = compute_ldec(decode_logits(backbone, rw2), message)
-            l_clone2 = compute_ldec(decode_logits(backbone, cl2), message)
-            e_c = _wb.ecapa_embed(protect_spk, clean_audio, 16000)
-            e_k = _wb.ecapa_embed(protect_spk, cl2, 16000)
-            l_prot2 = _F.cosine_similarity(e_c.detach(), e_k, dim=-1).mean()
-
-            gc, gk, gp = _gnorm(l_clean2), _gnorm(l_clone2), _gnorm(l_prot2)
-            print(f"\n--- P1 GRADIENT AUDIT (one batch; norms over {len(trainable)} trainable tensors) ---")
-            print(f"  ||grad Ldec(clean)||            = {gc:.4e}")
-            print(f"  ||grad Ldec(clone)||            = {gk:.4e}")
-            print(f"  ||grad cos(spk)||               = {gp:.4e}   (lambda_protect = {args.lambda_protect})")
-            print(f"  effective weight of the protective term = {args.lambda_protect * gp / max(gc + gk, 1e-12):.4f}")
-            print(f"  lambda_protect for a 1:1 gradient match  = {(gc + gk) / max(gp, 1e-12):.1f}")
-            print("  If that last number is far above the lambda you used, the pilot tested a term that was")
-            print("  effectively switched off, and the 5-epoch result says nothing about the mechanism.")
-        extra_total, extra_terms = extra(backbone, out, clean_audio, message) if extra.active else (0.0, {})
-        loss = loss + extra_total
         extra_total, extra_terms = extra(backbone, out, clean_audio, message) if extra.active else (0.0, {})
         loss = loss + extra_total
         print(f"\n--- 3. Loss ---")
