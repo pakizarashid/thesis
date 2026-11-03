@@ -26,7 +26,8 @@ sys.path.insert(0, HERE)
 
 import clone_eval_v2 as ce  # noqa: E402
 
-ARMS = ("clean", "wm", "rs", "q2", "a0", "q2c", "t", "q2t")
+ARMS = ("clean", "wm", "rs", "q2", "a0", "q2c", "t", "q2t",
+        "n1notchK2", "n1notchK6", "n1notchK12")
 
 
 class FW:
