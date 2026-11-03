@@ -397,3 +397,69 @@ the code had to be robust to it.
 **Predictions, before the corrected sweep.** P(some K ∈ {5, 6, 7} measures within 0.05 of 1.8768) ≈ 70 %.
 P(`n1notch` is reported not calibratable even after the fix) ≈ 30 % — the K = 4 → K = 8 step is 0.22 PESQ wide
 across three integers, so the curve may simply step over the 0.05 window.
+
+## Amendment A5 (2026-11-03, before any N1 clip is CLONED) — the primary analysis becomes the curve
+
+HN4 is promoted to the primary test and the matched-PESQ design is retired. Declared before any clone, any
+accept rate, any verifier score. Chosen by the author after the problem below was put to them.
+
+**Why.** The matched-PESQ design needs one arm to land within 0.05 of a target, and the target depends on which
+clips it is measured over. Q2's PESQ is **1.8768 on clips 0–19** and **1.7887 on all 100**. The calibration runs
+on clips 0–19 and the registered condition requires verification on all 100, and the two cannot be reconciled:
+`n1notch` at K = 12 measured ~1.81 on the subset but **1.9583 on all 100**, a subset bias of about +0.14. A4's
+K = 6 is correctly verified against the subset target (1.8586, |d| = 0.018) and would still miss on all 100 by
+roughly 0.2. Three successive amendments (A2 reference, A3 grid, A4 interpolation) each fixed a real defect and
+each left the design brittle, because forcing a single arm onto a moving target along a non-monotone curve is a
+worse instrument than placing several points on a curve and looking at where they fall.
+
+**The curve design is also this project's established method** for exactly this question: ME, MH, BP15 and BP20
+were analysed as protection-versus-PESQ in `claude/hmask-result-2026-10-22.md`, and the six-family curve claim
+rests on it.
+
+**What the calibration sweep already established, and what it implies for the design.** PESQ against K on clips
+0–19: K = 1 → 2.3589, 2 → 2.2361, 4 → 1.9954, 5 → 1.9205, 6 → 1.8586, 7 → 1.8172, 8 → 1.7773, 16 → 1.8188,
+32 → 1.8185, 64 → 1.8002, 128 → 1.7413. **The curve is essentially flat beyond K = 8**: notching 128 bins costs
+no more PESQ than notching 8. The whole dynamic range lies in K ∈ [1, 8], so the registered points must come
+from there.
+
+**Registered points.** `n1notch` at **K ∈ {2, 6, 12}**. K = 12 is already generated (PESQ 1.9583 on all 100,
+traced 1.00, acc_source 1.00) and is reused, not regenerated. K = 2 and K = 6 are new. PESQ, STOI, SI-SNR, WER
+and RMS are **measured on all 100 and reported** for each; nothing is matched to a target, so no calibration
+step and no tolerance applies.
+
+**Primary test (replaces HN1).** Build the additive reference curve from the arms already evaluated on F5-TTS,
+taking each arm's accept rate at Resemblyzer 0.6868 and its PESQ on the same 100 clips from
+`results/anticlone/prompts/RQA/manifest.json`. For each registered K, compute
+
+> offset_K = accept(n1notch_K) − curve_accept(PESQ_K)
+
+where `curve_accept` is linear interpolation of the additive points in PESQ. The primary statistic is the
+**mean offset over the three registered K**, with a speaker-level bootstrap 95 % CI (10,000 draws, resampling
+the 20 speakers).
+
+PASSES if mean offset ≤ **−0.05** and the CI **excludes 0**, and traced ≥ 0.84 for all three points.
+
+One statistic over three pre-declared points, so there is no arm to select after the fact and no
+"at least one of three" to exploit. Points outside the PESQ range spanned by the additive arms are reported but
+excluded from the mean, and the exclusion is stated with the result.
+
+**Secondary, descriptive.** Each point's offset individually with its own CI; the three-point curve plotted on
+the same axes as the six additive families; WER and STOI beside Q2's.
+
+**Unchanged.** `n1notch` remains the only arm (`n1rir` dropped at A4, `n1both` with it). The judge is still
+Resemblyzer at 0.6868, held out and never optimised against; ECAPA at 0.2994 is still reported only as an
+inflation check. Cloner F5-TTS, 100 clips, 20 held-out speakers, unseen text, 3 s prompt, same pairing as Q2.
+MaskGCT still confirms any pass. The traced ≥ 0.84 condition and the HN2 protection–traceability reading are
+unchanged. The pre-declared outcome table stands, with "at matched quality" read as "at its measured PESQ on the
+curve".
+
+**What this design cannot do that the matched-point design could.** It cannot state "at Q2's exact quality, N1
+protects X points better". It states where N1 sits relative to the trade-off that governs the additive
+families, which is the question the thesis actually asks. Interpolating the additive curve assumes accept varies
+smoothly with PESQ between the measured arms; with few arms that is a real assumption and is reported as one.
+
+**Predictions, before any clone.** P(primary passes) ≈ 25 %, down from the 30 % registered for HN1: the flatness
+of PESQ in K says the notch has little room to trade quality for effect, which is what a point on the curve
+looks like. P(traced ≥ 0.84 at all three K) ≈ 80 % — K = 12 already shows traced 1.00 and acc_source 1.00, so
+the watermark is surviving the notch far better than HN2 feared. P(the WER condition is reported as a material
+difference from Q2 at K = 12) ≈ 35 %.
