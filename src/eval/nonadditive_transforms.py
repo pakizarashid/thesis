@@ -292,8 +292,19 @@ def eval_prompts(args, device, backbone, n):
             .to(device).reshape(1, 1, -1)
         msg = ce.message_bits(args.message_seed_base + i, device)
         true_bits = np.array(msg[0].tolist())
-        wm = watermark(backbone, prompt, msg)
-        yield i, it, as1d(prompt), as1d(wm), true_bits
+        pin = getattr(args, "prompt_in", None)
+        if pin:
+            # N3: the base signal is an existing arm's published audio (e.g. q2).
+            import soundfile as _sf
+            x, sr = _sf.read(os.path.join(pin, "%d.flac" % i), dtype="float32")
+            assert sr == SR, (pin, i, sr)
+            base = np.asarray(x, dtype=np.float64).reshape(-1)
+            assert len(base) == prompt.shape[-1], \
+                "clip %d: %s is %d samples, the clean prompt is %d -- not the same clips" \
+                % (i, pin, len(base), prompt.shape[-1])
+        else:
+            base = as1d(watermark(backbone, prompt, msg))
+        yield i, it, as1d(prompt), base, true_bits
 
 
 def main():
@@ -328,6 +339,15 @@ def main():
                         "calibration. PESQ is then REPORTED, not matched.")
     p.add_argument("--l_ms", type=int, default=None,
                    help="Amendment A5: RIR length explicitly, bypassing calibration.")
+    p.add_argument("--prompt_in", default=None,
+                   help="N3: apply the transform to EXISTING prompt audio in this directory "
+                        "(e.g. .../RQA/q2) instead of to freshly watermarked audio. The clean "
+                        "prompt is still used as the PESQ reference and for message bits, so "
+                        "the numbers stay comparable with every other arm.")
+    p.add_argument("--out_arm_name", default=None,
+                   help="N3: name of the output subfolder and manifest arm key "
+                        "(default: --arm). Use e.g. c1 so composed arms are not confused "
+                        "with the plain notch arms.")
     a = ap.parse_args()
 
     os.environ.setdefault("TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD", "1")
@@ -506,7 +526,11 @@ def main():
         L = calib["n1rir"]["setting_rounded"] if "n1rir" in need else None
     bins = select_bins(f, K) if K else None
     rir = make_rir(L, seed=a.rir_seed) if L else None
-    print("[gen] arm=%s K=%s L=%s" % (a.arm, K, L))
+    out_name = getattr(a, "out_arm_name", None) or a.arm
+    if getattr(a, "prompt_in", None):
+        assert os.path.isdir(a.prompt_in), "--prompt_in %s is not a directory" % a.prompt_in
+        print("[gen] N3 composition: transform applied to EXISTING audio in %s" % a.prompt_in)
+    print("[gen] arm=%s out_name=%s K=%s L=%s" % (a.arm, out_name, K, L))
 
     ck_sha = ce.sha256(a.checkpoint)
     n = 2 if a.diagnostic else a.n_utterances
@@ -535,18 +559,21 @@ def main():
         rec = {"index": i, "utterance_id": ce.utterance_id(globals().get("_DS"), i, it),
                "speaker": str(it["speaker_id"]), "clean_sha": wav_sha(clean),
                "n_samples": int(len(clean)), "checkpoint_sha256": ck_sha,
-               "arm": a.arm, "K": K, "L_ms": L, "arms": {a.arm: q}}
+               "arm": out_name, "base_arm": a.arm, "K": K, "L_ms": L,
+               "prompt_in": getattr(a, "prompt_in", None),
+               "base_sha": wav_sha(wm),
+               "arms": {out_name: q}}
         if a.diagnostic:
             print(json.dumps({k: v for k, v in rec.items() if k != "arms"}, indent=1))
             print(json.dumps(q, indent=1))
             continue
-        write_flac(os.path.join(a.out_dir, "clean", "%d.flac" % i), wm)   # pairing reference
-        write_flac(os.path.join(a.out_dir, a.arm, "%d.flac" % i), y)
+        write_flac(os.path.join(a.out_dir, "clean", "%d.flac" % i), clean)  # pairing reference
+        write_flac(os.path.join(a.out_dir, out_name, "%d.flac" % i), y)
         os.makedirs(rec_dir, exist_ok=True)
         json.dump(rec, open(os.path.join(rec_dir, "%d.json" % i), "w"), indent=1)
         recs.append(rec)
-        print("[%d] %s PESQ=%.4f (vs_wm %.4f) STOI=%.4f SI-SNR=%.3f acc_src=%.3f" %
-              (i, a.arm, q["pesq"], q["pesq_vs_wm"], q["stoi"], q["si_snr"],
+        print("[%d] %s PESQ=%.4f (vs_in %.4f) STOI=%.4f SI-SNR=%.3f acc_src=%.3f" %
+              (i, out_name, q["pesq"], q["pesq_vs_wm"], q["stoi"], q["si_snr"],
                q["acc_source"]), flush=True)
 
     if a.diagnostic:
@@ -554,11 +581,12 @@ def main():
         print("Check the PESQ above against the calibration target before generating.")
         return
 
-    summ = {k: float(np.mean([r["arms"][a.arm][k] for r in recs]))
+    summ = {k: float(np.mean([r["arms"][out_name][k] for r in recs]))
             for k in ("pesq", "stoi", "si_snr", "snr_db", "acc_source",
                       "pesq_vs_wm", "stoi_vs_wm")}
-    summ["traced_source"] = float(np.mean([r["arms"][a.arm]["traced_source"] for r in recs]))
-    man = {"script": "nonadditive_transforms", "arm": a.arm, "K": K, "L_ms": L,
+    summ["traced_source"] = float(np.mean([r["arms"][out_name]["traced_source"] for r in recs]))
+    man = {"script": "nonadditive_transforms", "arm": out_name, "base_arm": a.arm,
+           "prompt_in": getattr(a, "prompt_in", None), "K": K, "L_ms": L,
            "design": "A5_curve" if forced else "matched_pesq",
            "settings": dict({k: v for k, v in vars(a).items() if k != "cmd"},
                             checkpoint_sha256=ck_sha, git=ce.git_info(),
