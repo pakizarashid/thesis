@@ -1,0 +1,202 @@
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 900 utterances (train split, speaker-disjoint from the other split).
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+[main] clone text: sampled per step from 60 training transcripts (6-14 words); pool saved to checkpoints/route2_p1g_r32lam0/clone_text_pool.json
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 589,824
+[build] msgproc_lora_r=32: 32 checkpoint tensor(s) don't match the new rank and will NOT be warm-started (LoRA zero-init instead):
+    msg_processor.transformer_decoder.layers.0.self_attn.in_proj_lora.A: checkpoint (8, 256) vs model (32, 256)
+    msg_processor.transformer_decoder.layers.0.self_attn.in_proj_lora.B: checkpoint (768, 8) vs model (768, 32)
+    msg_processor.transformer_decoder.layers.0.self_attn.out_proj_lora.A: checkpoint (8, 256) vs model (32, 256)
+    msg_processor.transformer_decoder.layers.0.self_attn.out_proj_lora.B: checkpoint (256, 8) vs model (256, 32)
+    msg_processor.transformer_decoder.layers.0.multihead_attn.in_proj_lora.A: checkpoint (8, 256) vs model (32, 256)
+    msg_processor.transformer_decoder.layers.0.multihead_attn.in_proj_lora.B: checkpoint (768, 8) vs model (768, 32)
+    msg_processor.transformer_decoder.layers.0.multihead_attn.out_proj_lora.A: checkpoint (8, 256) vs model (32, 256)
+    msg_processor.transformer_decoder.layers.0.multihead_attn.out_proj_lora.B: checkpoint (256, 8) vs model (256, 32)
+    msg_processor.transformer_decoder.layers.1.self_attn.in_proj_lora.A: checkpoint (8, 256) vs model (32, 256)
+    msg_processor.transformer_decoder.layers.1.self_attn.in_proj_lora.B: checkpoint (768, 8) vs model (768, 32)
+    msg_processor.transformer_decoder.layers.1.self_attn.out_proj_lora.A: checkpoint (8, 256) vs model (32, 256)
+    msg_processor.transformer_decoder.layers.1.self_attn.out_proj_lora.B: checkpoint (256, 8) vs model (256, 32)
+    msg_processor.transformer_decoder.layers.1.multihead_attn.in_proj_lora.A: checkpoint (8, 256) vs model (32, 256)
+    msg_processor.transformer_decoder.layers.1.multihead_attn.in_proj_lora.B: checkpoint (768, 8) vs model (768, 32)
+    msg_processor.transformer_decoder.layers.1.multihead_attn.out_proj_lora.A: checkpoint (8, 256) vs model (32, 256)
+    msg_processor.transformer_decoder.layers.1.multihead_attn.out_proj_lora.B: checkpoint (256, 8) vs model (256, 32)
+    msg_processor.transformer_decoder.layers.2.self_attn.in_proj_lora.A: checkpoint (8, 256) vs model (32, 256)
+    msg_processor.transformer_decoder.layers.2.self_attn.in_proj_lora.B: checkpoint (768, 8) vs model (768, 32)
+    msg_processor.transformer_decoder.layers.2.self_attn.out_proj_lora.A: checkpoint (8, 256) vs model (32, 256)
+    msg_processor.transformer_decoder.layers.2.self_attn.out_proj_lora.B: checkpoint (256, 8) vs model (256, 32)
+    msg_processor.transformer_decoder.layers.2.multihead_attn.in_proj_lora.A: checkpoint (8, 256) vs model (32, 256)
+    msg_processor.transformer_decoder.layers.2.multihead_attn.in_proj_lora.B: checkpoint (768, 8) vs model (768, 32)
+    msg_processor.transformer_decoder.layers.2.multihead_attn.out_proj_lora.A: checkpoint (8, 256) vs model (32, 256)
+    msg_processor.transformer_decoder.layers.2.multihead_attn.out_proj_lora.B: checkpoint (256, 8) vs model (256, 32)
+    msg_processor.transformer_decoder.layers.3.self_attn.in_proj_lora.A: checkpoint (8, 256) vs model (32, 256)
+    msg_processor.transformer_decoder.layers.3.self_attn.in_proj_lora.B: checkpoint (768, 8) vs model (768, 32)
+    msg_processor.transformer_decoder.layers.3.self_attn.out_proj_lora.A: checkpoint (8, 256) vs model (32, 256)
+    msg_processor.transformer_decoder.layers.3.self_attn.out_proj_lora.B: checkpoint (256, 8) vs model (256, 32)
+    msg_processor.transformer_decoder.layers.3.multihead_attn.in_proj_lora.A: checkpoint (8, 256) vs model (32, 256)
+    msg_processor.transformer_decoder.layers.3.multihead_attn.in_proj_lora.B: checkpoint (768, 8) vs model (768, 32)
+    msg_processor.transformer_decoder.layers.3.multihead_attn.out_proj_lora.A: checkpoint (8, 256) vs model (32, 256)
+    msg_processor.transformer_decoder.layers.3.multihead_attn.out_proj_lora.B: checkpoint (256, 8) vs model (256, 32)
+[build] Loaded LoRA weights from checkpoints/route2_vmaug_R0/route2_epoch19.pt (epoch 19, train-time avg_acc=1.0)
+[build] Trainable: ['detector', 'msg_processor'] LoRA only -- 64 tensors, 589,824 params
+[build] e.g. msg_processor.transformer_decoder.layers.0.self_attn.in_proj_lora.A
+[main] Loading YourTTS surrogate (the in-loop cloner; frozen)...
+
+======================================================================
+ROUTE 2: clone-aware detector training
+  trainable      : detector + msg_processor (LoRA)
+  in-loop cloner : yourtts (differentiable=True)
+  held-out eval  : XTTS, baseline to beat = 0.5587-0.5687 (noise floor ~0.02)
+  loss           : 1.0 * Ldec(clean) + 1.0 * Ldec(clone)
+  clone term on  : from epoch 0
+======================================================================
+
+[epoch -1  PRE-TRAINING] clean_acc=0.9625  clone_acc=0.5781
+  [e0 s0] loss=1.9611 Ldec_clean=0.0082 Ldec_clone=1.9529
+  [e0 s20] loss=2.7097 Ldec_clean=0.0966 Ldec_clone=2.6131
+  [e0 s40] loss=3.0038 Ldec_clean=0.0024 Ldec_clone=3.0013
+  [e0 s60] loss=2.3197 Ldec_clean=0.0034 Ldec_clone=2.3163
+  [e0 s80] loss=2.0069 Ldec_clean=0.0011 Ldec_clone=2.0058
+  [e0 s100] loss=2.2719 Ldec_clean=0.0378 Ldec_clone=2.2341
+  [e0 s120] loss=2.8889 Ldec_clean=0.0408 Ldec_clone=2.8482
+  [e0 s140] loss=2.7965 Ldec_clean=0.0242 Ldec_clone=2.7723
+  [e0 s160] loss=3.4017 Ldec_clean=0.0325 Ldec_clone=3.3692
+  [e0 s180] loss=2.2513 Ldec_clean=0.0009 Ldec_clone=2.2504
+  [e0 s200] loss=2.2348 Ldec_clean=0.0001 Ldec_clone=2.2347
+  [e0 s220] loss=2.1634 Ldec_clean=0.0011 Ldec_clone=2.1623
+  [e0 s240] loss=2.3435 Ldec_clean=0.0000 Ldec_clone=2.3435
+  [e0 s260] loss=2.8811 Ldec_clean=0.0004 Ldec_clone=2.8807
+  [e0 s280] loss=2.6141 Ldec_clean=0.0797 Ldec_clone=2.5344
+  [e0 s300] loss=2.3485 Ldec_clean=0.0002 Ldec_clone=2.3483
+  [e0 s320] loss=2.4500 Ldec_clean=0.0036 Ldec_clone=2.4464
+  [e0 s340] loss=2.7064 Ldec_clean=0.0007 Ldec_clone=2.7057
+  [e0 s360] loss=2.2299 Ldec_clean=0.0069 Ldec_clone=2.2230
+  [e0 s380] loss=2.7077 Ldec_clean=0.0060 Ldec_clone=2.7018
+  [e0 s400] loss=2.9317 Ldec_clean=0.0075 Ldec_clone=2.9241
+  [e0 s420] loss=2.4174 Ldec_clean=0.0007 Ldec_clone=2.4167
+  [e0 s440] loss=2.7521 Ldec_clean=0.0892 Ldec_clone=2.6629
+
+[epoch 0] clean_acc=1.0000  clone_acc=0.5594  (pre-training was 0.9625 / 0.5781)
+
+  [e1 s0] loss=2.1694 Ldec_clean=0.0127 Ldec_clone=2.1567
+  [e1 s20] loss=2.2057 Ldec_clean=0.0000 Ldec_clone=2.2057
+  [e1 s40] loss=2.5632 Ldec_clean=0.0020 Ldec_clone=2.5612
+  [e1 s60] loss=2.4877 Ldec_clean=0.0032 Ldec_clone=2.4845
+  [e1 s80] loss=2.3887 Ldec_clean=0.0058 Ldec_clone=2.3830
+  [e1 s100] loss=2.7058 Ldec_clean=0.0067 Ldec_clone=2.6991
+  [e1 s120] loss=2.9978 Ldec_clean=0.0009 Ldec_clone=2.9969
+  [e1 s140] loss=2.5958 Ldec_clean=0.0002 Ldec_clone=2.5955
+  [e1 s160] loss=2.4317 Ldec_clean=0.0022 Ldec_clone=2.4295
+  [e1 s180] loss=2.9750 Ldec_clean=0.0007 Ldec_clone=2.9743
+  [e1 s200] loss=3.1415 Ldec_clean=0.4832 Ldec_clone=2.6583
+  [e1 s220] loss=1.9642 Ldec_clean=0.0006 Ldec_clone=1.9636
+  [e1 s240] loss=2.8660 Ldec_clean=0.0469 Ldec_clone=2.8191
+  [e1 s260] loss=2.7294 Ldec_clean=0.0047 Ldec_clone=2.7247
+  [e1 s280] loss=2.1149 Ldec_clean=0.0007 Ldec_clone=2.1142
+  [e1 s300] loss=2.3928 Ldec_clean=0.0001 Ldec_clone=2.3927
+  [e1 s320] loss=2.3675 Ldec_clean=0.0011 Ldec_clone=2.3663
+  [e1 s340] loss=2.6498 Ldec_clean=0.0014 Ldec_clone=2.6484
+  [e1 s360] loss=2.2815 Ldec_clean=0.0023 Ldec_clone=2.2792
+  [e1 s380] loss=2.4137 Ldec_clean=0.0534 Ldec_clone=2.3603
+  [e1 s400] loss=2.4428 Ldec_clean=0.0011 Ldec_clone=2.4417
+  [e1 s420] loss=1.9066 Ldec_clean=0.0004 Ldec_clone=1.9061
+  [e1 s440] loss=2.2997 Ldec_clean=0.0168 Ldec_clone=2.2829
+
+[epoch 1] clean_acc=1.0000  clone_acc=0.5906  (pre-training was 0.9625 / 0.5781)
+
+  [e2 s0] loss=2.1081 Ldec_clean=0.0004 Ldec_clone=2.1078
+  [e2 s20] loss=2.5089 Ldec_clean=0.0001 Ldec_clone=2.5088
+  [e2 s40] loss=2.4753 Ldec_clean=0.0321 Ldec_clone=2.4433
+  [e2 s60] loss=2.3643 Ldec_clean=0.0032 Ldec_clone=2.3611
+  [e2 s80] loss=2.7894 Ldec_clean=0.0012 Ldec_clone=2.7882
+  [e2 s100] loss=2.4328 Ldec_clean=0.0001 Ldec_clone=2.4327
+  [e2 s120] loss=2.6676 Ldec_clean=0.0022 Ldec_clone=2.6653
+  [e2 s140] loss=1.9950 Ldec_clean=0.0005 Ldec_clone=1.9945
+  [e2 s160] loss=2.3218 Ldec_clean=0.0004 Ldec_clone=2.3214
+  [e2 s180] loss=2.5667 Ldec_clean=0.0005 Ldec_clone=2.5663
+  [e2 s200] loss=2.2034 Ldec_clean=0.0005 Ldec_clone=2.2029
+  [e2 s220] loss=2.6834 Ldec_clean=0.0000 Ldec_clone=2.6834
+  [e2 s240] loss=2.3266 Ldec_clean=0.0005 Ldec_clone=2.3261
+  [e2 s260] loss=2.3675 Ldec_clean=0.0060 Ldec_clone=2.3615
+  [e2 s280] loss=2.6155 Ldec_clean=0.0072 Ldec_clone=2.6083
+  [e2 s300] loss=2.2689 Ldec_clean=0.0017 Ldec_clone=2.2672
+  [e2 s320] loss=1.9228 Ldec_clean=0.0010 Ldec_clone=1.9218
+  [e2 s340] loss=2.6773 Ldec_clean=0.0019 Ldec_clone=2.6754
+  [e2 s360] loss=2.7119 Ldec_clean=0.0003 Ldec_clone=2.7115
+  [e2 s380] loss=2.3470 Ldec_clean=0.0016 Ldec_clone=2.3455
+  [e2 s400] loss=2.5269 Ldec_clean=0.0007 Ldec_clone=2.5263
+  [e2 s420] loss=2.5405 Ldec_clean=0.0013 Ldec_clone=2.5392
+  [e2 s440] loss=2.2770 Ldec_clean=0.0003 Ldec_clone=2.2767
+
+[epoch 2] clean_acc=1.0000  clone_acc=0.6250  (pre-training was 0.9625 / 0.5781)
+
+  [e3 s0] loss=2.8158 Ldec_clean=0.0008 Ldec_clone=2.8149
+  [e3 s20] loss=2.5377 Ldec_clean=0.0035 Ldec_clone=2.5342
+  [e3 s40] loss=2.2947 Ldec_clean=0.0045 Ldec_clone=2.2903
+  [e3 s60] loss=2.2627 Ldec_clean=0.0014 Ldec_clone=2.2613
+  [e3 s80] loss=2.7799 Ldec_clean=0.9172 Ldec_clone=1.8627
+  [e3 s100] loss=2.2173 Ldec_clean=0.0342 Ldec_clone=2.1831
+  [e3 s120] loss=2.2466 Ldec_clean=0.0700 Ldec_clone=2.1766
+  [e3 s140] loss=2.5188 Ldec_clean=0.0028 Ldec_clone=2.5160
+  [e3 s160] loss=2.3125 Ldec_clean=0.0002 Ldec_clone=2.3123
+  [e3 s180] loss=1.9501 Ldec_clean=0.0002 Ldec_clone=1.9499
+  [e3 s200] loss=2.4814 Ldec_clean=0.0007 Ldec_clone=2.4807
+  [e3 s220] loss=2.2662 Ldec_clean=0.0007 Ldec_clone=2.2655
+  [e3 s240] loss=1.9787 Ldec_clean=0.0331 Ldec_clone=1.9457
+  [e3 s260] loss=1.7251 Ldec_clean=0.0064 Ldec_clone=1.7188
+  [e3 s280] loss=2.1647 Ldec_clean=0.0004 Ldec_clone=2.1643
+  [e3 s300] loss=1.9315 Ldec_clean=0.0076 Ldec_clone=1.9239
+  [e3 s320] loss=2.4343 Ldec_clean=0.0002 Ldec_clone=2.4341
+  [e3 s340] loss=2.3651 Ldec_clean=0.0058 Ldec_clone=2.3594
+  [e3 s360] loss=2.5700 Ldec_clean=0.6935 Ldec_clone=1.8765
+  [e3 s380] loss=2.4863 Ldec_clean=0.0035 Ldec_clone=2.4828
+  [e3 s400] loss=2.1185 Ldec_clean=0.0008 Ldec_clone=2.1177
+  [e3 s420] loss=2.0695 Ldec_clean=0.0375 Ldec_clone=2.0321
+  [e3 s440] loss=2.0201 Ldec_clean=0.0001 Ldec_clone=2.0201
+
+[epoch 3] clean_acc=1.0000  clone_acc=0.6188  (pre-training was 0.9625 / 0.5781)
+
+  [e4 s0] loss=2.1650 Ldec_clean=0.0019 Ldec_clone=2.1632
+  [e4 s20] loss=2.3488 Ldec_clean=0.0001 Ldec_clone=2.3488
+  [e4 s40] loss=1.6655 Ldec_clean=0.0059 Ldec_clone=1.6597
+  [e4 s60] loss=2.0266 Ldec_clean=0.0016 Ldec_clone=2.0250
+  [e4 s80] loss=1.7904 Ldec_clean=0.0030 Ldec_clone=1.7874
+  [e4 s100] loss=2.2551 Ldec_clean=0.0002 Ldec_clone=2.2550
+  [e4 s120] loss=1.4828 Ldec_clean=0.0003 Ldec_clone=1.4825
+  [e4 s140] loss=1.7482 Ldec_clean=0.0003 Ldec_clone=1.7479
+  [e4 s160] loss=1.9319 Ldec_clean=0.0001 Ldec_clone=1.9317
+  [e4 s180] loss=2.0589 Ldec_clean=0.0028 Ldec_clone=2.0561
+  [e4 s200] loss=2.4015 Ldec_clean=0.0003 Ldec_clone=2.4012
+  [e4 s220] loss=2.2512 Ldec_clean=0.0017 Ldec_clone=2.2495
+  [e4 s240] loss=2.7106 Ldec_clean=0.0019 Ldec_clone=2.7088
+  [e4 s260] loss=2.2178 Ldec_clean=0.0057 Ldec_clone=2.2121
+  [e4 s280] loss=2.1998 Ldec_clean=0.1323 Ldec_clone=2.0675
+  [e4 s300] loss=2.2536 Ldec_clean=0.0006 Ldec_clone=2.2530
+  [e4 s320] loss=2.1321 Ldec_clean=0.0007 Ldec_clone=2.1314
+  [e4 s340] loss=2.1636 Ldec_clean=0.0022 Ldec_clone=2.1614
+  [e4 s360] loss=2.4655 Ldec_clean=0.0005 Ldec_clone=2.4650
+  [e4 s380] loss=2.2606 Ldec_clean=0.0252 Ldec_clone=2.2354
+  [e4 s400] loss=2.8618 Ldec_clean=0.0000 Ldec_clone=2.8618
+  [e4 s420] loss=2.0038 Ldec_clean=0.0001 Ldec_clone=2.0037
+  [e4 s440] loss=2.3670 Ldec_clean=0.0006 Ldec_clone=2.3664
+
+[epoch 4] clean_acc=1.0000  clone_acc=0.6156  (pre-training was 0.9625 / 0.5781)
+
+
+======================================================================
+DONE. Best epoch 2: clone_acc=0.6250 (pre-training 0.5781), clean_acc=1.0000
+These are YourTTS numbers -- the cloner that was IN the training loop, so they are optimistic by construction. The real result is the held-out XTTS eval:
+  python src/eval/xtts_transfer_eval.py --checkpoint checkpoints/route2_p1g_r32lam0/route2_final.pt \
+    --n_speakers 60 --n_eval_speakers 20 --eval_utterances_per_speaker 5 \
+    --output results/results_xtts_route2_n100.json
+Beat 0.5687 there by more than the ~0.02 noise floor and it is a real improvement.
+======================================================================
