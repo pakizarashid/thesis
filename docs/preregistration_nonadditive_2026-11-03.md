@@ -204,3 +204,47 @@ No expansion of scope mid-experiment.
 - quality table: PESQ, WER, STOI, SI-SNR, RMS for every arm beside Q2
 - an updated protection-versus-PESQ figure with the N1 arms on the same axes as the six additive families
 - a result document giving the verdict against HN1–HN4, failures included
+
+## Amendment A1 (2026-11-03, before any calibration sweep and before any N1 clip)
+
+The registered F-ratio criterion selected an artefact. Recorded in full so the amendment can be judged.
+
+**What was seen.** `fratio` ran on the 60 training speakers, 900 utterances, 563,400 frames, and returned as its
+top-16 bins: 0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 — that is, **0 Hz to 125 Hz**. Nothing above
+bin 16 was selected at all. No clip was generated; the calibration sweep had not run.
+
+**Why.** Speech carries almost no energy below about 80 Hz. In those bins `log(mag + 1e-8)` is dominated by the
+recording noise floor and by DC offset, so between-speaker variance is large for reasons unrelated to speaker
+identity, while within-speaker variance stays small. The criterion as registered therefore ranks near-silence
+highest. Notching those bins would have changed nothing audible and nothing about identity: the primary arm
+would have been a no-op presented as a mechanism.
+
+**Three changes, all decided before any sweep.**
+
+1. **Band restriction.** Only bins in [80 Hz, 7800 Hz] are eligible. Below 80 Hz is the noise-floor problem
+   above; the top edge keeps the criterion away from the anti-alias roll-off at 8 kHz.
+2. **Energy floor.** A bin is eligible only if its mean magnitude over the training split is within 60 dB of the
+   loudest bin. This is the same near-silence exclusion, measured rather than assumed, and it also protects
+   against the band edges being near-empty for this corpus.
+3. **Level normalisation.** Each frame's mean log-magnitude across bins is subtracted before the F-ratio is
+   computed, so the criterion ranks **spectral shape** rather than loudness. Without it, gain and
+   recording-level differences between speakers inflate every bin and reintroduce the same confound in a
+   different form.
+
+Ineligible bins are stored as null and treated as −infinity, so they can never be selected at any K. The frozen
+file records `criterion_version: "A1"`, the band, the floor, the eligible-bin count and the per-bin mean
+magnitude in dB, so the selection is auditable.
+
+**What this does not change.** The criterion is still computed only on the 60 training speakers, still consults
+no speaker verifier and no cloner, and still carries no causal claim: it ranks bins by between- versus
+within-speaker variation of level-normalised spectral shape, and the experiment tests whether suppressing them
+reduces clone identity preservation. Every hypothesis, threshold, arm, decision rule and prediction in the body
+of this pre-registration is unchanged, including the frozen calibration target.
+
+**Prediction added.** P(the A1 top-16 bins fall mainly in 200–3500 Hz, where speaker-discriminative formant
+structure is expected) ≈ 70 %. If A1 again selects a band edge, the criterion is wrong in a way these three
+changes do not fix, and N1's primary arm should be reconsidered rather than patched a third time.
+
+**Also recorded, for the calibration that follows.** Q2's PESQ on clips 0–19 is **1.8768**, against 1.7887 over
+all 100 clips — a difference of 0.0880, nearly twice the 0.05 width of the quality gate. The frozen target is
+1.8768, per the body of this document.
