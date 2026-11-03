@@ -352,3 +352,48 @@ rules and predictions. The superseded sweep is kept as `results/n1_calib.json.pr
 target lies between K = 4 and K = 8 on any plausible interpolation. P(`n1rir` calibratable within L ≤ 60 ms)
 ≈ 45 %. P(`n1notch` at its calibrated K fails the WER condition) ≈ 45 %, revised up from 35 %: F0 removal is
 more damaging to intelligibility than the original estimate assumed.
+
+## Amendment A4 (2026-11-03, after the A3 sweep, before any clip is CLONED)
+
+The A3 sweep froze a setting that does not meet the registered quality condition. The fault is in the
+calibration procedure, not in the grids or the transforms, and it is corrected here. **No clip has been cloned
+and no accept rate, verifier score or traced rate has been computed, so no outcome information has leaked.**
+
+**What was seen.** `n1notch` froze at **K = 12**. The generate step then reported per-clip PESQ against clean
+for clips 0–9: 1.4477, 1.8772, 2.1397, 2.0221, 1.6431, 1.6515, 1.4264, 1.7596, 1.4579, 1.6127 — a mean of
+**1.704** against the frozen target of **1.8768**. That is 0.17 below target, more than three times the 0.05
+width of the registered quality condition, so HN1's PESQ condition would have failed by construction.
+
+**Why K = 12 was returned.** The A3 grid is non-monotone in PESQ: K = 4 → 1.9954, K = 8 → **1.7773**,
+K = 16 → 1.8188. The implementation bracketed the target by taking the nearest setting below it by PESQ
+(K = 16) and the nearest above (K = 4). Those are **not adjacent**: the bracket spans the dip at K = 8.
+Interpolating 16 → 4 returned 12.06, and K = 12 lies inside the dip, so its true PESQ bears no relation to the
+line between its brackets. A3 disclosed the non-monotonicity as a hazard; disclosure was not enough, because
+the code had to be robust to it.
+
+**Two changes to the calibration procedure. No change to any grid, threshold, hypothesis or decision rule.**
+
+1. **Interpolate only across adjacent grid settings.** Only a pair of settings that are neighbours in the grid
+   and straddle the target may be interpolated. For `n1notch` the valid bracket is K = 4 (1.9954) and K = 8
+   (1.7773), which genuinely straddle 1.8768.
+2. **Verify by measurement, never trust the interpolation.** The interpolated setting and its integer
+   neighbours are each measured on the calibration clips, and the first whose measured PESQ is within 0.05 of
+   the target is frozen. Every probe is recorded in `results/n1_calib.json` as `verify_probe`. If no integer
+   setting measures within 0.05, the arm is reported **not calibratable** rather than freezing a setting that
+   fails the registered condition — refusing to freeze is the correct outcome, not a shortfall.
+
+**Consequences, recorded now.**
+
+- The K = 12 prompts written before the run was stopped are **discarded**. They are discarded on a *quality*
+  criterion fixed in advance, not on any outcome, and nothing derived from them was observed.
+- `n1rir` is **dropped**. Its extended grid reached L = 60 ms at PESQ 2.0623, still 0.19 above the target, and
+  A3 forbids a second extension. The departure to 40–60 ms is reported as having been attempted and having
+  failed to reach Q2's quality: a short RIR, at any length that remains a short RIR, is too gentle to cost what
+  Q2 costs. That is a finding about the mechanism, not a procedural failure.
+- `n1both` is **dropped**, since it requires both arms calibrated.
+- N1 therefore reduces to **`n1notch` alone**. That is the registered primary arm, so HN1 remains testable and
+  the pre-registration does not need reopening on that account.
+
+**Predictions, before the corrected sweep.** P(some K ∈ {5, 6, 7} measures within 0.05 of 1.8768) ≈ 70 %.
+P(`n1notch` is reported not calibratable even after the fix) ≈ 30 % — the K = 4 → K = 8 step is 0.22 PESQ wide
+across three integers, so the curve may simply step over the 0.05 window.
