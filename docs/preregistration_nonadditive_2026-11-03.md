@@ -248,3 +248,51 @@ changes do not fix, and N1's primary arm should be reconsidered rather than patc
 **Also recorded, for the calibration that follows.** Q2's PESQ on clips 0–19 is **1.8768**, against 1.7887 over
 all 100 clips — a difference of 0.0880, nearly twice the 0.05 width of the quality gate. The frozen target is
 1.8768, per the body of this document.
+
+## Amendment A2 (2026-11-03, after the first calibration sweep, before any N1 clip)
+
+The first sweep could not reach the target for a reason in the harness, not in the transforms. Recorded in full.
+
+**What was seen.** Target 1.8768. `n1notch`: PESQ 2.6230 / 2.6407 / 2.6412 / 2.5428 / 2.3613 at
+K = 8 / 16 / 32 / 64 / 128. `n1rir`: 4.6080 / 4.4399 / 3.9567 / 4.0654 at L = 5 / 10 / 20 / 30 ms. Both grids
+lie far above the target and both are non-monotonic. Both arms were written as `not calibratable`, the generate
+guard fired, and no clip was produced.
+
+**Why.** The reference was wrong. `protect_prompts_v2` measures every arm as `quality(clean, arm_audio)` — the
+**watermark plus the protection, against the clean prompt** — which is where Q2's 1.8768 comes from.
+`nonadditive_transforms.py` measured `quality(watermarked, transformed)`, i.e. the transform's cost **excluding
+the watermark's own**. A 5 ms RIR scoring PESQ 4.61 against the watermarked audio is a near-transparent
+transform, and no setting of it could ever reach a target defined on a different reference. This is the same
+class of error as the T1E calibration mismatch (a 20-clip calibration against a 100-clip target).
+
+**Change.** Calibration and reporting now measure `quality(clean, transformed)`, matching Q2 exactly. The
+transform-only figures are still reported as `pesq_vs_wm` and `stoi_vs_wm`, because the distinction between "what
+the watermark costs" and "what the transform adds to that" is informative and was previously conflated.
+
+RMS matching is unaffected and still checked against the transform's input, which is the watermarked audio — that
+is what `rms_match()` enforces, and it is what keeps every arm off the loudness axis.
+
+**Added diagnostic, printed before every sweep.** The watermark-only PESQ against clean, with no transform
+applied. That is the ceiling the transform starts from: it can only move PESQ down from there. If the
+watermark alone already scores below the target, no setting of any transform can reach it and the arm is
+reported `not calibratable` for a reason that has nothing to do with the mechanism. This number should have been
+printed from the start.
+
+**Nothing else changes.** Same arms, same grids, same frozen target of 1.8768, same hypotheses, thresholds,
+decision rules, primary arm and predictions. The superseded `results/n1_calib.json` is moved aside to
+`.pre_a2` and stays in git as the record of the failed sweep.
+
+**Prediction added, before the corrected sweep.** P(`n1notch` is calibratable to 1.8768 within the registered
+grid K ≤ 128) ≈ 55 %. P(`n1rir` is calibratable within L ≤ 30 ms) ≈ 40 % — convolution at these lengths is
+close to transparent, and the grid may need its one permitted extension.
+
+**On the A1 bin selection, recorded now rather than after the results.** A1's top-16 bins are 11–21
+(85.9–164.1 Hz) and 326, 331–334 (2546.9–2609.4 Hz). The registered prediction was that they would fall mainly
+in 200–3500 Hz; that prediction is **missed**, with 11 of 16 bins just above the 80 Hz band edge. The reading
+taken here is that this is the fundamental-frequency range — male F0 is roughly 85–180 Hz, female 165–255 Hz —
+so between-speaker variance is high while within-speaker variance stays bounded, which is what pitch looks like
+and is a genuine speaker cue; the 2.5 kHz cluster is plausibly formant structure. Unlike the pre-A1 run, these
+bins survive level normalisation and the energy floor, and bins 0–5 are excluded. The A1 stopping rule
+("reconsider rather than patch a third time if a band edge is selected again") is treated as satisfied on this
+interpretation, and **the criterion is not modified again.** If `n1notch` fails, this interpretation is part of
+what failed and must be reported as such, not revised afterwards.
