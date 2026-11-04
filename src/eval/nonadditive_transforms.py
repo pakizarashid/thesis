@@ -128,13 +128,76 @@ def apply_rir(x, h):
     return rms_match(y, x)
 
 
-def transform(x, arm, bins=None, rir=None):
+
+def _pca_region(k, region):
+    """Component index range. Thirds, mirroring the signature paper's
+    0:100 / 100:200 / 200:300 split of a 300-component vector."""
+    a, b = {"low": (0, k // 3), "mid": (k // 3, 2 * k // 3), "high": (2 * k // 3, k)}[region]
+    return int(a), int(max(b, a + 1))
+
+
+def pca_perturb(x, variant, region, scale, seed=1234, frame_len=1024, hop=None):
+    """Algorithm 1 of the signature paper (Jahangir et al.), on framed audio.
+
+        PC   = PCA.transform(X)              X = (frames x frame_len)
+        N    = Rotation(PC)   [or Laplacian, as in the EEG paper]
+        nc_i = PC_i + region * N[i]
+        y    = PCA.inversetransform(NC)
+
+    PCA by SVD on the mean-centred frame matrix, so the inverse is exact when
+    nothing is perturbed. Hann overlap-add divided by the window sum reconstructs
+    x exactly at scale=0 -- asserted by the self-test -- so any measured
+    degradation is the perturbation, not the framing. Sample count is preserved
+    and the output is RMS-matched to the input, keeping the arm off the loudness
+    axis like every other arm here.
+    """
+    x = as1d(x)
+    L = int(frame_len)
+    H = int(hop or L // 2)
+    if len(x) < L + H:
+        return x
+    n = 1 + (len(x) - L) // H
+    idx = np.arange(L)[None, :] + H * np.arange(n)[:, None]
+    X = x[idx]
+    mu = X.mean(axis=0, keepdims=True)
+    U, S, Vt = np.linalg.svd(X - mu, full_matrices=False)
+    PC = U * S
+    k = PC.shape[1]
+    lo, hi = _pca_region(k, region)
+    if variant == "rotation":
+        N = PC[::-1, ::-1]
+    elif variant == "laplacian":
+        g = np.random.default_rng(seed)
+        N = g.laplace(0.0, 1.0, size=PC.shape) * float(np.std(PC))
+    else:
+        raise ValueError("unknown pca variant %r" % variant)
+    NC = PC.copy()
+    NC[:, lo:hi] = PC[:, lo:hi] + float(scale) * N[:, lo:hi]
+    Xa = NC @ Vt + mu
+    w = np.hanning(L + 2)[1:-1]
+    y = np.zeros(len(x), dtype=np.float64)
+    ws = np.zeros(len(x), dtype=np.float64)
+    for j in range(n):
+        s_ = j * H
+        y[s_:s_ + L] += Xa[j] * w
+        ws[s_:s_ + L] += w
+    tail = (n - 1) * H + L
+    y[:tail] /= np.maximum(ws[:tail], 1e-12)
+    if tail < len(x):
+        y[tail:] = x[tail:]
+    return rms_match(y, x)
+
+
+def transform(x, arm, bins=None, rir=None, pca=None):
     if arm == "n1notch":
         return notch(x, bins)
     if arm == "n1rir":
         return apply_rir(x, rir)
     if arm == "n1both":
         return rms_match(apply_rir(notch(x, bins), rir), as1d(x))
+    if arm in ("pcarot", "pcalap"):
+        return pca_perturb(x, pca["variant"], pca["region"], pca["scale"],
+                           seed=pca["seed"], frame_len=pca["frame_len"], hop=pca["hop"])
     raise ValueError("unknown arm %r" % arm)
 
 
@@ -322,7 +385,9 @@ def main():
 
     p = sub.add_parser("calibrate", help="sweep to a target PESQ on clips 0-19, then freeze")
     add_common(p)
-    p.add_argument("--arm", required=True, choices=("n1notch", "n1rir"))
+    p.add_argument("--arm", required=True, choices=("n1notch", "n1rir"),
+                   help="PCA arms are not calibrated here: their scale sweep is run by the "
+                        "N5 cell under A5, the same way N4 swept L.")
     p.add_argument("--target_pesq", type=float, required=True)
     p.add_argument("--k_list", default="8,16,32,64,128")
     p.add_argument("--l_list", default="5,10,20,30")
@@ -330,8 +395,18 @@ def main():
 
     p = sub.add_parser("generate", help="write an arm's prompts")
     add_common(p)
-    p.add_argument("--arm", required=True, choices=("n1notch", "n1rir", "n1both"))
+    p.add_argument("--arm", required=True,
+                   choices=("n1notch", "n1rir", "n1both", "pcarot", "pcalap"))
     p.add_argument("--out_dir", required=True)
+    p.add_argument("--pca_region", default="mid", choices=("low", "mid", "high"),
+                   help="Which third of the principal components to perturb. 'mid' is the "
+                        "registered primary: the signature paper got 82%% success at SSIM "
+                        "0.74 on components 100:200 against 58%% at 0.70 on 0:100.")
+    p.add_argument("--pca_scale", type=float, default=None,
+                   help="Perturbation scale. Required for a pca arm (A5 curve design: "
+                        "the setting is passed explicitly and PESQ is REPORTED).")
+    p.add_argument("--pca_frame", type=int, default=1024, help="Frame length in samples.")
+    p.add_argument("--pca_seed", type=int, default=1234, help="Laplacian noise seed.")
     p.add_argument("--diagnostic", action="store_true",
                    help="2 clips, print everything, write nothing. RUN THIS FIRST.")
     p.add_argument("--k", type=int, default=None,
@@ -500,32 +575,45 @@ def main():
 
     # ---------------------------------------------------------------- generate
     forced = (a.k is not None) or (a.l_ms is not None)
-    if bins_all is None:
-        raise SystemExit("run `fratio` first -- the bin ranking must be frozen before any clip")
-    if not forced and not os.path.exists(a.calib_file):
-        raise SystemExit("run `calibrate` first, or pass --k / --l_ms under Amendment A5 "
-                         "(curve design: PESQ reported, not matched)")
-    calib = json.load(open(a.calib_file)) if os.path.exists(a.calib_file) else {}
-    f = np.array([(-np.inf if v is None else float(v))
-                  for v in bins_all["fratio"]], dtype=np.float64)
-    need = {"n1notch": ("n1notch",), "n1rir": ("n1rir",), "n1both": ("n1notch", "n1rir")}[a.arm]
-    if forced:
-        K = a.k if "n1notch" in need else None
-        L = a.l_ms if "n1rir" in need else None
-        if "n1notch" in need and K is None:
-            raise SystemExit("--k is required for %s under A5" % a.arm)
-        if "n1rir" in need and L is None:
-            raise SystemExit("--l_ms is required for %s under A5" % a.arm)
-        print("[gen] A5 curve design: setting passed explicitly, PESQ will be REPORTED "
-              "rather than matched to a target")
+    if a.arm in ("pcarot", "pcalap"):
+        assert a.pca_scale is not None, \
+            "--pca_scale is required for %s (A5 curve design: PESQ is reported, not matched)" % a.arm
+        forced = True
+        K = L = bins = rir = None
+        pca = {"variant": "rotation" if a.arm == "pcarot" else "laplacian",
+               "region": a.pca_region, "scale": float(a.pca_scale),
+               "seed": a.pca_seed, "frame_len": a.pca_frame, "hop": a.pca_frame // 2}
+        print("[gen] PCA perturbation (black-box, gradient-free): variant=%s region=%s "
+              "scale=%g frame=%d" % (pca["variant"], pca["region"], pca["scale"],
+                                     pca["frame_len"]))
     else:
-        for nm in need:
-            if nm not in calib or calib[nm].get("setting_rounded") is None:
-                raise SystemExit("%s is not calibrated/frozen" % nm)
-        K = calib["n1notch"]["setting_rounded"] if "n1notch" in need else None
-        L = calib["n1rir"]["setting_rounded"] if "n1rir" in need else None
-    bins = select_bins(f, K) if K else None
-    rir = make_rir(L, seed=a.rir_seed) if L else None
+        pca = None
+        if bins_all is None:
+            raise SystemExit("run `fratio` first -- the bin ranking must be frozen before any clip")
+        if not forced and not os.path.exists(a.calib_file):
+            raise SystemExit("run `calibrate` first, or pass --k / --l_ms under Amendment A5 "
+                             "(curve design: PESQ reported, not matched)")
+        calib = json.load(open(a.calib_file)) if os.path.exists(a.calib_file) else {}
+        f = np.array([(-np.inf if v is None else float(v))
+                      for v in bins_all["fratio"]], dtype=np.float64)
+        need = {"n1notch": ("n1notch",), "n1rir": ("n1rir",), "n1both": ("n1notch", "n1rir")}[a.arm]
+        if forced:
+            K = a.k if "n1notch" in need else None
+            L = a.l_ms if "n1rir" in need else None
+            if "n1notch" in need and K is None:
+                raise SystemExit("--k is required for %s under A5" % a.arm)
+            if "n1rir" in need and L is None:
+                raise SystemExit("--l_ms is required for %s under A5" % a.arm)
+            print("[gen] A5 curve design: setting passed explicitly, PESQ will be REPORTED "
+                  "rather than matched to a target")
+        else:
+            for nm in need:
+                if nm not in calib or calib[nm].get("setting_rounded") is None:
+                    raise SystemExit("%s is not calibrated/frozen" % nm)
+            K = calib["n1notch"]["setting_rounded"] if "n1notch" in need else None
+            L = calib["n1rir"]["setting_rounded"] if "n1rir" in need else None
+        bins = select_bins(f, K) if K else None
+        rir = make_rir(L, seed=a.rir_seed) if L else None
     out_name = getattr(a, "out_arm_name", None) or a.arm
     if getattr(a, "prompt_in", None):
         assert os.path.isdir(a.prompt_in), "--prompt_in %s is not a directory" % a.prompt_in
@@ -537,7 +625,7 @@ def main():
     rec_dir = os.path.join(a.out_dir, "records")
     recs = []
     for i, it, clean, wm, true_bits in eval_prompts(a, device, backbone, n):
-        y = transform(wm, a.arm, bins=bins, rir=rir)
+        y = transform(wm, a.arm, bins=bins, rir=rir, pca=pca)
         q = quality(clean, y)                     # A2: vs CLEAN, comparable to Q2
         q_vs_wm = quality(wm, y)                  # reported too: the transform's own cost
         q["pesq_vs_wm"] = q_vs_wm["pesq"]
@@ -559,7 +647,7 @@ def main():
         rec = {"index": i, "utterance_id": ce.utterance_id(globals().get("_DS"), i, it),
                "speaker": str(it["speaker_id"]), "clean_sha": wav_sha(clean),
                "n_samples": int(len(clean)), "checkpoint_sha256": ck_sha,
-               "arm": out_name, "base_arm": a.arm, "K": K, "L_ms": L,
+               "arm": out_name, "base_arm": a.arm, "K": K, "L_ms": L, "pca": pca,
                "prompt_in": getattr(a, "prompt_in", None),
                "base_sha": wav_sha(wm),
                "arms": {out_name: q}}
@@ -586,7 +674,7 @@ def main():
                       "pesq_vs_wm", "stoi_vs_wm")}
     summ["traced_source"] = float(np.mean([r["arms"][out_name]["traced_source"] for r in recs]))
     man = {"script": "nonadditive_transforms", "arm": out_name, "base_arm": a.arm,
-           "prompt_in": getattr(a, "prompt_in", None), "K": K, "L_ms": L,
+           "prompt_in": getattr(a, "prompt_in", None), "K": K, "L_ms": L, "pca": pca,
            "design": "A5_curve" if forced else "matched_pesq",
            "settings": dict({k: v for k, v in vars(a).items() if k != "cmd"},
                             checkpoint_sha256=ck_sha, git=ce.git_info(),
