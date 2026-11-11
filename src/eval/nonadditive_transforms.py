@@ -272,12 +272,12 @@ def add_common(p):
 def train_split(args):
     """The 60 TRAINING speakers. The F-ratio must never see the eval speakers."""
     from librispeech import LibriSpeechSubset
-    return LibriSpeechSubset(root=args.data_root, n_speakers=args.n_speakers,
+    return _TrimmedDataset(LibriSpeechSubset(root=args.data_root, n_speakers=args.n_speakers,
                              utterances_per_speaker=args.utterances_per_speaker,
                              n_eval_speakers=args.n_eval_speakers,
                              eval_utterances_per_speaker=args.eval_utterances_per_speaker,
                              sample_rate=SR, crop_seconds=args.max_full_seconds,
-                             split="train", subset=args.libri_subset)
+                             split="train", subset=args.libri_subset))
 
 
 def eval_prompts(args, device, backbone, n):
@@ -599,6 +599,21 @@ def main():
     json.dump(man, open(os.path.join(a.out_dir, "manifest.json"), "w"), indent=1)
     print("\nDONE ->", a.out_dir)
     print(json.dumps(summ, indent=1))
+
+
+
+# ===== N16 fix: the F-ratio must see REAL audio, not padding =====
+# LibriSpeechSubset and VCTKSubset return fixed 20 s items, padding anything
+# shorter. speaker_fratio never trimmed, though eval_prompts does. With the A1
+# per-frame level normalisation, padding becomes amplified noise.
+class _TrimmedDataset(torch.utils.data.Dataset):
+    def __init__(self, inner): self.inner = inner
+    def __len__(self): return len(self.inner)
+    def __getitem__(self, i):
+        it = dict(self.inner[i])
+        w = ce.trim_padding(it["waveform"].reshape(-1))
+        it["waveform"] = w.reshape(1, -1)
+        return it
 
 
 if __name__ == "__main__":
