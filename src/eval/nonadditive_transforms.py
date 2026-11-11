@@ -98,6 +98,10 @@ def rms_match(y, x):
 
 
 def notch(x, bins):
+    # K=0 means no notch: the watermark-only arm. RMS-matching x to
+    # itself is the identity, so the invariants still hold.
+    if bins is None or len(bins) == 0:
+        return rms_match(x, x)
     """Zero the given STFT bins. Non-additive: removes, never adds."""
     x = as1d(x)
     X = _stft(x)
@@ -271,6 +275,14 @@ def add_common(p):
 
 def train_split(args):
     """The 60 TRAINING speakers. The F-ratio must never see the eval speakers."""
+    if getattr(args, 'dataset', 'librispeech') == 'vctk':
+        from vctk import VCTKSubset
+        return _TrimmedDataset(VCTKSubset(root=args.vctk_root, n_speakers=args.n_speakers,
+                          utterances_per_speaker=args.utterances_per_speaker,
+                          n_eval_speakers=args.n_eval_speakers,
+                          eval_utterances_per_speaker=args.eval_utterances_per_speaker,
+                          sample_rate=SR, crop_seconds=args.max_full_seconds,
+                          split="train"))
     from librispeech import LibriSpeechSubset
     return _TrimmedDataset(LibriSpeechSubset(root=args.data_root, n_speakers=args.n_speakers,
                              utterances_per_speaker=args.utterances_per_speaker,
