@@ -169,6 +169,25 @@ def detect_acc(backbone, wav, message):
 # shared helpers
 # --------------------------------------------------------------------------------
 
+
+def _whisper_build(size):
+    """_ASR_CPU_FALLBACK: try GPU, fall back to CPU.
+
+    faster-whisper's CTranslate2 wheel links libcublas.so.12; this image is
+    CUDA 13, so the GPU backend raises at the first encode(). The prompt
+    transcript is a few seconds of audio per clip, so CPU int8 is ample.
+    """
+    from faster_whisper import WhisperModel
+    try:
+        m = WhisperModel(size, device="cuda", compute_type="float16")
+        import numpy as _n
+        list(m.transcribe(_n.zeros(16000, dtype=_n.float32), language="en")[0])
+        print(f"[transcribe] {size} on GPU")
+        return m
+    except Exception as e:
+        print(f"[transcribe] GPU unavailable ({type(e).__name__}); using CPU int8")
+        return WhisperModel(size, device="cpu", compute_type="int8")
+
 def write_ref_wav(speaker_audio_16k, tmp_dir, tag):
     """All three backends take a reference WAV path. Write once, reuse."""
     import soundfile as sf
@@ -210,7 +229,7 @@ class Transcriber:
             from faster_whisper import WhisperModel
             compute = "float16" if self.device == "cuda" else "int8"
             print(f"[transcribe] loading faster-whisper {self.model_size} ({compute})")
-            self._m = WhisperModel(self.model_size, device=self.device, compute_type=compute)
+            self._m = (lambda _sz: _whisper_build(_sz))(self.model_size)
         return self._m
 
     def __call__(self, wav_path):
