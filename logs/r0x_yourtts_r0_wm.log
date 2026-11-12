@@ -43,3 +43,136 @@ Traceback (most recent call last):
   File "/usr/local/lib/python3.13/dist-packages/TTS/utils/manage.py", line 468, in _find_files
     raise ValueError(" [!] Model file not found in the output path")
 ValueError:  [!] Model file not found in the output path
+[preflight] omegaconf 2.4.0 ok; numpy/torch ok
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+[plan] cloner=yourtts clips=100 prompts=['3'] texts=['unseen'] -> 100 clones to run
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[backbone] loaded checkpoints/route2_vmaug_R0/route2_epoch19.pt (epoch 19)
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794481235.118869    1395 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+INFO:speechbrain.utils.fetching:Fetch hyperparams.yaml: Using symlink found at '/tmp/ecapa_model/hyperparams.yaml'
+INFO:speechbrain.utils.fetching:Fetch embedding_model.ckpt: Using symlink found at '/tmp/ecapa_model/embedding_model.ckpt'
+INFO:speechbrain.utils.fetching:Fetch mean_var_norm_emb.ckpt: Using symlink found at '/tmp/ecapa_model/mean_var_norm_emb.ckpt'
+INFO:speechbrain.utils.fetching:Fetch classifier.ckpt: Using symlink found at '/tmp/ecapa_model/classifier.ckpt'
+INFO:speechbrain.utils.fetching:Fetch label_encoder.txt: Using symlink found at '/tmp/ecapa_model/label_encoder.ckpt'
+INFO:speechbrain.utils.parameter_transfer:Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+/usr/local/lib/python3.13/dist-packages/speechbrain/utils/checkpoints.py:202: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  state_dict = torch.load(path, map_location=device)
+/usr/local/lib/python3.13/dist-packages/speechbrain/processing/features.py:1550: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  stats = torch.load(path, map_location=self.device)
+WARNING:speechbrain.inference.interfaces:Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+/usr/local/lib/python3.13/dist-packages/resemblyzer/voice_encoder.py:43: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  checkpoint = torch.load(weights_fpath, map_location="cpu")
+[1/100] clip 0 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.385 res=0.745
+[2/100] clip 1 prompt 3 text unseen: acc_src=1.000 acc=0.375 traced=False far=True sim=0.387 res=0.805
+[3/100] clip 2 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.433 res=0.764
+[4/100] clip 3 prompt 3 text unseen: acc_src=1.000 acc=0.438 traced=False far=True sim=0.309 res=0.738
+[5/100] clip 4 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.163 res=0.699
+[6/100] clip 5 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.329 res=0.688
+[7/100] clip 6 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.453 res=0.791
+[8/100] clip 7 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.228 res=0.671
+[9/100] clip 8 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.315 res=0.759
+[10/100] clip 9 prompt 3 text unseen: acc_src=1.000 acc=0.375 traced=False far=True sim=0.480 res=0.743
+[11/100] clip 10 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.287 res=0.793
+[12/100] clip 11 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.244 res=0.763
+[13/100] clip 12 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.301 res=0.766
+[14/100] clip 13 prompt 3 text unseen: acc_src=1.000 acc=0.375 traced=False far=True sim=0.276 res=0.808
+[15/100] clip 14 prompt 3 text unseen: acc_src=1.000 acc=0.312 traced=False far=True sim=0.380 res=0.815
+[16/100] clip 15 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.170 res=0.714
+[17/100] clip 16 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.420 res=0.651
+[18/100] clip 17 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.474 res=0.767
+[19/100] clip 18 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.292 res=0.686
+[20/100] clip 19 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.288 res=0.743
+[21/100] clip 20 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.264 res=0.676
+[22/100] clip 21 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.363 res=0.689
+[23/100] clip 22 prompt 3 text unseen: acc_src=1.000 acc=0.438 traced=False far=True sim=0.315 res=0.710
+[24/100] clip 23 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.360 res=0.655
+[25/100] clip 24 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.308 res=0.716
+[26/100] clip 25 prompt 3 text unseen: acc_src=1.000 acc=0.438 traced=False far=True sim=0.513 res=0.773
+[27/100] clip 26 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.339 res=0.804
+[28/100] clip 27 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.272 res=0.772
+[29/100] clip 28 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.397 res=0.815
+[30/100] clip 29 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.167 res=0.818
+[31/100] clip 30 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.463 res=0.779
+[32/100] clip 31 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.453 res=0.740
+[33/100] clip 32 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.371 res=0.759
+[34/100] clip 33 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.326 res=0.676
+[35/100] clip 34 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.387 res=0.777
+[36/100] clip 35 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.364 res=0.776
+[37/100] clip 36 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.251 res=0.747
+[38/100] clip 37 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.272 res=0.773
+[39/100] clip 38 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.116 res=0.694
+[40/100] clip 39 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.242 res=0.755
+[41/100] clip 40 prompt 3 text unseen: acc_src=1.000 acc=0.375 traced=False far=True sim=0.305 res=0.737
+[42/100] clip 41 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.387 res=0.769
+[43/100] clip 42 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.397 res=0.749
+[44/100] clip 43 prompt 3 text unseen: acc_src=1.000 acc=0.438 traced=False far=True sim=0.331 res=0.766
+[45/100] clip 44 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.389 res=0.708
+[46/100] clip 45 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.211 res=0.745
+[47/100] clip 46 prompt 3 text unseen: acc_src=1.000 acc=0.375 traced=False far=True sim=0.416 res=0.758
+[48/100] clip 47 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.366 res=0.691
+[49/100] clip 48 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.397 res=0.798
+[50/100] clip 49 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.248 res=0.734
+[51/100] clip 50 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.153 res=0.753
+[52/100] clip 51 prompt 3 text unseen: acc_src=1.000 acc=0.438 traced=False far=True sim=0.355 res=0.793
+[53/100] clip 52 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.043 res=0.730
+[54/100] clip 53 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.098 res=0.763
+[55/100] clip 54 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.083 res=0.761
+[56/100] clip 55 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.458 res=0.732
+[57/100] clip 56 prompt 3 text unseen: acc_src=1.000 acc=0.438 traced=False far=True sim=0.338 res=0.771
+[58/100] clip 57 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.401 res=0.712
+[59/100] clip 58 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.503 res=0.793
+[60/100] clip 59 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.177 res=0.669
+[61/100] clip 60 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.311 res=0.706
+[62/100] clip 61 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.322 res=0.669
+[63/100] clip 62 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.284 res=0.699
+[64/100] clip 63 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=True sim=0.286 res=0.685
+[65/100] clip 64 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.358 res=0.721
+[66/100] clip 65 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.320 res=0.745
+[67/100] clip 66 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.347 res=0.641
+[68/100] clip 67 prompt 3 text unseen: acc_src=1.000 acc=0.438 traced=False far=True sim=0.280 res=0.722
+[69/100] clip 68 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.496 res=0.728
+[70/100] clip 69 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.315 res=0.730
+[71/100] clip 70 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.324 res=0.686
+[72/100] clip 71 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.378 res=0.758
+[73/100] clip 72 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.333 res=0.760
+[74/100] clip 73 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.450 res=0.680
+[75/100] clip 74 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.326 res=0.670
+[76/100] clip 75 prompt 3 text unseen: acc_src=1.000 acc=0.312 traced=False far=True sim=0.223 res=0.659
+[77/100] clip 76 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.147 res=0.694
+[78/100] clip 77 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.385 res=0.726
+[79/100] clip 78 prompt 3 text unseen: acc_src=1.000 acc=0.375 traced=False far=True sim=0.382 res=0.673
+[80/100] clip 79 prompt 3 text unseen: acc_src=1.000 acc=0.188 traced=False far=True sim=0.216 res=0.625
+[81/100] clip 80 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.315 res=0.653
+[82/100] clip 81 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.430 res=0.711
+[83/100] clip 82 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.389 res=0.724
+[84/100] clip 83 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.278 res=0.709
+[85/100] clip 84 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.433 res=0.735
+[86/100] clip 85 prompt 3 text unseen: acc_src=0.812 acc=0.438 traced=False far=True sim=0.078 res=0.682
+[87/100] clip 86 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.061 res=0.739
+[88/100] clip 87 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.260 res=0.687
+[89/100] clip 88 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.142 res=0.754
+[90/100] clip 89 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.061 res=0.645
+[91/100] clip 90 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.134 res=0.759
+[92/100] clip 91 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.232 res=0.817
+[93/100] clip 92 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.320 res=0.724
+[94/100] clip 93 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.082 res=0.635
+[95/100] clip 94 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.295 res=0.726
+[96/100] clip 95 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.166 res=0.630
+[97/100] clip 96 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.268 res=0.665
+[98/100] clip 97 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.307 res=0.734
+[99/100] clip 98 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.309 res=0.759
+[100/100] clip 99 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.070 res=0.615
+
+=== summary (prompt|text) ===
+3|unseen {'n_ok': 100, 'n_failed': 0, 'acc_source_mean': 0.9981, 'acc_mean': 0.6225, 'traced_rate': 0.17, 'far_rate': 0.87, 'sim_ecapa_mean': 0.3033, 'sim_resemblyzer_mean': 0.7282}
+saved results/ce_r0x_yourtts_r0_wm.json
