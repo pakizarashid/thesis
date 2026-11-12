@@ -1,0 +1,139 @@
+[preflight] omegaconf 2.4.0 ok; numpy/torch ok
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+[plan] cloner=xtts clips=100 prompts=['3'] texts=['unseen'] -> 100 clones to run
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[backbone] loaded checkpoints/route2_vmaug_R0/route2_epoch19.pt (epoch 19)
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794480507.134248    1071 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+[xtts] loading tts_models/multilingual/multi-dataset/xtts_v2 (first run downloads weights)...
+  0%|          | 0.00/1.87G [00:00<?, ?iB/s]  0%|          | 1.02k/1.87G [00:00<141:13:03, 3.67kiB/s]  0%|          | 5.20M/1.87G [00:00<01:45, 17.6MiB/s]      1%|          | 14.3M/1.87G [00:00<00:44, 41.7MiB/s]  1%|▏         | 23.4M/1.87G [00:00<00:32, 57.2MiB/s]  2%|▏         | 32.5M/1.87G [00:00<00:27, 67.8MiB/s]  2%|▏         | 40.4M/1.87G [00:00<00:27, 67.6MiB/s]  3%|▎         | 47.8M/1.87G [00:00<00:26, 67.7MiB/s]  3%|▎         | 56.4M/1.87G [00:01<00:24, 73.1MiB/s]  3%|▎         | 65.2M/1.87G [00:01<00:23, 77.2MiB/s]  4%|▍         | 74.0M/1.87G [00:01<00:22, 80.5MiB/s]  4%|▍         | 82.2M/1.87G [00:01<00:22, 79.6MiB/s]  5%|▍         | 90.7M/1.87G [00:01<00:21, 81.0MiB/s]  5%|▌         | 99.2M/1.87G [00:01<00:21, 82.4MiB/s]  6%|▌         | 109M/1.87G [00:01<00:20, 86.0MiB/s]   6%|▋         | 118M/1.87G [00:01<00:19, 87.7MiB/s]  7%|▋         | 127M/1.87G [00:01<00:19, 89.5MiB/s]  7%|▋         | 137M/1.87G [00:01<00:18, 91.3MiB/s]  8%|▊         | 146M/1.87G [00:02<00:18, 92.4MiB/s]  8%|▊         | 156M/1.87G [00:02<00:18, 92.7MiB/s]  9%|▉         | 165M/1.87G [00:02<00:18, 93.4MiB/s]  9%|▉         | 175M/1.87G [00:02<00:17, 94.2MiB/s] 10%|▉         | 184M/1.87G [00:02<00:17, 94.7MiB/s] 10%|█         | 194M/1.87G [00:02<00:17, 95.0MiB/s] 11%|█         | 203M/1.87G [00:02<00:18, 91.9MiB/s] 11%|█▏        | 213M/1.87G [00:02<00:18, 88.3MiB/s] 12%|█▏        | 221M/1.87G [00:02<00:18, 87.1MiB/s] 12%|█▏        | 230M/1.87G [00:02<00:18, 86.7MiB/s] 13%|█▎        | 239M/1.87G [00:03<00:18, 86.3MiB/s] 13%|█▎        | 248M/1.87G [00:03<00:18, 85.7MiB/s] 14%|█▎        | 256M/1.87G [00:03<00:18, 86.1MiB/s] 14%|█▍        | 265M/1.87G [00:03<00:18, 86.1MiB/s] 15%|█▍        | 274M/1.87G [00:03<00:18, 86.1MiB/s] 15%|█▌        | 282M/1.87G [00:03<00:18, 85.7MiB/s] 16%|█▌        | 291M/1.87G [00:03<00:18, 85.4MiB/s] 16%|█▌        | 299M/1.87G [00:03<00:18, 85.6MiB/s] 16%|█▋        | 308M/1.87G [00:03<00:18, 86.1MiB/s] 17%|█▋        | 317M/1.87G [00:03<00:18, 85.7MiB/s] 17%|█▋        | 325M/1.87G [00:04<00:17, 86.0MiB/s] 18%|█▊        | 334M/1.87G [00:04<00:17, 86.0MiB/s] 18%|█▊        | 343M/1.87G [00:04<00:17, 86.4MiB/s] 19%|█▉        | 351M/1.87G [00:04<00:17, 86.2MiB/s] 19%|█▉        | 360M/1.87G [00:04<00:17, 86.1MiB/s] 20%|█▉        | 369M/1.87G [00:04<00:17, 86.1MiB/s] 20%|██        | 377M/1.87G [00:04<00:17, 84.8MiB/s] 21%|██        | 386M/1.87G [00:04<00:17, 84.5MiB/s] 21%|██        | 394M/1.87G [00:04<00:17, 84.9MiB/s] 22%|██▏       | 403M/1.87G [00:04<00:17, 84.6MiB/s] 22%|██▏       | 411M/1.87G [00:05<00:17, 84.9MiB/s] 22%|██▏       | 420M/1.87G [00:05<00:17, 84.6MiB/s] 23%|██▎       | 428M/1.87G [00:05<00:16, 84.8MiB/s] 23%|██▎       | 437M/1.87G [00:05<00:16, 85.7MiB/s] 24%|██▍       | 446M/1.87G [00:05<00:16, 85.9MiB/s] 24%|██▍       | 454M/1.87G [00:05<00:16, 85.7MiB/s] 25%|██▍       | 463M/1.87G [00:05<00:16, 85.2MiB/s] 25%|██▌       | 471M/1.87G [00:05<00:16, 85.2MiB/s] 26%|██▌       | 480M/1.87G [00:05<00:16, 84.8MiB/s] 26%|██▌       | 488M/1.87G [00:05<00:16, 84.3MiB/s] 27%|██▋       | 497M/1.87G [00:06<00:16, 84.6MiB/s] 27%|██▋       | 505M/1.87G [00:06<00:16, 83.9MiB/s] 28%|██▊       | 514M/1.87G [00:06<00:16, 83.2MiB/s] 28%|██▊       | 522M/1.87G [00:06<00:16, 81.5MiB/s] 28%|██▊       | 530M/1.87G [00:06<00:16, 80.0MiB/s] 29%|██▉       | 538M/1.87G [00:06<00:16, 79.2MiB/s] 29%|██▉       | 546M/1.87G [00:06<00:17, 77.3MiB/s] 30%|██▉       | 554M/1.87G [00:06<00:16, 77.5MiB/s] 30%|███       | 562M/1.87G [00:06<00:16, 77.5MiB/s] 30%|███       | 570M/1.87G [00:07<00:16, 77.7MiB/s] 31%|███       | 577M/1.87G [00:07<00:16, 77.9MiB/s] 31%|███▏      | 586M/1.87G [00:07<00:16, 79.3MiB/s] 32%|███▏      | 594M/1.87G [00:07<00:16, 78.2MiB/s] 32%|███▏      | 601M/1.87G [00:07<00:16, 75.0MiB/s] 33%|███▎      | 610M/1.87G [00:07<00:16, 77.2MiB/s] 33%|███▎      | 618M/1.87G [00:07<00:15, 79.8MiB/s] 34%|███▎      | 626M/1.87G [00:07<00:16, 76.6MiB/s] 34%|███▍      | 634M/1.87G [00:07<00:16, 76.4MiB/s] 34%|███▍      | 642M/1.87G [00:07<00:15, 77.7MiB/s] 35%|███▍      | 651M/1.87G [00:08<00:15, 80.3MiB/s] 35%|███▌      | 659M/1.87G [00:08<00:14, 81.8MiB/s] 36%|███▌      | 668M/1.87G [00:08<00:14, 82.6MiB/s] 36%|███▌      | 676M/1.87G [00:08<00:14, 83.5MiB/s] 37%|███▋      | 685M/1.87G [00:08<00:14, 84.2MiB/s] 37%|███▋      | 693M/1.87G [00:08<00:13, 84.7MiB/s] 38%|███▊      | 702M/1.87G [00:08<00:13, 84.7MiB/s] 38%|███▊      | 710M/1.87G [00:08<00:13, 84.3MiB/s] 38%|███▊      | 719M/1.87G [00:08<00:13, 84.7MiB/s] 39%|███▉      | 727M/1.87G [00:08<00:13, 84.8MiB/s] 39%|███▉      | 736M/1.87G [00:09<00:13, 85.3MiB/s] 40%|███▉      | 745M/1.87G [00:09<00:13, 85.5MiB/s] 40%|████      | 753M/1.87G [00:09<00:12, 85.9MiB/s] 41%|████      | 762M/1.87G [00:09<00:12, 86.7MiB/s] 41%|████▏     | 771M/1.87G [00:09<00:12, 86.2MiB/s] 42%|████▏     | 780M/1.87G [00:09<00:12, 86.1MiB/s] 42%|████▏     | 788M/1.87G [00:09<00:12, 85.2MiB/s] 43%|████▎     | 797M/1.87G [00:09<00:12, 83.7MiB/s] 43%|████▎     | 805M/1.87G [00:09<00:12, 83.0MiB/s] 44%|████▎     | 813M/1.87G [00:09<00:12, 82.5MiB/s] 44%|████▍     | 822M/1.87G [00:10<00:12, 82.7MiB/s] 44%|████▍     | 830M/1.87G [00:10<00:12, 83.6MiB/s] 45%|████▍     | 839M/1.87G [00:10<00:12, 84.2MiB/s] 45%|████▌     | 847M/1.87G [00:10<00:12, 82.4MiB/s] 46%|████▌     | 856M/1.87G [00:10<00:12, 83.3MiB/s] 46%|████▋     | 864M/1.87G [00:10<00:12, 83.3MiB/s] 47%|████▋     | 872M/1.87G [00:10<00:12, 82.8MiB/s] 47%|████▋     | 881M/1.87G [00:10<00:12, 77.2MiB/s] 48%|████▊     | 889M/1.87G [00:10<00:13, 73.4MiB/s] 48%|████▊     | 897M/1.87G [00:11<00:12, 76.5MiB/s] 48%|████▊     | 905M/1.87G [00:11<00:12, 78.6MiB/s] 49%|████▉     | 914M/1.87G [00:11<00:11, 80.0MiB/s] 49%|████▉     | 922M/1.87G [00:11<00:11, 80.9MiB/s] 50%|████▉     | 930M/1.87G [00:11<00:11, 81.4MiB/s] 50%|█████     | 939M/1.87G [00:11<00:11, 81.9MiB/s] 51%|█████     | 947M/1.87G [00:11<00:11, 82.6MiB/s] 51%|█████     | 955M/1.87G [00:11<00:11, 82.1MiB/s] 52%|█████▏    | 964M/1.87G [00:11<00:10, 82.6MiB/s] 52%|█████▏    | 972M/1.87G [00:11<00:10, 82.5MiB/s] 52%|█████▏    | 980M/1.87G [00:12<00:10, 82.4MiB/s] 53%|█████▎    | 989M/1.87G [00:12<00:10, 82.8MiB/s] 53%|█████▎    | 997M/1.87G [00:12<00:10, 82.6MiB/s] 54%|█████▍    | 1.01G/1.87G [00:12<00:10, 82.4MiB/s] 54%|█████▍    | 1.01G/1.87G [00:12<00:10, 82.6MiB/s] 55%|█████▍    | 1.02G/1.87G [00:12<00:10, 82.5MiB/s] 55%|█████▌    | 1.03G/1.87G [00:12<00:10, 82.9MiB/s] 56%|█████▌    | 1.04G/1.87G [00:12<00:10, 82.5MiB/s] 56%|█████▌    | 1.05G/1.87G [00:12<00:10, 79.6MiB/s] 56%|█████▋    | 1.05G/1.87G [00:12<00:10, 80.5MiB/s] 57%|█████▋    | 1.06G/1.87G [00:13<00:09, 81.5MiB/s] 57%|█████▋    | 1.07G/1.87G [00:13<00:09, 81.9MiB/s] 58%|█████▊    | 1.08G/1.87G [00:13<00:09, 82.3MiB/s] 58%|█████▊    | 1.09G/1.87G [00:13<00:09, 82.6MiB/s] 59%|█████▊    | 1.10G/1.87G [00:13<00:09, 82.7MiB/s] 59%|█████▉    | 1.10G/1.87G [00:13<00:09, 82.7MiB/s] 60%|█████▉    | 1.11G/1.87G [00:13<00:09, 83.2MiB/s] 60%|██████    | 1.12G/1.87G [00:13<00:09, 82.7MiB/s] 60%|██████    | 1.13G/1.87G [00:13<00:08, 83.0MiB/s] 61%|██████    | 1.14G/1.87G [00:13<00:08, 83.0MiB/s] 61%|██████▏   | 1.15G/1.87G [00:14<00:08, 82.7MiB/s] 62%|██████▏   | 1.15G/1.87G [00:14<00:08, 83.1MiB/s] 62%|██████▏   | 1.16G/1.87G [00:14<00:08, 83.3MiB/s] 63%|██████▎   | 1.17G/1.87G [00:14<00:08, 83.6MiB/s] 63%|██████▎   | 1.18G/1.87G [00:14<00:08, 83.8MiB/s] 64%|██████▎   | 1.19G/1.87G [00:14<00:08, 84.0MiB/s] 64%|██████▍   | 1.20G/1.87G [00:14<00:07, 85.2MiB/s] 65%|██████▍   | 1.21G/1.87G [00:14<00:07, 85.9MiB/s] 65%|██████▌   | 1.22G/1.87G [00:14<00:07, 87.0MiB/s] 66%|██████▌   | 1.22G/1.87G [00:14<00:07, 87.5MiB/s] 66%|██████▌   | 1.23G/1.87G [00:15<00:07, 86.9MiB/s] 66%|██████▋   | 1.24G/1.87G [00:15<00:07, 86.7MiB/s] 67%|██████▋   | 1.25G/1.87G [00:15<00:07, 87.1MiB/s] 67%|██████▋   | 1.26G/1.87G [00:15<00:06, 88.2MiB/s] 68%|██████▊   | 1.27G/1.87G [00:15<00:06, 88.5MiB/s] 68%|██████▊   | 1.28G/1.87G [00:15<00:06, 88.8MiB/s] 69%|██████▉   | 1.29G/1.87G [00:15<00:06, 89.0MiB/s] 69%|██████▉   | 1.30G/1.87G [00:15<00:06, 88.4MiB/s] 70%|██████▉   | 1.30G/1.87G [00:15<00:06, 88.8MiB/s] 70%|███████   | 1.31G/1.87G [00:15<00:06, 88.8MiB/s] 71%|███████   | 1.32G/1.87G [00:16<00:06, 89.0MiB/s] 71%|███████   | 1.33G/1.87G [00:16<00:06, 89.1MiB/s] 72%|███████▏  | 1.34G/1.87G [00:16<00:05, 89.2MiB/s] 72%|███████▏  | 1.35G/1.87G [00:16<00:05, 88.8MiB/s] 73%|███████▎  | 1.36G/1.87G [00:16<00:05, 88.9MiB/s] 73%|███████▎  | 1.37G/1.87G [00:16<00:05, 88.8MiB/s] 74%|███████▎  | 1.38G/1.87G [00:16<00:05, 88.4MiB/s] 74%|███████▍  | 1.38G/1.87G [00:16<00:05, 87.7MiB/s] 75%|███████▍  | 1.39G/1.87G [00:16<00:05, 87.8MiB/s] 75%|███████▌  | 1.40G/1.87G [00:16<00:05, 87.6MiB/s] 76%|███████▌  | 1.41G/1.87G [00:17<00:05, 87.8MiB/s] 76%|███████▌  | 1.42G/1.87G [00:17<00:05, 88.2MiB/s] 76%|███████▋  | 1.43G/1.87G [00:17<00:04, 88.4MiB/s] 77%|███████▋  | 1.44G/1.87G [00:17<00:04, 88.4MiB/s] 77%|███████▋  | 1.45G/1.87G [00:17<00:04, 88.5MiB/s] 78%|███████▊  | 1.46G/1.87G [00:17<00:04, 88.8MiB/s] 78%|███████▊  | 1.46G/1.87G [00:17<00:04, 89.1MiB/s] 79%|███████▉  | 1.47G/1.87G [00:17<00:04, 88.7MiB/s] 79%|███████▉  | 1.48G/1.87G [00:17<00:04, 89.1MiB/s] 80%|███████▉  | 1.49G/1.87G [00:17<00:04, 87.5MiB/s] 80%|████████  | 1.50G/1.87G [00:18<00:04, 83.3MiB/s] 81%|████████  | 1.51G/1.87G [00:18<00:04, 84.9MiB/s] 81%|████████  | 1.52G/1.87G [00:18<00:04, 85.9MiB/s] 82%|████████▏ | 1.53G/1.87G [00:18<00:03, 86.7MiB/s] 82%|████████▏ | 1.54G/1.87G [00:18<00:03, 87.6MiB/s] 83%|████████▎ | 1.54G/1.87G [00:18<00:03, 88.3MiB/s] 83%|████████▎ | 1.55G/1.87G [00:18<00:03, 88.9MiB/s] 84%|████████▎ | 1.56G/1.87G [00:18<00:03, 86.6MiB/s] 84%|████████▍ | 1.57G/1.87G [00:18<00:03, 85.8MiB/s] 85%|████████▍ | 1.58G/1.87G [00:18<00:03, 85.0MiB/s] 85%|████████▌ | 1.59G/1.87G [00:19<00:03, 84.6MiB/s] 85%|████████▌ | 1.60G/1.87G [00:19<00:03, 84.3MiB/s] 86%|████████▌ | 1.60G/1.87G [00:19<00:03, 84.2MiB/s] 86%|████████▋ | 1.61G/1.87G [00:19<00:03, 84.0MiB/s] 87%|████████▋ | 1.62G/1.87G [00:19<00:02, 83.8MiB/s] 87%|████████▋ | 1.63G/1.87G [00:19<00:02, 83.6MiB/s] 88%|████████▊ | 1.64G/1.87G [00:19<00:02, 82.0MiB/s] 88%|████████▊ | 1.65G/1.87G [00:19<00:02, 81.3MiB/s] 89%|████████▊ | 1.65G/1.87G [00:19<00:02, 81.9MiB/s] 89%|████████▉ | 1.66G/1.87G [00:19<00:02, 81.9MiB/s] 89%|████████▉ | 1.67G/1.87G [00:20<00:02, 82.0MiB/s] 90%|████████▉ | 1.68G/1.87G [00:20<00:02, 82.1MiB/s] 90%|█████████ | 1.69G/1.87G [00:20<00:02, 82.4MiB/s] 91%|█████████ | 1.70G/1.87G [00:20<00:02, 80.5MiB/s] 91%|█████████ | 1.70G/1.87G [00:20<00:02, 78.8MiB/s] 92%|█████████▏| 1.71G/1.87G [00:20<00:01, 79.6MiB/s] 92%|█████████▏| 1.72G/1.87G [00:20<00:01, 80.5MiB/s] 93%|█████████▎| 1.73G/1.87G [00:20<00:02, 69.0MiB/s] 93%|█████████▎| 1.74G/1.87G [00:20<00:01, 72.6MiB/s] 93%|█████████▎| 1.75G/1.87G [00:21<00:01, 75.5MiB/s] 94%|█████████▍| 1.75G/1.87G [00:21<00:01, 77.8MiB/s] 94%|█████████▍| 1.76G/1.87G [00:21<00:01, 79.3MiB/s] 95%|█████████▍| 1.77G/1.87G [00:21<00:01, 80.5MiB/s] 95%|█████████▌| 1.78G/1.87G [00:21<00:01, 81.3MiB/s] 96%|█████████▌| 1.79G/1.87G [00:21<00:00, 81.8MiB/s] 96%|█████████▌| 1.80G/1.87G [00:21<00:00, 81.8MiB/s] 97%|█████████▋| 1.80G/1.87G [00:21<00:00, 81.3MiB/s] 97%|█████████▋| 1.81G/1.87G [00:21<00:00, 81.3MiB/s] 97%|█████████▋| 1.82G/1.87G [00:21<00:00, 81.5MiB/s] 98%|█████████▊| 1.83G/1.87G [00:22<00:00, 82.1MiB/s] 98%|█████████▊| 1.84G/1.87G [00:22<00:00, 82.4MiB/s] 99%|█████████▉| 1.84G/1.87G [00:22<00:00, 82.6MiB/s] 99%|█████████▉| 1.85G/1.87G [00:22<00:00, 80.7MiB/s]100%|█████████▉| 1.86G/1.87G [00:22<00:00, 79.0MiB/s]100%|██████████| 1.87G/1.87G [00:22<00:00, 82.7MiB/s]
+0.00iB [00:00, ?iB/s]4.37kiB [00:00, 5.99MiB/s]
+0.00iB [00:00, ?iB/s]361kiB [00:00, 24.6MiB/s]
+  0%|          | 0.00/32.0 [00:00<?, ?iB/s]100%|██████████| 32.0/32.0 [00:00<00:00, 70.1kiB/s]
+  0%|          | 0.00/7.75M [00:00<?, ?iB/s]  0%|          | 1.02k/7.75M [00:00<22:53, 5.65kiB/s] 99%|█████████▉| 7.70M/7.75M [00:00<00:00, 33.9MiB/s]100%|██████████| 7.75M/7.75M [00:00<00:00, 27.5MiB/s]
+INFO:speechbrain.utils.fetching:Fetch hyperparams.yaml: Using symlink found at '/tmp/ecapa_model/hyperparams.yaml'
+INFO:speechbrain.utils.fetching:Fetch embedding_model.ckpt: Fetching from HuggingFace Hub 'speechbrain/spkrec-ecapa-voxceleb' if not cached
+INFO:speechbrain.utils.fetching:Fetch mean_var_norm_emb.ckpt: Fetching from HuggingFace Hub 'speechbrain/spkrec-ecapa-voxceleb' if not cached
+INFO:speechbrain.utils.fetching:Fetch classifier.ckpt: Fetching from HuggingFace Hub 'speechbrain/spkrec-ecapa-voxceleb' if not cached
+INFO:speechbrain.utils.fetching:Fetch label_encoder.txt: Fetching from HuggingFace Hub 'speechbrain/spkrec-ecapa-voxceleb' if not cached
+INFO:speechbrain.utils.parameter_transfer:Loading pretrained files for: embedding_model, mean_var_norm_emb, classifier, label_encoder
+/usr/local/lib/python3.13/dist-packages/speechbrain/utils/checkpoints.py:202: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  state_dict = torch.load(path, map_location=device)
+/usr/local/lib/python3.13/dist-packages/speechbrain/processing/features.py:1550: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  stats = torch.load(path, map_location=self.device)
+WARNING:speechbrain.inference.interfaces:Could not parse CUDA device string 'cuda': not enough values to unpack (expected 2, got 1). Falling back to device 0.
+/usr/local/lib/python3.13/dist-packages/resemblyzer/voice_encoder.py:43: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  checkpoint = torch.load(weights_fpath, map_location="cpu")
+[1/100] clip 0 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.251 res=0.709
+[2/100] clip 1 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.381 res=0.711
+[3/100] clip 2 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.459 res=0.772
+[4/100] clip 3 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.191 res=0.602
+[5/100] clip 4 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.166 res=0.626
+[6/100] clip 5 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.093 res=0.629
+[7/100] clip 6 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.258 res=0.745
+[8/100] clip 7 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.317 res=0.725
+[9/100] clip 8 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.358 res=0.810
+[10/100] clip 9 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.412 res=0.662
+[11/100] clip 10 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.515 res=0.760
+[12/100] clip 11 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.157 res=0.612
+[13/100] clip 12 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.236 res=0.724
+[14/100] clip 13 prompt 3 text unseen: acc_src=1.000 acc=0.312 traced=False far=True sim=0.208 res=0.617
+[15/100] clip 14 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.354 res=0.824
+[16/100] clip 15 prompt 3 text unseen: acc_src=1.000 acc=1.000 traced=True far=False sim=0.094 res=0.656
+[17/100] clip 16 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.412 res=0.740
+[18/100] clip 17 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.335 res=0.652
+[19/100] clip 18 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.182 res=0.679
+[20/100] clip 19 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.262 res=0.658
+[21/100] clip 20 prompt 3 text unseen: acc_src=1.000 acc=0.438 traced=False far=True sim=0.334 res=0.775
+[22/100] clip 21 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.287 res=0.699
+[23/100] clip 22 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.432 res=0.708
+[24/100] clip 23 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.392 res=0.806
+[25/100] clip 24 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.465 res=0.769
+[26/100] clip 25 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.414 res=0.706
+[27/100] clip 26 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.478 res=0.710
+[28/100] clip 27 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.338 res=0.687
+[29/100] clip 28 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.311 res=0.774
+[30/100] clip 29 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.274 res=0.765
+[31/100] clip 30 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.363 res=0.801
+[32/100] clip 31 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.495 res=0.671
+[33/100] clip 32 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.293 res=0.654
+[34/100] clip 33 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.391 res=0.722
+[35/100] clip 34 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.261 res=0.780
+[36/100] clip 35 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.325 res=0.758
+[37/100] clip 36 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.424 res=0.755
+[38/100] clip 37 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.362 res=0.709
+[39/100] clip 38 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.141 res=0.648
+[40/100] clip 39 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.207 res=0.660
+[41/100] clip 40 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.317 res=0.637
+[42/100] clip 41 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.294 res=0.665
+[43/100] clip 42 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.293 res=0.641
+[44/100] clip 43 prompt 3 text unseen: acc_src=1.000 acc=0.312 traced=False far=True sim=0.231 res=0.652
+[45/100] clip 44 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.357 res=0.645
+[46/100] clip 45 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=-0.024 res=0.522
+[47/100] clip 46 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.374 res=0.730
+[48/100] clip 47 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.168 res=0.566
+[49/100] clip 48 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.298 res=0.707
+[50/100] clip 49 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.031 res=0.632
+[51/100] clip 50 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.293 res=0.691
+[52/100] clip 51 prompt 3 text unseen: acc_src=1.000 acc=0.438 traced=False far=True sim=0.184 res=0.727
+[53/100] clip 52 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.076 res=0.695
+[54/100] clip 53 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.087 res=0.662
+[55/100] clip 54 prompt 3 text unseen: acc_src=1.000 acc=0.438 traced=False far=True sim=0.146 res=0.724
+[56/100] clip 55 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.424 res=0.654
+[57/100] clip 56 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.360 res=0.623
+[58/100] clip 57 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.349 res=0.655
+[59/100] clip 58 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.480 res=0.781
+[60/100] clip 59 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.194 res=0.532
+[61/100] clip 60 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.227 res=0.710
+[62/100] clip 61 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.219 res=0.639
+[63/100] clip 62 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.253 res=0.683
+[64/100] clip 63 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.153 res=0.652
+[65/100] clip 64 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.237 res=0.699
+[66/100] clip 65 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.284 res=0.766
+[67/100] clip 66 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.247 res=0.666
+[68/100] clip 67 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.188 res=0.666
+[69/100] clip 68 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.304 res=0.704
+[70/100] clip 69 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.104 res=0.642
+[71/100] clip 70 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.377 res=0.678
+[72/100] clip 71 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.391 res=0.592
+[73/100] clip 72 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.198 res=0.625
+[74/100] clip 73 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.486 res=0.605
+[75/100] clip 74 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.396 res=0.644
+[76/100] clip 75 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.156 res=0.669
+[77/100] clip 76 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.403 res=0.807
+[78/100] clip 77 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.214 res=0.789
+[79/100] clip 78 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.221 res=0.783
+[80/100] clip 79 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=True sim=0.231 res=0.777
+[81/100] clip 80 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.179 res=0.668
+[82/100] clip 81 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=False sim=0.225 res=0.606
+[83/100] clip 82 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.224 res=0.713
+[84/100] clip 83 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.294 res=0.647
+[85/100] clip 84 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.293 res=0.611
+[86/100] clip 85 prompt 3 text unseen: acc_src=0.812 acc=0.625 traced=False far=True sim=0.159 res=0.620
+[87/100] clip 86 prompt 3 text unseen: acc_src=1.000 acc=0.875 traced=True far=False sim=0.101 res=0.671
+[88/100] clip 87 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.335 res=0.630
+[89/100] clip 88 prompt 3 text unseen: acc_src=1.000 acc=0.500 traced=False far=True sim=0.152 res=0.667
+[90/100] clip 89 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.075 res=0.606
+[91/100] clip 90 prompt 3 text unseen: acc_src=1.000 acc=0.562 traced=False far=True sim=0.174 res=0.729
+[92/100] clip 91 prompt 3 text unseen: acc_src=1.000 acc=0.688 traced=False far=True sim=0.250 res=0.761
+[93/100] clip 92 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.235 res=0.636
+[94/100] clip 93 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=-0.071 res=0.651
+[95/100] clip 94 prompt 3 text unseen: acc_src=1.000 acc=0.812 traced=True far=True sim=0.200 res=0.653
+[96/100] clip 95 prompt 3 text unseen: acc_src=1.000 acc=0.312 traced=False far=True sim=0.100 res=0.700
+[97/100] clip 96 prompt 3 text unseen: acc_src=1.000 acc=0.625 traced=False far=True sim=0.167 res=0.628
+[98/100] clip 97 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=True sim=0.251 res=0.734
+[99/100] clip 98 prompt 3 text unseen: acc_src=1.000 acc=0.938 traced=True far=False sim=0.305 res=0.616
+[100/100] clip 99 prompt 3 text unseen: acc_src=1.000 acc=0.750 traced=False far=False sim=0.176 res=0.662
+
+=== summary (prompt|text) ===
+3|unseen {'n_ok': 100, 'n_failed': 0, 'acc_source_mean': 0.9981, 'acc_mean': 0.7037, 'traced_rate': 0.36, 'far_rate': 0.8, 'sim_ecapa_mean': 0.2668, 'sim_resemblyzer_mean': 0.6862}
+saved results/ce_r0x_xtts_r0_wm.json

@@ -1,0 +1,45 @@
+[preflight] omegaconf 2.4.0 ok; numpy/torch ok
+[LibriSpeechSubset] Loading/downloading train-clean-100 into /tmp/data/librispeech (this is a ~6.3GB download on first run, cached after)...
+[LibriSpeechSubset] Loaded cached subset index from /tmp/data/librispeech/subset_index.json
+[LibriSpeechSubset] Using 100 utterances (eval split, speaker-disjoint from the other split).
+[plan] cloner=yourtts clips=100 prompts=['3'] texts=['unseen'] -> 100 clones to run
+/usr/local/lib/python3.13/dist-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+/kaggle/working/thesis/src/models/../../external/voicemark/speechtokenizer/model.py:87: UserWarning: Environment variable TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD detected, since the`weights_only` argument was not explicitly passed to `torch.load`, forcing weights_only=False.
+  params = torch.load(ckpt_path, map_location="cpu")
+/kaggle/working/thesis/src/models/../../external/voicemark/models.py:38: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.num_heads is odd
+  self.transformer = nn.TransformerEncoder(
+[VoiceMarkBackbone] Loaded checkpoint from epoch 46. st_model loaded separately (166 of its keys correctly absent from this checkpoint).
+[apply_lora_adapters] Wrapped 16 attention modules across ('msg_processor', 'detector') with LoRA (r=8, alpha=16). Total trainable LoRA parameters: 294,912
+[backbone] loaded checkpoints/route2_vmaug_R0/route2_epoch19.pt (epoch 19)
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794480987.738549    1211 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+Traceback (most recent call last):
+  File "/kaggle/working/thesis/src/eval/clone_eval_v2.py", line 607, in <module>
+    main()
+    ~~~~^^
+  File "/kaggle/working/thesis/src/eval/clone_eval_v2.py", line 518, in main
+    model = load_fn(device, args)
+  File "/kaggle/working/thesis/src/eval/clone_eval_v2.py", line 291, in load_yourtts
+    return load_yourtts_surrogate(device=device)
+  File "/kaggle/working/thesis/src/eval/../models/surrogate_vc.py", line 223, in load_yourtts_surrogate
+    tts = TTS(model_name="tts_models/multilingual/multi-dataset/your_tts", progress_bar=False)
+  File "/usr/local/lib/python3.13/dist-packages/TTS/api.py", line 97, in __init__
+    self.load_tts_model_by_name(model_name, vocoder_name, gpu=gpu)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/TTS/api.py", line 232, in load_tts_model_by_name
+    model_path, config_path, vocoder_path, vocoder_config_path, model_dir = self.download_model_by_name(
+                                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        model_name, vocoder_name
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/usr/local/lib/python3.13/dist-packages/TTS/api.py", line 166, in download_model_by_name
+    model_path, config_path, model_item = self.manager.download_model(model_name)
+                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/TTS/utils/manage.py", line 440, in download_model
+    output_model_path, output_config_path = self._find_files(output_path)
+                                            ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/TTS/utils/manage.py", line 468, in _find_files
+    raise ValueError(" [!] Model file not found in the output path")
+ValueError:  [!] Model file not found in the output path
