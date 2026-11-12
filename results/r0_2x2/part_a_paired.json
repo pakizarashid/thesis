@@ -1,0 +1,69 @@
+{
+  "n_common": 100,
+  "threshold": 0.686773419380188,
+  "sources": {
+    "clean_only": "results/r0_2x2/ce_clean_only_f5tts_100.json",
+    "mask_only": "results/r0_2x2/ce_mask_only_f5tts_100.json",
+    "r0_wm": "results/r0_mask/ce_r0_wm_f5tts_100.json",
+    "r0_mask": "results/r0_mask/ce_r0_mask_f5tts_100.json"
+  },
+  "acceptance": {
+    "watermark alone": {
+      "before": 1.0,
+      "after": 0.83,
+      "delta": -0.17000000000000004,
+      "ci": [
+        -0.25,
+        -0.09999999999999998
+      ],
+      "lost": 17,
+      "gained": 0,
+      "mcnemar_p": 1.52587890625e-05
+    },
+    "mask alone, no watermark": {
+      "before": 1.0,
+      "after": 0.92,
+      "delta": -0.07999999999999996,
+      "ci": [
+        -0.14,
+        -0.030000000000000027
+      ],
+      "lost": 8,
+      "gained": 0,
+      "mcnemar_p": 0.0078125
+    },
+    "mask on top of watermark": {
+      "before": 0.83,
+      "after": 0.54,
+      "delta": -0.2899999999999999,
+      "ci": [
+        -0.38000000000000006,
+        -0.19999999999999996
+      ],
+      "lost": 30,
+      "gained": 1,
+      "mcnemar_p": 2.9802322387695312e-08
+    },
+    "both mechanisms": {
+      "before": 1.0,
+      "after": 0.54,
+      "delta": -0.45999999999999996,
+      "ci": [
+        -0.56,
+        -0.36
+      ],
+      "lost": 46,
+      "gained": 0,
+      "mcnemar_p": 2.842170943040401e-14
+    }
+  },
+  "synergy_acceptance": {
+    "delta": -0.20999999999999996
+  },
+  "mean_sim": {
+    "clean_only": 0.8866016364097595,
+    "mask_only": 0.8112174540758132,
+    "r0_wm": 0.7479932788014412,
+    "r0_mask": 0.6904772701859474
+  }
+}
