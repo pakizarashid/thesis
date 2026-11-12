@@ -108,8 +108,18 @@ def compute_pesq_stoi(clean_wav, watermarked_wav, sr):
     clean_wav = clean_wav[:min_len].astype(np.float64)
     watermarked_wav = watermarked_wav[:min_len].astype(np.float64)
 
-    pesq_score = pesq(sr, clean_wav, watermarked_wav, "wb")  # wideband mode, correct for 16kHz
+    try:
+        pesq_score = pesq(sr, clean_wav, watermarked_wav, "wb")  # wideband mode, correct for 16kHz
+    except Exception as _e:
+        # PESQ raises NoUtterancesError on clips with no detected speech.
+        # Fail soft: one unusable clip must not abort a 2000-clip run.
+        print('[quality] PESQ unavailable (' + type(_e).__name__ + '): nan')
+        pesq_score = float('nan')
     stoi_score = stoi(clean_wav, watermarked_wav, sr, extended=False)
+    if not np.isfinite(pesq_score):
+        # the reference has no detected speech, so STOI's 0.0 is not a
+        # measurement of intelligibility -- mark the clip unmeasurable
+        stoi_score = float('nan')
     return pesq_score, stoi_score
 
 
